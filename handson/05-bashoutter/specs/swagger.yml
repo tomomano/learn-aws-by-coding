@@ -1,0 +1,73 @@
+openapi: 3.0.0
+info:
+  title: Bashoutter API
+  version: 0.1.0
+  description: https://gitlab.com/tomomano/intro-aws
+
+paths:
+  /haiku:
+    get:
+      summary: Get a list of haiku
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    item_id:
+                      type: string
+                    username:
+                      type: string
+                    first:
+                      type: string
+                    second:
+                      type: string
+                    third:
+                      type: string
+                    likes:
+                      type: integer
+                    created_at:
+                      type: string
+                      format: date-time
+    post:
+      summary: Post a new haiku
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                first:
+                  type: string
+                second:
+                  type: string
+                third:
+                  type: string
+      responses:
+        201:
+          description: OK
+  /haiku/{item_id}:
+    parameters:
+      - in: path
+        name: item_id
+        required: true
+        description: ID of the selected haiku
+        schema:
+          type: string
+    patch:
+      summary: Add like to a selected haiku
+      responses:
+        200:
+          description: OK
+    delete:
+      summary: Delete a haiku
+      responses:
+        204:
+          description: Resource deleted successfully

@@ -1,0 +1,227 @@
+== Appendix
+
+//[[appendix_aws_account]]
+// === AWS Educate
+
+// 執筆時点において，AWS Educateに参加すると，$30分のAWS利用クーポンが手に入る．また，AWS Educateの提供する各種オンライン教材にアクセスすることができる．以下に登録の手順を示す．
+
+// [NOTE]
+// ====
+// ここに示すのは執筆時点(2020/05)での情報である．将来的に手順が変更される可能性があることに注意．
+// ====
+
+// ==== AWS Educate アカウントの作成
+
+// . AWS Educate のページへ行く => https://aws.amazon.com/education/awseducate/
+// . "Join AWS Educate" > "Student" を選択．
+// . アカウント情報を入力．東大ECCSのメールアドレス(`g.ecc.u-tokyo.ac.jp`)を使用する．
+// . メールアドレスの確認がメールで届くので，リンクに従って認証する．
+// . アカウントが認可されるまで少し時間がかかるので，待つ．
+// . アカウントが認可されると，AWS Educate にログインできるようになる．
+
+// ==== AWS Educate から AWS アカウントを使用する
+
+// . AWS Educate にログインしたら，トップバーの"AWS Account"をクリック．そこから"AWS Educate Starter Account"をクリック (<<aws_educate>>)．
+// . 遷移した先のページ(vocareum)にある "AWS Console" をクリックすると，AWSのコンソール画面へ遷移する (<<aws_educate_account>>)．
+// ** このコンソール画面から，各種の AWS リソースを利用することができる．
+// . 遷移した先のページ(vocareum)にある "Account Details" をクリックすると，CLIからAWSにアクセスするためのアクセスキーなどが表示される (<<aws_educate_account>>)．
+// ** `aws_access_key_id`, `aws_secret_access_key` の値を確認．
+// ** これらの値を `~/.aws/credentials` などのファイルに保存する (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html[参照])．
+// あるいは， `AWS_ACCESS_KEY_ID` などの環境変数に設定する．
+
+// [[aws_educate]]
+// .AWS Educate スクリーンショット1
+// image::imgs/aws_educate.png[AWS Educate, 600, align="center"]
+
+// [[aws_educate_account]]
+// .AWS Educate スクリーンショット2
+// image::imgs/aws_educate_account.png[AWS Educate, 600, align="center"]
+
+[[aws_secrets]]
+=== AWS のシークレットキーの作成
+
+AWS シークレットキーとは， AWS CLI や AWS CDK から AWS の API を操作する際に，ユーザー認証を行うための鍵のことである．
+AWS CLI/CDK を使うには，最初にシークレットキーを発行する必要がある．
+AWS シークレットキーの詳細は https://docs.aws.amazon.com/ja_jp/general/latest/gr/managing-aws-access-keys.html[公式ドキュメンテーション] を参照．
+
+. AWS コンソールにログインする．
+. 画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<<aws_secret_key_1>>)
+. "Access keys for CLI, SDK, & API access" の下にある "Create accesss key" のボタンをクリックする (<<aws_secret_key_1>>)
+. 表示された Access key ID, Secret access key を記録しておく (画面を閉じると以降は表示されない)．
+. 鍵を忘れてしまった場合などは，何度でも発行が可能である．
+. 発行したシークレットキーは， `~/.aws/credentials` のファイルに書き込むか，環境変数に設定するなどして使う (詳しくは <<aws_cli_install>>)．
+
+[[aws_secret_key_1]]
+.AWS シークレットキーの発行1
+image::imgs/aws_secret_key_1.png[aws_secret_key_1, 400, align="center"]
+
+[[aws_secret_key_2]]
+.AWS シークレットキーの発行2
+image::imgs/aws_secret_key_2.png[aws_secret_key_2, 700, align="center"]
+
+[[aws_cli_install]]
+=== AWS CLI のインストール
+
+https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html[公式のドキュメンテーション]に従い，インストールを行う．
+
+Linuxマシンならば，以下のコマンドを実行すれば良い．
+
+[source, bash]
+----
+$ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+$ unzip awscliv2.zip
+$ sudo ./aws/install
+----
+
+インストールできたか確認するため，以下のコマンドを打って正しくバージョンが表示されることを確認する．
+
+[source, bash]
+----
+$ aws --version
+----
+
+インストールができたら，以下のコマンドにより初期設定を行う (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html[参照])．
+
+[source, bash]
+----
+$ aws configure
+----
+
+コマンドを実行すると， `AWS Access Key ID`, `AWS Secret Access Key` を入力するよう指示される．
+シークレットキーの発行については <<aws_secrets>> を参照．
+コマンドは加えて，`Default region name` を訊いてくる．
+ここには `ap-northeast-1` (東京リージョン)を指定するのがよい．
+最後の `Default output format` は `JSON` としておくとよい．
+
+上記のコマンドを完了すると， `~/.aws/credentials` と `~/.aws/config`　という名前のファイルに設定が保存されているはずである．念の為，中身をしてみるとよい．
+
+[source, bash]
+----
+$ cat ~/.aws/credentials
+[default]
+aws_access_key_id = XXXXXXXXXXXXXXXXXX
+aws_secret_access_key = YYYYYYYYYYYYYYYYYYY
+
+$ cat ~/.aws/config
+[profile default]
+region = ap-northeast-1
+output = json
+----
+
+上記のような出力が得られるはずである．
+
+`~/.aws/credentials` には認証鍵の情報が， `~/.aws/config` には各設定が記録されている．
+
+デフォルトでは， `[default]` という名前でプロファイルが保存される．
+いくつかのプロファイルを使い分けたければ， default の例に従って，例えば `[myprofile]` という名前でプロファイルを追加すればよい．
+
+AWS CLI でコマンドを打つときに，プロファイルを使い分けるには，
+
+[source, bash]
+----
+$ aws s3 ls --profile myprofile
+----
+
+のように， `--profile` というオプションをつけてコマンドを実行する．
+
+いちいち `--profile` オプションをつけるのが面倒だと感じる場合は，以下のように環境変数を設定することもできる．
+
+[source, bash]
+----
+export AWS_ACCESS_KEY_ID=XXXXXX
+export AWS_SECRET_ACCESS_KEY=YYYYYY
+export AWS_DEFAULT_REGION=ap-northeast-1
+----
+
+上の環境変数は， `~/.aws/credentials` よりも高い優先度を持つので，環境変数が設定されていればそちらの情報が使用される (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html[参照])．
+
+[[aws_cdk_install]]
+=== AWS CDK のインストール
+
+https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html[公式ドキュメント]に従いインストールを行う．
+
+Node.js がインストールされていれば，基本的に以下のコマンドを実行すれば良い．
+
+[source, bash]
+----
+$ npm install -g aws-cdk
+----
+
+[NOTE]
+====
+本書のハンズオンはAWS CDK version 1.30.0 で開発した．CDK は開発途上のライブラリなので，将来的にAPIが変更される可能性がある．APIの変更によりエラーが生じた場合は， version 1.30.0 を使用することを推奨する．
+
+[source bash]
+----
+$ npm install -g aws-cdk@1.30
+----
+====
+
+インストールできたか確認するため，以下のコマンドを打って正しくバージョンが表示されることを確認する．
+
+[source, bash]
+----
+$ cdk --version
+----
+
+インストールができたら，以下のコマンドによりAWS側の初期設定を行う．これは一度実行すればOK．
+
+[source, bash]
+----
+$ cdk bootstrap
+----
+
+[NOTE]
+====
+`cdk bootstrap` を実行するときは，AWSの認証情報とリージョンが正しく設定されていることを確認する．デフォルトでは `~/.aws/config` にあるデフォルトのプロファイルが使用される．デフォルト以外のプロファイルを用いるときは `AWS_ACCESS_KEY_ID` などの環境変数を設定する (https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html[参照])．
+====
+
+[NOTE]
+====
+AWS CDK の認証情報の設定は AWS CLI と基本的に同じである．詳しくは <<aws_cli_install>> を参照．
+====
+
+[[venv_quick_guide]]
+=== Python `venv` クイックガイド
+
+他人からもらったプログラムで， numpy や scipy のバージョンが違う！などの理由で，プログラムが動かない，という経験をしたことがある人は多いのではないだろうか．
+もし，自分のPCの中に一つしかPython環境がないとすると，プロジェクトを切り替えるごとに正しいバージョンをインストールし直さなければならず，これは大変な手間である．
+
+コードのシェアをよりスムーズにするためには，ライブラリのバージョンはプロジェクトごとに管理されるべきである．
+それを可能にするのが Python 仮想環境と呼ばれるツールであり， https://docs.python.org/3/tutorial/venv.html[venv], https://github.com/pyenv/pyenv[pyenv], https://docs.conda.io/en/latest/[conda] などがよく使われる．
+
+そのなかでも， `venv` は Python に標準搭載されているので，とても便利である． `pyenv` や `conda` は，別途インストールの必要があるが，それぞれの長所もある．
+
+[source, bash]
+----
+$ python -m venv .env
+----
+
+というコマンドを実行することで，`venv` モジュールにより `.env/` というディレクトリが作られる．
+
+この仮想環境を起動するには
+
+[source, bash]
+----
+$ source .env/bin/activate
+----
+
+と実行する．
+
+シェルのプロンプトに `(.env)` という文字が追加されていることを確認しよう．
+これが， "いまあなたは venv の中にいますよ" というしるしになる．
+
+.venv を起動したときのプロンプト
+image::imgs/venv_shell.png[venv shell, 500, align="center"]
+
+仮想環境を起動すると，それ以降実行する `pip` コマンドは， `.env/` 以下にインストールされる．このようにして，プロジェクトごとに使うライブラリのバージョンを切り分けることができる．
+
+Python では `requirements.txt` というファイルにに依存ライブラリを記述するのが一般的な慣例である．他人からもらったプログラムに， `requirements.txt` が定義されていれば，
+
+[source, bash]
+----
+$ pip install -r requirements.txt
+----
+
+と実行することで，必要なライブラリをインストールし，瞬時にPython環境を再現することができる．
+

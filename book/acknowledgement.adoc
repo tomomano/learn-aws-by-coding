@@ -1,0 +1,11 @@
+== 謝辞
+
+本原稿の執筆にあたり，以下の方々からの協力を得た．この場を借りて，感謝を表したい．
+
+* 勝俣敬寛氏 - Docker イメージの作成
+* 香取真知子氏 - ハンズオンプログラムの動作確認
+* https://gitlab.com/shuuji3[@shuuji3] - MR https://gitlab.com/tomomano/intro-aws/-/merge_requests/15[!15]
+* https://gitlab.com/takatama_jp[@takatama_jp] - MR https://gitlab.com/tomomano/intro-aws/-/merge_requests/14[!14]
+
+本書の執筆には https://asciidoctor.org/[Asciidoctor] を使用した．
+

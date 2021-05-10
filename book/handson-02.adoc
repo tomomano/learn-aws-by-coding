@@ -1,0 +1,670 @@
+[[sec_handson02]]
+== Hands-on #2: AWSでディープラーニングの計算を走らせる
+
+ハンズオン第二回では，GPUを搭載したEC2インスタンスを起動し，ディープラーニングの学習と推論を実行する演習を行う．
+
+ハンズオンのソースコードはこちらのリンクに置いてある => https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn
+
+[WARNING]
+====
+このハンズオンは，AWSの無料枠内では実行できない．
+`g4dn.xlarge` タイプの EC2 インスタンスを使うので， `ap-northeast-1` リージョンでは 0.8 $/hour のコストが発生する．
+====
+
+=== 準備
+
+本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<<handson_01_prep>>) が整っていることを前提とする．それ以外に必要な準備はない．
+
+=== アプリケーションの説明
+
+このハンズオンで作成するアプリケーションの概要を <<handson_02_architecture>> に示す．
+
+[[handson_02_architecture]]
+.ハンズオン#2で作製するアプリケーションのアーキテクチャ
+image::imgs/handson-02/handson-02-architecture.png[hands-on 01 architecture, 600, align="center"]
+
+図の多くの部分が，第一回ハンズオンで作成したアプリケーションと共通していることに気がつくだろう．少しの変更で，簡単にディープラーニングを走らせる環境を構築することができるのである！主な変更点は次の３点である．
+
+* GPUを搭載した `g4dn.xlarge` インスタンスタイプを使用．
+* ディープラーニングに使うプログラムが予めインストールされたDLAMI (後述) を使用．
+* SSHにポートフォワーディングのオプションつけてサーバーに接続し，サーバーで起動しているJupyter notebook (後述) を使ってプログラムを書いたり実行したりする．
+
+ハンズオンで使用するプログラムのコードをみてみよう (https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn/app.py[/handson/02-ec2-dnn/app.py])．コードも，第一回目とほとんど共通である．変更点のみ解説を行う．
+
+[source, python, linenums]
+----
+class Ec2ForDl(core.Stack):
+
+    def __init__(self, scope: core.App, name: str, key_name: str, **kwargs) -> None:
+        super().__init__(scope, name, **kwargs)
+
+        vpc = ec2.Vpc(
+            self, "Ec2ForDl-Vpc",
+            max_azs=1,
+            cidr="10.10.0.0/23",
+            subnet_configuration=[
+                ec2.SubnetConfiguration(
+                    name="public",
+                    subnet_type=ec2.SubnetType.PUBLIC,
+                )
+            ],
+            nat_gateways=0,
+        )
+
+        sg = ec2.SecurityGroup(
+            self, "Ec2ForDl-Sg",
+            vpc=vpc,
+            allow_all_outbound=True,
+        )
+        sg.add_ingress_rule(
+            peer=ec2.Peer.any_ipv4(),
+            connection=ec2.Port.tcp(22),
+        )
+
+        host = ec2.Instance(
+            self, "Ec2ForDl-Instance",
+            instance_type=ec2.InstanceType("g4dn.xlarge"), # <1>
+            machine_image=ec2.MachineImage.generic_linux({
+                "ap-northeast-1": "ami-09c0c16fc46a29ed9"
+            }), # <2>
+            vpc=vpc,
+            vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
+            security_group=sg,
+            key_name=key_name
+        )
+----
+<1> ここで，GPUを搭載した `g4dn.xlarge` インスタンスタイプを選択している (第一回では，CPUのみの `t2.micro` だった)．
+<2> ここで，Deep Learning 用の諸々のソフトウェアがプリンストールされたAMI (https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html[Deep Learning Amazon Machine Image; DLAMI]) を選択している．(第一回では，Amazon Linux というAMIを使用していた)．使用するAMIのIDは "ami-09c0c16fc46a29ed9" である．
+
+`g4dn.xlarge` のインスタンスタイプについては， <<sec_scientific_computing>> ですでに触れた．DLAMI について，少し説明しよう．
+
+==== DLAMI (Deep Learning Amazon Machine Image)
+
+`AMI` (Amazon Machine Image) とは，平たく言えば OS (Operating System) のことである．当然のことながら，OSがなければコンピュータはなにもできないので，EC2インスタンスを起動する時には必ずなにかのOSを"インストール"する必要がある．AMI には，例えば https://ubuntu.com/[Ubuntu] や https://www.suse.com/[SUSE Linux] などの各Linux系OSに加えて，Windows Server を選択することもできる．また，EC2での使用に最適化された https://aws.amazon.com/amazon-linux-ami/[Amazon Linux] というAMIも提供されている．
+
+しかしながら，AMIを単なるOSと理解するのは誤りである．
+AMIには，ベースとなる(空っぽの)OSを選択できることもできるが，それに加えて，各種のプログラムがインストール済みのAMIも用意されている．
+必要なプログラムがインストールされているAMIを見つけることができれば，自分でインストールを行ったり環境設定をする手間が大幅に省ける．
+具体例を挙げると，ハンズオン第一回では EC2 インスタンスに Python 3.6 をインストールする例を示したが，そのような操作をインスタンスを起動するたびに行うのは手間である！
+
+AMI は，AWSや他のサードパーティーから提供されており，EC2のコンソール画面でインスタンスを起動するときに検索することができる．あるいは， AWS CLI を使って，次のコマンドでリストを取得することができる (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html[参考])．
+
+[source, bash]
+----
+$ aws ec2 describe-images --owners amazon
+----
+
+上記のコマンドにより，amazon が提供しているAMIの一覧が表示される．
+また，自分自身のAMIを作って登録することも可能である (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html[参考])．
+
+
+ディープラーニングで頻繁に使われるプログラムが予めインストールしてあるAMIが， https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html[DLAMI (Deep Learning AMI)] である． DLAMIには `TensorFlow`, `PyTorch` などの人気の高いディープラーニングのフレームワーク・ライブラリが既にインストールされているため，EC2インスタンスを起動してすぐさまディープラーニングの計算を実行できる．
+
+本ハンズオンでは， Amazon Linux 2 をベースにした DLAMI を使用する (AMI ID = ami-09c0c16fc46a29ed9)．AWS CLI を使って，このAMIの詳細情報を取得してみよう．
+
+[source, bash]
+----
+$ aws ec2 describe-images --owners amazon --image-ids "ami-09c0c16fc46a29ed9"
+----
+
+[[handson_02_ami-info]]
+.AMI ID = ami-09c0c16fc46a29ed9 の詳細情報
+image::imgs/handson-02/ami-info.png[ami-info, 700, align="center"]
+
+<<handson_02_ami-info>> のような出力が得られるはずである．得られた出力から，例えばこの DLAMI には PyTorch のバージョン1.4.0 と 1.5.0 がインストールされていることがわかる．このDLAMIを使って，早速ディープラーニングの計算を実行してみよう．
+
+[TIP]
+====
+DLAMIには具体的には何がインストールされているのだろうか？
+興味のある読者のために，簡単な解説をしよう (参考: https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html[公式ドキュメンテーション])．
+
+最も low-level なレイヤーとしては， GPUドライバー がインストールされている．
+GPUドライバーなしにはOSはGPUにコマンドを送ることができない．
+次のレイヤーが https://developer.nvidia.com/about-cuda[CUDA] と https://developer.nvidia.com/cudnn[cuDNN] である．
+CUDAは，NVIDIA社が開発した，GPU上で汎用コンピューティングを行うための言語であり，C++言語を拡張したシンタックスを備える．
+cuDNN は CUDA で書かれたディープラーニングのライブラリであり，n次元の畳み込みなどの演算が実装されている．
+
+以上までが， "Base" と呼ばれるタイプの DLAMI の中身である．
+
+これに加えて， "Conda" と呼ばれるタイプには， これらのプログラム基盤の上に， `TensorFlow` や `PyTorch` などのライブラリがインストールされている．
+さらに， https://docs.conda.io/projects/conda/en/latest/index.html[Anaconda] による仮想環境を使うことによって， `TensorFlow` の環境， `PyTorch` の環境，を簡単に切り替えることができる (これについては，ハンズオンで触れる)．また， Jupyter notebook もインストール済みである．
+====
+
+=== スタックのデプロイ
+
+スタックの中身が理解できたところで，早速スタックをデプロイしてみよう．
+
+デプロイの手順は，ハンズオン1とほとんど共通である．
+ここでは，コマンドのみ列挙する (`#` で始まる行はコメントである)．
+それぞれのコマンドの意味を忘れてしまった場合は，ハンズオン1に戻って復習していただきたい．
+
+[source, bash]
+----
+# プロジェクトのディレクトリに移動
+$ cd intro-aws/handson/02-ec2-dnn
+
+# venv を作成し，依存ライブラリのインストールを行う
+$ python3 -m venv .env
+$ source .env/bin/activate
+$ pip install -r requirements.txt
+
+# AWS の認証情報をセットする
+# 自分自身の認証情報に置き換えること！
+export AWS_ACCESS_KEY_ID=XXXXXX
+export AWS_SECRET_ACCESS_KEY=YYYYYY
+export AWS_DEFAULT_REGION=ap-northeast-1
+
+# SSH鍵を生成
+$ export KEY_NAME="HirakeGoma"
+$ aws ec2 create-key-pair --key-name ${KEY_NAME} --query 'KeyMaterial' --output text > ${KEY_NAME}.pem
+$ mv HirakeGoma.pem ~/.ssh/
+$ chmod 400 ~/.ssh/HirakeGoma.pem
+
+# デプロイを実行
+$ cdk deploy -c key_name="HirakeGoma"
+----
+
+[WARNING]
+====
+ハンズオン1で作成したSSH鍵の削除を行わなかった場合は，SSH鍵を改めて作成する必要はない．逆に言うと，同じ名前のSSHが既に存在する場合は，鍵生成のコマンドはエラーを出力する．
+====
+
+デプロイのコマンドが無事に実行されれば， <<handson_02_cdk_output>> のような出力が得られるはずである．AWSにより割り振られたIPアドレス (`InstancePublicIp` に続く文字列) をメモしておこう．
+
+[[handson_02_cdk_output]]
+.CDKデプロイ実行後の出力
+image::imgs/handson-02/cdk_output.png[cdk output, 700, align="center"]
+
+=== ログイン
+
+早速，デプロイしたインスタンスにSSHでログインしてみよう．
+
+ここでは，この後で使う Jupyter notebook に接続するため，**ポートフォワーディング** のオプション (`-L`) をつけてログインする．
+
+[source, bash]
+----
+$ ssh -i ~/.ssh/HirakeGoma.pem -L localhost:8931:localhost:8888 ec2-user@<IP address>
+----
+
+ポートフォワーディングとは，クライアントマシンの特定のアドレスへの接続を，SSHの暗号化された通信を介して，リモートマシンの特定のアドレスへ転送する，という意味である．
+上のコマンドの `-L localhost:8931:localhost:8888` は，自分のローカルマシンの `localhost:8931` へのアクセスを，リモートサーバーの `localhost:8888` のアドレスに転送せよ，という意味である (`:` につづく数字はポート番号を意味している)．
+リモートサーバーのポート8888には，後述する Jupyter notebook が起動している．
+したがって，ローカルマシンの `localhost:8931` にアクセスすることで，リモートサーバーの Jupyter notebook にアクセスすることができるのである (このようなSSHによる接続方式を**トンネル接続**と呼ぶ)．
+
+ポートフォワーディングについて混乱した読者は，より詳しい解説が https://medium.com/@apbetahouse45/how-to-run-jupyter-notebooks-on-remote-server-part-1-ssh-a2be0232c533[このブログ記事] にある．
+
+[NOTE]
+====
+ポートフォワーディングのオプションで，ポートの番号 (`:8931`, `:8888` など) には1から65535までの任意の整数を指定できる．しかし，例えば ポート22は SSH に，ポート80は HTTP に，など，いくつか既に使われているポート番号もあることに注意する．また， Jupyter notebook デフォルトではポート8888番を使用する．したがって，リモート側のポート番号は，8888を使うのがよい．
+====
+
+[WARNING]
+====
+SSH ログインコマンドの `<IP address>` 部分は自分のインスタンスのIPアドレスを代入することを忘れずに．
+====
+
+[WARNING]
+====
+**本講義の提供している Docker を使ってデプロイを実行した人へ**
+
+SSH によるログインは， **Docker の外** (すなわちクライアントマシン本体) から行わなければならない．
+なぜなら，Jupyter を開くウェブブラウザは Docker の外にあるからである．
+
+その際，秘密鍵を Docker の外に持ってこなければならない．手っ取り早い方法は， `cat ~/.ssh/HirakeGoma` と打って，出力結果をコピー&ペーストで Docker の外に持ってくる方法である．
+
+あるいは `-v` オプションをつけて，ファイルシステムをマウントしてもよい (詳しくは https://docs.docker.com/storage/volumes/[参照])．
+====
+
+SSHによるログインができたら，早速，GPUの状態を確認してみよう．以下のコマンドを実行する．
+
+[source, bash]
+----
+$ nvidia-smi
+----
+
+<<handson_02_nvidia-smi>> のような出力が得られるはずである．出力を見ると， Tesla T4 型のGPUが1台搭載されていることが確認できる．その他，GPU Driver や CUDA のバージョンを確認することができる．
+
+[[handson_02_nvidia-smi]]
+.nvidia-smi の出力
+image::imgs/handson-02/nvidia-smi.png[nvidia-smi, 700, align="center"]
+
+=== Jupyter notebook の起動
+
+https://jupyter.org/[Jupyter notebook] とは，インタラクティブに Python のプログラムを書いたり実行したりするためのツールである．Jupyter は GUIとしてウェブブラウザを介してアクセスする形式をとっており，まるでノートを書くように，プロットやテーブルのデータも美しく表示することができる (<<handson_02_welcome_jupyter>>)．Python に慣れている読者は，きっと一度は使ったことがあるだろう．
+
+[[handson_02_welcome_jupyter]]
+.Jupyter notebook の画面
+image::imgs/handson-02/welcome_to_jupyter.png[welcome to jupyter, 700, align="center"]
+
+このハンズオンでは， Jupyter notebook を使ってディープラーニングのプログラムを書いたり実行していく．
+DLAMI には既に Jupyter がインストールされているので，特段の設定なしに使い始めることができる．
+
+早速， Jupyter を起動しよう． SSHでログインした先のEC2インスタンスで，次のコマンドを実行すればよい．
+
+[source, bash]
+----
+$ cd ~ # go to home directory
+$ jupyter notebook
+----
+
+このコマンドを実行すると， <<handson_02_jupyter_launch>> のような出力が確認できるだろう．
+この出力から，Jupyter のサーバーが EC2 インスタンスの `localhost:8888` というアドレスに起動していることがわかる．
+また， `localhost:8888` に続く `?token=XXXXXXX` は，アクセスに使うための一時的なトークンである．
+
+[[handson_02_jupyter_launch]]
+.Jupyter notebook サーバーを起動
+image::imgs/handson-02/jupyter_launch.png[jupyter launch, 700, align="center"]
+
+[NOTE]
+====
+Jupyter notebook を初回に起動するときは，起動に少し時間がかかることがある．
+1,2分じっと待つ．
+====
+
+先ほど，ポートフォワーディングのオプションをつけてSSH接続をしているので， Jupyter の起動している `localhost:8888` には，ローカルマシンの `localhost:8931` からアクセスすることができる．
+
+したがって，ローカルマシンから Jupyter にアクセスするには，ウェブブラウザ (Chrome, FireFox など)から次のアドレスにアクセスすれば良い．
+
+[source]
+----
+http://localhost:8931/?token=XXXXXXXXXX
+----
+
+`?token=XXXXXX` の部分は，上で Jupyter を起動したときに発行されたトークンの値に置き換える．
+
+上のアドレスにアクセスすると， Jupyter のホーム画面が起動するはずである (<<handson_02_jupyter_home>>)．
+これで， Jupyter の準備が整った！
+
+[[handson_02_jupyter_home]]
+.Jupyter ホーム画面
+image::imgs/handson-02/jupyter_home.png[jupyter home, 700, align="center"]
+
+[TIP]
+====
+DLAMI の https://docs.aws.amazon.com/dlami/latest/devguide/setup-jupyter-config.html[公式ドキュメンテーション] では，自分で指定したパスワードとSSLを有効化することを推奨している．
+本ハンズオンでは時間の節約のためにスキップしているが，今後個人で使うときはより強固にセキュリティを設定することを推奨する．
+====
+
+[NOTE]
+====
+Jupyter notebook の使い方(超簡易版)
+
+* `Shift` + `Enter`: セルを実行
+* `Esc`: **Command mode** に遷移
+* メニューバーの "+" ボタン または Command mode で `A` : セルを追加
+* メニューバーの "ハサミ" ボタン または Command mode で `X` : セルを削除
+
+ショートカットの一覧などは https://towardsdatascience.com/jypyter-notebook-shortcuts-bf0101a98330[このブログ] が参考になる．
+====
+
+=== PyTorchはじめの一歩
+
+https://pytorch.org/[PyTorch] は Facebook AI Research LAB (FAIR) が中心となって開発を進めている，オープンソースのディープラーニングのライブラリである．
+PyTorch は 有名な例で言えば Tesla 社の自動運転プロジェクトなどで使用されており，2020/06時点において最も人気の高いディープラーニングライブラリの一つである．
+本ハンズオンでは， PyTorch を使ってディープラーニングの実践を行う．
+
+[TIP]
+====
+PyTorch の歴史のお話
+
+Facebook は PyTorch の他に Caffe2 と呼ばれるディープラーニングのフレームワークを開発していた (初代Caffe は UC Berkley の博士学生だった Yangqing Jia によって創られた)．
+Caffe2 は 2018年に PyTorch プロジェクトに合併された．
+
+また，2019年12月，日本の Preferred Networks 社が開発していた https://chainer.org/[Chainer] も，開発を終了し，PyTorchの開発チームと協業していくことが発表された (https://chainer.org/announcement/2019/12/05/released-v7-ja.html[プレスリリース])．
+PyTorch には，開発統合前から Chainer からインスパイアされた API がいくつもあり， Chainer の DNA は今も PyTorch に引き継がれているのである...!
+====
+
+本格的なディープラーニングの計算に移る前に， PyTorch ライブラリを使って， GPU で計算を行うとはどういうものか，その入り口に触れてみよう．
+
+まずは，新しいノートブックを作成する．
+Jupyterのホーム画面の右上の "New" を押し，"conda_pytorch_p36" という環境を選択した上で，新規ノートブックを作成する (<<handson_02_jupyeter_new>>)．
+"conda_pytorch_p36" の仮想環境には， PyTorch がインストール済みである (他にある TensorFlow なども同様)．
+
+[[handson_02_jupyeter_new]]
+.新規ノートブックの作成． "conda_pytorch_p36" の環境を選択する．
+image::imgs/handson-02/jupyter_new.png[jupyter_new, 700, align="center"]
+
+次のようなプログラムを書いてみよう (<<handson_02_jupyeter_pytorch>>)．
+
+[[handson_02_jupyeter_pytorch]]
+.PyTorch始めの一歩
+image::imgs/handson-02/jupyter_pytorch.png[jupyter_pytorch, 700, align="center"]
+
+まずは， PyTorch をインポートする．さらに，GPUが使える環境にあるか，確認する．
+
+[source, python, linenums]
+----
+import torch
+print("Is CUDA ready?", torch.cuda.is_available())
+----
+
+出力:
+[source]
+----
+Is CUDA ready? True
+----
+
+次に，3x3 のランダムな行列を **CPU** 上に作ってみよう．
+
+[source, python, linenums]
+----
+x = torch.rand(3,3)
+print(x)
+----
+
+出力:
+[source]
+----
+tensor([[0.6896, 0.2428, 0.3269],
+        [0.0533, 0.3594, 0.9499],
+        [0.9764, 0.5881, 0.0203]])
+----
+
+次に，行列を **GPU** 上に作成する．
+
+[source, python, linenums]
+----
+y = torch.ones_like(x, device="cuda")
+x = x.to("cuda")
+----
+
+そして，行列 `x` と `y` の加算を，**GPU上で実行する**．
+
+[source, python, linenums]
+----
+z = x + y
+print(z)
+----
+
+出力:
+[source]
+----
+tensor([[1.6896, 1.2428, 1.3269],
+        [1.0533, 1.3594, 1.9499],
+        [1.9764, 1.5881, 1.0203]], device='cuda:0')
+----
+
+最後に，GPU上にある行列を，CPUに戻す．
+
+[source, python, linenums]
+----
+z = z.to("cpu")
+print(z)
+----
+
+出力:
+[source]
+----
+tensor([[1.6896, 1.2428, 1.3269],
+        [1.0533, 1.3594, 1.9499],
+        [1.9764, 1.5881, 1.0203]])
+----
+
+以上の例は， GPU を使った計算の初歩の初歩であるが，雰囲気はつかめただろうか？ CPU と GPU で明示的にデータを交換するのが肝である．この例は，たった 3x3 の行列の足し算なので，GPUを使う意味はまったくないが，これが数千，数万のサイズの行列になった時，GPUは格段の威力を発揮する．
+
+[NOTE]
+====
+完成した Jupyter notebook は https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn/pytorch/pytorch_get_started.ipynb[/handson/02-ec2-dnn/pytorch/pytorch_get_started.ipynb] にある．
+Jupyter の画面右上の "Upload" から，このファイルをアップロードして，コードを走らせることが可能である．
+
+しなしながら，勉強の時にはコードはすべて自分の手で打つことが，記憶に残りやすくより効果的である，というのが筆者の意見である．
+====
+
+=== CPU vs GPU の簡易ベンチマーク
+
+実際に，ベンチマークを取ることでGPUとCPUの速度を比較をしてみよう．実行時間を計測するツールとして， Jupyter の提供する https://ipython.readthedocs.io/en/stable/interactive/magics.html[%time] マジックコマンドを利用する．
+
+まずは，CPUを使用して，10000x10000 の行列の行列積を計算した場合の速度を測ってみよう．先ほどのノートブックの続きに，次のコードを実行する．
+
+[source, python, linenums]
+----
+s = 10000
+device = "cpu"
+x = torch.rand(s, s, device=device, dtype=torch.float32)
+y = torch.rand(s, s, device=device, dtype=torch.float32)
+
+%time z = torch.matmul(x,y)
+----
+
+出力は以下のようなものが得られるだろう．これは，行列積の計算に実時間で5.8秒かかったことを意味する (実行のたびに計測される時間はばらつくことに留意)．
+
+[source]
+----
+CPU times: user 11.5 s, sys: 140 ms, total: 11.6 s
+Wall time: 5.8 s
+----
+
+次に，GPUを使用して，同じ演算を行った場合の速度を計測しよう．
+
+[source, python, linenums]
+----
+s = 10000
+device = "cuda"
+x = torch.rand(s, s, device=device, dtype=torch.float32)
+y = torch.rand(s, s, device=device, dtype=torch.float32)
+torch.cuda.synchronize()
+
+%time z = torch.matmul(x,y); torch.cuda.synchronize()
+----
+
+出力は以下のようなものになるだろう．GPUでは 553ミリ秒 で計算を終えることができた！
+
+[source]
+----
+CPU times: user 334 ms, sys: 220 ms, total: 554 ms
+Wall time: 553 ms
+----
+
+
+[TIP]
+====
+PyTorch において， GPU での演算は asynchronous (非同期) で実行される．その理由で，上のベンチマークコードでは， `torch.cuda.synchronize()` というステートメントを埋め込んである．
+====
+
+[TIP]
+====
+このベンチマークでは， `dtype=torch.float32` と指定することで，32bitの浮動小数点型を用いている．ディープラーニングの学習および推論の計算には，32bit型，場合によっては16bit型が使われるのが一般的である．これの主な理由として，教師データやミニバッチに起因するノイズが，浮動小数点の精度よりも大きいことがあげられる．32bit/16bit を採用することで，メモリー消費を抑えたり，計算速度の向上が達成できる．
+====
+
+上記のベンチマークから，GPUを用いることで，**約10倍のスピードアップ**を実現することができた．スピードアップの割合は，演算の種類や行列のサイズに依存する．行列積は，そのなかでも最も速度向上が見込まれる演算の一つである．
+
+
+=== 実践ディープラーニング! MNIST手書き数字認識タスク
+
+ここまで，AWS上でディープラーニングの計算をするための概念や前提知識をながながと説明してきたが，ついにここからディープラーニングの計算を実際に走らせてみる．
+
+ここでは，機械学習のタスクで最も初歩的かつ有名な **MNIST データセットを使った数字認識**を扱う (<<handson_02_mnist_examples>>)．
+0から9までの手書きの数字の画像が与えられ，その数字が何の数字なのかを当てる，というシンプルなタスクである．
+
+[[handson_02_mnist_examples]]
+.MNIST 手書き数字データセット
+image::imgs/handson-02/mnist_examples.png[mnist_examples, 400, align="center"]
+
+今回は， MNIST 文字認識タスクを，**畳み込みニューラルネットワーク (Convolutional Neural Network; CNN)** を使って解く．
+ソースコードは https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn/pytorch/[/handson/02-ec2-dnn/pytorch/] にある `mnist.ipynb` と `simple_mnist.py` である．
+なお，このプログラムは， https://github.com/pytorch/examples/tree/master/mnist[PyTorch の公式 Example Project 集] を参考に，多少の改変を行ったものである．
+
+まず最初に，カスタムのクラスや関数が定義された `simple_mnist.py` をアップロードしよう (<<handson_02_jupyter_upload>>)．
+画面右上の "Upload" ボタンをクリックし，ファイルを選択すればよい．
+この Python プログラムの中に，CNN のモデルや，学習の各イテレーションにおけるパラメータの更新などが記述されている．
+今回は，この中身を説明することはしないが，興味のある読者は，自分でソースコードを読んでみるとよい．
+
+[[handson_02_jupyter_upload]]
+.`simple_mnist.py` をアップロード
+image::imgs/handson-02/jupyter_upload.png[jupyter upload, 600, align="center"]
+
+`simple_mnist.py` をアップロードできたら，次に新しい notebook を作成しよう．
+"conda_pytorch_p36" の環境を選択することを忘れずに．
+
+新しいノートブックが起動したら，まず最初に，必要なライブラリをインポートしよう．
+
+[source, python, linenums]
+----
+import torch
+import torch.optim as optim
+import torchvision
+from torchvision import datasets, transforms
+from matplotlib import pyplot as plt
+
+# custom functions and classes
+from simple_mnist import Model, train, test
+----
+
+https://pytorch.org/docs/stable/torchvision/index.html[torchvision] パッケージには，MNIST データセットをロードするなどの便利な関数が含まれている．
+また，今回のハンズオンで使うカスタムのクラス・関数 (`Model`, `train`, `test`) のインポートを行っている．
+
+次に，MNIST テストデータをダウンロードしよう．
+同時に，画像データの輝度の正規化も行っている．
+
+[source, python, linenums]
+----
+transf = transforms.Compose([transforms.ToTensor(),
+                             transforms.Normalize((0.1307,), (0.3081,))])
+
+trainset = datasets.MNIST(root='./data', train=True, download=True, transform=transf)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
+
+testset = datasets.MNIST(root='./data', train=False, download=True, transform=transf)
+testloader = torch.utils.data.DataLoader(trainset, batch_size=1000, shuffle=True)
+----
+
+今回扱う MNIST データは 28x28 ピクセルの正方形の画像(モノクロ)と，それぞれのラベル(0 - 9 の数字)の組で構成されている．
+いくつかのデータを抽出して，可視化してみよう．
+<<handson_02_mnist_ground_truth>> のような出力が得られるはずである．
+
+[source, python, linenums]
+----
+examples = iter(testloader)
+example_data, example_targets = examples.next()
+
+print("Example data size:", example_data.shape)
+
+fig = plt.figure(figsize=(10,4))
+for i in range(10):
+    plt.subplot(2,5,i+1)
+    plt.tight_layout()
+    plt.imshow(example_data[i][0], cmap='gray', interpolation='none')
+    plt.title("Ground Truth: {}".format(example_targets[i]))
+    plt.xticks([])
+    plt.yticks([])
+plt.show()
+----
+
+[[handson_02_mnist_ground_truth]]
+.MNIST の手書き数字画像とその教師ラベル
+image::imgs/handson-02/mnist_ground_truth.png[mnist_ground_truth, 700, align="center"]
+
+次に， CNN のモデルを定義する．
+
+[source, python, linenums]
+----
+model = Model()
+model.to("cuda") # load to GPU
+----
+
+今回使う `Model` は `simple_mnist.py` の中で定義されている．
+このモデルは，<<handson_02_cnn_architecture>> に示したような，２層の畳み込み層と2層の全結合層からなるネットワークである．
+出力層 (output layer) には Softmax 関数を使用し，損失関数 (Loss function) には 負の対数尤度関数 (Negative log likelyhood; NLL) を使用している．
+
+
+[[handson_02_cnn_architecture]]
+.本ハンズオンで使用するニューラルネットの構造．
+image::imgs/handson-02/cnn_architecture.png[cnn architecture, 700, align="center"]
+
+続いて， CNN のパラメータを更新する最適化アルゴリズムを定義する．
+ここでは， **Stochastic Gradient Descent (SGD)** を使用している．
+
+[source, python, linenums]
+----
+optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
+----
+
+これで，準備が整った．
+CNN の学習ループを開始しよう!
+
+[source, python, linenums]
+----
+train_losses = []
+for epoch in range(5):
+    losses = train(model, trainloader, optimizer, epoch)
+    train_losses = train_losses + losses
+    test(model, testloader)
+
+plt.figure(figsize=(7,5))
+plt.plot(train_losses)
+plt.xlabel("Iterations")
+plt.ylabel("Train loss")
+----
+
+ここでは5エポック分学習を行っている．
+GPU を使えば，これくらいの計算であれば1分程度で完了するだろう．
+
+出力として， <<handson_02_train_loss>> のようなプロットが得られるはずである．
+イテレーションを重ねるにつれて，損失関数 (Loss function) の値が減少している (=精度が向上している) ことがわかる．
+
+出力には各エポック終了後のテストデータに対する精度も表示されている．
+最終的には 99% 程度の極めて高い精度を実現できていることが確認できるだろう (<<handson_02_mnist_final_score>>)．
+
+[[handson_02_train_loss]]
+.学習の進行に対する Train loss の変化
+image::imgs/handson-02/train_loss.png[train_loss, 500, align="center"]
+
+[[handson_02_mnist_final_score]]
+.学習したCNNのテストデータに対するスコア (5エポック後)
+image::imgs/handson-02/mnist_final_score.png[mnist_final_score, 700, align="center"]
+
+最後に，学習した CNN の推論結果を可視化してみよう．
+次のコードを実行することで， <<handson_02_mnist_mnist_prediction>> のような出力が得られるだろう．
+この図で，下段右下などは，"1"に近い見た目をしているが，きちんと"9"と推論できている．
+なかなか賢い CNN を作り出すことができたようだ！
+
+[source, python, linenums]
+----
+model.eval()
+
+with torch.no_grad():
+    output = model(example_data.to("cuda"))
+
+fig = plt.figure(figsize=(10,4))
+for i in range(10):
+    plt.subplot(2,5,i+1)
+    plt.tight_layout()
+    plt.imshow(example_data[i][0], cmap='gray', interpolation='none')
+    plt.title("Prediction: {}".format(output.data.max(1, keepdim=True)[1][i].item()))
+    plt.xticks([])
+    plt.yticks([])
+plt.show()
+----
+
+[[handson_02_mnist_mnist_prediction]]
+.学習した CNN による，MNIST画像の推論結果
+image::imgs/handson-02/mnist_prediction.png[mnist_prediction, 700, align="center"]
+
+おめでとう！
+これで，めでたくあなたは AWS クラウドの仮想サーバーを使って，最初のディープラーニングの計算を行うことができた！
+MNIST 文字認識のタスクを行うニューラルネットを，GPUを使って高速に学習させ，現実的な問題を一つ解くことができたのである．
+
+興味のある読者は，今回のハンズオンを雛形に，自分で他のディープラーニングの計算を走らせてみるとよいだろう．
+
+=== スタックの削除
+
+これにて，ハンズオン第二回の内容はすべて説明した．
+クラウドの利用料金を最小化するため，使い終わったEC2インスタンスはすぐさま削除しよう．
+
+ハンズオン第一回と同様に， AWS の CloudFormation コンソールか， AWS CLI により削除を実行する (詳細は <<handson_01_delete_stack>> 参照)．
+
+[source, bash]
+----
+$ cdk destroy
+----
+
+[IMPORTANT]
+====
+**スタックの削除は各自で必ず行うこと！** 行わなかった場合，EC2インスタンスの料金が発生し続けることになる！ `g4dn.xlarge` は $0.526 / hour の料金設定なので，一日起動しつづけると約$12の請求が発生することになる！
+====
+
+[NOTE]
+====
+AWS で， GPU 搭載型のインスタンスは高めの料金設定がされている．
+したがって，プログラムの開発やデバッグはローカルマシンの GPU で行い，大規模なデータを処理するときや，複数の GPU を並列に使って高速にモデルの学習を行いたい場合などにクラウドを利用する，と使い分けるのがよいと筆者は考えている．
+====

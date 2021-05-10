@@ -1,0 +1,631 @@
+== Hands-on #1: 初めてのEC2インスタンスを起動する
+
+ハンズオンの第一回では， CDK を使って EC2 のインスタンス(仮想サーバー)を作成し，SSHでサーバーにログインする，という演習を行う．
+このハンズオンを終えれば，あなたは自分だけのサーバーをAWS上に立ち上げ，自由に計算を走らせることができるようになるのである！
+
+ハンズオン1のソースコードは https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/01-ec2[こちらのリンク] に置いてある．
+
+[WARNING]
+====
+ハンズオン1は，基本的に https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[AWS の無料枠] の範囲内で実行することができる．
+====
+
+[[handson_01_prep]]
+=== 準備
+
+まずは，ハンズオンを実行するための環境を整える．
+これらの環境整備は，後のハンズオンでも前提となるものなので確実にミスなく行っていただきたい．
+
+==== AWS Account
+
+ハンズオンを実行するには個人のAWSアカウントが必要である．
+AWSアカウントの取得については <<aws_account>> 参照．
+
+==== Python と Node.js
+
+本ハンズオンを実行するには，Python (3.6 以上)，Node.js (10.3.0 以上) がインストールされていなければならない．
+
+==== AWS CLI
+
+AWS CLI のインストールについては， <<aws_cli_install>> を参照．
+
+==== AWS CDK
+
+AWS CDK のインストールについては， <<aws_cdk_install>> を参照．
+
+==== ソースコードのダウンロード
+
+本ハンズオンで使用するプログラムのソースコードを，以下のコマンドを使って GitLab からダウンロードする．
+
+[source, bash]
+----
+$ git clone https://gitlab.com/tomomano/intro-aws.git
+----
+
+あるいは， https://gitlab.com/tomomano/intro-aws のページに行って，右上のダウンロードボタンからダウンロードすることもできる．
+
+==== Docker を使用する場合
+
+Python, Node.js, AWS CDK など，ハンズオンのプログラムを実行するために必要なプログラム/ライブラリがインストール済みの Docker image を用意した．
+また，ハンズオンのソースコードもクローン済みである．
+Docker の使い方を知っている読者は，これを使えば，諸々のインストールをする必要なく，すぐにハンズオンのプログラムを実行できる．
+
+次のコマンドでコンテナを起動する．
+
+[source, bash]
+----
+docker run -it registry.gitlab.com/tomomano/intro-aws:latest
+----
+
+=== SSH
+
+https://en.wikipedia.org/wiki/Secure_Shell[SSH (secure shell)] はUnix系のリモートサーバーに安全にアクセスするためのツールである．
+本ハンズオンでは， SSH を使って仮想サーバーにアクセスする．
+SSH に慣れていない読者のため，簡単な説明をここで行う．
+
+SSHによる通信はすべて暗号化されているので，機密情報をインターネット越しに安全に送受信することができる．
+本ハンズオンで，リモートのサーバーにアクセスするためにSSHクライアントがインストールされている必要がある．
+SSHクライアントはLinux/Macには標準搭載されている．
+Windowsの場合はWSLをインストールすることでSSHクライアントを利用することを推奨する (<<environments>> を参照)．
+
+SSH コマンドの基本的な使い方は
+
+[source, bash]
+----
+$ ssh <user name>@<host name>
+----
+
+である．
+`<host name>` はアクセスする先のサーバーのIPアドレスやDNSによるホストネームが入る．
+`<user name>` は接続する先のユーザー名である．
+
+SSH は平文のパスワードによる認証を行うこともできるが，より強固なセキュリティを施すため，**公開鍵暗号方式(Public Key Cryptography)による認証**を行うことが強く推奨されており，EC2はこの方法でしかアクセスを許していない．
+公開鍵暗号方式の仕組みについては各自勉強してほしい．
+本ハンズオンにおいて大事なことは，**EC2 インスタンスが公開鍵(Public key)を保持し，クライアントとなるコンピューター(あなた自身のコンピュータ)が秘密鍵(Private key)を保持する**，という点である．
+EC2のインスタンスには秘密鍵を持ったコンピュータのみがアクセスすることができる．逆に言うと，秘密鍵が漏洩すると第三者もサーバーにアクセスできることになるので，**秘密鍵は絶対に漏洩することのないよう注意して管理する**．
+
+SSH コマンドでは，ログインのために使用する秘密鍵ファイルを `-i` もしくは `--identity_file` のオプションで指定することができる．
+例えば
+
+[source, bash]
+----
+$ ssh -i Ec2SecretKey.pem <user name>@<host name>
+----
+
+のように使う．
+
+=== アプリケーションの説明
+
+このハンズオンで作成するアプリケーションの概要を <<handson_01_architecture>> に示す．
+
+[[handson_01_architecture]]
+.ハンズオン#1で作製するアプリケーションのアーキテクチャ
+image::imgs/handson-01/app_architecture.png[hands-on 01 architecture, 600, align="center"]
+
+このアプリケーションではまず，**VPC (Virtual Private Cloud)** を使ってプライベートな仮想ネットワーク環境を立ち上げている．
+そのVPCの public subnet の内側に，**EC2 (Elatic Compute Cloud)** の仮想サーバーを配置する．
+さらに，セキュリティのため， **Security Group** によるEC2インスタンスへのアクセス制限を設定している．
+このようにして作成された仮想サーバーに，SSHを使ってアクセスし，簡単な計算を行う．
+
+上記のようなアプリケーションを，CDKを使って構築する．
+
+早速ではあるが，今回のハンズオンで使用するプログラムを見てみよう (https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/01-ec2/app.py[handson/01-ec2/app.py])．
+
+[source, python, linenums]
+----
+class MyFirstEc2(core.Stack):
+
+    def __init__(self, scope: core.App, name: str, key_name: str, **kwargs) -> None:
+        super().__init__(scope, name, **kwargs)
+
+        # <1>
+        vpc = ec2.Vpc(
+            self, "MyFirstEc2-Vpc",
+            max_azs=1,
+            cidr="10.10.0.0/23",
+            subnet_configuration=[
+                ec2.SubnetConfiguration(
+                    name="public",
+                    subnet_type=ec2.SubnetType.PUBLIC,
+                )
+            ],
+            nat_gateways=0,
+        )
+
+        # <2>
+        sg = ec2.SecurityGroup(
+            self, "MyFirstEc2Vpc-Sg",
+            vpc=vpc,
+            allow_all_outbound=True,
+        )
+        sg.add_ingress_rule(
+            peer=ec2.Peer.any_ipv4(),
+            connection=ec2.Port.tcp(22),
+        )
+
+        # <3>
+        host = ec2.Instance(
+            self, "MyFirstEc2Instance",
+            instance_type=ec2.InstanceType("t2.micro"),
+            machine_image=ec2.MachineImage.latest_amazon_linux(),
+            vpc=vpc,
+            vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
+            security_group=sg,
+            key_name=key_name
+        )
+----
+<1> まず最初に，VPCを定義する．
+<2> 次に，SGを定義している．ここでは，任意のIPv4のアドレスからの，ポート22 (SSHの接続に使用される)への接続を許容している．それ以外の接続は拒絶される．
+<3> 最後に，上記で作ったVPCとSGが付与されたEC2 のインスタンスを作成している．インスタンスタイプは `t2.micro` を選択し， https://aws.amazon.com/amazon-linux-ami/[Amazon Linux] をOSとして設定している．
+
+それぞれについて，もう少し詳しく説明しよう．
+
+==== VPC (Virtual Private Cloud)
+
+image::imgs/aws_logos/VPC.png[VPC, 100]
+
+VPCはAWS上にプライベートな仮想ネットワーク環境を構築するツールである．高度な計算システムを構築するには，複数のサーバーを連動させて計算を行う必要があるが，そのような場合に互いのアドレスなどを管理する必要があり，そのような場合にVPCは有用である．
+
+本ハンズオンでは，サーバーは一つしか起動しないので，VPCの恩恵はよく分からないかもしれない．しかし，EC2インスタンスは必ずVPCの中に配置されなければならない，という制約があるので，このハンズオンでもミニマルなVPCを構成している．
+
+[TIP]
+====
+興味のある読者のために，VPCのコードについてもう少し詳しく説明しよう．
+
+[source, python, linenums]
+----
+vpc = ec2.Vpc(
+    self, "MyFirstEc2-Vpc",
+    max_azs=1,
+    cidr="10.10.0.0/23",
+    subnet_configuration=[
+        ec2.SubnetConfiguration(
+            name="public",
+            subnet_type=ec2.SubnetType.PUBLIC,
+        )
+    ],
+    nat_gateways=0,
+)
+----
+
+* `max_azs=1` : このパラメータは，前章で説明した avaialibility zone を設定している．このハンズオンでは，特にデータセンターの障害などを気にする必要はないので1にしている．
+* `cidr="10.10.0.0/23"` : このパラメターは，VPC内のIPv4のレンジを指定している．CIDR記法については， https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing[Wikipedia]などを参照． `10.10.0.0/23` は `10.10.0.0` から `10.10.1.255` までの512個の連続したアドレス範囲を指している．つまり，このVPCでは最大で512個のユニークなIPv4アドレスが使えることになる．今回はサーバーは一つなので512個は明らかに多すぎるが，VPCはアドレスの数はどれだけ作成しても無料なので，多めに作成した．
+* `subnet_configuration=...` : このパラメータは，VPCにどのようなサブネットを作るか，を決めている．サブネットの種類には **priavte subnet** と **public subnet** の二種類がある．private subnet は基本的にインターネットとは遮断されたサブネット環境である．インターネットと繋がっていないので，セキュリティは極めて高く，VPC内のサーバーとのみ通信を行えばよいEC2インスタンスは，ここに配置する．Public subnet とはインターネットに繋がったサブネットである．本ハンズオンで作成するサーバーは，外からSSHでログインを行いたいので，Public subnet 内に配置する．
+* `natgateways=0` : これは少し高度な内容なので省略する (興味のある読者は https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html[公式ドキュメンテーション]を参照)．が，**これを0にしておかないと，NAT Gateway の利用料金が発生してしまうので，注意！**
+====
+
+==== Security Group
+
+Security group (SG) は，EC2インスタンスに付与することのできる仮想ファイアーウォールである．例えば，特定のIPアドレスから来た接続を許したり　(インバウンド・トラフィックの制限) ，逆に特定のIPアドレスへのアクセスを禁止したり (アウトバウンド・トラフィックの制限) することができる．
+
+コードの該当部分を見てみよう．
+
+[source, python, linenums]
+----
+sg = ec2.SecurityGroup(
+    self, "MyFirstEc2Vpc-Sg",
+    vpc=vpc,
+    allow_all_outbound=True,
+)
+sg.add_ingress_rule(
+    peer=ec2.Peer.any_ipv4(),
+    connection=ec2.Port.tcp(22),
+)
+----
+
+本ハンズオンでは，SSHによる外部からの接続を許容するため， `sg.add_ingress_rule(peer=ec2.Peer.any_ipv4(), connection=ec2.Port.tcp(22))` により，すべてのIPv4アドレスからのポート22番へのアクセスを許容している．
+また，SSHでEC2インスタンスにログインしたのち，インターネットからプログラムなどをダウンロードできるよう， `allow_all_outbound=True` のパラメータを設定している．
+
+[NOTE]
+====
+SSH はデフォルトでは22番ポートを使用するのが慣例である．
+====
+
+[TIP]
+====
+セキュリティ上の観点からは，SSHの接続は自宅や大学などの特定の地点からの接続のみを許す方が望ましい．
+====
+
+==== EC2 (Elastic Compute Cloud)
+
+image::imgs/aws_logos/EC2.png[EC2, 100]
+
+EC2 はAWS上に仮想サーバーを立ち上げるサービスである．個々の起動状態にある仮想サーバーのことをインスタンス (instance) と呼ぶ
+(しかし，コミュニケーションにおいては，サーバーとインスタンスという言葉は相互互換的に用いられることが多い)．
+
+EC2では用途に応じて様々なインスタンスタイプが提供されている．
+以下に，代表的なインスタンスタイプの例を挙げる(2020/06時点での情報)．
+EC2 のインスタンスタイプのすべてのリストは https://aws.amazon.com/ec2/instance-types/[公式ドキュメンテーション]で見ることができる．
+
+[[ec2_instance_types]]
+[cols="1,1,1,1,1", options="header"] 
+.EC2 instance types
+|===
+|Instance
+|vCPU
+|Memory (GiB)
+|Network bandwidth (Gbps)
+|Price per hour ($)
+
+|t2.micro
+|1
+|1
+|-
+|0.0116
+
+|t2.small
+|1
+|2
+|-
+|0.023
+
+|t2.medium
+|2
+|4
+|-
+|0.0464
+
+|c5.24xlarge
+|96
+|192
+|25
+|4.08
+
+|c5n.18xlarge
+|72
+|192
+|100
+|3.888
+
+|x1e.16xlarge
+|64
+|1952
+|10
+|13.344
+
+|===
+
+このようにCPUは1コアから96コアまで，メモリーは1GBから3000GB以上まで，ネットワークは最大で100Gbpsまで，幅広く選択することができる．また，時間あたりの料金は，CPU・メモリーの占有数にほぼ比例する形で増加する．
+EC2 はサーバーの起動時間を秒単位で記録しており，**利用料金は使用時間に比例する形で決定される**．
+例えば， `t2.medium` のインスタンスを10時間起動した場合，0.0464 * 10 = 0.464 ドルの料金が発生する．
+
+[NOTE]
+====
+AWS には https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[無料利用枠] というものがあり， `t2.micro` であれば月に750時間までは無料で利用することができる．
+====
+
+[NOTE]
+====
+<<ec2_instance_types>> の価格は `us-east-1` のものである．地域によって多少価格設定が異なることがある．
+====
+
+[TIP]
+====
+上記で t2.micro の $0.0116 / hour という金額は，on-demandインスタンスというタイプを選択した場合の価格である．
+EC2 では他に，Spot instance と呼ばれるインスタンスも存在しする．
+Spot instance は，AWSのデータセンターの負荷が増えた場合，AWSの判断により強制シャットダウンされる可能性がある，という不便さを抱えているのだが，その分大幅に安い料金設定になっている．
+いうなれば，"すき間の空きCPUで計算を行う"といった格好である．
+科学計算で，コストを削減する目的で，このSpot Instanceを使う事例も報告されている (https://arxiv.org/abs/1904.10489[Wu+, 2019])．
+====
+
+EC2 インスタンスを定義しているコードの該当部分を見てみよう．
+
+[source, python, linenums]
+----
+host = ec2.Instance(
+    self, "MyFirstEc2Instance",
+    instance_type=ec2.InstanceType("t2.micro"),
+    machine_image=ec2.MachineImage.latest_amazon_linux(),
+    vpc=vpc,
+    vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
+    security_group=sg,
+    key_name=key_name
+)
+----
+
+ここでは， `t2.micro` というインスタンスタイプを選択している．
+さらに， `machine_image` (OSと考えてよい) として， https://aws.amazon.com/amazon-linux-ami/[Amazon Linux] を選択している (Machine image については，第二回ハンズオンでより詳しく触れる)．
+さらに，上で定義した VPC, SG をこのインスタンスに付与している．
+
+以上が，今回使用するプログラムの簡単な解説であった．
+ミニマルな形のプログラムではあるが，仮想サーバーを作成するのに必要なステップがおわかりいただけただろうか？
+
+=== プログラムを実行する
+
+さて，ハンズオンのコードの理解ができたところで，プログラムを実際に実行してみよう．繰り返しになるが， <<handson_01_prep>> での準備ができていることが前提である．
+
+==== Python の依存ライブラリのインストール
+
+まずは，Python の依存ライブラリをインストールする．以下では，Python のライブラリを管理するツールとして， https://docs.python.org/3/library/venv.html[venv] を使用する．
+
+まずは， `handson/01-ec2` のディレクトリに移動しよう．
+
+[source, bash]
+----
+$ cd handson/01-ec2
+----
+
+ディレクトリを移動したら， `venv` で新しい仮想環境を作成し，インストールを実行する．
+
+[source, bash]
+----
+$ python3 -m venv .env
+$ source .env/bin/activate
+$ pip install -r requirements.txt
+----
+
+これで Python の環境構築は完了だ．
+
+[NOTE]
+====
+`venv` の簡単な説明は <<venv_quick_guide>> に記述してある．
+====
+
+==== AWS のシークレットキーをセットする
+
+AWS CLI および AWS CDK を使うには，AWSのシークレットキーが設定されている必要がある．以下のようにして環境変数を設定する．
+
+[source, bash]
+----
+$ export AWS_ACCESS_KEY_ID=XXXXXX
+$ export AWS_SECRET_ACCESS_KEY=YYYYYY
+$ export AWS_DEFAULT_REGION=ap-northeast-1
+----
+
+上の `XXXXXX`, `YYYYYY` としたところは自分の鍵に置き換えることを忘れずに．
+
+シークレットキーの発行については <<aws_secrets>> を参照．
+
+==== SSH鍵を生成
+
+EC2 インスタンスには SSH を使ってログインする．
+EC2インスタンスを起動するのに先行して，今回のハンズオンで専用に使うSSHの公開鍵・秘密鍵のペアを準備する必要がある．
+
+以下の aws-cli コマンドにより， `HirakeGoma` という名前のついた鍵を生成する．
+
+[source, bash]
+----
+$ export KEY_NAME="HirakeGoma"
+$ aws ec2 create-key-pair --key-name ${KEY_NAME} --query 'KeyMaterial' --output text > ${KEY_NAME}.pem
+----
+
+上のコマンドを実行すると，現在のディレクトリに `HirakeGoma.pem` というファイルが作成される．これが，サーバーにアクセスするための秘密鍵である． SSH でこの鍵を使うため， `~/.ssh/` のディレクトリに鍵を移動する．さらに，秘密鍵が書き換えられたり第三者に閲覧されないよう，ファイルのアクセス権限を `400` に設定する．
+
+[source, bash]
+----
+$ mv HirakeGoma.pem ~/.ssh/
+$ chmod 400 ~/.ssh/HirakeGoma.pem
+----
+
+==== デプロイを実行
+
+これまでのステップで準備は整った！
+
+早速，アプリケーションをAWSにデプロイしてみよう．
+
+[source, bash]
+----
+$ cdk deploy -c key_name="HirakeGoma"
+----
+
+`-c key_name="HirakeGoma"` というオプションで，先程生成した `HirakeGoma` という名前の鍵を使うよう指定している．
+
+上記のコマンドを実行すると，VPC， EC2 などが実際に展開される．また，コマンドの出力の最後に <<handson_01_cdk_output>> のような出力が得られるはずである．
+**出力の中で `InstancePublicIp` に続く数字が，起動したインスタンスのパブリックIPアドレスである．**
+IPアドレスはデプロイのごとにランダムに割り当てられる．
+
+[[handson_01_cdk_output]]
+.CDKデプロイ実行後の出力
+image::imgs/handson-01/cdk_output.png[cdk output, 700, align="center"]
+
+==== SSH でログイン
+
+早速，SSHで接続してみよう．
+
+[source, bash]
+----
+$ ssh -i ~/.ssh/HirakeGoma.pem ec2-user@<IP address>
+----
+
+`-i` オプションで，先程生成した秘密鍵を指定している． EC2 インスタンスにはデフォルトで `ec2-user` という名前のユーザーが作られているので，それを使用する．最後に， `<IP address>` の部分は自分が作成したEC2インスタンスのIPアドレスで置き換える (`54.238.112.5` など）．
+
+ログインに成功すると，以下のような画面が表示される．リモートのサーバーにログインしているので，プロンプトが `[ec2-user@ip-10-10-1-217 ~]$` となっている．
+
+[[handson_01_ssh_login]]
+.SSH で EC2 インスタンスにログイン
+image::imgs/handson-01/ssh_login.png[ssh_login, 700, align="center"]
+
+**おめでとう！これで，めでたくAWS上にEC2仮想サーバーを起動し，リモートからアクセスすることができるようになった！**
+
+==== 起動した EC2 インスタンスで遊んでみる
+
+せっかくサーバーを起動したので，少し遊んでみよう．
+
+ログインした EC2 インスタンスで，次のコマンドを実行してみよう．
+CPUの情報を取得することができる．
+
+[source, bash]
+----
+$ cat /proc/cpuinfo
+
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 63
+model name	: Intel(R) Xeon(R) CPU E5-2676 v3 @ 2.40GHz
+stepping	: 2
+microcode	: 0x43
+cpu MHz		: 2400.096
+cache size	: 30720 KB
+----
+
+次に，実行中のプロセスやメモリの消費を見てみよう．
+
+[source, bash]
+----
+$  top -n 1
+
+top - 09:29:19 up 43 min,  1 user,  load average: 0.00, 0.00, 0.00
+Tasks:  76 total,   1 running,  51 sleeping,   0 stopped,   0 zombie
+Cpu(s):  0.3%us,  0.3%sy,  0.1%ni, 98.9%id,  0.2%wa,  0.0%hi,  0.0%si,  0.2%st
+Mem:   1009140k total,   270760k used,   738380k free,    14340k buffers
+Swap:        0k total,        0k used,        0k free,   185856k cached
+
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+    1 root      20   0 19696 2596 2268 S  0.0  0.3   0:01.21 init
+    2 root      20   0     0    0    0 S  0.0  0.0   0:00.00 kthreadd
+    3 root      20   0     0    0    0 I  0.0  0.0   0:00.00 kworker/0:0
+----
+
+`t2.micro` インスタンスなので， 1009140k = 1GB のメモリーがあることがわかる．
+
+今回起動したインスタンスには Python 2 はインストール済みだが， Python 3 は入っていない．
+Python 3.6 のインストールを行ってみよう．
+インストールは簡単である．
+
+[source, bash]
+----
+$ sudo yum update -y
+$ sudo yum install -y python36
+----
+
+インストールしたPythonを起動してみよう．
+
+[source, bash]
+----
+$ python3
+Python 3.6.10 (default, Feb 10 2020, 19:55:14)
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-28)] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+----
+
+Python のインタープリタが起動した！
+`Ctrl + D` あるいは `exit()` と入力することで，インタープリタを閉じることができる．
+
+さて，サーバーでのお遊びはこんなところにしておこう (興味があれば各自いろいろと試してみると良い) ．
+次のコマンドでログアウトする．
+
+[source, bash]
+----
+$ exit
+----
+
+==== AWS コンソールから確認
+
+これまでは，すべてコマンドラインからEC2に関連する諸々の操作を行ってきた．
+EC2インスタンスの状態を確認したり，サーバーをシャットダウンするなどの操作は，AWS コンソールから実行することもできる．
+軽くこれを紹介しよう．
+
+まず，AWS コンソールにログインする．
+
+ログインしたら， `Services` から `EC2` を検索(選択)する．
+次に，左のサイドバーの `Instances` とページを辿る.
+すると， <<aws_ec2_console>> のような画面が得られるはずである．
+この画面で，自分のアカウントの管理下にあるインスタンスを確認することができる．
+
+[[aws_ec2_console]]
+.EC2 コンソール画面
+image::imgs/handson-01/ec2_console.png[ec2_console, 700, align="center"]
+
+[WARNING]
+====
+**コンソール右上で，正しいリージョン (今回の場合は ap-northeast-1, Tokyo) が選択されているか，注意する！**
+====
+
+同様に，VPC・SG についてもコンソールから確認することができる．
+
+前章で CloudFormation について触れたが，今回デプロイしたアプリケーションも，CloudFormation の "スタック" として管理されている．
+スタック (stack) とは，AWSリソースの集合のことを指す．
+今回の場合は，VPC/EC2/SG などがスタックの中に含まれている．
+
+コンソールで `CloudFormation` のページに行ってみよう (<<aws_cloudformation_console>>)．
+
+[[aws_cloudformation_console]]
+.CloudFormation コンソール画面
+image::imgs/handson-01/cloudformation_console.png[cloudformation console, 700, align="center"]
+
+"MyFirstEc2" という名前のスタックがあることが確認できる．
+クリックをして中身を見てみると，EC2, VPN などのリソースがこのスタックに紐付いていることがわかる．
+
+[[handson_01_delete_stack]]
+==== スタックを削除
+
+これにて，第一回のハンズオンで説明すべき事柄はすべて完了した．
+最後に，使わなくなったスタックを削除しよう．
+
+スタックの削除には，２つの方法がある．
+
+１つめの方法は，前節の Cloudformation のコンソール画面で， "Delete" ボタンを押すことである (<<cloudformation_delete>>)．
+
+[[cloudformation_delete]]
+.CloudFormationコンソール画面から，スタックを削除
+image::imgs/handson-01/cloudformation_delete.png[cloudformation delete, 700, align="center"]
+
+２つめの方法は，コマンドラインから行う方法である．
+
+先ほど，デプロイを行ったコマンドラインに戻ろう．そうしたら，
+
+[source, bash]
+----
+$ cdk destroy
+----
+
+と実行する．すると，スタックの削除が始まる．
+
+削除した後は，VPC, EC2 など，すべて跡形もなく消え去っている．
+
+このように，自分の使いたいときにだけ，サーバーを立ち上げ，使い終わったら直ちに削除する，というのが現代のクラウドの正しい使い方である．
+
+[IMPORTANT]
+====
+**スタックの削除は各自で必ず行うこと！**
+行わなかった場合，EC2インスタンスの料金が発生し続けることになる！
+====
+
+また，本ハンズオンのために作成したSSH鍵ペアも不要なので，削除しておく．
+
+まず，EC2側に登録してある公開鍵を削除する．
+これも，コンソールおよびコマンドラインの２つの方法で実行できる．
+
+コンソールから実行するには， `EC2` の画面に行き，左のサイドバーの `Key Pairs` を選択．
+鍵の一覧が表示されるので， `HirakeGoma` とある鍵にチェックを入れ，画面右上の `Actions` から， `Delete` を実行 (<<delete_ec2_key_pair>>)．
+
+[[delete_ec2_key_pair]]
+.EC2でSSH鍵ペアを削除
+image::imgs/handson-01/ec2_keypair_console.png[ec2_keypair_console, 700, align="center"]
+
+コマンドラインから実行するには，以下のコマンドを使う．
+
+[source, bash]
+----
+$ aws ec2 delete-key-pair --key-name "HirakeGoma"
+----
+
+最後に，ローカルのコンピュータから鍵を削除する．
+
+[source, bash]
+----
+$ rm -f ~/.ssh/HirakeGoma.pem
+----
+
+これで，クラウドの片付けもすべて終了だ．
+
+[TIP]
+====
+なお，頻繁にEC2インスタンスを起動したりする場合は，いちいちSSH鍵を削除する必要はない．
+====
+
+=== 講義第一回目のまとめ
+
+ここまでが，第一回目の講義の内容である．盛りだくさんの内容であったが，ついてこれたであろうか？
+
+第一回では，クラウドの概要と，なぜクラウドを使うのか，という点を議論した．
+また，クラウドを学ぶ具体的な題材としてAWSを取り上げ，AWSの概要説明を行った．
+さらに，ハンズオンではAWS CLI/CDK を使って，自分のマイ・サーバーをAWS上に立ち上げる演習を行った．
+
+ハンズオンなどを通じて，いかに簡単に(たった数行のコマンドで！)仮想サーバーを立ち上げたり，削除したりすることができるか，体験することができただろう．
+このように，**ダイナミックに計算リソースを拡大・縮小をできることが，クラウドの最も本質的な側面であると，筆者は考えている**．
+
+次回以降の講義では，今回学んだクラウドの技術を基に，より現実的な問題を解くことを体験してもらう．お楽しみに！
+

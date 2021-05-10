@@ -1,0 +1,14 @@
+== 著者紹介
+
+真野 智之 (Tomoyuki Mano)　東京大学大学院情報理工学系研究科博士課程
+
+研究分野　神経科学・神経情報学
+
+現在の研究テーマ　クラウドを用いた脳画像解析・データベース構築
+
+趣味　料理・ランニング・鉄道・アニメ・村上春樹
+
+連絡先　tomoyukimano@gmail.com
+
+GitLab https://gitlab.com/tomomano 
+

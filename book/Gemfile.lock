@@ -1,0 +1,66 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    Ascii85 (1.0.3)
+    addressable (2.7.0)
+      public_suffix (>= 2.0.2, < 5.0)
+    afm (0.2.2)
+    asciidoctor (2.0.10)
+    asciidoctor-pdf (1.5.0.beta.6)
+      asciidoctor (>= 1.5.3, < 3.0.0)
+      concurrent-ruby (~> 1.1.0)
+      prawn (~> 2.2.0)
+      prawn-icon (~> 2.5.0)
+      prawn-svg (~> 0.29.0)
+      prawn-table (~> 0.2.0)
+      prawn-templates (~> 0.1.0)
+      safe_yaml (~> 1.0.0)
+      thread_safe (~> 0.3.0)
+      treetop (~> 1.5.0)
+    asciidoctor-pdf-cjk (0.1.3)
+      asciidoctor-pdf (~> 1.5.0.alpha.8)
+    concurrent-ruby (1.1.5)
+    css_parser (1.7.0)
+      addressable
+    hashery (2.1.2)
+    pdf-core (0.7.0)
+    pdf-reader (2.2.1)
+      Ascii85 (~> 1.0.0)
+      afm (~> 0.2.1)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
+    polyglot (0.3.5)
+    prawn (2.2.2)
+      pdf-core (~> 0.7.0)
+      ttfunk (~> 1.5)
+    prawn-icon (2.5.0)
+      prawn (>= 1.1.0, < 3.0.0)
+    prawn-svg (0.29.1)
+      css_parser (~> 1.6)
+      prawn (>= 0.11.1, < 3)
+    prawn-table (0.2.2)
+      prawn (>= 1.3.0, < 3.0.0)
+    prawn-templates (0.1.1)
+      pdf-reader (~> 2.0)
+      prawn (~> 2.2)
+    public_suffix (4.0.1)
+    rouge (3.12.0)
+    ruby-rc4 (0.1.5)
+    safe_yaml (1.0.5)
+    thread_safe (0.3.6)
+    treetop (1.5.3)
+      polyglot (~> 0.3)
+    ttfunk (1.5.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  asciidoctor (= 2.0.10)
+  asciidoctor-pdf (~> 1.5.0.beta)
+  asciidoctor-pdf-cjk (~> 0.1.3)
+  rouge
+
+BUNDLED WITH
+   1.16.1

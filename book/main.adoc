@@ -1,0 +1,36 @@
+= AWSによるクラウド入門
+真野 智之 (Tomoyuki Mano) <tomoyukimano@gmail.com>
+v1.0, 2020-06-19
+:toc: left
+:sectnums:
+:source-highlighter: rouge
+:rouge-style: github
+:icons: font
+:xrefstyle: short
+
+include::introduction.adoc[]
+include::cloud.adoc[]
+include::aws_get_started.adoc[]
+include::handson-01.adoc[]
+include::scientific_computing.adoc[]
+include::handson-02.adoc[]
+include::docker_system.adoc[]
+include::handson-03.adoc[]
+include::webserver.adoc[]
+include::serverless.adoc[]
+include::handson-04.adoc[]
+include::handson-05.adoc[]
+include::closing.adoc[]
+include::appendix.adoc[]
+include::acknowledgement.adoc[]
+include::author.adoc[]
+include::license.adoc[]
+
+// Additional styles
+++++
+<style>
+  .imageblock > .title {
+    text-align: inherit;
+  }
+</style>
+++++

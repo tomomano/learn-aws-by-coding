@@ -1,0 +1,44 @@
+[cols="1,1,1,5", options="header"]
+.Database 仕様
+|===
+|Name
+|Data type
+|Default (Initial)
+|Description
+
+|item_id
+|string
+|-
+|ID of the item (using uuid4); **Primary key of the table**
+
+|username
+|string
+|-
+|User name who posted the haiku
+
+|first
+|string
+|-
+|The first phrase
+
+|second
+|string
+|-
+|The second phrase
+
+|third
+|string
+|-
+|The third phrase
+
+|likes
+|integer
+|0
+|The number of likes that this haiku has got
+
+|created_at
+|string
+|-
+|Creation time stamp (ISO format) e.g. `2019-05-18T15:17:00+00:00`
+
+|===
