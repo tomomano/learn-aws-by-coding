@@ -38,16 +38,16 @@ def train(model, train_loader, optimizer, epoch, device=torch.device("cuda"), lo
         optimizer.zero_grad()
         output = model(data)
         loss = F.nll_loss(output, target)
-        train_losses.append(loss)
         loss.backward()
         optimizer.step()
+        train_losses.append(loss.item())
         if batch_idx % log_interval == 0:
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+            print('Train Epoch: {} [{}/{} ({:.1f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                 100. * batch_idx / len(train_loader), loss.item()))
     return train_losses
 
-def test(model, test_loader, device=torch.device("cuda")):
+def evaluate(model, test_loader, device=torch.device("cuda")):
     model.eval()
     test_loss = 0
     correct = 0
@@ -60,10 +60,6 @@ def test(model, test_loader, device=torch.device("cuda")):
             correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
-    
-    print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-        test_loss, correct, len(test_loader.dataset),
-        100. * correct / len(test_loader.dataset)))
-    
-    
-    
+    accuracy = 100. * correct / len(test_loader.dataset)
+
+    return test_loss, accuracy
