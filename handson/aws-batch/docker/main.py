@@ -36,3 +36,6 @@ def main():
         print(f"\nTest set: Average loss: {test_loss:.4f}, Accuracy: {test_accuracy:.1f}%\n")
     
     torch.save(model.state_dict(), "mnist_cnn.pt")
+
+if __name__ == "__main__":
+    main()
