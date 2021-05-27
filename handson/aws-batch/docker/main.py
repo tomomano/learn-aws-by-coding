@@ -38,9 +38,9 @@ def main(lr: float,
         metrics[epoch] = [np.mean(losses), val_loss, val_accuracy]
 
     df = pd.DataFrame(data=metrics, columns=["train_loss", "val_loss", "val_accuracy"])
-    filename = f"metrics_{lr:0.4f}_{momentum:0.4f}.csv"
+    filename = f"metrics_lr{lr:0.4f}_m{momentum:0.4f}.csv"
     df.to_csv(filename, header=True, index=False)
-    
+
     # save the result in S3
     if upload_to_s3:
         transfer_to_s3(filename, filename)
@@ -72,4 +72,4 @@ if __name__ == "__main__":
                         help="If true, the metric data is saved in S3")
     args = parser.parse_args()
 
-    main(args.lr, args.momentum, args.epochs)
+    main(args.lr, args.momentum, args.epochs, args.uploadS3)

@@ -6,3 +6,6 @@ aws-cdk.aws-batch~=1.0
 aws-cdk.aws-iam~=1.0
 aws-cdk.aws-ecr~=1.0
 boto3
+jupyter
+pandas
+matplotlib

@@ -23,6 +23,6 @@ RUN pip3 install \
 RUN echo "from torchvision import datasets; datasets.MNIST(root='/mnist', download=True)" >> tmp.py && \
     python3 tmp.py
 
-COPY main.py simple_mnist.py /root/
+COPY main.py simple_mnist.py ${HOME}/
 
 WORKDIR ${HOME}
