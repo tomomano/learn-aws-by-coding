@@ -13,7 +13,7 @@ RUN cd /opt \
     && unzip awscliv2.zip \
     && ./aws/install
 
-RUN npm install -g aws-cdk@1.30
+RUN npm install -g aws-cdk@1.105
 
 RUN cd /root \
     && git clone https://gitlab.com/tomomano/intro-aws.git
