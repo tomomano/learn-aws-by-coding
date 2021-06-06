@@ -1,3 +1,4 @@
+[[sec_serverless]]
 == Serverless architecture
 
 Serverless Architecture あるいは Serverless Computing とは， 従来とは全くアプローチの異なるクラウドシステムの設計方法である．
