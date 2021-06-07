@@ -21,20 +21,21 @@ def main(lr: float,
     # Split train data into train and validation set
     train_size = int(len(trainvalset) * 0.8) # use 80% as training data 
     val_size = len(trainvalset) - train_size # and 20% as validation data
-    trainset, valset = torch.utils.data.random_split(trainvalset, [train_size, val_size])
+    trainset, valset = torch.utils.data.random_split(trainvalset, [train_size, val_size], generator=torch.Generator().manual_seed(1008))
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
-    valloader = torch.utils.data.DataLoader(valset, batch_size=64, shuffle=True)
+    valloader = torch.utils.data.DataLoader(valset, batch_size=64, shuffle=False)
 
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = Model()
-    model.to("cuda")
+    model.to(device)
 
     optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum)
 
     metrics = np.zeros((epochs, 3))
     for epoch in range(epochs):
-        losses = train(model, trainloader, optimizer, epoch)
-        val_loss, val_accuracy = evaluate(model, valloader)
-        print(f"\nTest set: Average loss: {val_loss:.4f}, Accuracy: {val_accuracy:.1f}%\n")
+        losses = train(model, trainloader, optimizer, epoch, device=device)
+        val_loss, val_accuracy = evaluate(model, valloader, device=device)
+        print(f"\nVal set: Average loss: {val_loss:.4f}, Accuracy: {val_accuracy:.1f}%\n")
         metrics[epoch] = [np.mean(losses), val_loss, val_accuracy]
 
     df = pd.DataFrame(data=metrics, columns=["train_loss", "val_loss", "val_accuracy"])

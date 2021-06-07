@@ -62,9 +62,8 @@ image::imgs/aws_secret_key_2.png[aws_secret_key_2, 700, align="center"]
 [[aws_cli_install]]
 === AWS CLI のインストール
 
-https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html[公式のドキュメンテーション]に従い，インストールを行う．
-
-Linuxマシンならば，以下のコマンドを実行すれば良い．
+読者のために，執筆時点におけるインストールの手順 (Linux 向け) を簡単に記述する．
+将来のバージョンでは変更される可能性があるので，常に https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html[公式のドキュメンテーション] で最新の情報をチェックすることを忘れずに．
 
 [source, bash]
 ----
@@ -73,7 +72,7 @@ $ unzip awscliv2.zip
 $ sudo ./aws/install
 ----
 
-インストールできたか確認するため，以下のコマンドを打って正しくバージョンが表示されることを確認する．
+インストールできたか確認するため，以下のコマンドを打ってバージョン情報が出力されることを確認する．
 
 [source, bash]
 ----
@@ -90,10 +89,11 @@ $ aws configure
 コマンドを実行すると， `AWS Access Key ID`, `AWS Secret Access Key` を入力するよう指示される．
 シークレットキーの発行については <<aws_secrets>> を参照．
 コマンドは加えて，`Default region name` を訊いてくる．
-ここには `ap-northeast-1` (東京リージョン)を指定するのがよい．
+ここには自分の好きな地域 (例えば `ap-northeast-1` =東京リージョン) を指定すればよい．
 最後の `Default output format` は `JSON` としておくとよい．
 
-上記のコマンドを完了すると， `~/.aws/credentials` と `~/.aws/config`　という名前のファイルに設定が保存されているはずである．念の為，中身をしてみるとよい．
+上記のコマンドを完了すると， `~/.aws/credentials` と `~/.aws/config`　という名前のファイルが生成されているはずである．
+念の為，中身をしてみるとよい．
 
 [source, bash]
 ----
@@ -110,10 +110,10 @@ output = json
 
 上記のような出力が得られるはずである．
 
-`~/.aws/credentials` には認証鍵の情報が， `~/.aws/config` には各設定が記録されている．
+`~/.aws/credentials` には認証鍵の情報が， `~/.aws/config` には AWS CLI の設定が記録されている．
 
 デフォルトでは， `[default]` という名前でプロファイルが保存される．
-いくつかのプロファイルを使い分けたければ， default の例に従って，例えば `[myprofile]` という名前でプロファイルを追加すればよい．
+いくつかのプロファイルを使い分けたければ， default の例に従って，例えば `[myprofile]` などという名前でプロファイルを追加すればよい．
 
 AWS CLI でコマンドを打つときに，プロファイルを使い分けるには，
 
@@ -124,7 +124,14 @@ $ aws s3 ls --profile myprofile
 
 のように， `--profile` というオプションをつけてコマンドを実行する．
 
-いちいち `--profile` オプションをつけるのが面倒だと感じる場合は，以下のように環境変数を設定することもできる．
+いちいち `--profile` オプションをつけるのが面倒だと感じる場合は， `AWS_PROFILE` という環境変数を設定するとよい．
+
+[source, bash]
+----
+$ export AWS_PROFILE=myprofile
+----
+
+あるいは，認証情報などを環境変数に設定するテクニックもある．
 
 [source, bash]
 ----
@@ -138,22 +145,25 @@ export AWS_DEFAULT_REGION=ap-northeast-1
 [[aws_cdk_install]]
 === AWS CDK のインストール
 
-https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html[公式ドキュメント]に従いインストールを行う．
+読者のために，執筆時点におけるインストールの手順 (Linux 向け) を簡単に記述する．
+将来のバージョンでは変更される可能性があるので，常に https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html[公式のドキュメンテーション] で最新の情報をチェックすることを忘れずに．
 
 Node.js がインストールされていれば，基本的に以下のコマンドを実行すれば良い．
 
 [source, bash]
 ----
-$ npm install -g aws-cdk
+$ sudo npm install -g aws-cdk
 ----
 
 [NOTE]
 ====
-本書のハンズオンはAWS CDK version 1.30.0 で開発した．CDK は開発途上のライブラリなので，将来的にAPIが変更される可能性がある．APIの変更によりエラーが生じた場合は， version 1.30.0 を使用することを推奨する．
+本書のハンズオンはAWS CDK version 1.100.0 で開発した．
+CDK は開発途上のライブラリなので，将来的にAPIが変更される可能性がある．
+APIの変更によりエラーが生じた場合は， version 1.100.0 を使用することを推奨する．
 
-[source bash]
+[source, bash]
 ----
-$ npm install -g aws-cdk@1.30
+$ npm install -g aws-cdk@1.100
 ----
 ====
 
@@ -173,7 +183,9 @@ $ cdk bootstrap
 
 [NOTE]
 ====
-`cdk bootstrap` を実行するときは，AWSの認証情報とリージョンが正しく設定されていることを確認する．デフォルトでは `~/.aws/config` にあるデフォルトのプロファイルが使用される．デフォルト以外のプロファイルを用いるときは `AWS_ACCESS_KEY_ID` などの環境変数を設定する (https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html[参照])．
+`cdk bootstrap` を実行するときは，AWSの認証情報とリージョンが正しく設定されていることを確認する．
+デフォルトでは `~/.aws/config` にあるデフォルトのプロファイルが使用される．
+デフォルト以外のプロファイルを用いるときは <<aws_cli_install>> で紹介したテクニックを使って切り替える．
 ====
 
 [NOTE]
@@ -185,21 +197,25 @@ AWS CDK の認証情報の設定は AWS CLI と基本的に同じである．詳
 === Python `venv` クイックガイド
 
 他人からもらったプログラムで， numpy や scipy のバージョンが違う！などの理由で，プログラムが動かない，という経験をしたことがある人は多いのではないだろうか．
-もし，自分のPCの中に一つしかPython環境がないとすると，プロジェクトを切り替えるごとに正しいバージョンをインストールし直さなければならず，これは大変な手間である．
+もし，自分の計算機の中に一つしか Python 環境がないとすると，プロジェクトを切り替えるごとに正しいバージョンをインストールし直さなければならず，これは大変な手間である．
 
 コードのシェアをよりスムーズにするためには，ライブラリのバージョンはプロジェクトごとに管理されるべきである．
 それを可能にするのが Python 仮想環境と呼ばれるツールであり， https://docs.python.org/3/tutorial/venv.html[venv], https://github.com/pyenv/pyenv[pyenv], https://docs.conda.io/en/latest/[conda] などがよく使われる．
 
-そのなかでも， `venv` は Python に標準搭載されているので，とても便利である． `pyenv` や `conda` は，別途インストールの必要があるが，それぞれの長所もある．
+そのなかでも， `venv` は Python に標準搭載されているので，とても便利である．
+`pyenv` や `conda` は，別途インストールの必要があるが，それぞれの長所もある．
+
+`venv` を使って仮想環境を作成するには，
 
 [source, bash]
 ----
 $ python -m venv .env
 ----
 
-というコマンドを実行することで，`venv` モジュールにより `.env/` というディレクトリが作られる．
+と実行する．
+これにより `.env/` というディレクトリが作られ，このディレクトリに依存するライブラリが保存されることになる．
 
-この仮想環境を起動するには
+この新たな仮想環境を起動するには
 
 [source, bash]
 ----
@@ -208,9 +224,10 @@ $ source .env/bin/activate
 
 と実行する．
 
-シェルのプロンプトに `(.env)` という文字が追加されていることを確認しよう．
+シェルのプロンプトに `(.env)` という文字が追加されていることを確認しよう (<<fig_venv_prompt>>)．
 これが， "いまあなたは venv の中にいますよ" というしるしになる．
 
+[[fig_venv_prompt]]
 .venv を起動したときのプロンプト
 image::imgs/venv_shell.png[venv shell, 500, align="center"]
 
@@ -223,5 +240,9 @@ Python では `requirements.txt` というファイルにに依存ライブラ�
 $ pip install -r requirements.txt
 ----
 
-と実行することで，必要なライブラリをインストールし，瞬時にPython環境を再現することができる．
+と実行することで，必要なライブラリをインストールし，瞬時に Python 環境を再現することができる．
 
+[NOTE]
+====
+venv による仮想環境を保存するディレクトリの名前は任意に選べることができるが， `.env` という名前を用いるのが一般的である．
+====

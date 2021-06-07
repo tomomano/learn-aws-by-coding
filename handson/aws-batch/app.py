@@ -19,7 +19,6 @@ class SimpleBatch(core.Stack):
             self, "bucket",
             removal_policy=core.RemovalPolicy.DESTROY,
             auto_delete_objects=True,
-            bucket_name=self.stack_name.lower() + "bucket"
         )
 
         vpc = ec2.Vpc(
@@ -91,7 +90,7 @@ class SimpleBatch(core.Stack):
                 }
             ),
             job_definition_name=self.stack_name + "job-definition",
-            timeout=core.Duration.hours(12),
+            timeout=core.Duration.hours(2),
         )
 
 app = core.App()

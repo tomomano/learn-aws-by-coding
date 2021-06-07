@@ -1,4 +1,4 @@
-[[sec_handson02]]
+[[sec_jupyter_and_deep_learning]]
 == Hands-on #2: AWSでディープラーニングの計算を走らせる
 
 ハンズオン第二回では，GPUを搭載したEC2インスタンスを起動し，ディープラーニングの学習と推論を実行する演習を行う．
