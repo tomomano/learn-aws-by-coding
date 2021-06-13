@@ -11,9 +11,9 @@
 ハイパーパラメータとは，勾配降下法によって最適化されるニューラルネットのパラメータの外にあるパラメータのことであり，具体的にはモデルの層の幅・深さなどネットワークのアーキテクチャに関わるもの，学習率やモメンタムなどパラメータの更新則に関わるものなどが含まる．
 深層学習においてハイパーパラメータの調整はとても重要なタスクである．
 しかしながら，ハイパーパラメータを調整するには，少しづつ条件を変えながら何度もニューラルネットを学習させる必要があり，多くの計算時間がかかる．
-本ハンズオンでは，クラウドの強力な計算リソースを利用することで並列的にニューラルネットの訓練を実行することでこの問題を高速に解く方法を学んでいこう．
+本ハンズオンでは，クラウドの強力な計算リソースを利用し並列的にニューラルネットの訓練を実行することで，この問題を高速に解く方法を学んでいこう．
 
-このハンズオンは，本書で扱うハンズオンの中でも最も難易度が高い (もう少し正確に言うなら，最も手数が多い) ものだ．
+このハンズオンは，本書で扱うハンズオンの中でも最も難易度が高いものだ (もう少し正確に言うなら，最もステップ数が多い)．
 内容が少し難しく感じる読者もいるかもしれないが，頑張ってついてきてほしい．
 
 === Auto scaling groups (ASG)
@@ -22,7 +22,7 @@
 
 ECS の概要を示した <<ecs_overview>> を振り返って見てほしい．
 前章 (<<sec_fargate_qabot>>) でも説明したが， ECS のクラスターで計算を担う実体としては EC2 と Fargate を指定することができる．
-Fargate については，前章でハンズオンとともに記述した．
+Fargate については，前章で記述した．
 クラスターで EC2 が選択された場合について，以下に簡単に説明を行っていきたい．
 
 EC2 クラスターには **Auto scaling groups (ASG)** と呼ばれるサービスが配置される．
@@ -44,20 +44,27 @@ image::imgs/aws_logos/Batch.png[Batch, 100]
 それが **AWS Batch** である．
 
 AWS Batch はその名の通りバッチ (Batch) 化されたジョブ (入力データだけが異なる独立した演算が繰り返し実行されること) を想定している．
-バッチ計算には，例えば多くの科学計算や機械学習が当てはまる．
-AWS Batch を用いることの利点は，クラスターのスケーリングやジョブの割り振りはすべて自動で実行され，ユーザーは背後のクラウドの詳細を気にすることなく，大量のジョブを投入することのできるシステムが手に入る点である．
+多くの科学計算や機械学習がバッチ計算に当てはまる．
+例えば，初期値のパラメータを変えてシミュレーションを走らせる，といったケースだ．
+AWS Batch を用いることの利点は，クラスターのスケーリングやジョブの割り振りはすべて自動で実行され，
+ユーザーはクラウドの背後で起こっている詳細を気にすることなく，大量のジョブを投入することのできるシステムが手に入る点である．
 
-AWS Batch では，ジョブの投入・管理をスムーズに行うため，次のような概念が設定されている (<<>>)．
+AWS Batch では，ジョブの投入・管理をスムーズに行うため，次のような概念が定義されている (<<fig_batch_concept>>)．
 まず， `Job` というのが，AWS Batch によって実行されるひとつひとつの計算の単位である．
 `Job Definitions` とは Job の内容を定義するものであり，これには実行されるべき Docker のイメージのアドレスや，割り当てる CPU・RAM の容量，環境変数などの設定が含まれる．
-Job の実行を管理するものとして `Job Queues` が存在する．
+ユーザーが Job の実行を実行すると， Job は `Job Queues` に入る．
 Job queues とは，実行されるのを待っているジョブの待ち列のことであり，時間的に最も先頭に投入されたジョブが最初に実行される．
+また，複数の queue を配置し， queue ごとに priority (優先度) を設定することが可能であり， priority の高い queue に溜まった Job が優先的に実行される．
 `Compute environment` とは，先述したクラスターとほぼ同義の概念であり，計算が実際に実行される場所 (EC2 や Fargate からなるクラスター) を指す．
-Compute environment には，使用する EC2 のインスタンスタイプ (`t2.micro` など) や同時に起動するインスタンス数の上限などのパラメータが指定されている．
-Job queues に溜まったジョブは， Compute environment にそのジョブを受け付ける余裕がある場合に，その Compute environment に投下される．
+Compute environment には，使用する EC2 のインスタンスタイプや同時に起動するインスタンス数の上限などの簡易なスケーリングポリシーが指定されている．
+Job queues は Compute environment の空き状況を監視しており， それに応じて Job を Compute environment に投下する．
 
 以上が AWS Batch を使用する上で理解しておかなければならない概念であるが，くどくど言葉で説明してもなかなかピンとこないだろう．
 ここからは，実際に自分で手を動かしながら学んでいこう．
+
+[[fig_batch_concept]]
+.AWS Batch の主要な概念
+image::imgs/aws_batch/batch_concepts.png[batch concepts, 700, align="center"]
 
 === 準備
 
@@ -67,9 +74,9 @@ Job queues に溜まったジョブは， Compute environment にそのジョブ
 === MNIST 手書き文字認識 (再訪)
 
 今回のハンズオンでは，機械学習のハイパーパラメータ調整を取り上げると冒頭で述べた．
-その最もシンプルな例題として， <<sec_handson02>> で扱った MNIST 手書き文字認識の問題を再度取り上げよう．
-<<sec_handson02>> では，適当にチョイスしたハイパーパラメータを用いてモデルの訓練を行った．
-ここで使用したプログラムの中でのハイパーパラメータの例として，確率的勾配降下法 (SGD) における学習率やモメンタムが含まれる．
+その最もシンプルな例題として， <<sec_mnist_using_jupyter>> で扱った MNIST 手書き文字認識の問題を再度取り上げよう．
+<<sec_mnist_using_jupyter>> では，適当にチョイスしたハイパーパラメータを用いてモデルの訓練を行った．
+ここで使用したプログラムの中でのハイパーパラメータとしては，確率的勾配降下法 (SGD) における学習率やモメンタムが含まれる．
 コードでいうと，以下の行が該当する．
 
 [source, python]
@@ -88,7 +95,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 グリッドサーチ法，ランダムサーチ法，そしてベイズ最適化による方法である．
 
 グリッドサーチ法とは，ハイパーパラメータの組をある範囲の中で可能な組み合わせをすべて計算し，最適なパラメータの組を見出す方法である．
-最もシンプルかつ確実な方法であるが，すべての組み合わせの可能性を愚直に計算するのには大きな計算コストがかかる．
+最もシンプルかつ確実な方法であるが，すべての組み合わせの可能性を愚直に計算するので計算コストが大きい．
 
 ランダムサーチ法とは，ハイパーパラメータの組をある範囲の中でランダムに抽出し，大量に試行されたランダムな組の中から最適なパラメータの組を見出す方法である．
 すべての可能性を網羅的に探索できるわけではないが，調整すべきパラメータの数が多数ある場合に，グリッドサーチよりも効率的に広い探索空間をカバーすることができる．
@@ -103,9 +110,9 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 
 一方，ベイズ最適化による方法は，過去の結果をもとに次の探索が決定されるので，並列化はそれほど単純ではない．
 最近では https://optuna.org/[optuna] などのハイパーパラメータ探索のためのライブラリが発達しており，ベイズ最適化の数理的な処理を自動で実行してくれるので便利である．
-これらのライブラリを使うと，もし一台のコンピュータ(ノード)の中に複数の GPU が存在する場合は，並列に計算を実行することができる．
+これらのライブラリを使うと，もし一台のコンピュータ (ノード) の中に複数の GPU が存在する場合は，並列に計算を実行することができる．
 しかしながら，一台のノードにとどまらず，複数のノードをまたいだ並列化は，高度なプログラミングテクニックが必要とされるだけでなく，ノード間の接続様式などクラウドのアーキテクチャにも深く依存するものである．
-本書ではここまで高度なクラウドの使用方法までは立ち入らない．
+本書ではここまで高度なクラウドの使用方法には立ち入らない．
 ****
 
 [[sec_run_mnist_docker_local]]
@@ -113,8 +120,8 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 
 まずは，本ハンズオンで使用する Docker image をローカルで計算してみよう．
 
-Docker image のソースコードは <<>> にある．
-基本的に <<sec_jupyter_and_deep_learning>> のハンズオンを元にし，本ハンズオン専用の軽微な変更が施してある．
+Docker image のソースコードは https://github.com/tomomano/intro-aws-2021/tree/main/handson/aws-batch/docker[handson/aws-batch/docker] にある．
+基本的に <<sec_mnist_using_jupyter>> のハンズオンを元にし，本ハンズオン専用の軽微な変更が施してある．
 興味のある読者はソースコードも含めて読んでいただきたい．
 
 次のコマンドで Docker image をローカルに pull してこよう．
@@ -150,14 +157,14 @@ $ docker run -it --gpus all mymnist python3 main.py --lr 0.1 --momentum 0.5 --ep
 上のコマンドでは，`--gpus all` というパラメータが加わった．
 
 CPU/GPU どちらで実行した場合でも，エポックを重ねるにつれて訓練データ (Train データ) の Loss は単調に減少していくのが見て取れるだろう．
-一方， 検証データ (Validation データ) の Loss および Accuracy は，ある程度まで減少した後，それ以上性能が向上しないことに気がつくだろう．
+一方，**検証データ (Validation データ) の Loss および Accuracy は，ある程度まで減少した後，それ以上性能が向上しない**ことに気がつくだろう．
 これを実際にプロットしてみると <<fig_loss_epoch_profile>> のようになるはずである．
 
 [[fig_loss_epoch_profile]]
 .(左) Train/Validation データそれぞれの Loss のエポックごとの変化． (右) Validation データの Accuracy のエポックごとの変化
 image::imgs/aws_batch/loss_epoch_profile.png[loss epochs, 600, align="center"]
 
-これはいわゆるオーバーフィッティングと呼ばれる現象で，ニューラルネットが訓練データに過度に最適化され，訓練データの外のデータに対しての汎化性能が向上していないことを示している．
+これは**オーバーフィッティング**と呼ばれる現象で，ニューラルネットが訓練データに過度に最適化され，訓練データの外のデータに対しての精度 (汎化性能) が向上していないことを示している．
 このような場合の対処法として， **Early stopping** と呼ばれるテクニックが知られている．
 Early stopping とは，訓練データの Loss を追跡し，それが減少から増加に転じるエポックで学習をうち止め，そのエポックでのウェイトパラメータを採用する，というものである．
 本ハンズオンでも， Early stopping によって訓練の終了を判断し，モデルの性能評価を行っていく．
@@ -202,17 +209,17 @@ image::imgs/aws_batch/architecture.png[architecture, 600, align="center"]
 
 [source, python, linenums]
 ----
+
 class SimpleBatch(core.Stack):
 
     def __init__(self, scope: core.App, name: str, **kwargs) -> None:
         super().__init__(scope, name, **kwargs)
 
-        # S3 bucket to store data
+        # S3 bucket to store data <1>
         bucket = s3.Bucket(
             self, "bucket",
             removal_policy=core.RemovalPolicy.DESTROY,
             auto_delete_objects=True,
-            bucket_name=self.stack_name.lower() + "bucket"
         )
 
         vpc = ec2.Vpc(
@@ -228,6 +235,7 @@ class SimpleBatch(core.Stack):
             nat_gateways=0,
         )
 
+        # <2>
         managed_env = batch.ComputeEnvironment(
             self, "managed-env",
             compute_resources=batch.ComputeResources(
@@ -244,6 +252,7 @@ class SimpleBatch(core.Stack):
             compute_environment_name=self.stack_name + "compute-env"
         )
 
+        # <3>
         job_queue = batch.JobQueue(
             self, "job-queue",
             compute_environments=[
@@ -255,6 +264,7 @@ class SimpleBatch(core.Stack):
             job_queue_name=self.stack_name + "job-queue"
         )
 
+        # <4>
         job_role = iam.Role(
             self, "job-role",
             assumed_by=iam.CompositePrincipal(
@@ -264,12 +274,13 @@ class SimpleBatch(core.Stack):
         # allow read and write access to S3 bucket
         bucket.grant_read_write(job_role)
 
-        # create a ECR repository to push docker image
+        # create a ECR repository to push docker image <5>
         repo = ecr.Repository(
             self, "repository",
             removal_policy=core.RemovalPolicy.DESTROY,
         )
 
+        # <6>
         job_def = batch.JobDefinition(
             self, "job-definition",
             container=batch.JobDefinitionContainer(
@@ -284,9 +295,38 @@ class SimpleBatch(core.Stack):
                 }
             ),
             job_definition_name=self.stack_name + "job-definition",
-            timeout=core.Duration.hours(12),
+            timeout=core.Duration.hours(2),
         )
 ----
+
+<1> で，計算結果を保存するための S3 バケットを用意している
+<2> で， Compute environment を定義している．
+ここでは `g4dn.xlarge` のインスタンスタイプを使用するとし，最大の vCPU 使用数は 64 と指定している．
+<3> で， <2> で作成した Compute environment と紐付いた Job queue を定義している．
+<4> で， Job が計算結果を S3 に書き込むことができるよう， IAM ロールを定義している．
+<5> では， Docker image を配置するための ECR を定義している．
+<6> で Job definition を作成している．
+ここでは，4 vCPU， 12000 MB (=12GB) の RAM を使用するように指定している．
+また，今後必要となる環境変数 (`BUCKET_NAME`) を設定している．
+さらに， <4> で作った IAM を付与している．
+
+[TIP]
+====
+`g4dn.xlarge` は 4 vCPU が割り当てられているので，上のプログラムで最大の vCPU 使用数が 64 だとすると，最大で 16 台のインスタンスが同時に起動することになる．
+
+ここで注意が一点ある．
+AWS では各アカウントごとに EC2 で起動できるインスタンスの上限が設定されている．
+この上限は AWS コンソールにログインし， EC2コンソールの左側メニューバーの `Limits` をクリックすることで確認できる (<<fig_ec2_limits>>)．
+`g4dn.xlarge` (EC2 の区分でいうと G ファミリーに属する) の制限を確認するには， `Running On-Demand All G instances` という名前の項目を見る．
+ここにある数字が， AWS によって課されたアカウントの上限であり，この上限を超えたインスタンスを起動することはできない．
+もし，自分の用途に対して上限が低すぎる場合は，上限の緩和申請を行うことができる．
+詳しくは https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html[公式ドキュメンテーション] を参照のこと．
+
+[[fig_ec2_limits]]
+.EC2コンソールから各種の上限を確認する
+image::imgs/aws_batch/ec2_limits.png[EC2 limits, 700, align="center"]
+
+====
 
 === スタックのデプロイ
 
@@ -328,19 +368,16 @@ Compute environment とは，先ほど述べたとおり，計算が実行され
 上のプログラムで指定したとおり， `g4dn.xlarge` が実際に使用されるインスタンスタイプとして表示されている．
 また，この時点ではひとつのジョブが走っていないので， `desired vCPUs` は 0 になっている．
 
-次に，Job queue overview の下に `SimpleBatch-queue` という項目に注目してほしい．
-Job queues からはこれから実行待ちのジョブ・実行中のジョブ・実行が完了したジョブを一覧で確認することができる．
-
-これらが Batch の"骨組み"と言える部分である．
-以降はここにジョブを投入する方法を見ていこう．
+次に，Job queue overview にある `SimpleBatch-queue` という項目に注目してほしい．
+ここでは実行待ちのジョブ・実行中のジョブ・実行が完了したジョブを一覧で確認することができる．
 
 === Docker image を ECR に配置する
 
-さて， Batch がジョブを実行するには，どこか指定された場所から Docker image をダウンロードしてくる必要がある．
+さて， Batch がジョブを実行するには，どこか指定された場所から Docker image をダウンロード (pull) してくる必要がある．
 前回のハンズオン (<<sec_fargate_qabot>>) では，公開設定にしてある GitHub Container Registry から Docker image を pull してきた．
 今回のハンズオンでは， AWS から提供されているコンテナ置き場である **ECR (Elastic Container Registry)** に image を配置するという設計を採用する．
 Batch は ECR から image を pull してくることで，タスクを実行する (<<fig_batch_architecture>>)．
-ECR を利用する利点は，自分だけがアクセスすることのできるプライベートな image の置き場所を用意する点である．
+ECR を利用する利点は，自分だけがアクセスすることのできるプライベートな image の置き場所を用意できる点である．
 
 スタックのソースコードでいうと，以下の箇所が ECR を定義している．
 
@@ -415,7 +452,7 @@ image::imgs/aws_batch/ecr_console2.png[ecr console 2, 700, align="center"]
 
 さて，ここからは実際に AWS Batch にジョブを投入する方法を見ていこう．
 
-ハンズオンのディレクトリの `scripts/` というディレクトリの中に， `run_single.ipynb` というファイルが見つかるはずである (`.ipynb` は Jupyter notebook のファイル形式)．
+ハンズオンのディレクトリの `notebook/` というディレクトリの中に， `run_single.ipynb` というファイルが見つかるはずである (`.ipynb` は Jupyter notebook のファイル形式)．
 これを Jupyter notebook から開こう．
 
 今回のハンズオンでは， `venv` による仮想環境の中に Jupyter notebook もインストール済みである．
@@ -424,7 +461,7 @@ image::imgs/aws_batch/ecr_console2.png[ecr console 2, 700, align="center"]
 [source, bash]
 ----
 # .env の仮想環境にいることを確認
-(.env) $ cd scripts
+(.env) $ cd notebook
 (.env) $ jupyter notebook
 ----
 
@@ -500,10 +537,10 @@ image::imgs/aws_batch/batch_running_job.png[batch running job, 700, align="cente
 
 <<fig_batch_running_job>> で赤で囲った箇所に注目してほしい．
 ひとつのジョブが投入されると，それは `SUBMITTED` という状態を経て `RUNNABLE` という状態に遷移する．
-`RUNNABLE` とは， ジョブを実行するためのインスタンスがCompute Environment に不足しているため，新たなインスタンスが起動されるのを待っている状態に相当する．
+`RUNNABLE` とは， ジョブを実行するためのインスタンスが Compute Environment に不足しているため，新たなインスタンスが起動されるのを待っている状態に相当する．
 インスタンスの準備が整うと，ジョブの状態は `STARTING` を経て `RUNNING` に至る．
 
-次に， `RUNNING` のときの Compute Environment の `Desired vCPU` を見てみよう (<<fig_batch_running_job>> で紫で囲った箇所)．
+次に，ジョブのステータスが `RUNNING` のときの Compute Environment の `Desired vCPU` を見てみよう (<<fig_batch_running_job>> で紫で囲った箇所)．
 ここで 4 と表示されているのは， `g4dn.xlarge` インスタンス一つ分の vCPU の数である．
 ジョブの投入に応じて，それを実行するのに最低限必要な EC2 インスタンスが起動されたことが確認できる．
 (興味のある人は， EC2 コンソールも同時に覗いてみるとよい)．
@@ -515,7 +552,7 @@ image::imgs/aws_batch/batch_running_job.png[batch running job, 700, align="cente
 ジョブが完了すると，学習の結果 (エポックごとの Loss と Accuracy を記録した CSV ファイル) は S3 に保存される．
 AWS コンソールからこれを確認しよう．
 
-S3 のコンソールに行くと `simplebatch-bucketXXXXXXX` という名前のバケットが見つかるはずである．
+S3 のコンソールに行くと `simplebatch-bucketXXXXXXX` (XXXX の部分はユーザーによって異なる) という名前のバケットが見つかるはずである．
 これをクリックして中身を見てみると， `metrics_lr0.0100_m0.1000.csv` という名前の CSV があることが確認できるだろう (<<fig_s3_saved_file>>)．
 これが， 学習率 = 0.01, モメンタム = 0.1 として学習を行ったときの結果である．
 
@@ -554,8 +591,8 @@ df = read_table_from_s3(
 )
 ----
 
-[7] を実行する際，最初の引数のバケットの名前を，自分自身のバケットの名前に置き換えることを注意しよう．
-(先ほど S3 コンソールから確認した `simplebatch-bucketXXXX` (XXXX の部分はユーザーによって異なる) のことである．)
+[7] を実行する際，最初の引数のバケットの名前を，**自分自身のバケットの名前に置き換える**ことに注意しよう．
+(先ほど S3 コンソールから確認した `simplebatch-bucketXXXX` のことである．)
 
 [9] 番のセルで， CSV のデータをプロットしている (<<fig_loss_epoch_profile2>>)．
 ローカルで実行したときと同じように， AWS Batch を用いて MNIST モデルを訓練することに成功した！
@@ -586,4 +623,135 @@ image::imgs/aws_batch/loss_epoch_profile2.png[loss_epoch_profile2, 600, align="c
 さて，ここからが最後の仕上げである．
 ここまでのハンズオンで構築した AWS Batch のシステムを使って，ハイパーパラメータサーチを実際に行おう．
 
+先ほど実行した `run_single.ipynb` と同じディレクトリにある `run_sweep.ipynb` を開く．
+
+セル [1], [2], [3] は `run_single.ipynb` と同一である．
+セル[4] の for ループを使って，グリッド状にハイパーパラメータの組み合わせを用意し， batch にジョブを投入している．
+
+セル [4] を実行したら， Batch のコンソールを開こう．
+先ほどと同様に，ジョブのステータスは `SUBMITTED` > `RUNNABLE` > `STARTING` > `RUNNING` と移り変わっていくことがわかるだろう．
+最終的に 9 個のジョブがすべて `RUNNING` の状態になることを確認しよう (<<fig_batch_many_parallel_jobs>>)．
+また，このとき Compute environment の `Desired vCPUs` は 4x9=36 となっていることを確認しよう (<<fig_batch_many_parallel_jobs>>)．
+
+[[fig_batch_many_parallel_jobs]]
+.複数のジョブを同時投入したときの Batch コンソール
+image::imgs/aws_batch/batch_many_parallel_jobs.png[batch many parallel jobs, 700, align="center"]
+
+次に，Batch のコンソールの左側のメニューから `Jobs` をクリックしてみよう．
+ここでは，実行中の Job の一覧が確認することができる (<<fig_batch_parallel_job_list>>)．
+Job のステータスでフィルタリングをすることも可能である．
+9個のジョブがどれも `RUNNING` 状態にあることが確認できるだろう．
+
+[[fig_batch_parallel_job_list]]
+.複数のジョブを同時投入したときの Job 一覧
+image::imgs/aws_batch/batch_parallel_job_list.png[batch many parallel jobs, 700, align="center"]
+
+今度は EC2 コンソールを見てみよう．
+左のメニューから `Instances` を選択すると， <<fig_ec2_instances_list>> に示すような起動中のインスタンスの一覧が表示される．
+`g4dn.xlarge` が 9 台稼働しているのが確認できる．
+Batch がジョブの投下に合わせて必要な数のインスタンスを起動してくれたのだ！
+
+[[fig_ec2_instances_list]]
+.複数のジョブを同時投入したときの EC2 インスタンスの一覧
+image::imgs/aws_batch/ec2_instances_list.png[ec2 instances list, 700, align="center"]
+
+ここまで確認できたら，それぞれの Job が終了するまでしばらく待とう (だいたい 15 分くらいで終わる)．
+すべてのジョブが終了すると，ダッシュボードの `SUCCEEDED` が 9 となっているはずだ (<<>>)．
+また， Compute environment の `Desired vCPUs` も 0 に落ちていることを確認しよう．
+最後に EC2 コンソールに行って，すべての g4dn インスタンスが停止していることを確認しよう．
+
+以上から， AWS Batch を使うことで，ジョブの投入に応じて自動的に EC2 インスタンスが起動され，ジョブの完了とともに直ちにインスタンスの停止が行われる一連の挙動を観察することができた．
+
+さて，再び `run_sweep.ipynb` に戻ってこよう．
+
+[5] 以降のセルでは，グリッドサーチの結果を可視化している．
+
+[source, python]
+----
+# [5]
+import pandas as pd
+import numpy as np
+import io
+from matplotlib import pyplot as plt
+
+# [6]
+def read_table_from_s3(bucket_name, key, profile_name=None):
+    if profile_name is None:
+        session = boto3.Session()
+    else:
+        session = boto3.Session(profile_name=profile_name)
+    s3 = session.resource("s3")
+    bucket = s3.Bucket(bucket_name)
+    
+    obj = bucket.Object(key).get().get("Body")
+    df = pd.read_csv(obj)
+    
+    return df
+
+# [7]
+grid = np.zeros((3,3))
+for (i, lr) in enumerate([0.1, 0.01, 0.001]):
+    for (j, m) in enumerate([0.5, 0.1, 0.05]):
+        key = f"metrics_lr{lr:0.4f}_m{m:0.4f}.csv"
+        df = read_table_from_s3("simplebatch-bucket43879c71-mbqaltx441fu", key)
+        grid[i,j] = df["val_accuracy"].max()
+
+# [8]
+fig, ax = plt.subplots(figsize=(6,6))
+ax.set_aspect('equal')
+
+c = ax.pcolor(grid, edgecolors='w', linewidths=2)
+
+for i in range(3):
+    for j in range(3):
+        text = ax.text(j+0.5, i+0.5, f"{grid[i, j]:0.1f}",
+                       ha="center", va="center", color="w")
+----
+
+最終的に出力されるプロットが <<fig_grid_search_result>> である．
+
+[[fig_grid_search_result]]
+.ハイパーパラメータのグリッドサーチの結果
+image::imgs/aws_batch/grid_search_result.png[grid_search_result, 400, align="center"]
+
+このプロットから，差は僅かであるが，学習率が 0.1 のときに精度は最大となることがわかる．
+また，学習率 0.1 のときはモメンタムを変えても大きな差は生じないことが見て取れる．
+
+[TIP]
+====
+今回のパラメータサーチは学習用として極めて単純化されたものである点は承知いただきたい．
+
+例えば，今回は学習率が 0.1 が最も良いとされたが，それは訓練のエポックを 100 に限定しているからかもしれない．
+学習率が低いとその分訓練に必要なエポック数も多くなる．
+訓練のエポック数をもっと増やせばまた違った結果が観察される可能性はある．
+
+また，今回は MNIST の訓練データ 60,000 枚のうち， 48,000 枚を訓練データ，残り 12,000 枚を検証データとして用いた．
+この分割は乱数を固定してランダムに行ったが，もしこの分割によるデータのバイアスを気にするならば，分割の乱数を変えて複数回モデルの評価を行う (**k-fold cross-validation**) のも，より精緻なアプローチとして考えられる．
+====
+
+以上のようにして， CNN を用いた MNIST 分類モデルのハイパーパラメータの最適化の一連の流れを体験した．
+今回紹介したスタックは， ECR に置く Docker イメージを入れ替えることで，任意のプログラムを実行することができる．
+興味にある読者は，ぜひ自分自身のアプリケーションを実行してもらいたい．
+
+=== スタックの削除
+
+これにて，本ハンズオンは終了である．最後にスタックを削除しよう．
+
+今回のスタックを削除するにあたり，ECR に配置された Docker のイメージは手動で削除されなければならない．
+(これをしないと， `cdk destroy` を実行したときにエラーになってしまう．
+これは CloudFormation の仕様なのでどうしようもない)．
+
+ECR の Docker image を削除するには， ECR のコンソールに行き，イメージが配置されたレポジトリを開く．
+そして，画面右上の `DELETE` ボタンを押して削除する (<<fig_delete_ecr>>)．
+
+[[fig_delete_ecr]]
+.ECR から Docker image を削除する
+image::imgs/aws_batch/delete_ecr.png[delete_ecr, 700, align="center"]
+
+これが完了したうえで，次のコマンドでスタックを削除する．
+
+[source, bash]
+----
+$ cdk destroy
+----
 
