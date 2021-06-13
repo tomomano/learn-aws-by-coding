@@ -112,8 +112,8 @@ AWS はアカウント作成の際，クレジットカードの登録が求め�
 ハンズオンで紹介するコマンドを実行したり，SSHでサーバーにアクセスするため，UNIX系のコンソール環境が必要である．
 Mac または Linux のユーザーは，OSに標準搭載のコンソール(ターミナルとも呼ばれる)を使用すればよい．
 Windowsのユーザーは，
-https://docs.microsoft.com/en-us/windows/wsl/install-win10[Windows Subsystem for Linux (WSL)]
-を使ってUbuntuの仮想環境をインストールすることを推奨する．
+https://docs.microsoft.com/en-us/windows/wsl/about[Windows Subsystem for Linux (WSL)]
+を使って Linux の仮想環境をインストールすることを推奨する．
 WSLのインストールについては，
 https://docs.microsoft.com/en-us/windows/wsl/install-win10[公式ドキュメンテーションを参照]
 のこと．
@@ -121,8 +121,8 @@ https://docs.microsoft.com/en-us/windows/wsl/install-win10[公式ドキュメン
 講義ではDockerの使い方を解説する．
 予め自身の計算機にDockerのインストールをしておくこと．
 Linux/Mac/Windowsのインストール法については https://docs.docker.com/get-docker/[公式ドキュメンテーション]を参照．
-執筆時点において，**Windows 10 Home**　へのインストールには注意が必要である．詳細は
-https://docs.docker.com/docker-for-windows/install-windows-home/[こちらのドキュメンテーションを参照]
+執筆時点において，**Windows 10 Home**　へのインストールするには WSL2 バックエンドの設定が必要である．詳細は
+https://docs.docker.com/docker-for-windows/install/[こちらのドキュメンテーションを参照]
 のこと．
 * **Python** (Version 3.6以上)
 * **Node.js** (version 10.0以上)

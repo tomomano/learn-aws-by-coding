@@ -1,14 +1,21 @@
-[[sec_handson_03]]
+[[sec_fargate_qabot]]
 == Hands-on #3: AWSで自動質問回答ボットを走らせる
 
-ハンズオン第三回では，前章で学んだ Docker と ECS を使うことで，大規模な機械学習システムの最もシンプルなものを実装する．
+ハンズオン第三回では，前章で学んだ Docker と ECS を使うことで，大規模化可能な機械学習システムの最もシンプルなものを実装する．
 
 具体的には， Transformer と呼ばれるディープラーニングのモデルを使った自然言語処理を利用することで，
 英語で与えられた質問への回答を自動で生成するボットを作成してみる．
 特に，何百何千もの質問に同時に対応できるように，単一のサーバーに展開するのではなく，リクエストに応じて複数のサーバーを自動的に起動し，並列でジョブを実行させるシステムを設計する．
-まさに，初歩的ながら， Siri/Alexa/Google assistant のようなシステムを作り上げるのである！
+まさに，初歩的ながら， Siri・Alexa・Google assistant のようなシステムを作り上げるのである！
 
-ハンズオンのソースコードはこちらのリンクに置いてある => https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/03-qa-bot
+ハンズオンのソースコードはこちらのリンクにある => https://github.com/tomomano/intro-aws-2021/tree/main/handson/qa-bot
+
+[TIP]
+====
+通常の機械学習のワークフローでは，モデルの訓練 => 推論 (データへの適用) が基本的な流れである．
+しかしながら， GPU を使ったモデルの訓練はやや難易度が高いため，次章 (<<sec_aws_batch>>) で取り扱う．
+本章は，クラウド上でのクラスターの構築・タスクの管理などの概念に慣れるため，よりシンプルな実装で実現できる推論計算の並列化を紹介する．
+====
 
 [WARNING]
 ====
@@ -16,13 +23,53 @@
 計算の実行には 0.025 $/hour のコストが発生することに注意．
 ====
 
+=== Fargate
+
+.Fargate のロゴ
+image::imgs/aws_logos/Fargate.png[Fargate, 100]
+
+ハンズオンに入っていく前に， **Fargate** という AWS の機能を知っておく必要がある．
+
+ECS の概要を示した <<ecs_overview>> をもう一度見てみよう．
+この図で， ECS の管理下にあるクラスターが示されているが，このクラスターの中で計算を行う実体としては二つの選択肢がある．
+**EC2 あるいは Fargate** のいずれかである．
+EC2 を用いた場合は，先の章で説明したような流れでインスタンスが起動し，計算が実行される．
+しかし， EC2 クラスターの作成・管理は技術的な難易度がやや高いので，次章 (<<sec_aws_batch>>) で説明することにする．
+
+Fargate とは， **ECS での利用に特化**して設計された，**コンテナを使用した計算タスク**を走らせるための仕組みである．
+計算を走らせるという点では EC2 と役割は似ているが， Fargate は EC2 インスタンスのような物理的実体は持たない．
+ECS の利用に専用設計がされているがために， ECS のクラスターとして Fargate を選択すると，とても簡単な設定・プログラムで，非常にパワフルかつスケーラブルな計算システムを構築することができる．
+(クラスターのスケーリングが容易な分，Fargate にはいくつかの制限が伴う．
+例えば GPU を用いた計算は Fargate ではできない．)
+
+Fargate では， EC2 と同様に CPU とメモリーのサイズを必要な分だけ指定できる．
+執筆時点では， CPU は 0.25 - 4 コア， RAM は 0.5 - 30 GB の間で選択することができる (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html[公式ドキュメンテーション参照])．
+
+以上が Fargate の概要であったが，くどくど言葉で説明してもなかなかピンとこないだろう．
+ここからは実際に手を動かしながら， ECS と Fargate を使った並列タスクの処理の仕方を学んでいこう．
+
+[TIP]
+====
+厳密には， ECS に付与するクラスターには EC2 と Fargate のハイブリッドを使用することも可能である．
+====
+
+[TIP]
+====
+"Fargate は EC2 インスタンスのような物理的実体は持たない"，と上に書いたが，少し語弊があるかもしれない．
+Fargate も，データセンターのどこかの CPU 上で起動するので，物理的な実体はどこかには必ず存在する．
+しかし，EC2 インスタンスと違って，例えば SSH でログインすることは基本的に想定されていないし，なにかのソフトウェアをインストールしたりなどの概念も存在しない (基本的に Docker を介してすべてのプログラムが実行される)．
+その意味で "物理的実体を持たない" と表現したのである．
+実は， Fargate は <<sec_serverless>> で紹介する， serverless architecture の重要な構成要素の一つである．
+====
+
 === 準備
 
-本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<<handson_01_prep>>) が整っていることを前提とする．それ以外に必要な準備はない．
+本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<<handson_01_prep>>) が整っていることを前提とする．
+それ以外に必要な準備はない．
 
 === Transformer を用いた question-answering プログラム
 
-このハンズオンで解きたい，自動質問回答の問題をより具体的に定義しよう．
+このハンズオンで開発する，自動質問回答システムをより具体的に定義しよう．
 次のような文脈 (context) と質問 (question) が与えられた状況を想定する．
 
 ----
@@ -38,8 +85,8 @@ question: In what year did Einstein win the Nobel prize?
 answer: 1921
 ----
 
-人間にとっては，このような文章を理解することは容易であるが，コンピュータにそれをやらせることはなかなか難しいことは，想像ができるだろう．
-しかし，近年のディープラーニングを使った自然言語処理の進歩は著しく，上で示したような例題などは，かなり高い正答率で回答できるモデルを作ることができる．
+人間にとっては，このような文章を理解することは容易であるが，コンピュータにそれをやらせることはなかなか難しいことは容易に想像ができるだろう．
+しかし，近年の深層学習を使った自然言語処理の進歩は著しく，上で示したような例題などは，極めて高い正答率で回答できるモデルを作ることができる．
 
 今回は， https://github.com/huggingface/transformers[huggingface/transformers] で公開されている学習済みの言語モデルを利用することで，上で定義した問題を解く Q&A ボットを作る．
 この Q&A ボットは https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)[Transformer]
@@ -120,7 +167,7 @@ https://github.com/huggingface/transformers[huggingface/transformers] には，�
 
 [TIP]
 ====
-今回提供する Docker のソースコードは https://gitlab.com/tomomano/intro-aws/handson/03-qa-bot/docker においてある．
+今回提供する Docker のソースコードは https://github.com/tomomano/intro-aws-2021/tree/main/handson/qa-bot/docker にある．
 ====
 
 === アプリケーションの説明
@@ -128,7 +175,7 @@ https://github.com/huggingface/transformers[huggingface/transformers] には，�
 このハンズオンで作成するアプリケーションの概要を <<handson_03_architecture>> に示す．
 
 [[handson_03_architecture]]
-.ハンズオン#2で作製するアプリケーションのアーキテクチャ
+.ハンズオン#3で作製するアプリケーションのアーキテクチャ
 image::imgs/handson-03/handson-03-architecture.png[hands-on 03 architecture, 600, align="center"]
 
 簡単にまとめると，以下のような設計である．
@@ -240,6 +287,40 @@ container = taskdef.add_container(
 ここでは， GitLab container registry に置いてある image をダウンロードしてくるよう指定している．
 
 このようにわずか数行のコードであるが，これだけで上で説明したような，タスクのスケジューリングなどが自動で実行される．
+
+[TIP]
+====
+上のコードで `cpu=1024` と指定されているのに注目してほしい．
+これは CPU ユニットと呼ばれる数で， 以下の換算表に従って仮想CPU (virtual CPU; vCPU) が割り当てられる．
+1024 が 1 CPU に相当する．
+0.25 や 0.5 vCPU などの数字は，それぞれ実効的に 1/4, 1/2 の CPU 時間が割り当てられることを意味する．
+また， CPU ユニットによって使用できるメモリー量も変わってくる．
+例えば， 1024 CPU ユニットを選択した場合は， 2 から 8 GB の範囲でのみメモリー量を指定することができる．
+最新の情報は https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html[公式ドキュメンテーション] を参照のこと．
+
+.CPU　ユニットと 指定可能なメモリー量の換算表
+[cols="1,1"]
+|===
+|CPU ユニット
+|メモリーの値
+
+|256 (.25 vCPU)
+|0.5 GB, 1 GB, 2 GB
+
+|512 (.5 vCPU)
+|1 GB, 2 GB, 3 GB, 4 GB
+
+|1024 (1 vCPU)
+|2 GB, 3 GB, 4 GB, 5 GB, 6 GB, 7 GB, 8 GB
+
+|2048 (2 vCPU)
+|Between 4 GB and 16 GB in 1-GB increments
+
+|4096 (4 vCPU)
+|Between 8 GB and 30 GB in 1-GB increments
+|===
+
+====
 
 === スタックのデプロイ
 
@@ -421,4 +502,3 @@ $ cdk destroy
 第三回では，さらにレベルアップし， Serverless architecture という最新のクラウドの設計方法について解説する．
 その応用として，簡単な SNS サービスをゼロから実装する予定である．
 お楽しみに！
-
