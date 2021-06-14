@@ -22,6 +22,9 @@ jobs:
         run: |
           cd book
           gem install bundler
+          bundle install
 
       - name: Build the docs
-        run: ./generate.sh main.adoc
+        run: |
+          cd book
+          ./generate.sh main.adoc
