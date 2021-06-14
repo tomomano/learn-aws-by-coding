@@ -1,0 +1,27 @@
+name: GitHub pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "2.6"
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: |
+          cd book
+          gem install bundler
+
+      - name: Build the docs
+        run: ./generate.sh main.adoc

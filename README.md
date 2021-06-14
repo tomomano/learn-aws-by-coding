@@ -4,7 +4,7 @@
 
 - テキスト(HTML版)は [こちら](https://tomomano.gitlab.io/intro-aws/)
 - テキスト(PDF版)は [こちら](https://tomomano.gitlab.io/intro-aws/main.pdf)
-- ハンズオンで使用するプログラム => [handson/](handson/)
+- ハンズオンで使用するプログラム は [handson/](handson/) 以下にあります．
 
 2020年に公開した最初のバージョンは [こちら](https://tomomano.gitlab.io/intro-aws/)
 ([GitLab source](https://gitlab.com/tomomano/intro-aws))
