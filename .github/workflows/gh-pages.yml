@@ -3,8 +3,6 @@ name: GitHub pages
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   deploy:
@@ -28,9 +26,9 @@ jobs:
         run: |
           cd book
           ./generate.sh main.adoc
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: book/dist
-          destination_dir: docs/
