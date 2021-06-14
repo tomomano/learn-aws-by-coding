@@ -25,4 +25,4 @@ jobs:
           push: true
           file: docker/Dockerfile
           tags: |
-            docker.pkg.github.com/${{ github.repository }}/labc:$latest
+            docker.pkg.github.com/${{ github.repository }}/labc:latest
