@@ -2,8 +2,8 @@
 
 🚀🚀AWS の入門者向けの教科書を公開しています🚀🚀
 
-- テキスト(HTML版)は [こちら](https://tomomano.gitlab.io/intro-aws/)
-- テキスト(PDF版)は [こちら](https://tomomano.gitlab.io/intro-aws/main.pdf)
+- テキスト(HTML版)は [こちら](https://tomomano.github.io/learn-aws-by-coding/)
+- テキスト(PDF版)は [こちら](https://tomomano.github.io/learn-aws-by-coding/main.pdf)
 - ハンズオンで使用するプログラム は [handson/](handson/) 以下にあります．
 
 2020年に公開した最初のバージョンは [こちら](https://tomomano.gitlab.io/intro-aws/)
