@@ -1,6 +1,6 @@
 = コードで学ぶAWS入門
 真野 智之 (Tomoyuki Mano) <tomoyukimano@gmail.com>
-v1.0, 2020-06-19
+v1.0, 2021-06-14
 :toc: left
 :sectnums:
 :source-highlighter: rouge

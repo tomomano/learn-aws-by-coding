@@ -23,6 +23,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          file: handson/qa-bot/docker/Dockerfile
+          context: handson/qa-bot/docker
           tags: |
             docker.pkg.github.com/${{ github.repository }}/qabot:latest
