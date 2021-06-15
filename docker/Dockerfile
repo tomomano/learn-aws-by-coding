@@ -15,10 +15,11 @@ RUN cd /opt \
 
 RUN npm install -g aws-cdk@1.105
 
-RUN cd /root \
-    && git clone https://github.com/tomomano/learn-aws-by-coding.git
+# clean up unnecessary files
+RUN rm -rf /opt/*
 
-COPY handson/ /root
+# copy hands-on source code in /root/
+COPY handson/ /root/handson
 
 # Make command line prettier...
 RUN echo "alias ls='ls --color=auto'" >> /root/.bashrc
