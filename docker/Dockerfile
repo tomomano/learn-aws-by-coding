@@ -16,7 +16,7 @@ RUN cd /opt \
 RUN npm install -g aws-cdk@1.105
 
 RUN cd /root \
-    && git clone https://gitlab.com/tomomano/intro-aws.git
+    && git clone https://github.com/tomomano/learn-aws-by-coding.git
 
 # Make command line prettier...
 RUN echo "alias ls='ls --color=auto'" >> /root/.bashrc

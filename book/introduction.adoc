@@ -1,6 +1,6 @@
-ハンズオンで使うプログラム，および教科書とそのソースコードは以下のウェブページで公開している．
+ハンズオンで使うプログラムや教科書のソースコードは以下のウェブページで公開している．
 
-https://gitlab.com/tomomano/intro-aws
+https://github.com/tomomano/learn-aws-by-coding
 
 == はじめに
 
@@ -139,7 +139,7 @@ Docker の使い方を知っている読者は，これを使えば，諸々の�
 
 [source, bash]
 ----
-docker run -it registry.gitlab.com/tomomano/intro-aws:latest
+docker pull docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest
 ----
 
 Docker Image は https://gitlab.com/tomomano/intro-aws/container_registry[GitLab の Container registry] においてある．

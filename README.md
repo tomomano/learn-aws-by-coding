@@ -11,6 +11,8 @@
 
 ## 更新履歴
 
+- 6/15: Version 1.0 公開
+
 ## ライセンス
 
 本教科書およびハンズオンのソースコードは [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) に従うライセンスで公開しています．
