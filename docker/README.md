@@ -9,13 +9,10 @@ The image is pre-installed with
 - AWS CLI
 - AWS CDK
 
-## Launching the container in an interactive mode
+## (For developer) Building docker image locally
+
+`cd` to the root of the repository, and run
 
 ```bash
-docker run -it registry.gitlab.com/tomomano/intro-aws:latest
+docker build -t labc -f docker/Dockerfile .
 ```
-
-Once launched, you will find the hands-on source code in `~/intro-aws/handson/`.
-Then, `cd` into this directory, and run the programs.
-
-Have fun!

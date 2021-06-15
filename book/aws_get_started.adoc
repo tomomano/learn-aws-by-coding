@@ -1,3 +1,4 @@
+[[sec_aws_general_introduction]]
 == AWS入門
 
 === AWSとは？
