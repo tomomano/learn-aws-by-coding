@@ -482,7 +482,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#handson_01_prep">4.1. 準備</a></li>
 <li><a href="#_ssh">4.2. SSH</a></li>
 <li><a href="#_アプリケーションの説明">4.3. アプリケーションの説明</a></li>
-<li><a href="#_プログラムを実行する">4.4. プログラムを実行する</a></li>
+<li><a href="#sec_handson_ec2_run">4.4. プログラムを実行する</a></li>
 <li><a href="#_講義第一回目のまとめ">4.5. 講義第一回目のまとめ</a></li>
 </ul>
 </li>
@@ -582,6 +582,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#aws_cli_install">15.2. AWS CLI のインストール</a></li>
 <li><a href="#aws_cdk_install">15.3. AWS CDK のインストール</a></li>
 <li><a href="#venv_quick_guide">15.4. Python <code>venv</code> クイックガイド</a></li>
+<li><a href="#sec_handson_docker">15.5. ハンズオン実行用の Docker image の使い方</a></li>
 </ul>
 </li>
 <li><a href="#_謝辞">16. 謝辞</a></li>
@@ -810,12 +811,11 @@ Docker の使い方を知っている読者は，これを使えば，諸々の�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash">docker pull docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest</code></pre>
+<pre class="rouge highlight"><code data-lang="bash">docker run docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Docker Image は <a href="https://gitlab.com/tomomano/intro-aws/container_registry">GitLab の Container registry</a> においてある．
-Docker Image のソースコードは <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/docker/Dockerfile">こちら</a> にある．</p>
+<p>この Docker image の使い方や詳細は <a href="#sec_handson_docker">Section 15.5</a> に記載している．</p>
 </div>
 </div>
 </div>
@@ -842,10 +842,10 @@ Linuxのコマンドラインについて知識があると，トラブルシュ
 <div class="sect2">
 <h3 id="_講義に関連する資料">1.6. 講義に関連する資料</h3>
 <div class="paragraph">
-<p>ハンズオンで使うプログラム，および教科書とそのソースコードは以下のウェブページで公開している．</p>
+<p>ハンズオンで使うプログラムや教科書のソースコードは以下のウェブページで公開している．</p>
 </div>
 <div class="paragraph">
-<p><a href="https://gitlab.com/tomomano/intro-aws" class="bare">https://gitlab.com/tomomano/intro-aws</a></p>
+<p><a href="https://github.com/tomomano/learn-aws-by-coding" class="bare">https://github.com/tomomano/learn-aws-by-coding</a></p>
 </div>
 </div>
 <div class="sect2">
@@ -853,7 +853,7 @@ Linuxのコマンドラインについて知識があると，トラブルシュ
 <div class="ulist">
 <ul>
 <li>
-<p>プログラムのコードやシェルのコマンドは <code>monospace letter</code> で記述する．</p>
+<p>コードやシェルのコマンドは <code>monospace letter</code> で記述する．</p>
 </li>
 <li>
 <p>シェルに入力するコマンドは，それがシェルコマンドであると明示する目的で，先頭に <code>$</code> がつけてある．
@@ -2347,7 +2347,7 @@ Spot instance は，AWSのデータセンターの負荷が増えた場合，AWS
 </div>
 </div>
 <div class="sect2">
-<h3 id="_プログラムを実行する">4.4. プログラムを実行する</h3>
+<h3 id="sec_handson_ec2_run">4.4. プログラムを実行する</h3>
 <div class="paragraph">
 <p>さて，ハンズオンのコードの理解ができたところで，プログラムを実際に実行してみよう．繰り返しになるが， <a href="#handson_01_prep">Section 4.1</a> での準備ができていることが前提である．</p>
 </div>
@@ -8952,6 +8952,99 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="sec_handson_docker">15.5. ハンズオン実行用の Docker image の使い方</h3>
+<div class="paragraph">
+<p>ハンズオンを実行するために必要な， Node.js, Python, AWS CDK などがインストールされた Docker image を用意した．
+これを使用することで，自分のローカルマシンに諸々をインストールする必要なく，すぐにハンズオンのコードが実行できる．</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>ハンズオンのいくつかのコマンドは Docker の外 = ローカルマシンのリアル環境で実行されなければならない．
+それらについてはハンズオンの該当箇所に注意書きとして記してある．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Docker Image は <a href="https://github.com/tomomano?tab=packages&amp;repo_name=learn-aws-by-coding">GitHub Packages の Container registry</a> においてある．
+Docker Image のビルドファイルは <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile">こちら</a> にある．</p>
+</div>
+<div class="paragraph">
+<p>次のコマンドで container を起動する．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>初回にコマンドを実行したときのみ， image が GitHub Packages からダウンロード (pull) される．
+二回目以降はローカルにダウンロードされた image が使用される．</p>
+</div>
+<div class="paragraph">
+<p>container が起動すると，次のようなインタラクティブシェルが表示されるはずである (起動時に <code>-it</code> のオプションをつけたのがポイントである)．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code>root@aws-handson:~$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>この状態で <code>ls</code> コマンドを打つと， <code>handson/</code> というディレクトリがあるはずである．
+ここに <code>cd</code> する．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ cd handson</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>すると，各ハンズオンごとのディレクトリが見つかるはずである．</p>
+</div>
+<div class="paragraph">
+<p>あとは，ハンズオンごとにディレクトリを移動し，ハンズオンごとの virtualenv を作成し，スタックのデプロイを行えばよい (<a href="#sec_handson_ec2_run">Section 4.4</a> など参照)．
+ハンズオンごとに使用する依存ライブラリが異なるので，それぞれのハンズオンごとに virtualenv を作成するという設計になっている．</p>
+</div>
+<div class="paragraph">
+<p>AWS の認証情報を設定することも忘れずに．
+<a href="#aws_cli_install">Section 15.2</a> で記述したように， <code>AWS_ACCESS_KEY_ID</code> などの環境変数を設定するのが簡単な方法である．
+あるいは，<strong>ローカルマシンの</strong> <code>~/.aws/credentials</code> に認証情報が書き込まれているなら，このディレクトリを container に<strong>マウント</strong>することで，同じ認証ファイルを container 内部から参照することが可能である．
+この選択肢を取る場合は，以下のコマンドで container を起動する．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> <span class="nt">-v</span> ~/.aws:/root/.aws:ro docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>これにより，ローカルマシンの <code>~/.aws</code> を container の <code>/root/.aws</code> にマウントすることができる．
+最後の <code>:ro</code> は read-only を意味する．
+大切な認証ファイルが誤って書き換えられてしまわないように， read-only のフラグをつけることをおすすめする．</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>/root/</code> が container 環境におけるホームディレクトリである．
+ここで紹介した認証ファイルをマウントするテクニックは， SSH 鍵を container に渡すときなどにも使える．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -8959,6 +9052,13 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 <div class="sectionbody">
 <div class="paragraph">
 <p>本原稿の執筆にあたり，以下の方々からの協力を得た．この場を借りて，感謝を表したい．</p>
+</div>
+<div class="paragraph">
+<p><strong>2021年バージョンの contributors</strong>
+* yet to come&#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p><strong><a href="https://gitlab.com/tomomano/intro-aws">2020年バージョン</a>の contributors</strong></p>
 </div>
 <div class="ulist">
 <ul>
@@ -8979,6 +9079,10 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 <div class="paragraph">
 <p>本書の執筆には <a href="https://asciidoctor.org/">Asciidoctor</a> を使用した．</p>
 </div>
+<div class="paragraph">
+<p>また，本書はオープンソースの教科書として，すべての読者・ディベロッパーからのフィードバックを受け付けている．
+誤植や記述の誤り，改善点など見つかったら，ぜひ <a href="https://github.com/tomomano/learn-aws-by-coding/issues">Issues</a> や <a href="https://github.com/tomomano/learn-aws-by-coding/pulls">Pull request</a> を投稿していただきたい．</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -8989,15 +9093,16 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 </div>
 <div class="paragraph">
 <p>情報理工学博士 (東京大学大学院情報理工学系研究科システム情報学専攻)．
-2021年より日本学術振興会特別研究員 (PD) として沖縄科学技術大学院大学 (OIST) でポスドク研究員として働く．
-研究分野は神経科学・神経情報学．
-趣味は料理・ランニング・鉄道・アニメ・村上春樹．</p>
+2021年より日本学術振興会特別研究員 (PD) (現職)．
+沖縄科学技術大学院大学 (OIST) にてポスドク研究員として働く．
+現在の研究分野は神経科学・神経情報学．
+趣味は料理・ランニング・鉄道・アニメ，村上春樹の熱烈な愛読家．</p>
 </div>
 <div class="paragraph">
 <p>連絡先　<a href="mailto:tomoyukimano@gmail.com">tomoyukimano@gmail.com</a></p>
 </div>
 <div class="paragraph">
-<p>GitLab <a href="https://gitlab.com/tomomano" class="bare">https://gitlab.com/tomomano</a></p>
+<p>GitHub <a href="https://github.com/tomomano" class="bare">https://github.com/tomomano</a></p>
 </div>
 </div>
 </div>
@@ -9027,7 +9132,7 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-06-15 01:26:15 UTC
+Last updated 2021-06-15 02:32:03 UTC
 </div>
 </div>
 <style>
