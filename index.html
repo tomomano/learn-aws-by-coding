@@ -467,7 +467,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_どうやってクラウドを使うのか">2.3. どうやってクラウドを使うのか？</a></li>
 </ul>
 </li>
-<li><a href="#_aws入門">3. AWS入門</a>
+<li><a href="#sec_aws_general_introduction">3. AWS入門</a>
 <ul class="sectlevel2">
 <li><a href="#_awsとは">3.1. AWSとは？</a></li>
 <li><a href="#_awsの機能サービス">3.2. AWSの機能・サービス</a></li>
@@ -483,7 +483,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_ssh">4.2. SSH</a></li>
 <li><a href="#_アプリケーションの説明">4.3. アプリケーションの説明</a></li>
 <li><a href="#sec_handson_ec2_run">4.4. プログラムを実行する</a></li>
-<li><a href="#_講義第一回目のまとめ">4.5. 講義第一回目のまとめ</a></li>
+<li><a href="#_小括">4.5. 小括</a></li>
 </ul>
 </li>
 <li><a href="#sec_scientific_computing">5. クラウドで行う科学計算・機械学習</a>
@@ -1111,7 +1111,7 @@ CPUが1000個欲しいと思ったらならば，そのようにクラウドプ�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_aws入門">3. AWS入門</h2>
+<h2 id="sec_aws_general_introduction">3. AWS入門</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_awsとは">3.1. AWSとは？</h3>
@@ -1792,7 +1792,7 @@ CDK は TypeScript (JavaScript), Python, Java など複数の言語でサポー�
 このハンズオンを終えれば，あなたは自分だけのサーバーをAWS上に立ち上げ，自由に計算を走らせることができるようになるのである！</p>
 </div>
 <div class="paragraph">
-<p>ハンズオン1のソースコードは <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/01-ec2">こちらのリンク</a> に置いてある．</p>
+<p>ハンズオン1のソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/ec2-get-started">こちらのリンク</a> に置いてある．</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -1846,27 +1846,22 @@ AWSアカウントの取得については <a href="#aws_account">Section 1.3</a
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>git clone https://gitlab.com/tomomano/intro-aws.git</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>git clone https://github.com/tomomano/learn-aws-by-coding.git</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>あるいは， <a href="https://gitlab.com/tomomano/intro-aws" class="bare">https://gitlab.com/tomomano/intro-aws</a> のページに行って，右上のダウンロードボタンからダウンロードすることもできる．</p>
+<p>あるいは， hhttps://github.com/tomomano/learn-aws-by-coding.git のページに行って，右上のダウンロードボタンからダウンロードすることもできる．</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_docker_を使用する場合">4.1.6. Docker を使用する場合</h4>
 <div class="paragraph">
 <p>Python, Node.js, AWS CDK など，ハンズオンのプログラムを実行するために必要なプログラム/ライブラリがインストール済みの Docker image を用意した．
-また，ハンズオンのソースコードもクローン済みである．
+また，ハンズオンのソースコードもパッケージ済みである．
 Docker の使い方を知っている読者は，これを使えば，諸々のインストールをする必要なく，すぐにハンズオンのプログラムを実行できる．</p>
 </div>
 <div class="paragraph">
-<p>次のコマンドでコンテナを起動する．</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="bash">docker run <span class="nt">-it</span> registry.gitlab.com/tomomano/intro-aws:latest</code></pre>
-</div>
+<p>使用方法については <a href="#sec_handson_docker">Section 15.5</a> を参照のこと．</p>
 </div>
 </div>
 </div>
@@ -1878,10 +1873,10 @@ Docker の使い方を知っている読者は，これを使えば，諸々の�
 SSH に慣れていない読者のため，簡単な説明をここで行う．</p>
 </div>
 <div class="paragraph">
-<p>SSHによる通信はすべて暗号化されているので，機密情報をインターネット越しに安全に送受信することができる．
-本ハンズオンで，リモートのサーバーにアクセスするためにSSHクライアントがインストールされている必要がある．
+<p>SSH による通信はすべて暗号化されているので，機密情報をインターネットを介して安全に送受信することができる．
+本ハンズオンで，リモートのサーバーにアクセスするための SSH クライアントがローカルマシンにインストールされている必要がある．
 SSHクライアントはLinux/Macには標準搭載されている．
-Windowsの場合はWSLをインストールすることでSSHクライアントを利用することを推奨する (<a href="#environments">Section 1.4</a> を参照)．</p>
+Windows の場合は WSL をインストールすることでSSHクライアントを利用することを推奨する (<a href="#environments">Section 1.4</a> を参照)．</p>
 </div>
 <div class="paragraph">
 <p>SSH コマンドの基本的な使い方は</p>
@@ -1893,18 +1888,18 @@ Windowsの場合はWSLをインストールすることでSSHクライアント�
 </div>
 <div class="paragraph">
 <p>である．
-<code>&lt;host name&gt;</code> はアクセスする先のサーバーのIPアドレスやDNSによるホストネームが入る．
+<code>&lt;host name&gt;</code> はアクセスする先のサーバーの IP アドレスや DNS によるホストネームが入る．
 <code>&lt;user name&gt;</code> は接続する先のユーザー名である．</p>
 </div>
 <div class="paragraph">
-<p>SSH は平文のパスワードによる認証を行うこともできるが，より強固なセキュリティを施すため，<strong>公開鍵暗号方式(Public Key Cryptography)による認証</strong>を行うことが強く推奨されており，EC2はこの方法でしかアクセスを許していない．
+<p>SSH は平文のパスワードによる認証を行うこともできるが，より強固なセキュリティを施すため，<strong>公開鍵暗号方式(Public Key Cryptography)による認証</strong>を行うことが強く推奨されており， EC2 はこの方法でしかアクセスを許していない．
 公開鍵暗号方式の仕組みについては各自勉強してほしい．
-本ハンズオンにおいて大事なことは，<strong>EC2 インスタンスが公開鍵(Public key)を保持し，クライアントとなるコンピューター(あなた自身のコンピュータ)が秘密鍵(Private key)を保持する</strong>，という点である．
+本ハンズオンにおいて大事なことは，<strong> EC2 インスタンスが公開鍵(Public key)を保持し，クライアントとなるコンピューター(あなた自身のコンピュータ)が秘密鍵(Private key)を保持する</strong>，という点である．
 EC2のインスタンスには秘密鍵を持ったコンピュータのみがアクセスすることができる．逆に言うと，秘密鍵が漏洩すると第三者もサーバーにアクセスできることになるので，<strong>秘密鍵は絶対に漏洩することのないよう注意して管理する</strong>．</p>
 </div>
 <div class="paragraph">
 <p>SSH コマンドでは，ログインのために使用する秘密鍵ファイルを <code>-i</code> もしくは <code>--identity_file</code> のオプションで指定することができる．
-例えば</p>
+例えば，</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1936,7 +1931,7 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 <p>上記のようなアプリケーションを，CDKを使って構築する．</p>
 </div>
 <div class="paragraph">
-<p>早速ではあるが，今回のハンズオンで使用するプログラムを見てみよう (<a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/01-ec2/app.py">handson/01-ec2/app.py</a>)．</p>
+<p>早速ではあるが，今回のハンズオンで使用するプログラムを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/ec2-get-started/app.py">handson/ec2-get-started/app.py</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2031,11 +2026,14 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>次に，SGを定義している．ここでは，任意のIPv4のアドレスからの，ポート22 (SSHの接続に使用される)への接続を許容している．それ以外の接続は拒絶される．</td>
+<td>次に， security group (SG) を定義している．
+ここでは，任意のIPv4のアドレスからの，ポート22 (SSHの接続に使用される)への接続を許可している．
+それ以外の接続は拒絶される．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>最後に，上記で作ったVPCとSGが付与されたEC2 のインスタンスを作成している．インスタンスタイプは <code>t2.micro</code> を選択し， <a href="https://aws.amazon.com/amazon-linux-ami/">Amazon Linux</a> をOSとして設定している．</td>
+<td>最後に，上記で作った VP Cと SG が付与された EC2 インスタンスを作成している．
+インスタンスタイプは <code>t2.micro</code> を選択し， <a href="https://aws.amazon.com/amazon-linux-ami/">Amazon Linux</a> をOSとして設定している．</td>
 </tr>
 </table>
 </div>
@@ -2050,7 +2048,7 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 </div>
 </div>
 <div class="paragraph">
-<p>VPCはAWS上にプライベートな仮想ネットワーク環境を構築するツールである．高度な計算システムを構築するには，複数のサーバーを連動させて計算を行う必要があるが，そのような場合に互いのアドレスなどを管理する必要があり，そのような場合にVPCは有用である．</p>
+<p>VPC は AWS 上にプライベートな仮想ネットワーク環境を構築するツールである．高度な計算システムを構築するには，複数のサーバーを連動させて計算を行う必要があるが，そのような場合に互いのアドレスなどを管理する必要があり，そのような場合にVPCは有用である．</p>
 </div>
 <div class="paragraph">
 <p>本ハンズオンでは，サーバーは一つしか起動しないので，VPCの恩恵はよく分からないかもしれない．しかし，EC2インスタンスは必ずVPCの中に配置されなければならない，という制約があるので，このハンズオンでもミニマルなVPCを構成している．</p>
@@ -2097,16 +2095,29 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 <div class="ulist">
 <ul>
 <li>
-<p><code>max_azs=1</code> : このパラメータは，前章で説明した avaialibility zone を設定している．このハンズオンでは，特にデータセンターの障害などを気にする必要はないので1にしている．</p>
+<p><code>max_azs=1</code> : このパラメータは，前章で説明した avaialibility zone (AZ) を設定している．
+このハンズオンでは，特にデータセンターの障害などを気にする必要はないので <code>1</code> にしている．</p>
 </li>
 <li>
-<p><code>cidr="10.10.0.0/23"</code> : このパラメターは，VPC内のIPv4のレンジを指定している．CIDR記法については， <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">Wikipedia</a>などを参照． <code>10.10.0.0/23</code> は <code>10.10.0.0</code> から <code>10.10.1.255</code> までの512個の連続したアドレス範囲を指している．つまり，このVPCでは最大で512個のユニークなIPv4アドレスが使えることになる．今回はサーバーは一つなので512個は明らかに多すぎるが，VPCはアドレスの数はどれだけ作成しても無料なので，多めに作成した．</p>
+<p><code>cidr="10.10.0.0/23"</code> : このパラメターは，VPC内のIPv4のレンジを指定している．
+CIDR記法については， <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">Wikipedia</a>などを参照．
+<code>10.10.0.0/23</code> は <code>10.10.0.0</code> から <code>10.10.1.255</code> までの512個の連続したアドレス範囲を指している．
+つまり，このVPCでは最大で512個のユニークなIPv4アドレスが使えることになる．
+今回はサーバーは一つなので512個は明らかに多すぎるが，VPCはアドレスの数はどれだけ作成しても無料なので，多めに作成した．</p>
 </li>
 <li>
-<p><code>subnet_configuration=&#8230;&#8203;</code> : このパラメータは，VPCにどのようなサブネットを作るか，を決めている．サブネットの種類には <strong>priavte subnet</strong> と <strong>public subnet</strong> の二種類がある．private subnet は基本的にインターネットとは遮断されたサブネット環境である．インターネットと繋がっていないので，セキュリティは極めて高く，VPC内のサーバーとのみ通信を行えばよいEC2インスタンスは，ここに配置する．Public subnet とはインターネットに繋がったサブネットである．本ハンズオンで作成するサーバーは，外からSSHでログインを行いたいので，Public subnet 内に配置する．</p>
+<p><code>subnet_configuration=&#8230;&#8203;</code> : このパラメータは，VPCにどのようなサブネットを作るか，を決めている．
+サブネットの種類には <strong>priavte subnet</strong> と <strong>public subnet</strong> の二種類がある．
+private subnet は基本的にインターネットとは遮断されたサブネット環境である．
+インターネットと繋がっていないので，セキュリティは極めて高く， VPC 内のサーバーとのみ通信を行えばよい EC2 インスタンスはここに配置する．
+Public subnet とはインターネットに繋がったサブネットである．
+本ハンズオンで作成するサーバーは，外からSSHでログインを行いたいので， Public subnet 内に配置する．
+より詳細な記述は <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html#vpc-subnet-basics">公式ドキュメンテーション</a> を参照．</p>
 </li>
 <li>
-<p><code>natgateways=0</code> : これは少し高度な内容なので省略する (興味のある読者は <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">公式ドキュメンテーション</a>を参照)．が，<strong>これを0にしておかないと，NAT Gateway の利用料金が発生してしまうので，注意！</strong></p>
+<p><code>natgateways=0</code> : これは少し高度な内容なので省略する
+(興味のある読者は <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">公式ドキュメンテーション</a>を参照)．
+が，<strong>これを0にしておかないと，NAT Gateway の利用料金が発生してしまうので，注意！</strong></p>
 </li>
 </ul>
 </div>
@@ -2118,7 +2129,8 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 <div class="sect3">
 <h4 id="_security_group">4.3.2. Security Group</h4>
 <div class="paragraph">
-<p>Security group (SG) は，EC2インスタンスに付与することのできる仮想ファイアーウォールである．例えば，特定のIPアドレスから来た接続を許したり　(インバウンド・トラフィックの制限) ，逆に特定のIPアドレスへのアクセスを禁止したり (アウトバウンド・トラフィックの制限) することができる．</p>
+<p>Security group (SG) は， EC2 インスタンスに付与することのできる仮想ファイアーウォールである．
+例えば，特定の IP アドレスから来た接続を許可・拒絶したり　(インバウンド・トラフィックの制限) ，逆に特定のIPアドレスへのアクセスを禁止したり (アウトバウンド・トラフィックの制限) することができる．</p>
 </div>
 <div class="paragraph">
 <p>コードの該当部分を見てみよう．</p>
@@ -2147,8 +2159,8 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 </div>
 </div>
 <div class="paragraph">
-<p>本ハンズオンでは，SSHによる外部からの接続を許容するため， <code>sg.add_ingress_rule(peer=ec2.Peer.any_ipv4(), connection=ec2.Port.tcp(22))</code> により，すべてのIPv4アドレスからのポート22番へのアクセスを許容している．
-また，SSHでEC2インスタンスにログインしたのち，インターネットからプログラムなどをダウンロードできるよう， <code>allow_all_outbound=True</code> のパラメータを設定している．</p>
+<p>本ハンズオンでは， SSH による外部からの接続を許容するため， <code>sg.add_ingress_rule(peer=ec2.Peer.any_ipv4(), connection=ec2.Port.tcp(22))</code> により，すべての IPv4 アドレスからのポート22番へのアクセスを許容している．
+また， SSH で EC2 インスタンスにログインしたのち，インターネットからプログラムなどをダウンロードできるよう， <code>allow_all_outbound=True</code> のパラメータを設定している．</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2172,7 +2184,7 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>セキュリティ上の観点からは，SSHの接続は自宅や大学などの特定の地点からの接続のみを許す方が望ましい．</p>
+<p>セキュリティ上の観点からは，SSHの接続は自宅や大学・職場など特定の地点からの接続のみを許す方が望ましい．</p>
 </div>
 </td>
 </tr>
@@ -2188,12 +2200,12 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 </div>
 <div class="paragraph">
 <p>EC2 はAWS上に仮想サーバーを立ち上げるサービスである．個々の起動状態にある仮想サーバーのことをインスタンス (instance) と呼ぶ
-(しかし，コミュニケーションにおいては，サーバーとインスタンスという言葉は相互互換的に用いられることが多い)．</p>
+(しかし，口語的なコミュニケーションにおいては，サーバーとインスタンスという言葉は相互互換的に用いられることが多い)．</p>
 </div>
 <div class="paragraph">
-<p>EC2では用途に応じて様々なインスタンスタイプが提供されている．
-以下に，代表的なインスタンスタイプの例を挙げる(2020/06時点での情報)．
-EC2 のインスタンスタイプのすべてのリストは <a href="https://aws.amazon.com/ec2/instance-types/">公式ドキュメンテーション</a>で見ることができる．</p>
+<p>EC2 では用途に応じて様々なインスタンスタイプが提供されている．
+以下に，代表的なインスタンスタイプの例を挙げる (執筆時点での情報)．
+EC2 のインスタンスタイプのすべてのリストは <a href="https://aws.amazon.com/ec2/instance-types/">公式ドキュメンテーション</a> で見ることができる．</p>
 </div>
 <table id="ec2_instance_types" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. EC2 instance types</caption>
@@ -2259,7 +2271,8 @@ EC2 のインスタンスタイプのすべてのリストは <a href="https://a
 </tbody>
 </table>
 <div class="paragraph">
-<p>このようにCPUは1コアから96コアまで，メモリーは1GBから3000GB以上まで，ネットワークは最大で100Gbpsまで，幅広く選択することができる．また，時間あたりの料金は，CPU・メモリーの占有数にほぼ比例する形で増加する．
+<p>このように CPU の数は1コアから96コアまで，メモリーは 1GB から 3000GB 以上まで，ネットワークは最大で100Gbpsまで，幅広く選択することができる．
+また，時間あたりの料金は，CPU・メモリーの占有数にほぼ比例する形で増加する．
 EC2 はサーバーの起動時間を秒単位で記録しており，<strong>利用料金は使用時間に比例する形で決定される</strong>．
 例えば， <code>t2.medium</code> のインスタンスを10時間起動した場合，0.0464 * 10 = 0.464 ドルの料金が発生する．</p>
 </div>
@@ -2285,7 +2298,8 @@ EC2 はサーバーの起動時間を秒単位で記録しており，<strong>�
 </td>
 <td class="content">
 <div class="paragraph">
-<p><a href="#ec2_instance_types">Table 2</a> の価格は <code>us-east-1</code> のものである．地域によって多少価格設定が異なることがある．</p>
+<p><a href="#ec2_instance_types">Table 2</a> の価格は <code>us-east-1</code> のものである．
+リージョンによって多少価格設定が異なる．</p>
 </div>
 </td>
 </tr>
@@ -2299,11 +2313,11 @@ EC2 はサーバーの起動時間を秒単位で記録しており，<strong>�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>上記で t2.micro の $0.0116 / hour という金額は，on-demandインスタンスというタイプを選択した場合の価格である．
-EC2 では他に，Spot instance と呼ばれるインスタンスも存在しする．
-Spot instance は，AWSのデータセンターの負荷が増えた場合，AWSの判断により強制シャットダウンされる可能性がある，という不便さを抱えているのだが，その分大幅に安い料金設定になっている．
-いうなれば，"すき間の空きCPUで計算を行う"といった格好である．
-科学計算で，コストを削減する目的で，このSpot Instanceを使う事例も報告されている (<a href="https://arxiv.org/abs/1904.10489">Wu+, 2019</a>)．</p>
+<p>上記で t2.micro の $0.0116 / hour という金額は， On-demand インスタンスというタイプを選択した場合の価格である．
+EC2 では他に， <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html">Spot instance</a> と呼ばれるインスタンスも存在しする．
+Spot instance は，AWSのデータセンターの負荷が増えた場合，ユーザーのプログラムが実行中であってもAWSの判断により強制シャットダウンされる，という不便さを抱えているのだが，その分大幅に安い料金設定になっている．
+AWS で一時的に生じた余剰な空きCPUをユーザーに割安で貸し出す，という発想である．
+科学計算で，コストを削減する目的で，この Spot Instance を活用する事例も報告されている (<a href="https://arxiv.org/abs/1904.10489">Wu+, 2019</a>)．</p>
 </div>
 </td>
 </tr>
@@ -2337,7 +2351,8 @@ Spot instance は，AWSのデータセンターの負荷が増えた場合，AWS
 </div>
 <div class="paragraph">
 <p>ここでは， <code>t2.micro</code> というインスタンスタイプを選択している．
-さらに， <code>machine_image</code> (OSと考えてよい) として， <a href="https://aws.amazon.com/amazon-linux-ami/">Amazon Linux</a> を選択している (Machine image については，第二回ハンズオンでより詳しく触れる)．
+さらに， <code>machine_image</code> (OSと考えてよい) として， <a href="https://aws.amazon.com/amazon-linux-ami/">Amazon Linux</a> を選択している
+(Machine image については，第二回ハンズオンでより詳しく触れる)．
 さらに，上で定義した VPC, SG をこのインスタンスに付与している．</p>
 </div>
 <div class="paragraph">
@@ -2357,11 +2372,11 @@ Spot instance は，AWSのデータセンターの負荷が増えた場合，AWS
 <p>まずは，Python の依存ライブラリをインストールする．以下では，Python のライブラリを管理するツールとして， <a href="https://docs.python.org/3/library/venv.html">venv</a> を使用する．</p>
 </div>
 <div class="paragraph">
-<p>まずは， <code>handson/01-ec2</code> のディレクトリに移動しよう．</p>
+<p>まずは， <code>handson/ec2-get-started</code> のディレクトリに移動しよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">cd </span>handson/01-ec2</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">cd </span>handson/ec2-get-started</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2391,11 +2406,26 @@ Spot instance は，AWSのデータセンターの負荷が増えた場合，AWS
 </tr>
 </table>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>環境によっては <code>pip</code> ではなく <code>pip3</code> あるいは <code>python3 -m pip</code> に置き換える必要がある．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_aws_のシークレットキーをセットする">4.4.2. AWS のシークレットキーをセットする</h4>
 <div class="paragraph">
-<p>AWS CLI および AWS CDK を使うには，AWSのシークレットキーが設定されている必要がある．以下のようにして環境変数を設定する．</p>
+<p>AWS CLI および AWS CDK を使うには， AWS のシークレットキーが設定されている必要がある．
+以下のようにして環境変数を設定する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2410,12 +2440,16 @@ Spot instance は，AWSのデータセンターの負荷が増えた場合，AWS
 <div class="paragraph">
 <p>シークレットキーの発行については <a href="#aws_secrets">Section 15.1</a> を参照．</p>
 </div>
+<div class="paragraph">
+<p>あるいは， <code>~/.aws/credentials</code> に認証情報を保存しておく方法もある．
+詳しくは <a href="#aws_cli_install">Section 15.2</a> を参照．</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_ssh鍵を生成">4.4.3. SSH鍵を生成</h4>
 <div class="paragraph">
 <p>EC2 インスタンスには SSH を使ってログインする．
-EC2インスタンスを起動するのに先行して，今回のハンズオンで専用に使うSSHの公開鍵・秘密鍵のペアを準備する必要がある．</p>
+EC2 インスタンスを作成するのに先行して，今回のハンズオンで専用に使うSSHの公開鍵・秘密鍵のペアを準備する必要がある．</p>
 </div>
 <div class="paragraph">
 <p>以下の aws-cli コマンドにより， <code>HirakeGoma</code> という名前のついた鍵を生成する．</p>
@@ -2453,9 +2487,10 @@ EC2インスタンスを起動するのに先行して，今回のハンズオ�
 <p><code>-c key_name="HirakeGoma"</code> というオプションで，先程生成した <code>HirakeGoma</code> という名前の鍵を使うよう指定している．</p>
 </div>
 <div class="paragraph">
-<p>上記のコマンドを実行すると，VPC， EC2 などが実際に展開される．また，コマンドの出力の最後に <a href="#handson_01_cdk_output">Figure 10</a> のような出力が得られるはずである．
-<strong>出力の中で <code>InstancePublicIp</code> に続く数字が，起動したインスタンスのパブリックIPアドレスである．</strong>
-IPアドレスはデプロイのごとにランダムに割り当てられる．</p>
+<p>上記のコマンドを実行すると， VPC， EC2 などがAWS上に展開される．
+そして，コマンドの出力の最後に <a href="#handson_01_cdk_output">Figure 10</a> のような出力が得られるはずである．
+<strong>出力の中で <code>InstancePublicIp</code> に続く数字が，起動したインスタンスのパブリック IP アドレスである．</strong>
+IP アドレスはデプロイのごとにランダムなアドレスが割り当てられる．</p>
 </div>
 <div id="handson_01_cdk_output" class="imageblock text-center">
 <div class="content">
@@ -2467,7 +2502,7 @@ IPアドレスはデプロイのごとにランダムに割り当てられる．
 <div class="sect3">
 <h4 id="_ssh_でログイン">4.4.5. SSH でログイン</h4>
 <div class="paragraph">
-<p>早速，SSHで接続してみよう．</p>
+<p>早速，SSH　で接続してみよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2475,12 +2510,15 @@ IPアドレスはデプロイのごとにランダムに割り当てられる．
 </div>
 </div>
 <div class="paragraph">
-<p><code>-i</code> オプションで，先程生成した秘密鍵を指定している． EC2 インスタンスにはデフォルトで <code>ec2-user</code> という名前のユーザーが作られているので，それを使用する．最後に， <code>&lt;IP address&gt;</code> の部分は自分が作成したEC2インスタンスのIPアドレスで置き換える (<code>54.238.112.5</code> など）．</p>
+<p><code>-i</code> オプションで，先程生成した秘密鍵を指定している．
+EC2 インスタンスにはデフォルトで <code>ec2-user</code> という名前のユーザーが作られているので，それを使用する．
+最後に， <code>&lt;IP address&gt;</code> の部分は自分が作成したEC2インスタンスのIPアドレスで置き換える (<code>12.345.678.9</code> など）．</p>
 </div>
 <div class="paragraph">
-<p>ログインに成功すると，以下のような画面が表示される．リモートのサーバーにログインしているので，プロンプトが <code>[ec2-user@ip-10-10-1-217 ~]$</code> となっている．</p>
+<p>ログインに成功すると， <a href="#fig_handson_01_ssh_login">Figure 11</a> のような画面が表示される．
+リモートのサーバーにログインしているので，プロンプトが <code>[ec2-user@ip-10-10-1-217 ~]$</code> のようになっていることを確認しよう．</p>
 </div>
-<div id="handson_01_ssh_login" class="imageblock text-center">
+<div id="fig_handson_01_ssh_login" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-01/ssh_login.png" alt="ssh_login" width="700">
 </div>
@@ -2493,11 +2531,11 @@ IPアドレスはデプロイのごとにランダムに割り当てられる．
 <div class="sect3">
 <h4 id="_起動した_ec2_インスタンスで遊んでみる">4.4.6. 起動した EC2 インスタンスで遊んでみる</h4>
 <div class="paragraph">
-<p>せっかくサーバーを起動したので，少し遊んでみよう．</p>
+<p>せっかく新しいインスタンスを起動したので，少し遊んでみよう．</p>
 </div>
 <div class="paragraph">
 <p>ログインした EC2 インスタンスで，次のコマンドを実行してみよう．
-CPUの情報を取得することができる．</p>
+CPU の情報を取得することができる．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2548,7 +2586,7 @@ Python 3.6 のインストールを行ってみよう．
 </div>
 </div>
 <div class="paragraph">
-<p>インストールしたPythonを起動してみよう．</p>
+<p>インストールした Python を起動してみよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2576,12 +2614,12 @@ Type <span class="s2">"help"</span>, <span class="s2">"copyright"</span>, <span 
 <div class="sect3">
 <h4 id="_aws_コンソールから確認">4.4.7. AWS コンソールから確認</h4>
 <div class="paragraph">
-<p>これまでは，すべてコマンドラインからEC2に関連する諸々の操作を行ってきた．
+<p>これまでは，すべてコマンドラインから EC2 に関連する操作を行ってきた．
 EC2インスタンスの状態を確認したり，サーバーをシャットダウンするなどの操作は，AWS コンソールから実行することもできる．
 軽くこれを紹介しよう．</p>
 </div>
 <div class="paragraph">
-<p>まず，AWS コンソールにログインする．</p>
+<p>まず，ウェブブラウザを開いて AWS コンソールにログインする．</p>
 </div>
 <div class="paragraph">
 <p>ログインしたら， <code>Services</code> から <code>EC2</code> を検索(選択)する．
@@ -2613,9 +2651,9 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <p>同様に，VPC・SG についてもコンソールから確認することができる．</p>
 </div>
 <div class="paragraph">
-<p>前章で CloudFormation について触れたが，今回デプロイしたアプリケーションも，CloudFormation の "スタック" として管理されている．
-スタック (stack) とは，AWSリソースの集合のことを指す．
-今回の場合は，VPC/EC2/SG などがスタックの中に含まれている．</p>
+<p>前章で CloudFormation について触れたが，今回デプロイしたアプリケーションも，CloudFormation のスタックとして管理されている．
+<strong>スタック (stack)</strong> とは， AWS リソースの集合のことを指す．
+今回の場合は， VPC/EC2/SG などがスタックの中に含まれている．</p>
 </div>
 <div class="paragraph">
 <p>コンソールで <code>CloudFormation</code> のページに行ってみよう (<a href="#aws_cloudformation_console">Figure 13</a>)．</p>
@@ -2678,17 +2716,17 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <td class="content">
 <div class="paragraph">
 <p><strong>スタックの削除は各自で必ず行うこと！</strong>
-行わなかった場合，EC2インスタンスの料金が発生し続けることになる！</p>
+行わなかった場合， EC2 インスタンスの料金が発生し続けることになる！</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>また，本ハンズオンのために作成したSSH鍵ペアも不要なので，削除しておく．</p>
+<p>また，本ハンズオンのために作成した SSH 鍵ペアも不要なので，削除しておく．</p>
 </div>
 <div class="paragraph">
-<p>まず，EC2側に登録してある公開鍵を削除する．
+<p>まず， EC2 側に登録してある公開鍵を削除する．
 これも，コンソールおよびコマンドラインの２つの方法で実行できる．</p>
 </div>
 <div class="paragraph">
@@ -2728,7 +2766,7 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>なお，頻繁にEC2インスタンスを起動したりする場合は，いちいちSSH鍵を削除する必要はない．</p>
+<p>なお，頻繁に EC2 インスタンスを起動したりする場合は，いちいち SSH 鍵を削除する必要はない．</p>
 </div>
 </td>
 </tr>
@@ -2737,21 +2775,23 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_講義第一回目のまとめ">4.5. 講義第一回目のまとめ</h3>
+<h3 id="_小括">4.5. 小括</h3>
 <div class="paragraph">
-<p>ここまでが，第一回目の講義の内容である．盛りだくさんの内容であったが，ついてこれたであろうか？</p>
+<p>ここまでが，本書の第一部の内容である．
+盛りだくさんの内容であったが，ついてこれたであろうか？</p>
 </div>
 <div class="paragraph">
-<p>第一回では，クラウドの概要と，なぜクラウドを使うのか，という点を議論した．
-また，クラウドを学ぶ具体的な題材としてAWSを取り上げ，AWSの概要説明を行った．
-さらに，ハンズオンではAWS CLI/CDK を使って，自分のマイ・サーバーをAWS上に立ち上げる演習を行った．</p>
+<p><a href="#chap_cloud_basics">Section 2</a> では，クラウドの概要と，なぜクラウドを使うのか，という点を議論した．
+続いて <a href="#sec_aws_general_introduction">Section 3</a> では，クラウドを学ぶ具体的な題材として AWS を取り上げ， AWS の概要説明を行った．
+さらに， <a href="#sec_first_ec2">Section 4</a> のハンズオンでは AWS CLI/CDK を使って，自分のプライベートなサーバーを AWS 上に立ち上げる演習を行った．</p>
 </div>
 <div class="paragraph">
-<p>ハンズオンなどを通じて，いかに簡単に(たった数行のコマンドで！)仮想サーバーを立ち上げたり，削除したりすることができるか，体験することができただろう．
+<p>これらを通じて，いかに簡単に (たった数行のコマンドで！) 仮想サーバーを立ち上げたり，削除したりすることができるか，体験することができただろう．
 このように，<strong>ダイナミックに計算リソースを拡大・縮小をできることが，クラウドの最も本質的な側面であると，筆者は考えている</strong>．</p>
 </div>
 <div class="paragraph">
-<p>次回以降の講義では，今回学んだクラウドの技術を基に，より現実的な問題を解くことを体験してもらう．お楽しみに！</p>
+<p>次章からは，今回学んだクラウドの技術を基に，より現実に即した問題を解くことを体験してもらう．
+お楽しみに！</p>
 </div>
 </div>
 </div>
@@ -9132,7 +9172,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-06-15 02:32:03 UTC
+Last updated 2021-06-15 03:44:30 UTC
 </div>
 </div>
 <style>
