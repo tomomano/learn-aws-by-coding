@@ -11,7 +11,7 @@ v1.0, 2021-06-14
 include::introduction.adoc[]
 include::cloud.adoc[]
 include::aws_get_started.adoc[]
-include::handson-01.adoc[]
+include::handson-ec2.adoc[]
 include::scientific_computing.adoc[]
 include::handson-02.adoc[]
 include::docker_system.adoc[]

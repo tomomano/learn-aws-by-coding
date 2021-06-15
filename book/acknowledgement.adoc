@@ -2,10 +2,18 @@
 
 本原稿の執筆にあたり，以下の方々からの協力を得た．この場を借りて，感謝を表したい．
 
+**2021年バージョンの contributors**
+* yet to come...
+
+**https://gitlab.com/tomomano/intro-aws[2020年バージョン]の contributors**
+
 * 勝俣敬寛氏 - Docker イメージの作成
 * 香取真知子氏 - ハンズオンプログラムの動作確認
 * https://gitlab.com/shuuji3[@shuuji3] - MR https://gitlab.com/tomomano/intro-aws/-/merge_requests/15[!15]
 * https://gitlab.com/takatama_jp[@takatama_jp] - MR https://gitlab.com/tomomano/intro-aws/-/merge_requests/14[!14]
 
 本書の執筆には https://asciidoctor.org/[Asciidoctor] を使用した．
+
+また，本書はオープンソースの教科書として，すべての読者・ディベロッパーからのフィードバックを受け付けている．
+誤植や記述の誤り，改善点など見つかったら，ぜひ https://github.com/tomomano/learn-aws-by-coding/issues[Issues] や https://github.com/tomomano/learn-aws-by-coding/pulls[Pull request] を投稿していただきたい．
 

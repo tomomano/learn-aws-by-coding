@@ -246,3 +246,69 @@ $ pip install -r requirements.txt
 ====
 venv による仮想環境を保存するディレクトリの名前は任意に選べることができるが， `.env` という名前を用いるのが一般的である．
 ====
+
+[[sec_handson_docker]]
+=== ハンズオン実行用の Docker image の使い方
+
+ハンズオンを実行するために必要な， Node.js, Python, AWS CDK などがインストールされた Docker image を用意した．
+これを使用することで，自分のローカルマシンに諸々をインストールする必要なく，すぐにハンズオンのコードが実行できる．
+
+[WARNING]
+====
+ハンズオンのいくつかのコマンドは Docker の外 = ローカルマシンのリアル環境で実行されなければならない．
+それらについてはハンズオンの該当箇所に注意書きとして記してある．
+====
+
+Docker Image は https://github.com/tomomano?tab=packages&repo_name=learn-aws-by-coding[GitHub Packages の Container registry] においてある．
+Docker Image のビルドファイルは https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile[こちら] にある．
+
+次のコマンドで container を起動する．
+
+[source, bash]
+----
+$ docker run -it docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest
+----
+
+初回にコマンドを実行したときのみ， image が GitHub Packages からダウンロード (pull) される．
+二回目以降はローカルにダウンロードされた image が使用される．
+
+container が起動すると，次のようなインタラクティブシェルが表示されるはずである (起動時に `-it` のオプションをつけたのがポイントである)．
+
+[source]
+----
+root@aws-handson:~$
+----
+
+この状態で `ls` コマンドを打つと， `handson/` というディレクトリがあるはずである．
+ここに `cd` する．
+
+[souce, bash]
+----
+$ cd handson
+----
+
+すると，各ハンズオンごとのディレクトリが見つかるはずである．
+
+あとは，ハンズオンごとにディレクトリを移動し，ハンズオンごとの virtualenv を作成し，スタックのデプロイを行えばよい (<<sec_handson_ec2_run>> など参照)．
+ハンズオンごとに使用する依存ライブラリが異なるので，それぞれのハンズオンごとに virtualenv を作成するという設計になっている．
+
+AWS の認証情報を設定することも忘れずに．
+<<aws_cli_install>> で記述したように， `AWS_ACCESS_KEY_ID` などの環境変数を設定するのが簡単な方法である．
+あるいは，**ローカルマシンの** `~/.aws/credentials` に認証情報が書き込まれているなら，このディレクトリを container に**マウント**することで，同じ認証ファイルを container 内部から参照することが可能である．
+この選択肢を取る場合は，以下のコマンドで container を起動する．
+
+[source, bash]
+----
+$ docker run -it -v ~/.aws:/root/.aws:ro docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest
+----
+
+これにより，ローカルマシンの `~/.aws` を container の `/root/.aws` にマウントすることができる．
+最後の `:ro` は read-only を意味する．
+大切な認証ファイルが誤って書き換えられてしまわないように， read-only のフラグをつけることをおすすめする．
+
+[TIP]
+====
+`/root/` が container 環境におけるホームディレクトリである．
+ここで紹介した認証ファイルをマウントするテクニックは， SSH 鍵を container に渡すときなどにも使える．
+====
+

@@ -139,11 +139,10 @@ Docker の使い方を知っている読者は，これを使えば，諸々の�
 
 [source, bash]
 ----
-docker pull docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest
+docker run docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest
 ----
 
-Docker Image は https://gitlab.com/tomomano/intro-aws/container_registry[GitLab の Container registry] においてある．
-Docker Image のソースコードは https://gitlab.com/tomomano/intro-aws/-/tree/master/docker/Dockerfile[こちら] にある．
+この Docker image の使い方や詳細は <<sec_handson_docker>> に記載している．
 
 === 前提知識
 
@@ -158,13 +157,13 @@ Linuxのコマンドラインについて知識があると，トラブルシュ
 
 === 講義に関連する資料
 
-ハンズオンで使うプログラム，および教科書とそのソースコードは以下のウェブページで公開している．
+ハンズオンで使うプログラムや教科書のソースコードは以下のウェブページで公開している．
 
-https://gitlab.com/tomomano/intro-aws
+https://github.com/tomomano/learn-aws-by-coding
 
 === 本書で使用するノーテーションなど
 
-* プログラムのコードやシェルのコマンドは `monospace letter` で記述する．
+* コードやシェルのコマンドは `monospace letter` で記述する．
 * シェルに入力するコマンドは，それがシェルコマンドであると明示する目的で，先頭に `$` がつけてある．
 `$` はコマンドをコピー&ペーストするときは除かなければならない．
 逆に，コマンドの出力には `$` はついていない点に留意する．
@@ -179,15 +178,3 @@ WARNING: 陥りやすいミスなどの注意事項を述べる．
 
 IMPORTANT: 絶対に犯してはならないミスを指摘する．
 
-
-// .もっと勉強したい人へ
-// ****
-// クラウドの実践的な教材としては，以下のリソースが役に立つだろう．
-
-// - https://aws.amazon.com/education/awseducate/[AWS Educate]
-// (AWSが公式で提供している学生向けのクラウド学習教材．オンラインの教科書・動画・コーディングなどで学べる．学生ならば受講は無料．)
-// - https://docs.aws.amazon.com/[AWS公式ドキュメント]
-// (クラウド技術は日進月歩であり，新しい機能やサービスが毎年のように更新され，昔の情報はどんどん古くなっていく．公式ドキュメンテーションで常に最新の情報を参照すべし．)
-
-// また，クラウドというのは様々な情報技術の総体である．クラウドのインフラを支える理論について興味がある場合は，ネットワーク・OS・データベースなど，個別のテーマに絞った本を参照することをおすすめする．
-// ****
