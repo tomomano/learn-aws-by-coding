@@ -164,11 +164,11 @@ False
 
 自分の使うソフトウェア・ライブラリがインストールされた，自分だけの Image を作ることも可能である．
 
-例えば， https://gitlab.com/tomomano/intro-aws/container_registry[本講義で提供している docker image] には， Python, Node.js, AWS CLI, AWS CDK などのソフトウェアがインストール済みであり，ダウンロードしてくるだけですぐにハンズオンのプログラムが実行できるようになっている．
+例えば， https://gitlab.com/tomomano/intro-aws/container_registry[本書で提供している docker image] には， Python, Node.js, AWS CLI, AWS CDK などのソフトウェアがインストール済みであり，ダウンロードしてくるだけですぐにハンズオンのプログラムが実行できるようになっている．
 
 カスタムの docker image を作るには， `Dockerfile` という名前のついたファイルを用意し，その中にどんなプログラムをインストールするかなどを記述していく．
 
-具体例として，本講義で提供している Docker image のレシピを見てみよう (https://github.com/tomomano/intro-aws-2021/blob/main/docker/Dockerfile[/docker/Dockerfile])．
+具体例として，本書で提供している Docker image のレシピを見てみよう (https://github.com/tomomano/intro-aws-2021/blob/main/docker/Dockerfile[/docker/Dockerfile])．
 
 [source, docker]
 ----

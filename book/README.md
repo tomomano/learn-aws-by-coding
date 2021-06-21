@@ -1,4 +1,6 @@
-The source of the main text, written with [asciidoctor](https://asciidoctor.org/).
+The source of the main text is here, written with [asciidoctor](https://asciidoctor.org/).
+
+If you want to build the document from the source, follow these steps.
 
 ## Install
 
@@ -6,7 +8,7 @@ Prerequisites:
 - `ruby`
 - `bundler`
 
-Install dependent libraries:
+Install ruby libraries:
 
 ```bash
 bundle install --path vendor/bundle
@@ -17,6 +19,8 @@ bundle install --path vendor/bundle
 ```bash
 ./generate.sh main.adoc
 ```
+
+This will generate HTML and PDF documents in the directory named `dist/`.
 
 ## Source structure
 
