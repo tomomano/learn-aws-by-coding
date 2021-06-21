@@ -8701,7 +8701,7 @@ Content-Type: application/json
 <div class="paragraph">
 <p>AWS シークレットキーとは， AWS CLI や AWS CDK から AWS の API を操作する際に，ユーザー認証を行うための鍵のことである．
 AWS CLI/CDK を使うには，最初にシークレットキーを発行する必要がある．
-AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ja_jp/general/latest/gr/managing-aws-access-keys.html">公式ドキュメンテーション</a> を参照．</p>
+AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html">公式ドキュメンテーション</a> を参照．</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -8709,33 +8709,93 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ja
 <p>AWS コンソールにログインする．</p>
 </li>
 <li>
-<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#aws_secret_key_1">Figure 90</a>)</p>
+<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 90</a>)</p>
 </li>
 <li>
-<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#aws_secret_key_1">Figure 90</a>)</p>
+<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 91</a>)</p>
 </li>
 <li>
 <p>表示された Access key ID, Secret access key を記録しておく (画面を閉じると以降は表示されない)．</p>
 </li>
 <li>
-<p>鍵を忘れてしまった場合などは，何度でも発行が可能である．</p>
+<p>鍵を忘れてしまった場合などは，同じ手順で再発行が可能である．</p>
 </li>
 <li>
 <p>発行したシークレットキーは， <code>~/.aws/credentials</code> のファイルに書き込むか，環境変数に設定するなどして使う (詳しくは <a href="#aws_cli_install">Section 15.2</a>)．</p>
 </li>
 </ol>
 </div>
-<div id="aws_secret_key_1" class="imageblock text-center">
+<div id="fig:aws_secret_key_1" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_1.png" alt="aws_secret_key_1" width="400">
 </div>
 <div class="title">Figure 90. AWS シークレットキーの発行1</div>
 </div>
-<div id="aws_secret_key_2" class="imageblock text-center">
+<div id="fig:aws_secret_key_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_2.png" alt="aws_secret_key_2" width="700">
 </div>
 <div class="title">Figure 91. AWS シークレットキーの発行2</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>AWS Educate Starter Account</strong> を用いている場合は，以下の手順でシークレットキーを確認する．</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 92</a>)．</p>
+</li>
+<li>
+<p><code>Account Details</code> をクリックし，続いて <code>AWS CLI: Show</code> をクリックする．</p>
+</li>
+<li>
+<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 93</a>)．
+ここで表示された内容を <code>~/.aws/credentials</code> にコピーする (<a href="#aws_cli_install">Section 15.2</a> 参照)．
+<code>aws_session_token</code> の箇所も漏らさずコピーすること．</p>
+</li>
+<li>
+<p>続いて， <code>~/.aws/config</code> というファイルを用意し，次の内容を書き込む．
+現時点では AWS Starter Account は <code>us-east-1</code> リージョンでしか利用できないためである．</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[profile default]
+region = ap-northeast-1
+output = json</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>上記の説明ではプロファイル名が <code>default</code> となっていたが，これは自分の好きな名前に変更しても良い．
+<code>default</code> 以外の名前を使用する場合は，コマンドを実行する際にプロファイル名を指定する必要がある (<a href="#aws_cli_install">Section 15.2</a>)．</p>
+</li>
+</ul>
+</div>
+<div id="fig:vocareum_console" class="imageblock text-center">
+<div class="content">
+<img src="imgs/vocareum_console.png" alt="vocareum console" width="700">
+</div>
+<div class="title">Figure 92. vocareum コンソール</div>
+</div>
+<div id="fig:vocareum_secret" class="imageblock text-center">
+<div class="content">
+<img src="imgs/vocareum_secret.png" alt="vocareum secret" width="700">
+</div>
+<div class="title">Figure 93. vocareum から AWS シークレットキーの発行</div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -8832,6 +8892,21 @@ output <span class="o">=</span> json</code></pre>
 </div>
 <div class="paragraph">
 <p>上の環境変数は， <code>~/.aws/credentials</code> よりも高い優先度を持つので，環境変数が設定されていればそちらの情報が使用される (<a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">参照</a>)．</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>AWS Educate Starter Account</strong> は <code>us-east-1</code> のリージョンのみ利用可能である (執筆時点での情報)．
+よって， AWS Educate Starter Account を使用している場合は， default region を <code>us-east-1</code> に設定する必要がある．</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -8954,14 +9029,14 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 <p>と実行する．</p>
 </div>
 <div class="paragraph">
-<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 92</a>)．
+<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 94</a>)．
 これが， "いまあなたは venv の中にいますよ" というしるしになる．</p>
 </div>
 <div id="fig_venv_prompt" class="imageblock text-center">
 <div class="content">
 <img src="imgs/venv_shell.png" alt="venv shell" width="500">
 </div>
-<div class="title">Figure 92. venv を起動したときのプロンプト</div>
+<div class="title">Figure 94. venv を起動したときのプロンプト</div>
 </div>
 <div class="paragraph">
 <p>仮想環境を起動すると，それ以降実行する <code>pip</code> コマンドは， <code>.env/</code> 以下にインストールされる．このようにして，プロジェクトごとに使うライブラリのバージョンを切り分けることができる．</p>
@@ -9014,7 +9089,7 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 </table>
 </div>
 <div class="paragraph">
-<p>Docker Image は <a href="https://github.com/tomomano?tab=packages&amp;repo_name=learn-aws-by-coding">GitHub Packages の Container registry</a> においてある．
+<p>Docker Image は <a href="https://hub.docker.com/repository/docker/tomomano/labc">Docker Hub</a> においてある．
 Docker Image のビルドファイルは <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile">こちら</a> にある．</p>
 </div>
 <div class="paragraph">
@@ -9022,11 +9097,11 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> tomomano/labc:latest</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>初回にコマンドを実行したときのみ， image が GitHub Packages からダウンロード (pull) される．
+<p>初回にコマンドを実行したときのみ， image が Docker Hub からダウンロード (pull) される．
 二回目以降はローカルにダウンロードされた image が使用される．</p>
 </div>
 <div class="paragraph">
@@ -9094,8 +9169,14 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <p>本原稿の執筆にあたり，以下の方々からの協力を得た．この場を借りて，感謝を表したい．</p>
 </div>
 <div class="paragraph">
-<p><strong>2021年バージョンの contributors</strong>
-* yet to come&#8230;&#8203;</p>
+<p><strong>2021年バージョンの contributors</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>yet to come&#8230;&#8203;</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><strong><a href="https://gitlab.com/tomomano/intro-aws">2020年バージョン</a>の contributors</strong></p>
@@ -9172,7 +9253,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-06-21 02:43:38 UTC
+Last updated 2021-06-21 12:28:38 UTC
 </div>
 </div>
 <style>
