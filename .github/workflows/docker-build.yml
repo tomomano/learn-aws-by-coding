@@ -5,7 +5,7 @@ on:
 
 jobs:
   push_to_registry:
-    name: Push Docker image to GitHub packages
+    name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -24,4 +24,4 @@ jobs:
           push: true
           file: docker/Dockerfile
           tags: |
-            tomomano/qabot
+            tomomano/labc:latest
