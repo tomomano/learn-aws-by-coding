@@ -1,17 +1,17 @@
 # コードで学ぶAWS入門 (Learn AWS by Coding)
 
-🚀🚀AWS の入門者向けの教科書を公開しています🚀🚀
+🚀🚀東京大学2021年度S1/S2ターム システム情報学特論　"AWSを使ったクラウドコンピューティング入門" 講義資料🚀🚀
 
 - テキスト(HTML版)は [こちら](https://tomomano.github.io/learn-aws-by-coding/)
 - テキスト(PDF版)は [こちら](https://tomomano.github.io/learn-aws-by-coding/main.pdf)
 - ハンズオンで使用するプログラム は [handson/](handson/) 以下にあります．
 
-2020年に公開した最初のバージョンは [こちら](https://tomomano.gitlab.io/intro-aws/)
-([GitLab source](https://gitlab.com/tomomano/intro-aws))
+2020年バージョン (初代) は [こちら](https://tomomano.gitlab.io/intro-aws/)
+(GitLab は [こちら](https://gitlab.com/tomomano/intro-aws))
 
 ## 更新履歴
 
-- 6/15: Version 1.0 公開
+- 6/21: Version 1.0 公開
 
 ## ライセンス
 

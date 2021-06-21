@@ -3,6 +3,7 @@
 本原稿の執筆にあたり，以下の方々からの協力を得た．この場を借りて，感謝を表したい．
 
 **2021年バージョンの contributors**
+
 * yet to come...
 
 **https://gitlab.com/tomomano/intro-aws[2020年バージョン]の contributors**

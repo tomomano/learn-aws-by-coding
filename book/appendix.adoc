@@ -1,63 +1,57 @@
 == Appendix
 
-//[[appendix_aws_account]]
-// === AWS Educate
-
-// 執筆時点において，AWS Educateに参加すると，$30分のAWS利用クーポンが手に入る．また，AWS Educateの提供する各種オンライン教材にアクセスすることができる．以下に登録の手順を示す．
-
-// [NOTE]
-// ====
-// ここに示すのは執筆時点(2020/05)での情報である．将来的に手順が変更される可能性があることに注意．
-// ====
-
-// ==== AWS Educate アカウントの作成
-
-// . AWS Educate のページへ行く => https://aws.amazon.com/education/awseducate/
-// . "Join AWS Educate" > "Student" を選択．
-// . アカウント情報を入力．東大ECCSのメールアドレス(`g.ecc.u-tokyo.ac.jp`)を使用する．
-// . メールアドレスの確認がメールで届くので，リンクに従って認証する．
-// . アカウントが認可されるまで少し時間がかかるので，待つ．
-// . アカウントが認可されると，AWS Educate にログインできるようになる．
-
-// ==== AWS Educate から AWS アカウントを使用する
-
-// . AWS Educate にログインしたら，トップバーの"AWS Account"をクリック．そこから"AWS Educate Starter Account"をクリック (<<aws_educate>>)．
-// . 遷移した先のページ(vocareum)にある "AWS Console" をクリックすると，AWSのコンソール画面へ遷移する (<<aws_educate_account>>)．
-// ** このコンソール画面から，各種の AWS リソースを利用することができる．
-// . 遷移した先のページ(vocareum)にある "Account Details" をクリックすると，CLIからAWSにアクセスするためのアクセスキーなどが表示される (<<aws_educate_account>>)．
-// ** `aws_access_key_id`, `aws_secret_access_key` の値を確認．
-// ** これらの値を `~/.aws/credentials` などのファイルに保存する (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html[参照])．
-// あるいは， `AWS_ACCESS_KEY_ID` などの環境変数に設定する．
-
-// [[aws_educate]]
-// .AWS Educate スクリーンショット1
-// image::imgs/aws_educate.png[AWS Educate, 600, align="center"]
-
-// [[aws_educate_account]]
-// .AWS Educate スクリーンショット2
-// image::imgs/aws_educate_account.png[AWS Educate, 600, align="center"]
-
 [[aws_secrets]]
 === AWS のシークレットキーの作成
 
 AWS シークレットキーとは， AWS CLI や AWS CDK から AWS の API を操作する際に，ユーザー認証を行うための鍵のことである．
 AWS CLI/CDK を使うには，最初にシークレットキーを発行する必要がある．
-AWS シークレットキーの詳細は https://docs.aws.amazon.com/ja_jp/general/latest/gr/managing-aws-access-keys.html[公式ドキュメンテーション] を参照．
+AWS シークレットキーの詳細は https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html[公式ドキュメンテーション] を参照．
 
 . AWS コンソールにログインする．
-. 画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<<aws_secret_key_1>>)
-. "Access keys for CLI, SDK, & API access" の下にある "Create accesss key" のボタンをクリックする (<<aws_secret_key_1>>)
+. 画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<<fig:aws_secret_key_1>>)
+. "Access keys for CLI, SDK, & API access" の下にある "Create accesss key" のボタンをクリックする (<<fig:aws_secret_key_2>>)
 . 表示された Access key ID, Secret access key を記録しておく (画面を閉じると以降は表示されない)．
-. 鍵を忘れてしまった場合などは，何度でも発行が可能である．
+. 鍵を忘れてしまった場合などは，同じ手順で再発行が可能である．
 . 発行したシークレットキーは， `~/.aws/credentials` のファイルに書き込むか，環境変数に設定するなどして使う (詳しくは <<aws_cli_install>>)．
 
-[[aws_secret_key_1]]
+[[fig:aws_secret_key_1]]
 .AWS シークレットキーの発行1
 image::imgs/aws_secret_key_1.png[aws_secret_key_1, 400, align="center"]
 
-[[aws_secret_key_2]]
+[[fig:aws_secret_key_2]]
 .AWS シークレットキーの発行2
 image::imgs/aws_secret_key_2.png[aws_secret_key_2, 700, align="center"]
+
+[WARNING]
+====
+**AWS Educate Starter Account** を用いている場合は，以下の手順でシークレットキーを確認する．
+
+- AWS Educate のコンソール画面から， `vocareum` のコンソールに移動する (<<fig:vocareum_console>>)．
+- `Account Details` をクリックし，続いて `AWS CLI: Show` をクリックする．
+- `aws_access_key_id`, `aws_secret_access_key`, `aws_session_token` が表示される (<<fig:vocareum_secret>>)．
+ここで表示された内容を `~/.aws/credentials` にコピーする (<<aws_cli_install>> 参照)．
+`aws_session_token` の箇所も漏らさずコピーすること．
+- 続いて， `~/.aws/config` というファイルを用意し，次の内容を書き込む．
+現時点では AWS Starter Account は `us-east-1` リージョンでしか利用できないためである．
+[source, bash]
+----
+[profile default]
+region = ap-northeast-1
+output = json
+----
+- 上記の説明ではプロファイル名が `default` となっていたが，これは自分の好きな名前に変更しても良い．
+`default` 以外の名前を使用する場合は，コマンドを実行する際にプロファイル名を指定する必要がある (<<aws_cli_install>>)．
+
+
+[[fig:vocareum_console]]
+.vocareum コンソール
+image::imgs/vocareum_console.png[vocareum console, 700, align="center"]
+
+[[fig:vocareum_secret]]
+.vocareum から AWS シークレットキーの発行
+image::imgs/vocareum_secret.png[vocareum secret, 700, align="center"]
+====
+
 
 [[aws_cli_install]]
 === AWS CLI のインストール
@@ -141,6 +135,12 @@ export AWS_DEFAULT_REGION=ap-northeast-1
 ----
 
 上の環境変数は， `~/.aws/credentials` よりも高い優先度を持つので，環境変数が設定されていればそちらの情報が使用される (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html[参照])．
+
+[WARNING]
+====
+**AWS Educate Starter Account** は `us-east-1` のリージョンのみ利用可能である (執筆時点での情報)．
+よって， AWS Educate Starter Account を使用している場合は， default region を `us-east-1` に設定する必要がある．
+====
 
 [[aws_cdk_install]]
 === AWS CDK のインストール
@@ -259,17 +259,17 @@ venv による仮想環境を保存するディレクトリの名前は任意に
 それらについてはハンズオンの該当箇所に注意書きとして記してある．
 ====
 
-Docker Image は https://github.com/tomomano?tab=packages&repo_name=learn-aws-by-coding[GitHub Packages の Container registry] においてある．
+Docker Image は https://hub.docker.com/repository/docker/tomomano/labc[Docker Hub] においてある．
 Docker Image のビルドファイルは https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile[こちら] にある．
 
 次のコマンドで container を起動する．
 
 [source, bash]
 ----
-$ docker run -it docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest
+$ docker run -it tomomano/labc:latest
 ----
 
-初回にコマンドを実行したときのみ， image が GitHub Packages からダウンロード (pull) される．
+初回にコマンドを実行したときのみ， image が Docker Hub からダウンロード (pull) される．
 二回目以降はローカルにダウンロードされた image が使用される．
 
 container が起動すると，次のようなインタラクティブシェルが表示されるはずである (起動時に `-it` のオプションをつけたのがポイントである)．
