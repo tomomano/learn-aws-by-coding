@@ -36,7 +36,7 @@ image::imgs/aws_secret_key_2.png[aws_secret_key_2, 700, align="center"]
 [source, bash]
 ----
 [profile default]
-region = ap-northeast-1
+region = us-east-1
 output = json
 ----
 - 上記の説明ではプロファイル名が `default` となっていたが，これは自分の好きな名前に変更しても良い．
