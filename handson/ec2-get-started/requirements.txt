@@ -1,1 +1,1 @@
-aws-cdk.aws-ec2==1.105.0
+aws-cdk.aws-ec2==1.100.0
