@@ -43,7 +43,7 @@ AWS CDK のインストールについては， <<aws_cdk_install>> を参照．
 $ git clone https://github.com/tomomano/learn-aws-by-coding.git
 ----
 
-あるいは， hhttps://github.com/tomomano/learn-aws-by-coding.git のページに行って，右上のダウンロードボタンからダウンロードすることもできる．
+あるいは， https://github.com/tomomano/learn-aws-by-coding のページに行って，右上のダウンロードボタンからダウンロードすることもできる．
 
 ==== Docker を使用する場合
 

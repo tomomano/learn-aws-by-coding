@@ -7,10 +7,10 @@
 実践にあたって，最低限必要な AWS の知識を本章では解説しよう．
 
 https://aws.amazon.com[AWS (Amazon Web Service)] はAmazon社が提供する総合的なクラウドプラットフォームである．
-AWSはAmazonが持つ膨大な計算リソースを貸し出すクラウドサービスとして，2006年に誕生した．
+AWS は Amazon 社が持つ膨大な計算リソースを貸し出すクラウドサービスとして，2006年に誕生した．
 2018年では，クラウドプロバイダーとして最大のマーケットシェア(約33%)を保持している (https://www.canalys.com/newsroom/cloud-market-share-q4-2018-and-full-year-2018[参照])．
-Netflix, Slackをはじめとした多くのウェブ関連のサービスで，一部または全てのサーバーリソースがAWSから提供されているとのことである．
-よって，知らないうちにAWSの恩恵にあずかっている人も少なくないはずだ．
+Netflix や Slack をはじめとした多くのウェブ関連のサービスで，一部または全てのサーバーリソースが AWS から提供されているとのことである．
+よって，知らないうちに AWS の恩恵にあずかっている人も少なくないはずだ．
 
 最大のシェアをもつだけに，とても幅広い機能・サービスが提供されており，科学・エンジニアリングの研究用途としても頻繁に用いられるようになってきている．
 
@@ -25,10 +25,10 @@ image::imgs/aws_services.png[AWS services, 350, align="center"]
 計算，ストレージ，データベース，ネットワーク，セキュリティなど，クラウドの構築に必要な様々な要素が**独立したコンポーネント**として提供されている．
 基本的に，これらを組み合わせることでひとつのクラウドシステムができあがる．
 
-また，機械学習・音声認識・AR/VRなど，特定のアプリケーションにパッケージ済みのサービスも提供されている．
-これらを合計すると全部で176個のサービスが提供されているとのことである (https://dev.classmethod.jp/articles/aws-summary-2020/[参照])．
+また，機械学習・音声認識・AR/VR など，特定のアプリケーションにパッケージ済みのサービスも提供されている．
+これらを合計すると全部で170個以上のサービスが提供されているとのことである (https://dev.classmethod.jp/articles/aws-summary-2020/[参照])．
 
-AWSの初心者は，この**大量のサービスの数に圧倒され，どこから手をつけたらよいのかわからなくなる**，という状況に陥りがちである．
+AWS の初心者は，この**大量のサービスの数に圧倒され，どこから手をつけたらよいのかわからなくなる**，という状況に陥りがちである．
 だが実のところ，**基本的な構成要素はそのうちの数個**のみに限られる．
 他の機能の多くは，基本の要素を組み合わせ特定のアプリケーションに特化したパッケージとして AWS が用意したものである．
 したがって，基本要素となる機能の使い方を知れば，AWSのおおよそのリソースを使いこなすことが可能になる．
@@ -49,7 +49,7 @@ image:imgs/aws_logos/EC2.png[S3, 40, role="left"]
 
 image:imgs/aws_logos/Lambda.png[S3, 40, role="left"]
 **Lambda**
-Function as a Service (FaaS)と呼ばれる，小さな計算を**サーバーなし**で実行するためのサービス．
+Function as a Service (FaaS) と呼ばれる，小さな計算を**サーバーなし**で実行するためのサービス．
 Serverless architecutre の章 (<<sec_serverless>>) で詳しく解説する．
 
 ==== ストレージ
@@ -68,19 +68,19 @@ Serverless architecutre の章 (<<sec_serverless>>) で詳しく解説する．
 
 image:imgs/aws_logos/DynamoDB.png[S3, 40, role="left"]
 **DynamoDB**
-NoSQL型のデータベースサービス (知っている人は `mongoDB` などを思い浮かべたらよい)．
+NoSQL 型のデータベースサービス (知っている人は `mongoDB` などを思い浮かべたらよい)．
 Serverless architecutre の章 (<<sec_serverless>>) で詳しく解説する．
 
 ==== ネットワーク
 
 image:imgs/aws_logos/VPC.png[S3, 40, role="left"]
 **VPC(Virtual Private Cloud)**
-AWS上に仮想ネットワーク環境を作成し，仮想サーバー間の接続を定義したり，外部からのアクセスなどを管理する．
-EC2はVPCの内部に配置されなければならない．
+AWS 上に仮想ネットワーク環境を作成し，仮想サーバー間の接続を定義したり，外部からのアクセスなどを管理する．
+EC2 は VPC の内部に配置されなければならない．
 
 === Region と Availability Zone
 
-AWSを使用する際に知っておかなければならない重要な概念として， `Region` と `Availability Zone (AZ)` がある (<<fig_aws_regions_and_azs>>)．
+AWS を使用する際に知っておかなければならない重要な概念として， `Region` と `Availability Zone (AZ)` がある (<<fig_aws_regions_and_azs>>)．
 以下ではこの概念について簡単に記述する．
 
 [[fig_aws_regions_and_azs]]
@@ -88,8 +88,8 @@ AWSを使用する際に知っておかなければならない重要な概念�
 image::imgs/aws_region_and_az.png[AWS regions and azs, 500, align="center"]
 
 `Region` とは，おおまかに言うとデータセンターの所在地のことである．
-執筆時点において，AWSは世界の25の国と地域でデータセンターを所有している．
-<<fig_aws_regions>> は執筆時点で利用できるRegionの世界地図を示している．
+執筆時点において， AWS は世界の25の国と地域でデータセンターを所有している．
+<<fig_aws_regions>> は執筆時点で利用できる Region の世界地図を示している．
 日本では東京と大阪にデータセンターがある．
 各Regionには固有のIDがついており，例えば東京は `ap-northeast-1`, 米国オハイオ州は `us-east-2`，などと定義されている．
 
@@ -121,6 +121,14 @@ AWS を使用するとき，どこの region を指定するのがよいのだ�
 これらのポイントから総合的に判断して使用する region を決めると良い．
 ====
 
+[WARNING]
+====
+AWS Educate を利用している読者へ
+
+執筆時点において，AWS Educate による Starter Account を使用している場合は `us-east-1` region のみ利用できる
+(https://awseducate-starter-account-services.s3.amazonaws.com/AWS_Educate_Starter_Account_Services_Supported.pdf[参照])．
+====
+
 .Further reading
 ****
 * https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html[AWS documentation "Regions, Availability Zones, and Local Zones"]
@@ -134,18 +142,19 @@ AWS のリソースを追加・編集・削除などの操作を実行するに�
 
 ==== コンソール画面からリソースを操作する
 
-AWSのアカウントにログインすると，まず最初に表示されるのが** AWS コンソール**である (<<aws_console_window>>)．
+AWS のアカウントにログインすると，まず最初に表示されるのが** AWS コンソール**である (<<aws_console_window>>)．
 
 [[aws_console_window]]
 .AWSマネージメントコンソール画面
 image::imgs/aws_console.png[AWS console, 600, align="center"]
 
-コンソールを使うことで， EC2 のインスタンスを立ち上げたり，S3のデータを追加・削除したり，ログを閲覧したりなど，AWS上のあらゆるリソースの操作をGUI (Graphical User Interface) を通して実行することができる．
+コンソールを使うことで， EC2 のインスタンスを立ち上げたり，S3のデータを追加・削除したり，ログを閲覧したりなど，AWS上のあらゆるリソースの操作を GUI (Graphical User Interface) を通して実行することができる．
 **初めて触る機能をポチポチと試したり，デバッグを行うときなどにとても便利である**．
 
 コンソールはさらっと機能を試したり，開発中のクラウドのデバッグをするときには便利なのであるが，実際にクラウドの開発をする場面でこれを直接いじることはあまりない．
 むしろ，次に紹介する API を使用して，プログラムとしてクラウドのリソースを記述することで開発を行うのが一般的である．
-そのような理由で，本書ではAWSコンソールを使ったAWSの使い方はあまり触れない．AWSのドキュメンテーションには，たくさんの
+そのような理由で，本書ではAWSコンソールを使った AWS の使い方はあまり触れない．
+AWS のドキュメンテーションには，たくさんの
 https://aws.amazon.com/getting-started/hands-on/[チュートリアル]
 が用意されており，コンソール画面から様々な操作を行う方法が記述されているので，興味がある読者はそちらを参照されたい．
 
@@ -226,7 +235,8 @@ ec2_client.run_instances(
 ==== ミニ・ハンズオン: AWS CLI を使ってみよう
 
 ここでは，ミニ・ハンズオンとして，AWS CLI を実際に使ってみる．
-AWS CLI は先述の通り， AWS 上の任意のリソースの操作が可能であるが，ここでは一番シンプルな，** S3 を使ったファイルの読み書きを実践する** (EC2の操作は少し複雑なので，第一回ハンズオンで行う)．
+AWS CLI は先述の通り， AWS 上の任意のリソースの操作が可能であるが，ここでは一番シンプルな，** S3 を使ったファイルの読み書きを実践する**
+(EC2の操作は少し複雑なので，第一回ハンズオンで行う)．
 `aws s3` コマンドの詳しい使い方は https://docs.aws.amazon.com/cli/latest/reference/s3/index.html#cli-aws-s3[公式ドキュメンテーション]を参照．
 
 [NOTE]
