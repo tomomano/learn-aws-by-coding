@@ -660,7 +660,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>スケーラブルな自動質問回答ボットを作る</p>
 </li>
 <li>
-<p>並列化されたハイパーパラメータサーチの実行</p>
+<p>並列化されたハイパーパラメータサーチの実装</p>
 </li>
 </ul>
 </div></div></td>
@@ -680,16 +680,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 <div class="paragraph">
 <p>第一部は，クラウドの基礎となる概念・知識を解説する．
-セキュリティやネットワークなど，クラウドを利用する上で最低限おさえなければいけないポイントを紹介する．
-ハンズオンでは，初めての仮想サーバーをAWSに立ち上げる演習を行う．</p>
+セキュリティやネットワークなど，クラウドを利用する上で最低限おさえなければいけないポイントを説明する．
+ハンズオンでは，初めての仮想サーバーを AWS に立ち上げる演習を行う．</p>
 </div>
 <div class="paragraph">
 <p>第二部では，クラウド上で科学計算(特に機械学習)を走らせるための入門となる知識・技術を解説する．
 併せて，
 <a href="https://www.docker.com/">Docker</a>
-とよばれる仮想計算環境に自分のプログラムをパッケージングする手順を説明する．
-ハンズオンでは， AWS のクラウドで Jupyter notebook を使って簡単な機械学習の計算を走らせる課題を実践する．
-さらに，ディープラーニングを用いた自然言語処理により，質問に自動で回答を生成するボットを作成する．
+とよばれる仮想計算環境の使用方法を紹介する．
+ハンズオンでは， AWS のクラウドで Jupyter notebook を起動し簡単な機械学習の計算を走らせる課題を実践する．
+さらに，深層学習を用いた自然言語処理により，質問に自動で回答を生成するボットを作成する．
 また，同時に複数の GPU インスタンスを起動し，深層学習のハイパーパラメータサーチを行う方法を紹介する．</p>
 </div>
 <div class="paragraph">
@@ -708,11 +708,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="paragraph">
 <p>ここでいう"地球"とは，クラウドコンピューティングの全体像のことである．
-言うまでもなく，クラウドという技術は大変奥が深く，幾多の情報技術・ハードウェア・アルゴリズムが精緻に組み合わさってできた総体である．
-今日では科学研究から日常のインフラ設備に至るまで，我々の社会の多くの部分がクラウド技術によって支えられている．</p>
+言うまでもなく，クラウドという技術は非常に広範かつ複雑な概念で，幾多の情報技術・ハードウェア・アルゴリズムが精緻に組み合わさってできた総体である．
+そして，今日では科学研究から日常のインフラ設備に至るまで，我々の社会の多くの部分がクラウド技術によって支えられている．</p>
 </div>
 <div class="paragraph">
-<p>そして，ここでいう"ロケット"とはこの講義のことである．
+<p>ここでいう"ロケット"とはこの講義のことである．
 この講義では，ロケットに乗って宇宙まで飛び立ち，地球(クラウド)の全体を自身の目で眺めてもらう．
 その際，ロケットの成り立ちや仕組み(背後にある要素技術やプログラムのソースコード)は深くは問わない．
 将来，自分が研究などの目的でクラウドを利用することになった時に，改めて学んでもらえば良い．
@@ -725,7 +725,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 それぞれで本一冊分以上の内容に相当するものであるが，本書はあえてこれらを一冊にまとめ連続的に俯瞰するという野心的な意図を持って執筆された．</p>
 </div>
 <div class="paragraph">
-<p>なんにせよ，このロケットにしがみついてきてもらえれば，とてもエキサイティングな景色が見られることを約束したい．</p>
+<p>決して楽な搭乗体験ではないかもしれないが，このロケットにしがみついてきてもらえれば，とてもエキサイティングな景色が見られることを約束したい．</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -742,13 +742,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 AWS のアカウントの作成の仕方は <a href="https://aws.amazon.com/jp/register-flow/">公式のドキュメンテーション</a> を参照のこと．</p>
 </div>
 <div class="paragraph">
-<p>AWS にはいくつかの機能に対して無料枠というのが設定されており，いくつかのハンズオンはこの無料枠内で実行できる．
-一方，いくつかのハンズオンでは数ドル程度のコストが発生する．
+<p>AWS にはいくつかの機能に対して無料利用枠が設定されており，いくつかのハンズオンは無料の範囲内で実行できる．
+一方，他のハンズオン (特に機械学習を扱うもの) では数ドル程度のコストが発生する．
 ハンズオンごとに発生するおおよそのコストについて記述があるので，注意をしながらハンズオンに取り組んでいただきたい．</p>
 </div>
 <div class="paragraph">
 <p>また，大学などの教育機関における講義で AWS を使用する際は， <a href="https://aws.amazon.com/education/awseducate/">AWS Educate</a> というプログラムを利用することも可能である．
-これは，講義の担当者が申請を行うことで，受講する学生に対し AWS クレジット (AWS の利用券) が提供されるというプログラムである．
+これは，講義の担当者が申請を行うことで，受講する学生に対し AWS クレジットが提供されるというプログラムである．
+これを利用することで金銭的な負担なしに AWS のクラウドを実際に使用することができる．
 また，講義を経由せず個人で AWS Educate に参加することも可能である．
 AWS Educate からは様々な学習教材が提供されているので，ぜひ活用してもらいたい．</p>
 </div>
@@ -761,7 +762,7 @@ AWS Educate からは様々な学習教材が提供されているので，ぜ�
 <div class="ulist">
 <ul>
 <li>
-<p><strong>UNIX系コンソール</strong>:
+<p><strong>UNIX 系コンソール</strong>:
 ハンズオンで紹介するコマンドを実行したり， SSH でサーバーにアクセスするため， UNIX 系のコンソール環境が必要である．
 Mac または Linux のユーザーは， OS に標準搭載のコンソール(ターミナルとも呼ばれる)を使用すればよい．
 Windows のユーザーは，
@@ -774,8 +775,8 @@ WSL のインストールについては，
 <li>
 <p><strong>Docker</strong>:
 講義では Docker の使い方を解説する．
-予め自身の計算機にDockerのインストールをしておくこと．
-Linux/Mac/Windowsのインストール法については <a href="https://docs.docker.com/get-docker/">公式ドキュメンテーション</a>を参照．
+予め自身の計算機に Docker のインストールをしておくこと．
+Linux/Mac/Windows のインストール法については <a href="https://docs.docker.com/get-docker/">公式ドキュメンテーション</a>を参照．
 執筆時点において，<strong>Windows 10 Home</strong>　へのインストールには WSL2 バックエンドの設定が必要である．詳細は
 <a href="https://docs.docker.com/docker-for-windows/install/">こちらのドキュメンテーションを参照</a>
 のこと．</p>
@@ -823,12 +824,12 @@ Docker の使い方を知っている読者は，これを使えば，諸々の�
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Pythonの基本的な理解</strong>:
+<p><strong>Python の基本的な理解</strong>:
 本書ではPythonを使ってプログラムの作成を行う．
 使用するライブラリは十分抽象化されており，関数の名前を見ただけで意味が明瞭なものがほとんどであるので， Python に詳しくなくても心配する必要はない．</p>
 </li>
 <li>
-<p><strong>Linuxコマンドラインの基礎的な理解</strong>:
+<p><strong>Linux コマンドラインの基礎的な理解</strong>:
 クラウドを利用する際，クラウド上に立ち上がるサーバーは基本的に Linux である．
 Linux のコマンドラインについて知識があると，トラブルシュートなどが容易になる．
 筆者のおすすめの参考書は
@@ -950,7 +951,7 @@ Linux のコマンドラインについて知識があると，トラブルシ�
 </li>
 <li>
 <p><strong>Rapid elasticity</strong>
-利用者のリクエストに応じて，迅速に計算資源の拡大あるいは縮小を行うことができる</p>
+利用者のリクエストに応じて，迅速に計算資源の拡大あるいは縮小を行うことができる．</p>
 </li>
 <li>
 <p><strong>Measured service</strong>
@@ -962,9 +963,9 @@ Linux のコマンドラインについて知識があると，トラブルシ�
 <p>&#8230;&#8203;と，いわれても抽象的でよくわからないかもしれない．もう少し具体的な話をする．</p>
 </div>
 <div class="paragraph">
-<p>個人が所有する計算機で， CPU の数を増やそうと思ったら，物理的に筐体を開け，CPUソケットを露出させ，新しいCPUに交換する必要があるだろう．
+<p>個人が所有する計算機で， CPU をアップグレードしようと思ったら，物理的に筐体を開け，CPUソケットを露出させ，新しいCPUに交換する必要があるだろう．
 あるいは，ストレージがいっぱいになってしまったら，古いディスクを抜き取り，新しいディスクを挿入する必要がある．
-計算機の場所を移動させたときには， LAN ケーブルを差し込まないとネットワークには接続できない．</p>
+計算機の場所を移動させたときには，新しい部屋の LAN ケーブルを差し込まないとネットワークには接続できない．</p>
 </div>
 <div class="paragraph">
 <p>クラウドでは，これらの操作が<strong>プログラムからのコマンドによって実行できる</strong>．
@@ -989,8 +990,8 @@ CPUが1000個欲しいと思ったらならば，そのようにクラウドプ�
 <div class="sect2">
 <h3 id="_なぜクラウドを使うのか">2.2. なぜクラウドを使うのか？</h3>
 <div class="paragraph">
-<p>上述のように，クラウドとは自由に計算資源をプログラムを通じて操作することのできる計算環境である．
-ここでは，自前のローカル計算環境と比べて，なぜクラウドを使うと良いことがあるのかについて述べたい．</p>
+<p>上述のように，クラウドとはプログラムを通じて自由に計算資源を操作することのできる計算環境である．
+ここでは，リアルなローカル計算環境と比べて，なぜクラウドを使うと良いことがあるのかについて述べたい．</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1071,7 +1072,7 @@ CPUが1000個欲しいと思ったらならば，そのようにクラウドプ�
 <div class="sect2">
 <h3 id="_どうやってクラウドを使うのか">2.3. どうやってクラウドを使うのか？</h3>
 <div class="paragraph">
-<p>各大学や研究機関では，その機関の構成員向けの大規模計算機サーバーが運用されていることが多い．
+<p>大学や研究機関では，その機関の構成員向けの大規模計算機サーバーが運用されていることが多い．
 このような，特定の組織・団体の内部のみで使用されるクラウドを，プライベートクラウド (private cloud) と呼ぶ．</p>
 </div>
 <div class="paragraph">
@@ -1081,7 +1082,7 @@ CPUが1000個欲しいと思ったらならば，そのようにクラウドプ�
 </div>
 <div class="paragraph">
 <p>プライベートクラウドは，組織の構成員ならば無料もしくは極めて割安のコストで計算を実行できる．
-しかし，最大で使用できる計算資源の量は，研究提案の申請により決定される場合が多く，柔軟性に欠ける場合もある．
+しかし，使用できる計算資源の量は，研究提案の申請により決定される場合が多く，柔軟性に欠ける場合もある．
 パブリッククラウドを利用する場合は，プロバイダーの設定した利用料金を支払うことになるが，計算リソースはほとんど上限なく使用することが可能である．</p>
 </div>
 <div class="sidebarblock">
@@ -1121,10 +1122,10 @@ CPUが1000個欲しいと思ったらならば，そのようにクラウドプ�
 </div>
 <div class="paragraph">
 <p><a href="https://aws.amazon.com">AWS (Amazon Web Service)</a> はAmazon社が提供する総合的なクラウドプラットフォームである．
-AWSはAmazonが持つ膨大な計算リソースを貸し出すクラウドサービスとして，2006年に誕生した．
+AWS は Amazon 社が持つ膨大な計算リソースを貸し出すクラウドサービスとして，2006年に誕生した．
 2018年では，クラウドプロバイダーとして最大のマーケットシェア(約33%)を保持している (<a href="https://www.canalys.com/newsroom/cloud-market-share-q4-2018-and-full-year-2018">参照</a>)．
-Netflix, Slackをはじめとした多くのウェブ関連のサービスで，一部または全てのサーバーリソースがAWSから提供されているとのことである．
-よって，知らないうちにAWSの恩恵にあずかっている人も少なくないはずだ．</p>
+Netflix や Slack をはじめとした多くのウェブ関連のサービスで，一部または全てのサーバーリソースが AWS から提供されているとのことである．
+よって，知らないうちに AWS の恩恵にあずかっている人も少なくないはずだ．</p>
 </div>
 <div class="paragraph">
 <p>最大のシェアをもつだけに，とても幅広い機能・サービスが提供されており，科学・エンジニアリングの研究用途としても頻繁に用いられるようになってきている．</p>
@@ -1146,11 +1147,11 @@ Netflix, Slackをはじめとした多くのウェブ関連のサービスで，
 基本的に，これらを組み合わせることでひとつのクラウドシステムができあがる．</p>
 </div>
 <div class="paragraph">
-<p>また，機械学習・音声認識・AR/VRなど，特定のアプリケーションにパッケージ済みのサービスも提供されている．
-これらを合計すると全部で176個のサービスが提供されているとのことである (<a href="https://dev.classmethod.jp/articles/aws-summary-2020/">参照</a>)．</p>
+<p>また，機械学習・音声認識・AR/VR など，特定のアプリケーションにパッケージ済みのサービスも提供されている．
+これらを合計すると全部で170個以上のサービスが提供されているとのことである (<a href="https://dev.classmethod.jp/articles/aws-summary-2020/">参照</a>)．</p>
 </div>
 <div class="paragraph">
-<p>AWSの初心者は，この<strong>大量のサービスの数に圧倒され，どこから手をつけたらよいのかわからなくなる</strong>，という状況に陥りがちである．
+<p>AWS の初心者は，この<strong>大量のサービスの数に圧倒され，どこから手をつけたらよいのかわからなくなる</strong>，という状況に陥りがちである．
 だが実のところ，<strong>基本的な構成要素はそのうちの数個</strong>のみに限られる．
 他の機能の多くは，基本の要素を組み合わせ特定のアプリケーションに特化したパッケージとして AWS が用意したものである．
 したがって，基本要素となる機能の使い方を知れば，AWSのおおよそのリソースを使いこなすことが可能になる．</p>
@@ -1175,7 +1176,7 @@ Netflix, Slackをはじめとした多くのウェブ関連のサービスで，
 <div class="paragraph">
 <p><span class="image left"><img src="imgs/aws_logos/Lambda.png" alt="S3" width="40"></span>
 <strong>Lambda</strong>
-Function as a Service (FaaS)と呼ばれる，小さな計算を<strong>サーバーなし</strong>で実行するためのサービス．
+Function as a Service (FaaS) と呼ばれる，小さな計算を<strong>サーバーなし</strong>で実行するためのサービス．
 Serverless architecutre の章 (<a href="#sec_serverless">Section 11</a>) で詳しく解説する．</p>
 </div>
 </div>
@@ -1199,7 +1200,7 @@ Serverless architecutre の章 (<a href="#sec_serverless">Section 11</a>) で詳
 <div class="paragraph">
 <p><span class="image left"><img src="imgs/aws_logos/DynamoDB.png" alt="S3" width="40"></span>
 <strong>DynamoDB</strong>
-NoSQL型のデータベースサービス (知っている人は <code>mongoDB</code> などを思い浮かべたらよい)．
+NoSQL 型のデータベースサービス (知っている人は <code>mongoDB</code> などを思い浮かべたらよい)．
 Serverless architecutre の章 (<a href="#sec_serverless">Section 11</a>) で詳しく解説する．</p>
 </div>
 </div>
@@ -1208,15 +1209,15 @@ Serverless architecutre の章 (<a href="#sec_serverless">Section 11</a>) で詳
 <div class="paragraph">
 <p><span class="image left"><img src="imgs/aws_logos/VPC.png" alt="S3" width="40"></span>
 <strong>VPC(Virtual Private Cloud)</strong>
-AWS上に仮想ネットワーク環境を作成し，仮想サーバー間の接続を定義したり，外部からのアクセスなどを管理する．
-EC2はVPCの内部に配置されなければならない．</p>
+AWS 上に仮想ネットワーク環境を作成し，仮想サーバー間の接続を定義したり，外部からのアクセスなどを管理する．
+EC2 は VPC の内部に配置されなければならない．</p>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_region_と_availability_zone">3.4. Region と Availability Zone</h3>
 <div class="paragraph">
-<p>AWSを使用する際に知っておかなければならない重要な概念として， <code>Region</code> と <code>Availability Zone (AZ)</code> がある (<a href="#fig_aws_regions_and_azs">Figure 4</a>)．
+<p>AWS を使用する際に知っておかなければならない重要な概念として， <code>Region</code> と <code>Availability Zone (AZ)</code> がある (<a href="#fig_aws_regions_and_azs">Figure 4</a>)．
 以下ではこの概念について簡単に記述する．</p>
 </div>
 <div id="fig_aws_regions_and_azs" class="imageblock text-center">
@@ -1227,8 +1228,8 @@ EC2はVPCの内部に配置されなければならない．</p>
 </div>
 <div class="paragraph">
 <p><code>Region</code> とは，おおまかに言うとデータセンターの所在地のことである．
-執筆時点において，AWSは世界の25の国と地域でデータセンターを所有している．
-<a href="#fig_aws_regions">Figure 5</a> は執筆時点で利用できるRegionの世界地図を示している．
+執筆時点において， AWS は世界の25の国と地域でデータセンターを所有している．
+<a href="#fig_aws_regions">Figure 5</a> は執筆時点で利用できる Region の世界地図を示している．
 日本では東京と大阪にデータセンターがある．
 各Regionには固有のIDがついており，例えば東京は <code>ap-northeast-1</code>, 米国オハイオ州は <code>us-east-2</code>，などと定義されている．</p>
 </div>
@@ -1275,6 +1276,24 @@ AZ は，ビジネスなどでサーバーダウンが許容されない場合�
 </tr>
 </table>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>AWS Educate を利用している読者へ</p>
+</div>
+<div class="paragraph">
+<p>執筆時点において，AWS Educate による Starter Account を使用している場合は <code>us-east-1</code> region のみ利用できる
+(<a href="https://awseducate-starter-account-services.s3.amazonaws.com/AWS_Educate_Starter_Account_Services_Supported.pdf">参照</a>)．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="sidebarblock">
 <div class="content">
 <div class="title">Further reading</div>
@@ -1299,7 +1318,7 @@ AZ は，ビジネスなどでサーバーダウンが許容されない場合�
 <div class="sect3">
 <h4 id="_コンソール画面からリソースを操作する">3.5.1. コンソール画面からリソースを操作する</h4>
 <div class="paragraph">
-<p>AWSのアカウントにログインすると，まず最初に表示されるのが<strong> AWS コンソール</strong>である (<a href="#aws_console_window">Figure 7</a>)．</p>
+<p>AWS のアカウントにログインすると，まず最初に表示されるのが<strong> AWS コンソール</strong>である (<a href="#aws_console_window">Figure 7</a>)．</p>
 </div>
 <div id="aws_console_window" class="imageblock text-center">
 <div class="content">
@@ -1308,13 +1327,14 @@ AZ は，ビジネスなどでサーバーダウンが許容されない場合�
 <div class="title">Figure 7. AWSマネージメントコンソール画面</div>
 </div>
 <div class="paragraph">
-<p>コンソールを使うことで， EC2 のインスタンスを立ち上げたり，S3のデータを追加・削除したり，ログを閲覧したりなど，AWS上のあらゆるリソースの操作をGUI (Graphical User Interface) を通して実行することができる．
+<p>コンソールを使うことで， EC2 のインスタンスを立ち上げたり，S3のデータを追加・削除したり，ログを閲覧したりなど，AWS上のあらゆるリソースの操作を GUI (Graphical User Interface) を通して実行することができる．
 <strong>初めて触る機能をポチポチと試したり，デバッグを行うときなどにとても便利である</strong>．</p>
 </div>
 <div class="paragraph">
 <p>コンソールはさらっと機能を試したり，開発中のクラウドのデバッグをするときには便利なのであるが，実際にクラウドの開発をする場面でこれを直接いじることはあまりない．
 むしろ，次に紹介する API を使用して，プログラムとしてクラウドのリソースを記述することで開発を行うのが一般的である．
-そのような理由で，本書ではAWSコンソールを使ったAWSの使い方はあまり触れない．AWSのドキュメンテーションには，たくさんの
+そのような理由で，本書ではAWSコンソールを使った AWS の使い方はあまり触れない．
+AWS のドキュメンテーションには，たくさんの
 <a href="https://aws.amazon.com/getting-started/hands-on/">チュートリアル</a>
 が用意されており，コンソール画面から様々な操作を行う方法が記述されているので，興味がある読者はそちらを参照されたい．</p>
 </div>
@@ -1437,7 +1457,8 @@ AWS CLI を使った場合は，以下のようなコマンドを打てばよい
 <h4 id="_ミニハンズオン_aws_cli_を使ってみよう">3.5.3. ミニ・ハンズオン: AWS CLI を使ってみよう</h4>
 <div class="paragraph">
 <p>ここでは，ミニ・ハンズオンとして，AWS CLI を実際に使ってみる．
-AWS CLI は先述の通り， AWS 上の任意のリソースの操作が可能であるが，ここでは一番シンプルな，<strong> S3 を使ったファイルの読み書きを実践する</strong> (EC2の操作は少し複雑なので，第一回ハンズオンで行う)．
+AWS CLI は先述の通り， AWS 上の任意のリソースの操作が可能であるが，ここでは一番シンプルな，<strong> S3 を使ったファイルの読み書きを実践する</strong>
+(EC2の操作は少し複雑なので，第一回ハンズオンで行う)．
 <code>aws s3</code> コマンドの詳しい使い方は <a href="https://docs.aws.amazon.com/cli/latest/reference/s3/index.html#cli-aws-s3">公式ドキュメンテーション</a>を参照．</p>
 </div>
 <div class="admonitionblock note">
@@ -1850,7 +1871,7 @@ AWSアカウントの取得については <a href="#aws_account">Section 1.3</a
 </div>
 </div>
 <div class="paragraph">
-<p>あるいは， hhttps://github.com/tomomano/learn-aws-by-coding.git のページに行って，右上のダウンロードボタンからダウンロードすることもできる．</p>
+<p>あるいは， <a href="https://github.com/tomomano/learn-aws-by-coding" class="bare">https://github.com/tomomano/learn-aws-by-coding</a> のページに行って，右上のダウンロードボタンからダウンロードすることもできる．</p>
 </div>
 </div>
 <div class="sect3">
@@ -2808,19 +2829,19 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <div class="paragraph">
 <p>計算機が発達した現代では，計算機によるシミュレーションやビッグデータの解析は，科学・エンジニアリングの研究の主要な柱である．
 これらの大規模な計算を実行するには，クラウドは最適である．
-講義第二回では，どのようにしてクラウド上で科学計算を実行するのかを，ハンズオンとともに体験してもらう．
-科学計算の具体的な題材として，今回は機械学習(ディープラーニング)を取り上げる．</p>
+本章から始まる第二部では，どのようにしてクラウド上で科学計算を実行するのかを，ハンズオンとともに体験してもらう．
+科学計算の具体的な題材として，今回は機械学習(深層学習)を取り上げる．</p>
 </div>
 <div class="paragraph">
-<p>なお，本書では <a href="https://pytorch.org/">PyTorch</a> ライブラリを使ってディープラーニングのアルゴリズムを走らせるが，ディープラーニングおよび PyTorch の知識は不要である．
-講義ではなぜ・どうやってディープラーニングをクラウドで実行するかに主眼を置いているので，実行するプログラムの詳細には立ち入らない．
-将来自分でディープラーニングを使う機会が来たときに，詳しく学んでもらいたい．</p>
+<p>なお，本書では <a href="https://pytorch.org/">PyTorch</a> ライブラリを使って深層学習のアルゴリズムを実装するが，深層学習および PyTorch の知識は不要である．
+講義ではなぜ・どうやって深層学習をクラウドで実行するかに主眼を置いているので，実行するプログラムの詳細には立ち入らない．
+将来自分で深層学習を使う機会が来たときに，詳しく学んでもらいたい．</p>
 </div>
 <div class="sect2">
 <h3 id="_なぜ機械学習をクラウドで行うのか">5.1. なぜ機械学習をクラウドで行うのか？</h3>
 <div class="paragraph">
-<p>2010年代に始まったAIブームのおかげで，研究だけでなく社会・ビジネスの文脈でも機械学習に高い関心が寄せられている．
-特に，ディープラーニングと呼ばれる多層のレイヤーからなるニューラルネットワークを用いたアルゴリズムは，画像認識や自然言語処理などの分野で圧倒的に高い性能を実現し，革命をもたらしている．</p>
+<p>2010年代に始まった　AI　ブームのおかげで，研究だけでなく社会・ビジネスの文脈でも機械学習に高い関心が寄せられている．
+特に，深層学習 (ディープラーニング) と呼ばれる多層のレイヤーからなるニューラルネットワークを用いたアルゴリズムは，画像認識や自然言語処理などの分野で圧倒的に高い性能を実現し，革命をもたらしている．</p>
 </div>
 <div class="paragraph">
 <p>ディープラーニングの特徴は，なんといってもそのパラメータの多さである．
@@ -2830,12 +2851,15 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="imgs/cnn.png" alt="cnn" width="500">
+<img src="imgs/cnn.png" alt="cnn" width="400">
 </div>
 <div class="title">Figure 16. ニューラルネットワークにおける畳み込み演算．</div>
 </div>
 <div class="paragraph">
-<p>GPT-3 に限らず，最近の SOTA (State-of-the-art) の性能を達成するニューラルネットでは，百万から億のオーダーのパラメータを有することは頻繁になってきている．そのような巨大なニューラルネットを学習させるのは，当然のことながら巨大な計算コストがかかる．そんな巨大な計算に最適なのが，クラウドである！事実，GPT-3の学習も，詳細は明かされていないが，Microsoft社のクラウドを使って行われたと報告されている．</p>
+<p>GPT-3 に限らず，最近の SOTA (State-of-the-art) の性能を達成するニューラルネットでは，百万から億のオーダーのパラメータを有することは頻繁になってきている．
+そのような巨大なニューラルネットを訓練 (最適化) させるのは，当然のことながら膨大な計算コストがかかる．
+そんな巨大な計算に最適なのが，クラウドである！
+事実，GPT-3の学習も，詳細は明かされていないが，Microsoft社のクラウドを使って行われたと報告されている．</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -2845,7 +2869,12 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>GPT-3 が発表された時，そのモデルがもつ表現能力には多くの人が驚嘆させられた． <a href="https://openai.com/blog/better-language-models/#task5">OpenAI</a> のブログに，モデルが出力した翻訳や文章要約のタスクの結果が紹介されている．</p>
+<p>GPT-3 で使われた計算リソースの詳細は論文でも明かされていないのだが， <a href="https://lambdalabs.com/blog/demystifying-gpt-3/">Lambda 社のブログ</a>で興味深い考察が行われている
+(Lambda社は機械学習に特化したクラウドサービスを提供している)．</p>
+</div>
+<div class="paragraph">
+<p>記事によると，1750億のパラメータを訓練するには，一台の GPU (NVIDIA V100) を用いた場合，342年の月日と460万ドルのクラウド利用料が必要となる，とのことである．
+GPT-3 のチームは，複数の GPU に処理を分散することで現実的な時間のうちに訓練を完了させたのであろうが，このレベルのモデルになってくるとクラウド技術の限界を攻めないと達成できないことは確かである．</p>
 </div>
 </td>
 </tr>
@@ -2858,7 +2887,11 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <p>ディープラーニングの計算で欠かすことのできない技術として， <strong>GPU (Graphics Processing Unit)</strong> について少し説明する．</p>
 </div>
 <div class="paragraph">
-<p>GPUは，その名のとおり，元々はコンピュータグラフィックスを出力するための専用計算チップである．CPU (Central Processing Unit) に対し，グラフィックスの演算に特化した設計がなされている．身近なところでは，XBoxやPS4などのゲーム機などに搭載されているし，ハイスペックなノートパソコンやデスクトップコンピュータにも搭載されていることがある．コンピュータグラフィクスでは，スクリーンにアレイ状に並んだ数百万個の画素をリアルタイムで処理する必要がある．そのため，GPUは，コアあたりの演算能力は比較的弱いかわりに，チップあたり数百から数千のコアを搭載しており (<a href="#gpu_architecture">Figure 17</a>)，スクリーンの画素を並列的に処理することで，リアルタイムでの描画を実現している．</p>
+<p>GPU は，その名のとおり，元々はコンピュータグラフィックスを出力するための専用計算チップである．
+CPU (Central Processing Unit) に対し，グラフィックスの演算に特化した設計がなされている．
+身近なところでは， XBox や PS5 などのゲームコンソールなどに搭載されているし，ハイエンドなノート型・デスクトップ型計算機にも搭載されていることがある．
+コンピュータグラフィクスでは，スクリーンにアレイ状に並んだ数百万個の画素をビデオレート (30 fps) 以上で処理する必要がある．
+そのため，GPUはコアあたりの演算能力は比較的小さいかわりに，チップあたり数百から数千のコアを搭載しており (<a href="#gpu_architecture">Figure 17</a>)，スクリーンの画素を並列的に処理することで，リアルタイムでの描画を実現している．</p>
 </div>
 <div id="gpu_architecture" class="imageblock text-center">
 <div class="content">
@@ -2867,13 +2900,19 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <div class="title">Figure 17. GPUのアーキテクチャ．GPUには数百から数千の独立した計算コアが搭載されている． (画像出典: <a href="https://devblogs.nvidia.com/nvidia-turing-architecture-in-depth/" class="bare">https://devblogs.nvidia.com/nvidia-turing-architecture-in-depth/</a>)</div>
 </div>
 <div class="paragraph">
-<p>このように，コンピュータグラフィクスの目的で生まれたGPUだが，2010年前後から，その高い並列計算能力をグラフィックス以外の計算(科学計算など)に用いるという流れ (<strong>General-purpose computing on GPU; GPGPU</strong>) が生まれた．GPUのコアは，その設計から，行列の計算など，単純かつ規則的な演算が得意であり，そのような演算に対しては数個程度のコアしか持たないCPUに比べて圧倒的に高い計算速度を実現することができる．現在ではGPGPUは分子動力学や気象シミュレーション，そして機械学習など多くの分野で使われている．</p>
+<p>このように，コンピュータグラフィクスの目的で生まれた GPU だが，2010年前後から，その高い並列計算能力をグラフィックス以外の計算 (科学計算など) に用いるという流れ (<strong>General-purpose computing on GPU; GPGPU</strong>) が生まれた．
+GPUのコアは，その設計から，行列の計算など，単純かつ規則的な演算が得意であり，そのような演算に対しては数個程度のコアしか持たない CPU に比べて圧倒的に高い計算速度を実現することができる．
+現在では GPGPU は分子動力学や気象シミュレーション，そして機械学習など多くの分野で使われている．</p>
 </div>
 <div class="paragraph">
-<p>ディープラーニングで最も頻繁に起こる演算が，ニューロンの出力を次の層のニューロンに伝える畳み込み (Convolution) 演算である．畳み込み演算は，まさにGPUが得意とする演算であり，CPUではなくGPUを用いることで学習を飛躍的に(最大で数百倍程度！)加速させることができる．</p>
+<p>ディープラーニングで最も頻繁に起こる演算が，ニューロンの出力を次の層のニューロンに伝える畳み込み (Convolution) 演算である．
+畳み込み演算は，まさに GPU が得意とする演算であり， CPU ではなく GPU を用いることで学習を飛躍的に (最大で数百倍程度) 加速させることができる．</p>
 </div>
 <div class="paragraph">
-<p>このように GPU は機械学習の計算で欠かせないものであるが，なかなか高価である．例えば，科学計算・機械学習に専用設計されたNVIDIA社の Tesla V100 というチップは，一台で約百万円の価格が設定されている．機械学習を始めるのに，いきなり百万円の投資はなかなか大きい．だが，クラウドを使えば，初期コスト０でGPUを使用することができる．</p>
+<p>このように GPU は機械学習の計算で欠かせないものであるが，なかなか高価である．
+例えば，科学計算・機械学習に専用設計された NVIDIA 社の Tesla V100 というチップは，一台で約百万円の価格が設定されている．
+機械学習を始めるのに，いきなり百万円の投資はなかなか大きい．
+だが，クラウドを使えば，初期コスト０で GPU を使用することができる．</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2883,10 +2922,11 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>機械学習を行うのに，V100が必ずしも必要というわけではない．
-むしろ，研究者などでしばしば行われるのは，コンピュータゲームに使われるグラフィックス用のGPUを買ってきて(NVIDIA GeForceシリーズなど)，開発のときはをそれを用いる，というアプローチである．
-グラフィックス用のいわゆる"コンシューマGPU"は，市場の需要が大きいおかげで，10万円前後の価格で購入することができる．
-V100と比べると，コンシューマGPUはコアの数が少なかったり，メモリーが小さかったりなどで劣る点があるが，ディープラーニングの計算は特に問題なく実行することができ，開発の段階では十分な性能である．</p>
+<p>機械学習を行うのに， V100 が必ずしも必要というわけではない．
+むしろ，研究者などでしばしば行われるのは，コンピュータゲームに使われるグラフィックス用の GPU を買ってきて (NVIDIA GeForce シリーズなど)，開発のときはをそれを用いる，というアプローチである．
+グラフィックス用のいわゆる"コンシューマ GPU"は，市場の需要が大きいおかげで，10万円前後の価格で購入することができる．
+V100 と比べると，コンシューマ GPU はコアの数が少なかったり，メモリーが小さかったりなどで劣る点があるが，
+それらを除いては計算能力に特に制限があるわけではなく，開発の段階では十分な性能である．</p>
 </div>
 <div class="paragraph">
 <p>プログラムができあがって，ビッグデータの解析や，モデルをさらに大きくしたいときなどに，クラウドは有効だろう．</p>
@@ -2896,8 +2936,8 @@ V100と比べると，コンシューマGPUはコアの数が少なかったり�
 </table>
 </div>
 <div class="paragraph">
-<p>クラウドでGPUを使うには，GPUが搭載されたEC2インスタンスタイプ (<code>P3</code>, <code>P2</code>, <code>G3</code>, <code>G4</code> など) を選択しなければならない．
-<a href="#table_gpu_instances">Table 3</a> に，代表的なGPU搭載のインスタンスタイプを挙げる (執筆時点(2020/06)での情報)．</p>
+<p>クラウドで GPU を使うには， GPU が搭載されたEC2インスタンスタイプ (<code>P3</code>, <code>P2</code>, <code>G3</code>, <code>G4</code> など) を選択しなければならない．
+<a href="#table_gpu_instances">Table 3</a> に，代表的な GPU 搭載のインスタンスタイプを挙げる (執筆時点での情報)．</p>
 </div>
 <table id="table_gpu_instances" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 3. GPUを搭載したEC2インスタンスタイプ</caption>
@@ -2961,12 +3001,13 @@ V100と比べると，コンシューマGPUはコアの数が少なかったり�
 </tbody>
 </table>
 <div class="paragraph">
-<p><a href="#table_gpu_instances">Table 3</a> からわかるとおり，CPUのみのインスタンスと比べると少し高い価格設定になっている．
-また，古い世代のGPU (V100に対してのK80) はより安価な価格で提供されている．
-GPUの搭載数は1台から最大で8台まで選択することが可能である．</p>
+<p><a href="#table_gpu_instances">Table 3</a> からわかるとおり， CPU のみのインスタンスと比べると少し高い価格設定になっている．
+また，古い世代の GPU (V100 に対しての K80) はより安価な価格で提供されている．
+1インスタンスあたりの GPU の搭載数は1台から最大で8台まで選択することが可能である．</p>
 </div>
 <div class="paragraph">
-<p>GPUを搭載した一番安いインスタンスタイプは， <code>g2dn.xlarge</code> であり，これには廉価かつ省エネルギー設計の NVIDIA T4 が搭載されている．今回のハンズオンでは，このインスタンスを使用して，ディープラーニングの計算を行ってみる．</p>
+<p>GPU を搭載した一番安いインスタンスタイプは， <code>g2dn.xlarge</code> であり，これには廉価かつ省エネルギー設計の NVIDIA T4 が搭載されている．
+今回のハンズオンでは，このインスタンスを使用して，ディープラーニングの計算を行ってみる．</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -2992,23 +3033,6 @@ GPUの搭載数は1台から最大で8台まで選択することが可能であ
 <div class="paragraph">
 <p>V100を一台搭載した <code>p3.2xlarge</code> の利用料金は一時間あたり $3.06 である．V100が約百万円で売られていることを考えると，約3000時間 (= 124日間)，通算で計算を行った場合に，クラウドを使うよりもV100を自分で買ったほうがお得になる，という計算になる．
 (実際には，自前でV100を用意する場合は，V100だけでなく，CPUやネットワーク機器，電気使用料も必要なので，百万円よりもさらにコストがかかる．)</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>GPT-3 で使われた計算リソースの詳細は論文でも明かされていないのだが， <a href="https://lambdalabs.com/blog/demystifying-gpt-3/">Lambda社のブログ</a>で興味深い考察が行われている (Lambda社は機械学習に特化したクラウドサービスを提供している)．</p>
-</div>
-<div class="paragraph">
-<p>記事によると，1750億のパラメータを学習するには，一台のGPU (NVIDIA V100)を用いた場合，342年の月日と460万ドルのクラウド利用料が必要となる，とのことである．GPT-3のチームは，複数のGPUに処理を分散することで現実的な時間のうちに学習を完了させたのであろうが，このレベルのモデルになってくるとクラウド技術の限界を攻めないと達成できないことは確かである．</p>
 </div>
 </td>
 </tr>
@@ -9253,7 +9277,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-06-22 23:23:41 UTC
+Last updated 2021-06-23 03:41:16 UTC
 </div>
 </div>
 <style>
