@@ -492,7 +492,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_gpu_による機械学習の高速化">5.2. GPU による機械学習の高速化</a></li>
 </ul>
 </li>
-<li><a href="#sec_jupyter_and_deep_learning">6. Hands-on #2: AWSでディープラーニングの計算を走らせる</a>
+<li><a href="#sec_jupyter_and_deep_learning">6. Hands-on #2: AWS でディープラーニングを実践</a>
 <ul class="sectlevel2">
 <li><a href="#_準備">6.1. 準備</a></li>
 <li><a href="#_アプリケーションの説明_2">6.2. アプリケーションの説明</a></li>
@@ -1813,7 +1813,7 @@ CDK は TypeScript (JavaScript), Python, Java など複数の言語でサポー�
 このハンズオンを終えれば，あなたは自分だけのサーバーをAWS上に立ち上げ，自由に計算を走らせることができるようになるのである！</p>
 </div>
 <div class="paragraph">
-<p>ハンズオン1のソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/ec2-get-started">こちらのリンク</a> に置いてある．</p>
+<p>ハンズオンのソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/ec2-get-started">こちらのリンク</a> に置いてある．</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -2446,24 +2446,13 @@ AWS で一時的に生じた余剰な空きCPUをユーザーに割安で貸し�
 <h4 id="_aws_のシークレットキーをセットする">4.4.2. AWS のシークレットキーをセットする</h4>
 <div class="paragraph">
 <p>AWS CLI および AWS CDK を使うには， AWS のシークレットキーが設定されている必要がある．
-以下のようにして環境変数を設定する．</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>XXXXXX
-<span class="nv">$ </span><span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>YYYYYY
-<span class="nv">$ </span><span class="nb">export </span><span class="nv">AWS_DEFAULT_REGION</span><span class="o">=</span>ap-northeast-1</code></pre>
-</div>
+シークレットキーの発行については <a href="#aws_secrets">Section 15.1</a> を参照のこと．
+シークレットキーを発行したら， <a href="#aws_cli_install">Section 15.2</a> を参照し，コマンドラインの設定を行う．</p>
 </div>
 <div class="paragraph">
-<p>上の <code>XXXXXX</code>, <code>YYYYYY</code> としたところは自分の鍵に置き換えることを忘れずに．</p>
-</div>
-<div class="paragraph">
-<p>シークレットキーの発行については <a href="#aws_secrets">Section 15.1</a> を参照．</p>
-</div>
-<div class="paragraph">
-<p>あるいは， <code>~/.aws/credentials</code> に認証情報を保存しておく方法もある．
-詳しくは <a href="#aws_cli_install">Section 15.2</a> を参照．</p>
+<p>繰り返しになるがここに簡単に記すと，一つ目の方法は <code>AWS_ACCESS_KEY_ID</code> などの環境変数を設定するやり方である．
+もう一つの方法は， <code>~/.aws/credentials</code> に認証情報を保存しておく方式である．
+シークレットキーの設定は AWS CLI/CDK を使用するうえで共通のステップになるので，しっかりと理解しておくように．</p>
 </div>
 </div>
 <div class="sect3">
@@ -2821,12 +2810,6 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <h2 id="sec_scientific_computing">5. クラウドで行う科学計算・機械学習</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ここからが第二回目の講義の内容になる．</p>
-</div>
-<div class="paragraph">
-<p>第二回目は，前回学んだクラウドの知識・技術を使って，現実的な問題を解くことを考える．</p>
-</div>
-<div class="paragraph">
 <p>計算機が発達した現代では，計算機によるシミュレーションやビッグデータの解析は，科学・エンジニアリングの研究の主要な柱である．
 これらの大規模な計算を実行するには，クラウドは最適である．
 本章から始まる第二部では，どのようにしてクラウド上で科学計算を実行するのかを，ハンズオンとともに体験してもらう．
@@ -2849,7 +2832,7 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 例えば，最新の言語モデルである <a href="https://arxiv.org/abs/2005.14165">GPT-3</a> には<strong>1750億個</strong>ものパラメータが含まれている！
 このような膨大なパラメータを有することで，ディープラーニングは高い表現力と汎化性能を実現しているのである．</p>
 </div>
-<div class="imageblock text-center">
+<div id="fig:convolution" class="imageblock text-center">
 <div class="content">
 <img src="imgs/cnn.png" alt="cnn" width="400">
 </div>
@@ -2859,7 +2842,7 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <p>GPT-3 に限らず，最近の SOTA (State-of-the-art) の性能を達成するニューラルネットでは，百万から億のオーダーのパラメータを有することは頻繁になってきている．
 そのような巨大なニューラルネットを訓練 (最適化) させるのは，当然のことながら膨大な計算コストがかかる．
 そんな巨大な計算に最適なのが，クラウドである！
-事実，GPT-3の学習も，詳細は明かされていないが，Microsoft社のクラウドを使って行われたと報告されている．</p>
+事実，GPT-3の学習も，詳細は明かされていないが，Microsoft 社のクラウドを使って行われたと報告されている．</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -2870,7 +2853,7 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <td class="content">
 <div class="paragraph">
 <p>GPT-3 で使われた計算リソースの詳細は論文でも明かされていないのだが， <a href="https://lambdalabs.com/blog/demystifying-gpt-3/">Lambda 社のブログ</a>で興味深い考察が行われている
-(Lambda社は機械学習に特化したクラウドサービスを提供している)．</p>
+(Lambda 社は機械学習に特化したクラウドサービスを提供している)．</p>
 </div>
 <div class="paragraph">
 <p>記事によると，1750億のパラメータを訓練するには，一台の GPU (NVIDIA V100) を用いた場合，342年の月日と460万ドルのクラウド利用料が必要となる，とのことである．
@@ -2905,7 +2888,7 @@ GPUのコアは，その設計から，行列の計算など，単純かつ規�
 現在では GPGPU は分子動力学や気象シミュレーション，そして機械学習など多くの分野で使われている．</p>
 </div>
 <div class="paragraph">
-<p>ディープラーニングで最も頻繁に起こる演算が，ニューロンの出力を次の層のニューロンに伝える畳み込み (Convolution) 演算である．
+<p>ディープラーニングで最も頻繁に起こる演算が，ニューロンの出力を次の層のニューロンに伝える<strong>畳み込み (Convolution)</strong> 演算である (<a href="#fig:convolution">Figure 16</a>)．
 畳み込み演算は，まさに GPU が得意とする演算であり， CPU ではなく GPU を用いることで学習を飛躍的に (最大で数百倍程度) 加速させることができる．</p>
 </div>
 <div class="paragraph">
@@ -3006,8 +2989,8 @@ V100 と比べると，コンシューマ GPU はコアの数が少なかった�
 1インスタンスあたりの GPU の搭載数は1台から最大で8台まで選択することが可能である．</p>
 </div>
 <div class="paragraph">
-<p>GPU を搭載した一番安いインスタンスタイプは， <code>g2dn.xlarge</code> であり，これには廉価かつ省エネルギー設計の NVIDIA T4 が搭載されている．
-今回のハンズオンでは，このインスタンスを使用して，ディープラーニングの計算を行ってみる．</p>
+<p>GPU を搭載した一番安いインスタンスタイプは， <code>g4dn.xlarge</code> であり，これには廉価かつ省エネルギー設計の NVIDIA T4 が搭載されている．
+後のハンズオンでは，このインスタンスを使用して，ディープラーニングの計算を行ってみる．</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -3017,7 +3000,8 @@ V100 と比べると，コンシューマ GPU はコアの数が少なかった�
 </td>
 <td class="content">
 <div class="paragraph">
-<p><a href="#table_gpu_instances">Table 3</a> の価格は <code>us-east-1</code> のもの．地域によって多少価格設定が異なることがある．</p>
+<p><a href="#table_gpu_instances">Table 3</a> の価格は <code>us-east-1</code> のものである．
+リージョンによって多少価格設定が異なる．</p>
 </div>
 </td>
 </tr>
@@ -3031,24 +3015,56 @@ V100 と比べると，コンシューマ GPU はコアの数が少なかった�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>V100を一台搭載した <code>p3.2xlarge</code> の利用料金は一時間あたり $3.06 である．V100が約百万円で売られていることを考えると，約3000時間 (= 124日間)，通算で計算を行った場合に，クラウドを使うよりもV100を自分で買ったほうがお得になる，という計算になる．
+<p>V100 を一台搭載した <code>p3.2xlarge</code> の利用料金は一時間あたり $3.06 である．
+V100 が約百万円で売られていることを考えると，約3000時間 (= 124日間)，通算で計算を行った場合に，クラウドを使うよりもV100を自分で買ったほうがお得になる，という計算になる．
 (実際には，自前でV100を用意する場合は，V100だけでなく，CPUやネットワーク機器，電気使用料も必要なので，百万円よりもさらにコストがかかる．)</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Further reading</div>
+<div class="paragraph">
+<p>深層学習を詳しく勉強したい人には以下の参考書を推薦したい．
+深層学習の基礎的な概念や理論は普遍的であるが，この分野は日進月歩なので，常に最新の情報を取り入れることを忘れずに．</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.deeplearningbook.org/">Deep Learning (Ian Goodfellow, Yoshua Bengio and Aaron Courville)</a>
+出版されてから数年が経つが，深層学習の理論的な側面を学びたいならばおすすめの入門書．
+ウェブで無料で読むことができる．
+日本語版も出版されている．
+実装についてはほとんど触れられていないので，理論家向けの本．</p>
+</li>
+<li>
+<p><a href="https://www.oreilly.co.jp/books/9784873117584/">ゼロから作る Deep Learning (斎藤 康毅)</a>
+合計三冊からなるシリーズ．
+理論と実装がバランスよく説明されていて，深層学習の入門書の決定版．</p>
+</li>
+<li>
+<p><a href="https://d2l.ai/">Dive into Deep Learning (Aston Zhang, Zachary C. Lipton, Mu Li, and Alexander J. Smola)</a>
+深層学習の基礎から最新のアルゴリズムまでを，実装を通して学んでいくスタイルの本．
+ウェブで無料で読むことができる，1000ページ越えの超大作．
+これを読破することができれば，深層学習の実装で困ることはないだろう．</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="sec_jupyter_and_deep_learning">6. Hands-on #2: AWSでディープラーニングの計算を走らせる</h2>
+<h2 id="sec_jupyter_and_deep_learning">6. Hands-on #2: AWS でディープラーニングを実践</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ハンズオン第二回では，GPUを搭載したEC2インスタンスを起動し，ディープラーニングの学習と推論を実行する演習を行う．</p>
+<p>ハンズオン第二回では， GPU を搭載したEC2インスタンスを起動し，ディープラーニングの学習と推論を実行する演習を行う．</p>
 </div>
 <div class="paragraph">
-<p>ハンズオンのソースコードはこちらのリンクに置いてある &#8658; <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn" class="bare">https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn</a></p>
+<p>ハンズオンのソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist">こちらのリンク</a> に置いてある．</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -3058,8 +3074,9 @@ V100 と比べると，コンシューマ GPU はコアの数が少なかった�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>このハンズオンは，AWSの無料枠内では実行できない．
-<code>g4dn.xlarge</code> タイプの EC2 インスタンスを使うので， <code>ap-northeast-1</code> リージョンでは 0.8 $/hour のコストが発生する．</p>
+<p>このハンズオンは， AWS の無料枠内では実行できない．
+<code>g4dn.xlarge</code> タイプの EC2 インスタンスを使うので， <code>us-east-1</code> リージョンでは 0.526 $/hour のコストが発生する．
+東京 (<code>ap-northeast-1</code>) を選択した場合は 0.71 $/hour のコストが発生する．</p>
 </div>
 </td>
 </tr>
@@ -3078,12 +3095,13 @@ V100 と比べると，コンシューマ GPU はコアの数が少なかった�
 </div>
 <div id="handson_02_architecture" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/handson-02-architecture.png" alt="hands-on 01 architecture" width="600">
+<img src="imgs/handson-jupyter/handson-02-architecture.png" alt="hands-on 01 architecture" width="600">
 </div>
 <div class="title">Figure 18. ハンズオン#2で作製するアプリケーションのアーキテクチャ</div>
 </div>
 <div class="paragraph">
-<p>図の多くの部分が，第一回ハンズオンで作成したアプリケーションと共通していることに気がつくだろう．少しの変更で，簡単にディープラーニングを走らせる環境を構築することができるのである！主な変更点は次の３点である．</p>
+<p>図の多くの部分が，第一回ハンズオンで作成したアプリケーションと共通していることに気がつくだろう．
+少しの変更で，簡単にディープラーニングを走らせる環境を構築することができるのである！主な変更点は次の３点である．</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3091,7 +3109,7 @@ V100 と比べると，コンシューマ GPU はコアの数が少なかった�
 <p>GPUを搭載した <code>g4dn.xlarge</code> インスタンスタイプを使用．</p>
 </li>
 <li>
-<p>ディープラーニングに使うプログラムが予めインストールされたDLAMI (後述) を使用．</p>
+<p>ディープラーニングに使うプログラムが予めインストールされた DLAMI (後述) を使用．</p>
 </li>
 <li>
 <p>SSHにポートフォワーディングのオプションつけてサーバーに接続し，サーバーで起動しているJupyter notebook (後述) を使ってプログラムを書いたり実行したりする．</p>
@@ -3099,7 +3117,8 @@ V100 と比べると，コンシューマ GPU はコアの数が少なかった�
 </ul>
 </div>
 <div class="paragraph">
-<p>ハンズオンで使用するプログラムのコードをみてみよう (<a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn/app.py">/handson/02-ec2-dnn/app.py</a>)．コードも，第一回目とほとんど共通である．変更点のみ解説を行う．</p>
+<p>ハンズオンで使用するプログラムのコードをみてみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist/app.py">/handson/mnist/app.py</a>)．
+コードは第一回目とほとんど共通である．変更点のみ解説を行う．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3188,30 +3207,40 @@ V100 と比べると，コンシューマ GPU はコアの数が少なかった�
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>ここで，GPUを搭載した <code>g4dn.xlarge</code> インスタンスタイプを選択している (第一回では，CPUのみの <code>t2.micro</code> だった)．</td>
+<td>ここで， GPU を搭載した <code>g4dn.xlarge</code> インスタンスタイプを選択している (第一回では， CPU のみの <code>t2.micro</code> だった)．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>ここで，Deep Learning 用の諸々のソフトウェアがプリンストールされたAMI (<a href="https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html">Deep Learning Amazon Machine Image; DLAMI</a>) を選択している．(第一回では，Amazon Linux というAMIを使用していた)．使用するAMIのIDは "ami-09c0c16fc46a29ed9" である．</td>
+<td>ここでは，Deep Learning 用の諸々のソフトウェアがプリンストールされたAMI (<a href="https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html">Deep Learning Amazon Machine Image; DLAMI</a>) を選択している．
+(第一回では，Amazon Linux というAMIを使用していた)．
+使用するAMIのIDは <code>ami-09c0c16fc46a29ed9</code> である．</td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p><code>g4dn.xlarge</code> のインスタンスタイプについては， <a href="#sec_scientific_computing">Section 5</a> ですでに触れた．DLAMI について，少し説明しよう．</p>
+<p><code>g4dn.xlarge</code> のインスタンスタイプについては， <a href="#sec_scientific_computing">Section 5</a> ですでに触れた．
+DLAMI について，少し説明しよう．</p>
 </div>
 <div class="sect3">
 <h4 id="_dlami_deep_learning_amazon_machine_image">6.2.1. DLAMI (Deep Learning Amazon Machine Image)</h4>
 <div class="paragraph">
-<p><code>AMI</code> (Amazon Machine Image) とは，平たく言えば OS (Operating System) のことである．当然のことながら，OSがなければコンピュータはなにもできないので，EC2インスタンスを起動する時には必ずなにかのOSを"インストール"する必要がある．AMI には，例えば <a href="https://ubuntu.com/">Ubuntu</a> や <a href="https://www.suse.com/">SUSE Linux</a> などの各Linux系OSに加えて，Windows Server を選択することもできる．また，EC2での使用に最適化された <a href="https://aws.amazon.com/amazon-linux-ami/">Amazon Linux</a> というAMIも提供されている．</p>
+<p><strong>AMI (Amazon Machine Image)</strong> とは，大まかには OS (Operating System) に相当する概念である．
+当然のことながら， OS がなければコンピュータはなにもできないので，EC2 インスタンスを起動する時には必ずなにかの OS を"インストール"する必要がある．
+EC2 が起動したときにロードされる OS に相当するものが， AMI である．
+AMI には，例えば <a href="https://ubuntu.com/">Ubuntu</a> などの Linux 系 OS に加えて，Windows Server を選択することもできる．
+また， EC2 での使用に最適化された <a href="https://aws.amazon.com/amazon-linux-ami/">Amazon Linux</a> という AMI も提供されている．</p>
 </div>
 <div class="paragraph">
-<p>しかしながら，AMIを単なるOSと理解するのは誤りである．
-AMIには，ベースとなる(空っぽの)OSを選択できることもできるが，それに加えて，各種のプログラムがインストール済みのAMIも用意されている．
-必要なプログラムがインストールされているAMIを見つけることができれば，自分でインストールを行ったり環境設定をする手間が大幅に省ける．
+<p>しかしながら， AMI を単なる OS と理解するのは過剰な単純化である．
+AMI には，ベースとなる (空っぽの) OS を選択できることもできるが，それに加えて，各種のプログラムがインストール済みの AMI も定義することができる．
+必要なプログラムがインストールされている AMI を見つけることができれば，自分でインストールを行ったり環境設定をする手間が大幅に省ける．
 具体例を挙げると，ハンズオン第一回では EC2 インスタンスに Python 3.6 をインストールする例を示したが，そのような操作をインスタンスを起動するたびに行うのは手間である！</p>
 </div>
 <div class="paragraph">
-<p>AMI は，AWSや他のサードパーティーから提供されており，EC2のコンソール画面でインスタンスを起動するときに検索することができる．あるいは， AWS CLI を使って，次のコマンドでリストを取得することができる (<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html">参考</a>)．</p>
+<p>AMI は， AWS 公式のものに加えて，サードパーティーから提供されているものもある．
+また，自分自身の AMI を作って登録することも可能である (<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">参考</a>)．
+AMI は EC2 のコンソールから検索することが可能である．
+あるいは，AWS CLI を使って，次のコマンドでリストを取得することができる (<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html">参考</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3219,14 +3248,12 @@ AMIには，ベースとなる(空っぽの)OSを選択できることもでき�
 </div>
 </div>
 <div class="paragraph">
-<p>上記のコマンドにより，amazon が提供しているAMIの一覧が表示される．
-また，自分自身のAMIを作って登録することも可能である (<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">参考</a>)．</p>
+<p>ディープラーニングで頻繁に使われるプログラムが予めインストールしてあるAMIが， <a href="https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html">DLAMI (Deep Learning AMI)</a> である．
+DLAMI には <code>TensorFlow</code>, <code>PyTorch</code> などの人気の高いディープラーニングのフレームワーク・ライブラリが既にインストールされているため， EC2 インスタンスを起動してすぐさまディープラーニングの計算を実行できる．</p>
 </div>
 <div class="paragraph">
-<p>ディープラーニングで頻繁に使われるプログラムが予めインストールしてあるAMIが， <a href="https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html">DLAMI (Deep Learning AMI)</a> である． DLAMIには <code>TensorFlow</code>, <code>PyTorch</code> などの人気の高いディープラーニングのフレームワーク・ライブラリが既にインストールされているため，EC2インスタンスを起動してすぐさまディープラーニングの計算を実行できる．</p>
-</div>
-<div class="paragraph">
-<p>本ハンズオンでは， Amazon Linux 2 をベースにした DLAMI を使用する (AMI ID = ami-09c0c16fc46a29ed9)．AWS CLI を使って，このAMIの詳細情報を取得してみよう．</p>
+<p>本ハンズオンでは， Amazon Linux 2 をベースにした DLAMI を使用する (AMI ID = ami-09c0c16fc46a29ed9)．
+AWS CLI を使って，このAMIの詳細情報を取得してみよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3235,7 +3262,7 @@ AMIには，ベースとなる(空っぽの)OSを選択できることもでき�
 </div>
 <div id="handson_02_ami-info" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/ami-info.png" alt="ami-info" width="700">
+<img src="imgs/handson-jupyter/ami-info.png" alt="ami-info" width="700">
 </div>
 <div class="title">Figure 19. AMI ID = ami-09c0c16fc46a29ed9 の詳細情報</div>
 </div>
@@ -3254,10 +3281,10 @@ AMIには，ベースとなる(空っぽの)OSを選択できることもでき�
 興味のある読者のために，簡単な解説をしよう (参考: <a href="https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html">公式ドキュメンテーション</a>)．</p>
 </div>
 <div class="paragraph">
-<p>最も low-level なレイヤーとしては， GPUドライバー がインストールされている．
-GPUドライバーなしにはOSはGPUにコマンドを送ることができない．
+<p>最も low-level なレイヤーとしては， GPU ドライバー がインストールされている．
+GPU ドライバーなしには OS は GPU とコマンドのやり取りをすることができない．
 次のレイヤーが <a href="https://developer.nvidia.com/about-cuda">CUDA</a> と <a href="https://developer.nvidia.com/cudnn">cuDNN</a> である．
-CUDAは，NVIDIA社が開発した，GPU上で汎用コンピューティングを行うための言語であり，C++言語を拡張したシンタックスを備える．
+CUDA は， NVIDIA 社が開発した， GPU 上で汎用コンピューティングを行うための言語であり， C++ 言語を拡張したシンタックスを備える．
 cuDNN は CUDA で書かれたディープラーニングのライブラリであり，n次元の畳み込みなどの演算が実装されている．</p>
 </div>
 <div class="paragraph">
@@ -3265,7 +3292,8 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 </div>
 <div class="paragraph">
 <p>これに加えて， "Conda" と呼ばれるタイプには， これらのプログラム基盤の上に， <code>TensorFlow</code> や <code>PyTorch</code> などのライブラリがインストールされている．
-さらに， <a href="https://docs.conda.io/projects/conda/en/latest/index.html">Anaconda</a> による仮想環境を使うことによって， <code>TensorFlow</code> の環境， <code>PyTorch</code> の環境，を簡単に切り替えることができる (これについては，ハンズオンで触れる)．また， Jupyter notebook もインストール済みである．</p>
+さらに， <a href="https://docs.conda.io/projects/conda/en/latest/index.html">Anaconda</a> による仮想環境を使うことによって， <code>TensorFlow</code> の環境， <code>PyTorch</code> の環境，を簡単に切り替えることができる (これについては，ハンズオンで触れる)．
+また， Jupyter notebook もインストール済みである．</p>
 </div>
 </td>
 </tr>
@@ -3281,23 +3309,18 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 <div class="paragraph">
 <p>デプロイの手順は，ハンズオン1とほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
-それぞれのコマンドの意味を忘れてしまった場合は，ハンズオン1に戻って復習していただきたい．</p>
+それぞれのコマンドの意味を忘れてしまった場合は，ハンズオン1に戻って復習していただきたい．
+シークレットキーの設定も忘れずに．</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="c"># プロジェクトのディレクトリに移動</span>
-<span class="nv">$ </span><span class="nb">cd </span>intro-aws/handson/02-ec2-dnn
+<span class="nv">$ </span><span class="nb">cd </span>handson/mnist
 
 <span class="c"># venv を作成し，依存ライブラリのインストールを行う</span>
 <span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
 <span class="nv">$ </span><span class="nb">source</span> .env/bin/activate
 <span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
-
-<span class="c"># AWS の認証情報をセットする</span>
-<span class="c"># 自分自身の認証情報に置き換えること！</span>
-<span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>XXXXXX
-<span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>YYYYYY
-<span class="nb">export </span><span class="nv">AWS_DEFAULT_REGION</span><span class="o">=</span>ap-northeast-1
 
 <span class="c"># SSH鍵を生成</span>
 <span class="nv">$ </span><span class="nb">export </span><span class="nv">KEY_NAME</span><span class="o">=</span><span class="s2">"HirakeGoma"</span>
@@ -3328,7 +3351,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 </div>
 <div id="handson_02_cdk_output" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/cdk_output.png" alt="cdk output" width="700">
+<img src="imgs/handson-jupyter/cdk_output.png" alt="cdk output" width="700">
 </div>
 <div class="title">Figure 20. CDKデプロイ実行後の出力</div>
 </div>
@@ -3420,7 +3443,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 </div>
 <div id="handson_02_nvidia-smi" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/nvidia-smi.png" alt="nvidia-smi" width="700">
+<img src="imgs/handson-jupyter/nvidia-smi.png" alt="nvidia-smi" width="700">
 </div>
 <div class="title">Figure 21. nvidia-smi の出力</div>
 </div>
@@ -3432,7 +3455,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 </div>
 <div id="handson_02_welcome_jupyter" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/welcome_to_jupyter.png" alt="welcome to jupyter" width="700">
+<img src="imgs/handson-jupyter/welcome_to_jupyter.png" alt="welcome to jupyter" width="700">
 </div>
 <div class="title">Figure 22. Jupyter notebook の画面</div>
 </div>
@@ -3456,7 +3479,7 @@ DLAMI には既に Jupyter がインストールされているので，特段�
 </div>
 <div id="handson_02_jupyter_launch" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/jupyter_launch.png" alt="jupyter launch" width="700">
+<img src="imgs/handson-jupyter/jupyter_launch.png" alt="jupyter launch" width="700">
 </div>
 <div class="title">Figure 23. Jupyter notebook サーバーを起動</div>
 </div>
@@ -3495,7 +3518,7 @@ DLAMI には既に Jupyter がインストールされているので，特段�
 </div>
 <div id="handson_02_jupyter_home" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/jupyter_home.png" alt="jupyter home" width="700">
+<img src="imgs/handson-jupyter/jupyter_home.png" alt="jupyter home" width="700">
 </div>
 <div class="title">Figure 24. Jupyter ホーム画面</div>
 </div>
@@ -3587,7 +3610,7 @@ Jupyterのホーム画面の右上の "New" を押し，"conda_pytorch_p36" と�
 </div>
 <div id="handson_02_jupyeter_new" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/jupyter_new.png" alt="jupyter_new" width="700">
+<img src="imgs/handson-jupyter/jupyter_new.png" alt="jupyter_new" width="700">
 </div>
 <div class="title">Figure 25. 新規ノートブックの作成． "conda_pytorch_p36" の環境を選択する．</div>
 </div>
@@ -3596,7 +3619,7 @@ Jupyterのホーム画面の右上の "New" を押し，"conda_pytorch_p36" と�
 </div>
 <div id="handson_02_jupyeter_pytorch" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/jupyter_pytorch.png" alt="jupyter_pytorch" width="700">
+<img src="imgs/handson-jupyter/jupyter_pytorch.png" alt="jupyter_pytorch" width="700">
 </div>
 <div class="title">Figure 26. PyTorch始めの一歩</div>
 </div>
@@ -3828,7 +3851,7 @@ Wall time: 553 ms</code></pre>
 </div>
 <div id="handson_02_mnist_examples" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/mnist_examples.png" alt="mnist_examples" width="400">
+<img src="imgs/handson-jupyter/mnist_examples.png" alt="mnist_examples" width="400">
 </div>
 <div class="title">Figure 27. MNIST 手書き数字データセット</div>
 </div>
@@ -3845,7 +3868,7 @@ Wall time: 553 ms</code></pre>
 </div>
 <div id="handson_02_jupyter_upload" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/jupyter_upload.png" alt="jupyter upload" width="600">
+<img src="imgs/handson-jupyter/jupyter_upload.png" alt="jupyter upload" width="600">
 </div>
 <div class="title">Figure 28. <code>simple_mnist.py</code> をアップロード</div>
 </div>
@@ -3946,7 +3969,7 @@ Wall time: 553 ms</code></pre>
 </div>
 <div id="handson_02_mnist_ground_truth" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/mnist_ground_truth.png" alt="mnist_ground_truth" width="700">
+<img src="imgs/handson-jupyter/mnist_ground_truth.png" alt="mnist_ground_truth" width="700">
 </div>
 <div class="title">Figure 29. MNIST の手書き数字画像とその教師ラベル</div>
 </div>
@@ -3969,7 +3992,7 @@ Wall time: 553 ms</code></pre>
 </div>
 <div id="handson_02_cnn_architecture" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/cnn_architecture.png" alt="cnn architecture" width="700">
+<img src="imgs/handson-jupyter/cnn_architecture.png" alt="cnn architecture" width="700">
 </div>
 <div class="title">Figure 30. 本ハンズオンで使用するニューラルネットの構造．</div>
 </div>
@@ -4027,13 +4050,13 @@ GPU を使えば，これくらいの計算であれば1分程度で完了する
 </div>
 <div id="handson_02_train_loss" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/train_loss.png" alt="train_loss" width="500">
+<img src="imgs/handson-jupyter/train_loss.png" alt="train_loss" width="500">
 </div>
 <div class="title">Figure 31. 学習の進行に対する Train loss の変化</div>
 </div>
 <div id="handson_02_mnist_final_score" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/mnist_final_score.png" alt="mnist_final_score" width="700">
+<img src="imgs/handson-jupyter/mnist_final_score.png" alt="mnist_final_score" width="700">
 </div>
 <div class="title">Figure 32. 学習したCNNのテストデータに対するスコア (5エポック後)</div>
 </div>
@@ -4078,7 +4101,7 @@ GPU を使えば，これくらいの計算であれば1分程度で完了する
 </div>
 <div id="handson_02_mnist_mnist_prediction" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-02/mnist_prediction.png" alt="mnist_prediction" width="700">
+<img src="imgs/handson-jupyter/mnist_prediction.png" alt="mnist_prediction" width="700">
 </div>
 <div class="title">Figure 33. 学習した CNN による，MNIST画像の推論結果</div>
 </div>
@@ -9277,7 +9300,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-06-23 03:41:16 UTC
+Last updated 2021-06-26 02:47:14 UTC
 </div>
 </div>
 <style>
