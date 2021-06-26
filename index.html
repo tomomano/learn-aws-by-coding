@@ -3310,7 +3310,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 <p>デプロイの手順は，ハンズオン1とほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
 それぞれのコマンドの意味を忘れてしまった場合は，ハンズオン1に戻って復習していただきたい．
-シークレットキーの設定も忘れずに．</p>
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3340,7 +3340,8 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>ハンズオン1で作成したSSH鍵の削除を行わなかった場合は，SSH鍵を改めて作成する必要はない．逆に言うと，同じ名前のSSHが既に存在する場合は，鍵生成のコマンドはエラーを出力する．</p>
+<p>ハンズオン1で作成した SSH 鍵の削除を行わなかった場合は， SSH 鍵を改めて作成する必要はない．
+逆に言うと，同じ名前のSSHが既に存在する場合は，鍵生成のコマンドはエラーを出力する．</p>
 </div>
 </td>
 </tr>
@@ -3370,7 +3371,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 </div>
 </div>
 <div class="paragraph">
-<p>ポートフォワーディングとは，クライアントマシンの特定のアドレスへの接続を，SSHの暗号化された通信を介して，リモートマシンの特定のアドレスへ転送する，という意味である．
+<p>ポートフォワーディングとは，クライアントマシンの特定のアドレスへの接続を， SSH の暗号化された通信を介して，リモートマシンの特定のアドレスへ転送する，という意味である．
 上のコマンドの <code>-L localhost:8931:localhost:8888</code> は，自分のローカルマシンの <code>localhost:8931</code> へのアクセスを，リモートサーバーの <code>localhost:8888</code> のアドレスに転送せよ，という意味である (<code>:</code> につづく数字はポート番号を意味している)．
 リモートサーバーのポート8888には，後述する Jupyter notebook が起動している．
 したがって，ローカルマシンの <code>localhost:8931</code> にアクセスすることで，リモートサーバーの Jupyter notebook にアクセスすることができるのである (このようなSSHによる接続方式を<strong>トンネル接続</strong>と呼ぶ)．</p>
@@ -3386,7 +3387,10 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>ポートフォワーディングのオプションで，ポートの番号 (<code>:8931</code>, <code>:8888</code> など) には1から65535までの任意の整数を指定できる．しかし，例えば ポート22は SSH に，ポート80は HTTP に，など，いくつか既に使われているポート番号もあることに注意する．また， Jupyter notebook デフォルトではポート8888番を使用する．したがって，リモート側のポート番号は，8888を使うのがよい．</p>
+<p>ポートフォワーディングのオプションで，ポートの番号 (<code>:8931</code>, <code>:8888</code> など) には1から65535までの任意の整数を指定できる．
+しかし，例えば ポート 22 (SSH) やポート 80 (HTTP) など，いくつか既に使われているポート番号もあることに注意する．
+また， Jupyter notebook はデフォルトではポート8888番を使用する．
+したがって，リモート側のポート番号は，8888を使うのがよい．</p>
 </div>
 </td>
 </tr>
@@ -3421,17 +3425,19 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 なぜなら，Jupyter を開くウェブブラウザは Docker の外にあるからである．</p>
 </div>
 <div class="paragraph">
-<p>その際，秘密鍵を Docker の外に持ってこなければならない．手っ取り早い方法は， <code>cat ~/.ssh/HirakeGoma</code> と打って，出力結果をコピー&amp;ペーストで Docker の外に持ってくる方法である．</p>
+<p>その際，秘密鍵を Docker の外に持ってこなければならない．
+手っ取り早い方法は， <code>cat ~/.ssh/HirakeGoma</code> と打って，出力結果をコピー&amp;ペーストで Docker の外に持ってくる方法である．</p>
 </div>
 <div class="paragraph">
-<p>あるいは <code>-v</code> オプションをつけて，ファイルシステムをマウントしてもよい (詳しくはhttps://docs.docker.com/storage/volumes/[こちらを参照])．</p>
+<p>あるいは <code>-v</code> オプションをつけて，ファイルシステムをマウントしてもよい (詳しくは <a href="https://docs.docker.com/storage/volumes/">こちらを参照</a>)．</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>SSHによるログインができたら，早速，GPUの状態を確認してみよう．以下のコマンドを実行する．</p>
+<p>SSHによるログインができたら，早速， GPU の状態を確認してみよう．
+以下のコマンドを実行する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3439,7 +3445,9 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 </div>
 </div>
 <div class="paragraph">
-<p><a href="#handson_02_nvidia-smi">Figure 21</a> のような出力が得られるはずである．出力を見ると， Tesla T4 型のGPUが1台搭載されていることが確認できる．その他，GPU Driver や CUDA のバージョンを確認することができる．</p>
+<p><a href="#handson_02_nvidia-smi">Figure 21</a> のような出力が得られるはずである．
+出力を見ると， Tesla T4 型のGPUが1台搭載されていることが確認できる．
+その他，GPU Driver や CUDA のバージョンを確認することができる．</p>
 </div>
 <div id="handson_02_nvidia-smi" class="imageblock text-center">
 <div class="content">
@@ -3451,7 +3459,9 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 <div class="sect2">
 <h3 id="_jupyter_notebook_の起動">6.5. Jupyter notebook の起動</h3>
 <div class="paragraph">
-<p><a href="https://jupyter.org/">Jupyter notebook</a> とは，インタラクティブに Python のプログラムを書いたり実行したりするためのツールである．Jupyter は GUIとしてウェブブラウザを介してアクセスする形式をとっており，まるでノートを書くように，プロットやテーブルのデータも美しく表示することができる (<a href="#handson_02_welcome_jupyter">Figure 22</a>)．Python に慣れている読者は，きっと一度は使ったことがあるだろう．</p>
+<p><a href="https://jupyter.org/">Jupyter notebook</a> とは，インタラクティブに Python のプログラムを書いたり実行したりするためのツールである．
+Jupyter は GUI としてウェブブラウザを介してアクセスする形式をとっており，まるでノートを書くように，プロットやテーブルのデータも美しく表示することができる (<a href="#handson_02_welcome_jupyter">Figure 22</a>)．
+Python に慣れている読者は，きっと一度は使ったことがあるだろう．</p>
 </div>
 <div id="handson_02_welcome_jupyter" class="imageblock text-center">
 <div class="content">
@@ -3464,7 +3474,8 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 DLAMI には既に Jupyter がインストールされているので，特段の設定なしに使い始めることができる．</p>
 </div>
 <div class="paragraph">
-<p>早速， Jupyter を起動しよう． SSHでログインした先のEC2インスタンスで，次のコマンドを実行すればよい．</p>
+<p>早速， Jupyter を起動しよう．
+SSHでログインした先の EC2 インスタンスで，次のコマンドを実行すればよい．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3491,15 +3502,16 @@ DLAMI には既に Jupyter がインストールされているので，特段�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Jupyter notebook を初回に起動するときは，起動に少し時間がかかることがある．
-1,2分じっと待つ．</p>
+<p>Jupyter notebook を初回に起動するときは，起動に1,2分程度の時間がかかることがある．
+ほかの動作も起動直後はなぜか遅く，いくつかプログラムを走らせていくうちに俊敏に反応するようになってくる．
+AWS の GPU 搭載の仮想マシンの運用方法に起因する現象だと考えられる．</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>先ほど，ポートフォワーディングのオプションをつけてSSH接続をしているので， Jupyter の起動している <code>localhost:8888</code> には，ローカルマシンの <code>localhost:8931</code> からアクセスすることができる．</p>
+<p>先ほど，ポートフォワーディングのオプションをつけて SSH 接続をしているので， Jupyter の起動している <code>localhost:8888</code> には，ローカルマシンの <code>localhost:8931</code> からアクセスすることができる．</p>
 </div>
 <div class="paragraph">
 <p>したがって，ローカルマシンから Jupyter にアクセスするには，ウェブブラウザ (Chrome, FireFox など)から次のアドレスにアクセスすれば良い．</p>
@@ -3522,21 +3534,6 @@ DLAMI には既に Jupyter がインストールされているので，特段�
 </div>
 <div class="title">Figure 24. Jupyter ホーム画面</div>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>DLAMI の <a href="https://docs.aws.amazon.com/dlami/latest/devguide/setup-jupyter-config.html">公式ドキュメンテーション</a> では，自分で指定したパスワードとSSLを有効化することを推奨している．
-本ハンズオンでは時間の節約のためにスキップしているが，今後個人で使うときはより強固にセキュリティを設定することを推奨する．</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3545,7 +3542,7 @@ DLAMI には既に Jupyter がインストールされているので，特段�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Jupyter notebook の使い方(超簡易版)</p>
+<p>Jupyter notebook の使い方 (超簡易版)</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3556,10 +3553,10 @@ DLAMI には既に Jupyter がインストールされているので，特段�
 <p><code>Esc</code>: <strong>Command mode</strong> に遷移</p>
 </li>
 <li>
-<p>メニューバーの "+" ボタン または Command mode で <code>A</code> : セルを追加</p>
+<p>メニューバーの "+" ボタン または Command mode で <code>A</code> &#8658; セルを追加</p>
 </li>
 <li>
-<p>メニューバーの "ハサミ" ボタン または Command mode で <code>X</code> : セルを削除</p>
+<p>メニューバーの "ハサミ" ボタン または Command mode で <code>X</code> &#8658; セルを削除</p>
 </li>
 </ul>
 </div>
@@ -3575,7 +3572,7 @@ DLAMI には既に Jupyter がインストールされているので，特段�
 <h3 id="_pytorchはじめの一歩">6.6. PyTorchはじめの一歩</h3>
 <div class="paragraph">
 <p><a href="https://pytorch.org/">PyTorch</a> は Facebook AI Research LAB (FAIR) が中心となって開発を進めている，オープンソースのディープラーニングのライブラリである．
-PyTorch は 有名な例で言えば Tesla 社の自動運転プロジェクトなどで使用されており，2020/06時点において最も人気の高いディープラーニングライブラリの一つである．
+PyTorch は 有名な例で言えば Tesla 社の自動運転プロジェクトなどで使用されており，執筆時点において最も人気の高いディープラーニングライブラリの一つである．
 本ハンズオンでは， PyTorch を使ってディープラーニングの実践を行う．</p>
 </div>
 <div class="admonitionblock tip">
@@ -3589,7 +3586,8 @@ PyTorch は 有名な例で言えば Tesla 社の自動運転プロジェクト�
 <p>PyTorch の歴史のお話</p>
 </div>
 <div class="paragraph">
-<p>Facebook は PyTorch の他に Caffe2 と呼ばれるディープラーニングのフレームワークを開発していた (初代Caffe は UC Berkley の博士学生だった Yangqing Jia によって創られた)．
+<p>Facebook は PyTorch の他に Caffe2 と呼ばれるディープラーニングのフレームワークを開発していた
+(初代Caffe は UC Berkley の博士課程学生だった Yangqing Jia によって創られた)．
 Caffe2 は 2018年に PyTorch プロジェクトに合併された．</p>
 </div>
 <div class="paragraph">
@@ -3700,7 +3698,7 @@ Jupyterのホーム画面の右上の "New" を押し，"conda_pytorch_p36" と�
 </div>
 </div>
 <div class="paragraph">
-<p>最後に，GPU上にある行列を，CPUに戻す．</p>
+<p>最後に， GPU 上にある行列を， CPU に戻す．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3722,7 +3720,9 @@ Jupyterのホーム画面の右上の "New" を押し，"conda_pytorch_p36" と�
 </div>
 </div>
 <div class="paragraph">
-<p>以上の例は， GPU を使った計算の初歩の初歩であるが，雰囲気はつかめただろうか？ CPU と GPU で明示的にデータを交換するのが肝である．この例は，たった 3x3 の行列の足し算なので，GPUを使う意味はまったくないが，これが数千，数万のサイズの行列になった時，GPUは格段の威力を発揮する．</p>
+<p>以上の例は， GPU を使った計算の初歩の初歩であるが，雰囲気はつかめただろうか？
+CPU と GPU で明示的にデータを交換するのが肝である．
+この例は，たった 3x3 の行列の足し算なので， GPU を使う意味はまったくないが，これが数千，数万のサイズの行列になった時， GPU は格段の威力を発揮する．</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3732,7 +3732,7 @@ Jupyterのホーム画面の右上の "New" を押し，"conda_pytorch_p36" と�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>完成した Jupyter notebook は <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn/pytorch/pytorch_get_started.ipynb">/handson/02-ec2-dnn/pytorch/pytorch_get_started.ipynb</a> にある．
+<p>完成した Jupyter notebook は <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/mnist/pytorch/pytorch_get_started.ipynb">/handson/mnist/pytorch/pytorch_get_started.ipynb</a> にある．
 Jupyter の画面右上の "Upload" から，このファイルをアップロードして，コードを走らせることが可能である．</p>
 </div>
 <div class="paragraph">
@@ -3746,10 +3746,12 @@ Jupyter の画面右上の "Upload" から，このファイルをアップロ�
 <div class="sect2">
 <h3 id="_cpu_vs_gpu_の簡易ベンチマーク">6.7. CPU vs GPU の簡易ベンチマーク</h3>
 <div class="paragraph">
-<p>実際に，ベンチマークを取ることでGPUとCPUの速度を比較をしてみよう．実行時間を計測するツールとして， Jupyter の提供する <a href="https://ipython.readthedocs.io/en/stable/interactive/magics.html">%time</a> マジックコマンドを利用する．</p>
+<p>実際に，ベンチマークを取ることでGPUとCPUの速度を比較をしてみよう．
+実行時間を計測するツールとして， Jupyter の提供する <a href="https://ipython.readthedocs.io/en/stable/interactive/magics.html">%time</a> マジックコマンドを利用する．</p>
 </div>
 <div class="paragraph">
-<p>まずは，CPUを使用して，10000x10000 の行列の行列積を計算した場合の速度を測ってみよう．先ほどのノートブックの続きに，次のコードを実行する．</p>
+<p>まずは，CPUを使用して，10000x10000 の行列の行列積を計算した場合の速度を測ってみよう．
+先ほどのノートブックの続きに，次のコードを実行する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3769,7 +3771,8 @@ Jupyter の画面右上の "Upload" から，このファイルをアップロ�
 </div>
 </div>
 <div class="paragraph">
-<p>出力は以下のようなものが得られるだろう．これは，行列積の計算に実時間で5.8秒かかったことを意味する (実行のたびに計測される時間はばらつくことに留意)．</p>
+<p>出力は以下のようなものが得られるだろう．
+これは，行列積の計算に実時間で5.8秒かかったことを意味する (実行のたびに計測される時間はばらつくことに留意)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3778,7 +3781,7 @@ Wall time: 5.8 s</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>次に，GPUを使用して，同じ演算を行った場合の速度を計測しよう．</p>
+<p>次に， GPU を使用して，同じ演算を行った場合の速度を計測しよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3800,7 +3803,8 @@ Wall time: 5.8 s</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>出力は以下のようなものになるだろう．GPUでは 553ミリ秒 で計算を終えることができた！</p>
+<p>出力は以下のようなものになるだろう．
+GPU では 553ミリ秒 で計算を終えることができた！</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3816,7 +3820,8 @@ Wall time: 553 ms</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>PyTorch において， GPU での演算は asynchronous (非同期) で実行される．その理由で，上のベンチマークコードでは， <code>torch.cuda.synchronize()</code> というステートメントを埋め込んである．</p>
+<p>PyTorch において， GPU での演算は asynchronous (非同期) で実行される．
+その理由で，上のベンチマークコードでは， <code>torch.cuda.synchronize()</code> というステートメントを埋め込んである．</p>
 </div>
 </td>
 </tr>
@@ -3830,14 +3835,19 @@ Wall time: 553 ms</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>このベンチマークでは， <code>dtype=torch.float32</code> と指定することで，32bitの浮動小数点型を用いている．ディープラーニングの学習および推論の計算には，32bit型，場合によっては16bit型が使われるのが一般的である．これの主な理由として，教師データやミニバッチに起因するノイズが，浮動小数点の精度よりも大きいことがあげられる．32bit/16bit を採用することで，メモリー消費を抑えたり，計算速度の向上が達成できる．</p>
+<p>このベンチマークでは， <code>dtype=torch.float32</code> と指定することで，32bitの浮動小数点型を用いている．
+ディープラーニングの学習および推論の計算には，32bit型，場合によっては16bit型が使われるのが一般的である．
+これの主な理由として，教師データやミニバッチに起因するノイズが，浮動小数点の精度よりも大きいことがあげられる．
+32bit/16bit を採用することで，メモリー消費を抑えたり，計算速度の向上が達成できる．</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>上記のベンチマークから，GPUを用いることで，<strong>約10倍のスピードアップ</strong>を実現することができた．スピードアップの割合は，演算の種類や行列のサイズに依存する．行列積は，そのなかでも最も速度向上が見込まれる演算の一つである．</p>
+<p>上記のベンチマークから，GPUを用いることで，<strong>約10倍のスピードアップ</strong>を実現することができた．
+スピードアップの性能は，演算の種類や行列のサイズに依存する．
+行列積は，そのなかでも最も速度向上が見込まれる演算の一つである．</p>
 </div>
 </div>
 <div class="sect2">
@@ -3857,7 +3867,7 @@ Wall time: 553 ms</code></pre>
 </div>
 <div class="paragraph">
 <p>今回は， MNIST 文字認識タスクを，<strong>畳み込みニューラルネットワーク (Convolutional Neural Network; CNN)</strong> を使って解く．
-ソースコードは <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn/pytorch/">/handson/02-ec2-dnn/pytorch/</a> にある <code>mnist.ipynb</code> と <code>simple_mnist.py</code> である．
+ソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist/pytorch">/handson/minist/pytorch/</a> にある <code>mnist.ipynb</code> と <code>simple_mnist.py</code> である．
 なお，このプログラムは， <a href="https://github.com/pytorch/examples/tree/master/mnist">PyTorch の公式 Example Project 集</a> を参考に，多少の改変を行ったものである．</p>
 </div>
 <div class="paragraph">
@@ -3925,7 +3935,7 @@ Wall time: 553 ms</code></pre>
 <span class="n">trainloader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">trainset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="n">testset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">MNIST</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="s">'./data'</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transf</span><span class="p">)</span>
-<span class="n">testloader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">trainset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">testloader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">testset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
@@ -4046,7 +4056,7 @@ GPU を使えば，これくらいの計算であれば1分程度で完了する
 </div>
 <div class="paragraph">
 <p>出力には各エポック終了後のテストデータに対する精度も表示されている．
-最終的には 99% 程度の極めて高い精度を実現できていることが確認できるだろう (<a href="#handson_02_mnist_final_score">Figure 32</a>)．</p>
+最終的には 98% 以上の極めて高い精度を実現できていることが確認できるだろう (<a href="#handson_02_mnist_final_score">Figure 32</a>)．</p>
 </div>
 <div id="handson_02_train_loss" class="imageblock text-center">
 <div class="content">
@@ -4106,12 +4116,9 @@ GPU を使えば，これくらいの計算であれば1分程度で完了する
 <div class="title">Figure 33. 学習した CNN による，MNIST画像の推論結果</div>
 </div>
 <div class="paragraph">
-<p>おめでとう！
-これで，めでたくあなたは AWS クラウドの仮想サーバーを使って，最初のディープラーニングの計算を行うことができた！
-MNIST 文字認識のタスクを行うニューラルネットを，GPUを使って高速に学習させ，現実的な問題を一つ解くことができたのである．</p>
-</div>
-<div class="paragraph">
-<p>興味のある読者は，今回のハンズオンを雛形に，自分で他のディープラーニングの計算を走らせてみるとよいだろう．</p>
+<p>以上が， AWS クラウドの仮想サーバーを立ち上げ，最初のディープラーニングの計算を行う一連の流れである．
+MNIST 文字認識のタスクを行うニューラルネットを，クラウド上の GPU を使って高速に学習させ，現実的な問題を一つ解くことができたのである．
+興味のある読者は，今回のハンズオンを雛形に，自分の所望の計算を走らせてみるとよいだろう．</p>
 </div>
 </div>
 <div class="sect2">
@@ -4137,21 +4144,6 @@ MNIST 文字認識のタスクを行うニューラルネットを，GPUを使�
 <td class="content">
 <div class="paragraph">
 <p><strong>スタックの削除は各自で必ず行うこと！</strong> 行わなかった場合，EC2インスタンスの料金が発生し続けることになる！ <code>g4dn.xlarge</code> は $0.526 / hour の料金設定なので，一日起動しつづけると約$12の請求が発生することになる！</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>AWS で， GPU 搭載型のインスタンスは高めの料金設定がされている．
-したがって，プログラムの開発やデバッグはローカルマシンの GPU で行い，大規模なデータを処理するときや，複数の GPU を並列に使って高速にモデルの学習を行いたい場合などにクラウドを利用する，と使い分けるのがよいと筆者は考えている．</p>
 </div>
 </td>
 </tr>
@@ -9300,7 +9292,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-06-26 02:47:14 UTC
+Last updated 2021-06-26 08:02:03 UTC
 </div>
 </div>
 <style>
