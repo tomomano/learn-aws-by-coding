@@ -8,7 +8,10 @@ logging.disable(sys.maxsize)
 def main(context, question, item_id, save_flag):
 
     nlp = pipeline("question-answering")
-    answer = nlp(question=question, context=context)
+    answer = nlp({
+        "question": question,
+        "context": context
+    })
 
     # store answer in DynamoDB
     if save_flag:

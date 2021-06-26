@@ -16,6 +16,7 @@ RUN python3 -m pip install --no-cache-dir --upgrade pip \
 WORKDIR /workspace
 RUN git clone https://github.com/huggingface/transformers \
     && cd transformers/ \
+    && git checkout v4.8.1 \
     && python3 -m pip install --no-cache-dir .
 
 # Download the pre-trained model

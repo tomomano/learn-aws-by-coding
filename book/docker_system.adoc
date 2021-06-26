@@ -294,3 +294,4 @@ ECS の次の重要な役割はタスクの配置である．
 [[ecs_overview]]
 .ECS の概要
 image::imgs/ecs.png[ecs, 500, align="center"]
+

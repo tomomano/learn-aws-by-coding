@@ -8,9 +8,9 @@
 特に，何百何千もの質問に同時に対応できるように，単一のサーバーに展開するのではなく，リクエストに応じて複数のサーバーを自動的に起動し，並列でジョブを実行させるシステムを設計する．
 まさに，初歩的ながら， Siri・Alexa・Google assistant のようなシステムを作り上げるのである！
 
-ハンズオンのソースコードはこちらのリンクにある => https://github.com/tomomano/intro-aws-2021/tree/main/handson/qa-bot
+ハンズオンのソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot[こちらのリンク] にある．
 
-[TIP]
+[NOTE]
 ====
 通常の機械学習のワークフローでは，モデルの訓練 => 推論 (データへの適用) が基本的な流れである．
 しかしながら， GPU を使ったモデルの訓練はやや難易度が高いため，次章 (<<sec_aws_batch>>) で取り扱う．
@@ -33,17 +33,16 @@ image::imgs/aws_logos/Fargate.png[Fargate, 100]
 ECS の概要を示した <<ecs_overview>> をもう一度見てみよう．
 この図で， ECS の管理下にあるクラスターが示されているが，このクラスターの中で計算を行う実体としては二つの選択肢がある．
 **EC2 あるいは Fargate** のいずれかである．
-EC2 を用いた場合は，先の章で説明したような流れでインスタンスが起動し，計算が実行される．
+EC2 を用いた場合は，先の章 (<<sec_first_ec2>>, <<sec_jupyter_and_deep_learning>>) で説明したような流れでインスタンスが起動し，計算が実行される．
 しかし， EC2 クラスターの作成・管理は技術的な難易度がやや高いので，次章 (<<sec_aws_batch>>) で説明することにする．
 
 Fargate とは， **ECS での利用に特化**して設計された，**コンテナを使用した計算タスク**を走らせるための仕組みである．
 計算を走らせるという点では EC2 と役割は似ているが， Fargate は EC2 インスタンスのような物理的実体は持たない．
 ECS の利用に専用設計がされているがために， ECS のクラスターとして Fargate を選択すると，とても簡単な設定・プログラムで，非常にパワフルかつスケーラブルな計算システムを構築することができる．
-(クラスターのスケーリングが容易な分，Fargate にはいくつかの制限が伴う．
-例えば GPU を用いた計算は Fargate ではできない．)
 
 Fargate では， EC2 と同様に CPU とメモリーのサイズを必要な分だけ指定できる．
 執筆時点では， CPU は 0.25 - 4 コア， RAM は 0.5 - 30 GB の間で選択することができる (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html[公式ドキュメンテーション参照])．
+クラスターのスケーリングが容易な分， Fargate では EC2 ほど大きな CPU コア・ RAM 容量を単一インスタンスに付与することができず，また GPU を利用することもできない．
 
 以上が Fargate の概要であったが，くどくど言葉で説明してもなかなかピンとこないだろう．
 ここからは実際に手を動かしながら， ECS と Fargate を使った並列タスクの処理の仕方を学んでいこう．
@@ -57,7 +56,8 @@ Fargate では， EC2 と同様に CPU とメモリーのサイズを必要な�
 ====
 "Fargate は EC2 インスタンスのような物理的実体は持たない"，と上に書いたが，少し語弊があるかもしれない．
 Fargate も，データセンターのどこかの CPU 上で起動するので，物理的な実体はどこかには必ず存在する．
-しかし，EC2 インスタンスと違って，例えば SSH でログインすることは基本的に想定されていないし，なにかのソフトウェアをインストールしたりなどの概念も存在しない (基本的に Docker を介してすべてのプログラムが実行される)．
+しかし，EC2 インスタンスと違って，例えば SSH でログインすることは基本的に想定されていないし，なにかのソフトウェアをインストールしたりなどの概念も存在しない
+(基本的に Docker のコンテナを介してすべてのプログラムが実行される)．
 その意味で "物理的実体を持たない" と表現したのである．
 実は， Fargate は <<sec_serverless>> で紹介する， serverless architecture の重要な構成要素の一つである．
 ====
@@ -91,10 +91,10 @@ answer: 1921
 今回は， https://github.com/huggingface/transformers[huggingface/transformers] で公開されている学習済みの言語モデルを利用することで，上で定義した問題を解く Q&A ボットを作る．
 この Q&A ボットは https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)[Transformer]
 と呼ばれるモデルを使った自然言語処理に支えられえている (<<transformer_architecture>>)．
-このプログラムを， Docker にパッケージしたものが https://gitlab.com/tomomano/intro-aws/container_registry/ に `handson03` という名前で用意してある．
+このプログラムを， Docker にパッケージしたものが https://hub.docker.com/repository/docker/tomomano/qabot に用意してある．
 クラウドの設計に入る前に，まずはこのプログラムを単体で動かしてみよう．
 
-なお，今回は学習済みのモデルを用いているので，私達が行うのは，与えられた入力をモデルに投げて予測を行う (推論) のみである．
+なお，今回は学習済みのモデルを用いているので，私達が行うのは，与えられた入力をモデルに投入して予測を行う (推論) のみである．
 推論の演算は， CPU だけでも十分高速に行うことができるので，コストの削減と，よりシンプルにシステムを設計をする目的で，このハンズオンでは GPU は利用しない．
 一般的に， ニューラルネットは学習のほうが圧倒的に計算コストが大きく，そのような場合に GPU はより威力を発揮する．
 
@@ -106,16 +106,16 @@ image::imgs/transformer.png[transformer, 400, align="center"]
 
 [source, bash]
 ----
-$ docker pull registry.gitlab.com/tomomano/intro-aws/handson03:latest
+$ docker pull tomomano/qabot:latest
 ----
 
 pull できたら，早速この Docker に質問を投げかけてみよう．
 
 [source, bash]
 ----
-$ context="Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical physicist who developed the theory of relativity, one of the two pillars of modern physics (alongside quantum mechanics). His work is also known for its influence on the philosophy of science. He is best known to the general public for his mass–energy equivalence formula E = mc2, which has been dubbed \"the world's most famous equation\". He received the 1921 Nobel Prize in Physics \"for his services to theoretical physics, and especially for his discovery of the law of the photoelectric effect\", a pivotal step in the development of quantum theory."
+$ context="Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical physicist who developed the theory of relativity, one of the two pillars of modern physics (alongside quantum mechanics). His work is also known for its influence on the philosophy of science. He is best known to the general public for his mass–energy equivalence formula E = mc2, which has been dubbed the world's most famous equation. He received the 1921 Nobel Prize in Physics for his services to theoretical physics, and especially for his discovery of the law of the photoelectric effect, a pivotal step in the development of quantum theory."
 $ question="In what year did Einstein win the Nobel prize ?"
-$ docker run registry.gitlab.com/tomomano/intro-aws/handson03:latest "${context}" "${question}" foo --no_save
+$ docker run tomomano/qabot "${context}" "${question}" foo --no_save
 ----
 
 今回用意した Docker image は，第一引数に context となる文字列を，第二引数に question に相当する文字列を受けつける．
@@ -137,7 +137,7 @@ $ docker run registry.gitlab.com/tomomano/intro-aws/handson03:latest "${context}
 [source, bash]
 ----
 $ question="Why did Einstein win the Nobel prize ?"
-$ docker run registry.gitlab.com/tomomano/intro-aws/handson03:latest "${context}" "${question}" foo --no_save
+$ docker run tomomano/qabot "${context}" "${question}" foo --no_save
 ----
 
 出力：
