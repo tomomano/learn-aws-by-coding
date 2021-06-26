@@ -4156,7 +4156,7 @@ MNIST 文字認識のタスクを行うニューラルネットを，クラウ�
 <h2 id="_docker_入門">7. Docker 入門</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="#sec_scientific_computing">Section 5</a>，<a href="#sec_handson02">[sec_handson02]</a> にわたって， AWS 上に仮想サーバーを立ち上げ，深層学習のプログラムを走らせる方法を紹介してきた．
+<p><a href="#sec_scientific_computing">Section 5</a>，<a href="#sec_jupyter_and_deep_learning">Section 6</a> にわたって， AWS 上に仮想サーバーを立ち上げ，深層学習のプログラムを走らせる方法を紹介してきた．
 ここまでは，<strong>単一のサーバー</strong>を立ち上げ，それに SSH でログインをして，コマンドを叩くことで計算を行ってきた．
 いわば，<em>パーソナルコンピュータの延長</em>のような形でクラウドを使ってきたわけである．</p>
 </div>
@@ -4202,7 +4202,7 @@ MNIST 文字認識のタスクを行うニューラルネットを，クラウ�
 <div class="content">
 <img src="imgs/big_dnn_inference.png" alt="big_dnn_inference" width="700">
 </div>
-<div class="title">Figure 35. 複数の計算機を使った大規模なディープラーニングモデルの学習</div>
+<div class="title">Figure 35. 複数の計算機による深層学習モデルを使った推論計算</div>
 </div>
 <div class="paragraph">
 <p>このような複数の計算機を同時に走らせるようなアプリケーションをクラウド上で実現するには，どのようにすればよいのだろうか？</p>
@@ -4238,7 +4238,7 @@ Dockerを使うことで，クラウドのサーバー上に瞬時に計算環�
 <p>仮想マシン(VM) とは，ホストとなるマシンの上に，仮想化されたOSを走らせる技術である (<a href="#docker_vs_vm">Figure 37</a>)．
 VM には <strong>ハイパーバイザー (Hypervisor)</strong> と呼ばれるレイヤーが存在する．
 Hypervisor はまず，物理的な計算機リソース (CPU, RAM, network など) を分割し，仮想化する．
-例えば， ホストマシンに物理的なCPUが4コアあるとして，ハイパーバイザーはそれを (2,2) 個の組に仮想的に分割することができる．
+例えば， ホストマシンに物理的な CPU が4コアあるとして，ハイパーバイザーはそれを (2,2) 個の組に仮想的に分割することができる．
 VM 上で起動する OS には，ハイパーバイザーによって仮想化されたハードウェアが割り当てられる．
 VM 上で起動する OS は基本的に完全に独立であり，例えば OS-A は OS-B に割り当てられたCPUやメモリー領域にアクセスすることはできない．
 VM を作成するための有名なソフトウェアとしては， <a href="https://www.vmware.com/">VMware</a>， <a href="https://www.virtualbox.org/">VirtualBox</a>， <a href="https://xenproject.org/">Xen</a> などがある．
@@ -4262,6 +4262,38 @@ Docker で走る仮想 OS は，<strong>多くの部分をホストのOSに依�
 <img src="imgs/docker_vs_vm.png" alt="docker_vs_vm" width="700">
 </div>
 <div class="title">Figure 37. Docker と VM の比較 (画像出典: <a href="https://www.docker.com/blog/containers-replacing-virtual-machines/" class="bare">https://www.docker.com/blog/containers-replacing-virtual-machines/</a>)</div>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">コラム: プログラマー三種の神器?</div>
+<div class="paragraph">
+<p>職業的プログラマーにとっての"三種の神器"とはなんだろうか？
+多様な意見があると思うが，筆者は <strong>Git</strong>, <strong>Vim</strong> そして <strong>Docker</strong> を挙げたい．</p>
+</div>
+<div class="paragraph">
+<p>Git は多くの読者がご存じの通り，コードの変更を追跡するためのシステムである．
+Linux の作成者である Linus Torvalds によって2005年に誕生した．
+チームでの開発を進める際には欠かせないツールだ．</p>
+</div>
+<div class="paragraph">
+<p>Vim は1991年から30年以上の間プログラマーたちに愛されてきたテキストエディターである．
+<a href="https://insights.stackoverflow.com/survey/2019#technology-development-environments-and-tools-all-respondents">Stackoverflow が行った2019年のアンケート</a>
+によると，開発環境の部門で5位の人気を獲得している．
+たくさんのショートカットと様々なカスタム設定が提供されているので，初見の人にはなかなかハードルが高いが，一度マスターすれば他のモダンなエディターや統合開発環境に負けない，あるいはそれ以上の開発体験を実現することができる．</p>
+</div>
+<div class="paragraph">
+<p>これらの十年以上の歴史あるツールに並んで，第三番目の三種の神器として挙げたいのが Docker だ．
+Docker はプログラマーの開発のワークフローを一変させた．
+例えば，プロジェクトごとに Docker image を作成することで，どの OS でも全く同じ計算環境で開発・テストを実行することができるようになった．
+また， <a href="https://en.wikipedia.org/wiki/DevOps">DevOps</a> や <a href="https://en.wikipedia.org/wiki/Continuous_integration">CI</a> / <a href="https://en.wikipedia.org/wiki/Continuous_delivery">CD</a>
+といった最近の開発ワークフローも Docker のようなコンテナ技術の存在に立脚している．
+さらには Serverless computing (<a href="#sec_serverless">Section 11</a>) といった概念も，コンテナ技術の生んだ大きな技術革新といえる．</p>
+</div>
+<div class="paragraph">
+<p>あなたにとっての三種の神器はなんだろうか？
+また，今後の未来ではどんな新しいツールが三種の神器としてプログラマーのワークフローを革新していくだろうか？</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -4322,7 +4354,8 @@ Docker Hub 以外の registry から pull するには， <code>myregistry.local
 <p>ここで， <code>-it</code> とは，インタラクティブな shell のセッションを開始するために必要なオプションである．</p>
 </div>
 <div class="paragraph">
-<p>上のコマンドを実行すると，仮想化された Ubuntu が起動され，コマンドラインからコマンドが打ち込めるようになる (<a href="#docker_shell">Figure 38</a>)．</p>
+<p>上のコマンドを実行すると，仮想化された Ubuntu が起動され，コマンドラインからコマンドが打ち込めるようになる (<a href="#docker_shell">Figure 38</a>)．
+なお，このように起動状態にある計算環境 (ランタイム) のことを <strong>Container (コンテナ)</strong> と呼ぶ．</p>
 </div>
 <div id="docker_shell" class="imageblock text-center">
 <div class="content">
@@ -4332,7 +4365,7 @@ Docker Hub 以外の registry から pull するには， <code>myregistry.local
 </div>
 <div class="paragraph">
 <p>上で使った <code>ubuntu:18.04</code> のイメージは は，空の Ubuntu OS だが，既にプログラムがインストール済みのものもある．
-これは， <a href="#sec_handson02">[sec_handson02]</a> でみた DLAMI と概念として似ている．
+これは， <a href="#sec_jupyter_and_deep_learning">Section 6</a> でみた DLAMI と概念として似ている．
 たとえば， pytorch がインストール済みの Image は <a href="https://hub.docker.com/r/pytorch/pytorch/">こちら</a> で公開されている．</p>
 </div>
 <div class="paragraph">
@@ -4381,17 +4414,22 @@ False</code></pre>
 <p>自分の使うソフトウェア・ライブラリがインストールされた，自分だけの Image を作ることも可能である．</p>
 </div>
 <div class="paragraph">
-<p>例えば， <a href="https://gitlab.com/tomomano/intro-aws/container_registry">本書で提供している docker image</a> には， Python, Node.js, AWS CLI, AWS CDK などのソフトウェアがインストール済みであり，ダウンロードしてくるだけですぐにハンズオンのプログラムが実行できるようになっている．</p>
+<p>例えば， <a href="https://hub.docker.com/repository/docker/tomomano/labc">本書で提供している docker image</a>
+には， Python, Node.js, AWS CLI, AWS CDK などのソフトウェアがインストール済みであり，ダウンロードしてくるだけですぐにハンズオンのプログラムが実行できるようになっている．</p>
 </div>
 <div class="paragraph">
 <p>カスタムの docker image を作るには， <code>Dockerfile</code> という名前のついたファイルを用意し，その中にどんなプログラムをインストールするかなどを記述していく．</p>
 </div>
 <div class="paragraph">
-<p>具体例として，本書で提供している Docker image のレシピを見てみよう (<a href="https://github.com/tomomano/intro-aws-2021/blob/main/docker/Dockerfile">/docker/Dockerfile</a>)．</p>
+<p>具体例として，本書で提供している Docker image のレシピを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile">/docker/Dockerfile</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="docker"><span class="k">FROM</span><span class="s"> node:12</span>
+<span class="k">LABEL</span><span class="s"> maintainer="Tomoyuki Mano"</span>
+
+<span class="k">RUN </span>apt-get update <span class="se">\
+</span>    <span class="o">&amp;&amp;</span> apt-get <span class="nb">install </span>nano
 
 <i class="conum" data-value="1"></i><b>(1)</b>
 <span class="k">RUN </span><span class="nb">cd</span> /opt <span class="se">\
@@ -4407,15 +4445,13 @@ False</code></pre>
 </span>    <span class="o">&amp;&amp;</span> ./aws/install
 
 <i class="conum" data-value="2"></i><b>(2)</b>
-<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">-g</span> aws-cdk@1.105
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">-g</span> aws-cdk@1.100
 
-<span class="c"># Make command line prettier...</span>
-<span class="k">RUN </span><span class="nb">echo</span> <span class="s2">"alias ls='ls --color=auto'"</span> <span class="o">&gt;&gt;</span> /root/.bashrc
-<span class="k">RUN </span><span class="nb">echo</span> <span class="s2">"PS1='</span><span class="k">${</span><span class="nv">debian_chroot</span>:+<span class="p">(</span><span class="nv">$debian_chroot</span><span class="p">)</span><span class="k">}</span><span class="se">\[\0</span><span class="s2">33[01;32m</span><span class="se">\]\u</span><span class="s2">@aws-handson</span><span class="se">\[\0</span><span class="s2">33[00m</span><span class="se">\]</span><span class="s2">:</span><span class="se">\[\0</span><span class="s2">33[01;34m</span><span class="se">\]\w\[\0</span><span class="s2">33[00m</span><span class="se">\]\$</span><span class="s2"> '"</span> <span class="o">&gt;&gt;</span> /root/.bashrc
+<span class="c"># clean up unnecessary files</span>
+<span class="k">RUN </span><span class="nb">rm</span> <span class="nt">-rf</span> /opt/<span class="k">*</span>
 
-<span class="k">RUN </span><span class="nb">mkdir</span> <span class="nt">-p</span> /root/.ssh
-<span class="k">WORKDIR</span><span class="s"> /root</span>
-<span class="k">ENTRYPOINT</span><span class="s"> ["/bin/bash"]</span></code></pre>
+<span class="c"># copy hands-on source code in /root/</span>
+<span class="k">COPY</span><span class="s"> handson/ /root/handson</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4430,7 +4466,7 @@ False</code></pre>
 </div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title">Is Docker alone?</div>
+<div class="title">コラム: Is Docker alone?</div>
 <div class="paragraph">
 <p>コンテナを用いた仮想計算環境ツールとして Docker を紹介したが， 他に選択肢はないのか？
 よくぞ聞いてくれた！
@@ -4499,7 +4535,7 @@ ECS の概要を示したのが <a href="#ecs_overview">Figure 40</a> である�
 クラスターのスケーリングによってジョブの量にちょうど十分なだけのインスタンスが起動し，ジョブが完了した後は不要なインスタンスはインスタンスすべて停止される．</p>
 </div>
 <div class="paragraph">
-<p>さて，ここまで少し説明的な話が続いてしまったが，次章からは早速 Docker と AWS を使って大規模な並列計算システムを構築する</p>
+<p>さて，ここまで説明的な話が続いてしまったが，次章からは早速 Docker と AWS を使って大規模な並列計算システムを構築していこう！</p>
 </div>
 <div id="ecs_overview" class="imageblock text-center">
 <div class="content">
@@ -9292,7 +9328,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-06-26 08:02:03 UTC
+Last updated 2021-06-26 09:04:36 UTC
 </div>
 </div>
 <style>
