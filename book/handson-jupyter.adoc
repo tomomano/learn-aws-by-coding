@@ -1,14 +1,15 @@
 [[sec_jupyter_and_deep_learning]]
-== Hands-on #2: AWSでディープラーニングの計算を走らせる
+== Hands-on #2: AWS でディープラーニングを実践
 
-ハンズオン第二回では，GPUを搭載したEC2インスタンスを起動し，ディープラーニングの学習と推論を実行する演習を行う．
+ハンズオン第二回では， GPU を搭載したEC2インスタンスを起動し，ディープラーニングの学習と推論を実行する演習を行う．
 
-ハンズオンのソースコードはこちらのリンクに置いてある => https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn
+ハンズオンのソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist[こちらのリンク] に置いてある．
 
 [WARNING]
 ====
-このハンズオンは，AWSの無料枠内では実行できない．
-`g4dn.xlarge` タイプの EC2 インスタンスを使うので， `ap-northeast-1` リージョンでは 0.8 $/hour のコストが発生する．
+このハンズオンは， AWS の無料枠内では実行できない．
+`g4dn.xlarge` タイプの EC2 インスタンスを使うので， `us-east-1` リージョンでは 0.526 $/hour のコストが発生する．
+東京 (`ap-northeast-1`) を選択した場合は 0.71 $/hour のコストが発生する．
 ====
 
 === 準備
@@ -21,15 +22,17 @@
 
 [[handson_02_architecture]]
 .ハンズオン#2で作製するアプリケーションのアーキテクチャ
-image::imgs/handson-02/handson-02-architecture.png[hands-on 01 architecture, 600, align="center"]
+image::imgs/handson-jupyter/handson-02-architecture.png[hands-on 01 architecture, 600, align="center"]
 
-図の多くの部分が，第一回ハンズオンで作成したアプリケーションと共通していることに気がつくだろう．少しの変更で，簡単にディープラーニングを走らせる環境を構築することができるのである！主な変更点は次の３点である．
+図の多くの部分が，第一回ハンズオンで作成したアプリケーションと共通していることに気がつくだろう．
+少しの変更で，簡単にディープラーニングを走らせる環境を構築することができるのである！主な変更点は次の３点である．
 
 * GPUを搭載した `g4dn.xlarge` インスタンスタイプを使用．
-* ディープラーニングに使うプログラムが予めインストールされたDLAMI (後述) を使用．
+* ディープラーニングに使うプログラムが予めインストールされた DLAMI (後述) を使用．
 * SSHにポートフォワーディングのオプションつけてサーバーに接続し，サーバーで起動しているJupyter notebook (後述) を使ってプログラムを書いたり実行したりする．
 
-ハンズオンで使用するプログラムのコードをみてみよう (https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn/app.py[/handson/02-ec2-dnn/app.py])．コードも，第一回目とほとんど共通である．変更点のみ解説を行う．
+ハンズオンで使用するプログラムのコードをみてみよう (https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist/app.py[/handson/mnist/app.py])．
+コードは第一回目とほとんど共通である．変更点のみ解説を行う．
 
 [source, python, linenums]
 ----
@@ -73,34 +76,42 @@ class Ec2ForDl(core.Stack):
             key_name=key_name
         )
 ----
-<1> ここで，GPUを搭載した `g4dn.xlarge` インスタンスタイプを選択している (第一回では，CPUのみの `t2.micro` だった)．
-<2> ここで，Deep Learning 用の諸々のソフトウェアがプリンストールされたAMI (https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html[Deep Learning Amazon Machine Image; DLAMI]) を選択している．(第一回では，Amazon Linux というAMIを使用していた)．使用するAMIのIDは "ami-09c0c16fc46a29ed9" である．
+<1> ここで， GPU を搭載した `g4dn.xlarge` インスタンスタイプを選択している (第一回では， CPU のみの `t2.micro` だった)．
+<2> ここでは，Deep Learning 用の諸々のソフトウェアがプリンストールされたAMI (https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html[Deep Learning Amazon Machine Image; DLAMI]) を選択している．
+(第一回では，Amazon Linux というAMIを使用していた)．
+使用するAMIのIDは `ami-09c0c16fc46a29ed9` である．
 
-`g4dn.xlarge` のインスタンスタイプについては， <<sec_scientific_computing>> ですでに触れた．DLAMI について，少し説明しよう．
+`g4dn.xlarge` のインスタンスタイプについては， <<sec_scientific_computing>> ですでに触れた．
+DLAMI について，少し説明しよう．
 
 ==== DLAMI (Deep Learning Amazon Machine Image)
 
-`AMI` (Amazon Machine Image) とは，平たく言えば OS (Operating System) のことである．当然のことながら，OSがなければコンピュータはなにもできないので，EC2インスタンスを起動する時には必ずなにかのOSを"インストール"する必要がある．AMI には，例えば https://ubuntu.com/[Ubuntu] や https://www.suse.com/[SUSE Linux] などの各Linux系OSに加えて，Windows Server を選択することもできる．また，EC2での使用に最適化された https://aws.amazon.com/amazon-linux-ami/[Amazon Linux] というAMIも提供されている．
+**AMI (Amazon Machine Image)** とは，大まかには OS (Operating System) に相当する概念である．
+当然のことながら， OS がなければコンピュータはなにもできないので，EC2 インスタンスを起動する時には必ずなにかの OS を"インストール"する必要がある．
+EC2 が起動したときにロードされる OS に相当するものが， AMI である．
+AMI には，例えば https://ubuntu.com/[Ubuntu] などの Linux 系 OS に加えて，Windows Server を選択することもできる．
+また， EC2 での使用に最適化された https://aws.amazon.com/amazon-linux-ami/[Amazon Linux] という AMI も提供されている．
 
-しかしながら，AMIを単なるOSと理解するのは誤りである．
-AMIには，ベースとなる(空っぽの)OSを選択できることもできるが，それに加えて，各種のプログラムがインストール済みのAMIも用意されている．
-必要なプログラムがインストールされているAMIを見つけることができれば，自分でインストールを行ったり環境設定をする手間が大幅に省ける．
+しかしながら， AMI を単なる OS と理解するのは過剰な単純化である．
+AMI には，ベースとなる (空っぽの) OS を選択できることもできるが，それに加えて，各種のプログラムがインストール済みの AMI も定義することができる．
+必要なプログラムがインストールされている AMI を見つけることができれば，自分でインストールを行ったり環境設定をする手間が大幅に省ける．
 具体例を挙げると，ハンズオン第一回では EC2 インスタンスに Python 3.6 をインストールする例を示したが，そのような操作をインスタンスを起動するたびに行うのは手間である！
 
-AMI は，AWSや他のサードパーティーから提供されており，EC2のコンソール画面でインスタンスを起動するときに検索することができる．あるいは， AWS CLI を使って，次のコマンドでリストを取得することができる (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html[参考])．
+AMI は， AWS 公式のものに加えて，サードパーティーから提供されているものもある．
+また，自分自身の AMI を作って登録することも可能である (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html[参考])．
+AMI は EC2 のコンソールから検索することが可能である．
+あるいは，AWS CLI を使って，次のコマンドでリストを取得することができる (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html[参考])．
 
 [source, bash]
 ----
 $ aws ec2 describe-images --owners amazon
 ----
 
-上記のコマンドにより，amazon が提供しているAMIの一覧が表示される．
-また，自分自身のAMIを作って登録することも可能である (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html[参考])．
+ディープラーニングで頻繁に使われるプログラムが予めインストールしてあるAMIが， https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html[DLAMI (Deep Learning AMI)] である．
+DLAMI には `TensorFlow`, `PyTorch` などの人気の高いディープラーニングのフレームワーク・ライブラリが既にインストールされているため， EC2 インスタンスを起動してすぐさまディープラーニングの計算を実行できる．
 
-
-ディープラーニングで頻繁に使われるプログラムが予めインストールしてあるAMIが， https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html[DLAMI (Deep Learning AMI)] である． DLAMIには `TensorFlow`, `PyTorch` などの人気の高いディープラーニングのフレームワーク・ライブラリが既にインストールされているため，EC2インスタンスを起動してすぐさまディープラーニングの計算を実行できる．
-
-本ハンズオンでは， Amazon Linux 2 をベースにした DLAMI を使用する (AMI ID = ami-09c0c16fc46a29ed9)．AWS CLI を使って，このAMIの詳細情報を取得してみよう．
+本ハンズオンでは， Amazon Linux 2 をベースにした DLAMI を使用する (AMI ID = ami-09c0c16fc46a29ed9)．
+AWS CLI を使って，このAMIの詳細情報を取得してみよう．
 
 [source, bash]
 ----
@@ -109,7 +120,7 @@ $ aws ec2 describe-images --owners amazon --image-ids "ami-09c0c16fc46a29ed9"
 
 [[handson_02_ami-info]]
 .AMI ID = ami-09c0c16fc46a29ed9 の詳細情報
-image::imgs/handson-02/ami-info.png[ami-info, 700, align="center"]
+image::imgs/handson-jupyter/ami-info.png[ami-info, 700, align="center"]
 
 <<handson_02_ami-info>> のような出力が得られるはずである．得られた出力から，例えばこの DLAMI には PyTorch のバージョン1.4.0 と 1.5.0 がインストールされていることがわかる．このDLAMIを使って，早速ディープラーニングの計算を実行してみよう．
 
@@ -118,16 +129,17 @@ image::imgs/handson-02/ami-info.png[ami-info, 700, align="center"]
 DLAMIには具体的には何がインストールされているのだろうか？
 興味のある読者のために，簡単な解説をしよう (参考: https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html[公式ドキュメンテーション])．
 
-最も low-level なレイヤーとしては， GPUドライバー がインストールされている．
-GPUドライバーなしにはOSはGPUにコマンドを送ることができない．
+最も low-level なレイヤーとしては， GPU ドライバー がインストールされている．
+GPU ドライバーなしには OS は GPU とコマンドのやり取りをすることができない．
 次のレイヤーが https://developer.nvidia.com/about-cuda[CUDA] と https://developer.nvidia.com/cudnn[cuDNN] である．
-CUDAは，NVIDIA社が開発した，GPU上で汎用コンピューティングを行うための言語であり，C++言語を拡張したシンタックスを備える．
+CUDA は， NVIDIA 社が開発した， GPU 上で汎用コンピューティングを行うための言語であり， C++ 言語を拡張したシンタックスを備える．
 cuDNN は CUDA で書かれたディープラーニングのライブラリであり，n次元の畳み込みなどの演算が実装されている．
 
 以上までが， "Base" と呼ばれるタイプの DLAMI の中身である．
 
 これに加えて， "Conda" と呼ばれるタイプには， これらのプログラム基盤の上に， `TensorFlow` や `PyTorch` などのライブラリがインストールされている．
-さらに， https://docs.conda.io/projects/conda/en/latest/index.html[Anaconda] による仮想環境を使うことによって， `TensorFlow` の環境， `PyTorch` の環境，を簡単に切り替えることができる (これについては，ハンズオンで触れる)．また， Jupyter notebook もインストール済みである．
+さらに， https://docs.conda.io/projects/conda/en/latest/index.html[Anaconda] による仮想環境を使うことによって， `TensorFlow` の環境， `PyTorch` の環境，を簡単に切り替えることができる (これについては，ハンズオンで触れる)．
+また， Jupyter notebook もインストール済みである．
 ====
 
 === スタックのデプロイ
@@ -137,22 +149,17 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 デプロイの手順は，ハンズオン1とほとんど共通である．
 ここでは，コマンドのみ列挙する (`#` で始まる行はコメントである)．
 それぞれのコマンドの意味を忘れてしまった場合は，ハンズオン1に戻って復習していただきたい．
+シークレットキーの設定も忘れずに．
 
 [source, bash]
 ----
 # プロジェクトのディレクトリに移動
-$ cd intro-aws/handson/02-ec2-dnn
+$ cd handson/mnist
 
 # venv を作成し，依存ライブラリのインストールを行う
 $ python3 -m venv .env
 $ source .env/bin/activate
 $ pip install -r requirements.txt
-
-# AWS の認証情報をセットする
-# 自分自身の認証情報に置き換えること！
-export AWS_ACCESS_KEY_ID=XXXXXX
-export AWS_SECRET_ACCESS_KEY=YYYYYY
-export AWS_DEFAULT_REGION=ap-northeast-1
 
 # SSH鍵を生成
 $ export KEY_NAME="HirakeGoma"
@@ -173,7 +180,7 @@ $ cdk deploy -c key_name="HirakeGoma"
 
 [[handson_02_cdk_output]]
 .CDKデプロイ実行後の出力
-image::imgs/handson-02/cdk_output.png[cdk output, 700, align="center"]
+image::imgs/handson-jupyter/cdk_output.png[cdk output, 700, align="center"]
 
 === ログイン
 
@@ -226,7 +233,7 @@ $ nvidia-smi
 
 [[handson_02_nvidia-smi]]
 .nvidia-smi の出力
-image::imgs/handson-02/nvidia-smi.png[nvidia-smi, 700, align="center"]
+image::imgs/handson-jupyter/nvidia-smi.png[nvidia-smi, 700, align="center"]
 
 === Jupyter notebook の起動
 
@@ -234,7 +241,7 @@ https://jupyter.org/[Jupyter notebook] とは，インタラクティブに Pyth
 
 [[handson_02_welcome_jupyter]]
 .Jupyter notebook の画面
-image::imgs/handson-02/welcome_to_jupyter.png[welcome to jupyter, 700, align="center"]
+image::imgs/handson-jupyter/welcome_to_jupyter.png[welcome to jupyter, 700, align="center"]
 
 このハンズオンでは， Jupyter notebook を使ってディープラーニングのプログラムを書いたり実行していく．
 DLAMI には既に Jupyter がインストールされているので，特段の設定なしに使い始めることができる．
@@ -253,7 +260,7 @@ $ jupyter notebook
 
 [[handson_02_jupyter_launch]]
 .Jupyter notebook サーバーを起動
-image::imgs/handson-02/jupyter_launch.png[jupyter launch, 700, align="center"]
+image::imgs/handson-jupyter/jupyter_launch.png[jupyter launch, 700, align="center"]
 
 [NOTE]
 ====
@@ -277,7 +284,7 @@ http://localhost:8931/?token=XXXXXXXXXX
 
 [[handson_02_jupyter_home]]
 .Jupyter ホーム画面
-image::imgs/handson-02/jupyter_home.png[jupyter home, 700, align="center"]
+image::imgs/handson-jupyter/jupyter_home.png[jupyter home, 700, align="center"]
 
 [TIP]
 ====
@@ -322,13 +329,13 @@ Jupyterのホーム画面の右上の "New" を押し，"conda_pytorch_p36" と�
 
 [[handson_02_jupyeter_new]]
 .新規ノートブックの作成． "conda_pytorch_p36" の環境を選択する．
-image::imgs/handson-02/jupyter_new.png[jupyter_new, 700, align="center"]
+image::imgs/handson-jupyter/jupyter_new.png[jupyter_new, 700, align="center"]
 
 次のようなプログラムを書いてみよう (<<handson_02_jupyeter_pytorch>>)．
 
 [[handson_02_jupyeter_pytorch]]
 .PyTorch始めの一歩
-image::imgs/handson-02/jupyter_pytorch.png[jupyter_pytorch, 700, align="center"]
+image::imgs/handson-jupyter/jupyter_pytorch.png[jupyter_pytorch, 700, align="center"]
 
 まずは， PyTorch をインポートする．さらに，GPUが使える環境にあるか，確認する．
 
@@ -478,7 +485,7 @@ PyTorch において， GPU での演算は asynchronous (非同期) で実行�
 
 [[handson_02_mnist_examples]]
 .MNIST 手書き数字データセット
-image::imgs/handson-02/mnist_examples.png[mnist_examples, 400, align="center"]
+image::imgs/handson-jupyter/mnist_examples.png[mnist_examples, 400, align="center"]
 
 今回は， MNIST 文字認識タスクを，**畳み込みニューラルネットワーク (Convolutional Neural Network; CNN)** を使って解く．
 ソースコードは https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/02-ec2-dnn/pytorch/[/handson/02-ec2-dnn/pytorch/] にある `mnist.ipynb` と `simple_mnist.py` である．
@@ -491,7 +498,7 @@ image::imgs/handson-02/mnist_examples.png[mnist_examples, 400, align="center"]
 
 [[handson_02_jupyter_upload]]
 .`simple_mnist.py` をアップロード
-image::imgs/handson-02/jupyter_upload.png[jupyter upload, 600, align="center"]
+image::imgs/handson-jupyter/jupyter_upload.png[jupyter upload, 600, align="center"]
 
 `simple_mnist.py` をアップロードできたら，次に新しい notebook を作成しよう．
 "conda_pytorch_p36" の環境を選択することを忘れずに．
@@ -552,7 +559,7 @@ plt.show()
 
 [[handson_02_mnist_ground_truth]]
 .MNIST の手書き数字画像とその教師ラベル
-image::imgs/handson-02/mnist_ground_truth.png[mnist_ground_truth, 700, align="center"]
+image::imgs/handson-jupyter/mnist_ground_truth.png[mnist_ground_truth, 700, align="center"]
 
 次に， CNN のモデルを定義する．
 
@@ -569,7 +576,7 @@ model.to("cuda") # load to GPU
 
 [[handson_02_cnn_architecture]]
 .本ハンズオンで使用するニューラルネットの構造．
-image::imgs/handson-02/cnn_architecture.png[cnn architecture, 700, align="center"]
+image::imgs/handson-jupyter/cnn_architecture.png[cnn architecture, 700, align="center"]
 
 続いて， CNN のパラメータを更新する最適化アルゴリズムを定義する．
 ここでは， **Stochastic Gradient Descent (SGD)** を使用している．
@@ -607,11 +614,11 @@ GPU を使えば，これくらいの計算であれば1分程度で完了する
 
 [[handson_02_train_loss]]
 .学習の進行に対する Train loss の変化
-image::imgs/handson-02/train_loss.png[train_loss, 500, align="center"]
+image::imgs/handson-jupyter/train_loss.png[train_loss, 500, align="center"]
 
 [[handson_02_mnist_final_score]]
 .学習したCNNのテストデータに対するスコア (5エポック後)
-image::imgs/handson-02/mnist_final_score.png[mnist_final_score, 700, align="center"]
+image::imgs/handson-jupyter/mnist_final_score.png[mnist_final_score, 700, align="center"]
 
 最後に，学習した CNN の推論結果を可視化してみよう．
 次のコードを実行することで， <<handson_02_mnist_mnist_prediction>> のような出力が得られるだろう．
@@ -638,7 +645,7 @@ plt.show()
 
 [[handson_02_mnist_mnist_prediction]]
 .学習した CNN による，MNIST画像の推論結果
-image::imgs/handson-02/mnist_prediction.png[mnist_prediction, 700, align="center"]
+image::imgs/handson-jupyter/mnist_prediction.png[mnist_prediction, 700, align="center"]
 
 おめでとう！
 これで，めでたくあなたは AWS クラウドの仮想サーバーを使って，最初のディープラーニングの計算を行うことができた！

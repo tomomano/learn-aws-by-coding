@@ -4,7 +4,7 @@
 ハンズオンの第一回では， CDK を使って EC2 のインスタンス(仮想サーバー)を作成し，SSHでサーバーにログインする，という演習を行う．
 このハンズオンを終えれば，あなたは自分だけのサーバーをAWS上に立ち上げ，自由に計算を走らせることができるようになるのである！
 
-ハンズオン1のソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/ec2-get-started[こちらのリンク] に置いてある．
+ハンズオンのソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/ec2-get-started[こちらのリンク] に置いてある．
 
 [WARNING]
 ====
@@ -386,21 +386,12 @@ $ pip install -r requirements.txt
 ==== AWS のシークレットキーをセットする
 
 AWS CLI および AWS CDK を使うには， AWS のシークレットキーが設定されている必要がある．
-以下のようにして環境変数を設定する．
+シークレットキーの発行については <<aws_secrets>> を参照のこと．
+シークレットキーを発行したら， <<aws_cli_install>> を参照し，コマンドラインの設定を行う．
 
-[source, bash]
-----
-$ export AWS_ACCESS_KEY_ID=XXXXXX
-$ export AWS_SECRET_ACCESS_KEY=YYYYYY
-$ export AWS_DEFAULT_REGION=ap-northeast-1
-----
-
-上の `XXXXXX`, `YYYYYY` としたところは自分の鍵に置き換えることを忘れずに．
-
-シークレットキーの発行については <<aws_secrets>> を参照．
-
-あるいは， `~/.aws/credentials` に認証情報を保存しておく方法もある．
-詳しくは <<aws_cli_install>> を参照．
+繰り返しになるがここに簡単に記すと，一つ目の方法は `AWS_ACCESS_KEY_ID` などの環境変数を設定するやり方である．
+もう一つの方法は， `~/.aws/credentials` に認証情報を保存しておく方式である．
+シークレットキーの設定は AWS CLI/CDK を使用するうえで共通のステップになるので，しっかりと理解しておくように．
 
 ==== SSH鍵を生成
 
