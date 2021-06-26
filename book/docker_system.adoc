@@ -1,6 +1,6 @@
 == Docker 入門
 
-<<sec_scientific_computing>>，<<sec_handson02>> にわたって， AWS 上に仮想サーバーを立ち上げ，深層学習のプログラムを走らせる方法を紹介してきた．
+<<sec_scientific_computing>>，<<sec_jupyter_and_deep_learning>> にわたって， AWS 上に仮想サーバーを立ち上げ，深層学習のプログラムを走らせる方法を紹介してきた．
 ここまでは，**単一のサーバー**を立ち上げ，それに SSH でログインをして，コマンドを叩くことで計算を行ってきた．
 いわば，__パーソナルコンピュータの延長__のような形でクラウドを使ってきたわけである．
 
@@ -35,7 +35,7 @@ image::imgs/big_dnn_training.png[big_dnn_training, 700, align="center"]
 すなわち，大量のデータを複数のマシンで分割し，それぞれのマシンで推論の計算を行うというような構造である．
 
 [[big_dnn_inference]]
-.複数の計算機を使った大規模なディープラーニングモデルの学習
+.複数の計算機による深層学習モデルを使った推論計算
 image::imgs/big_dnn_inference.png[big_dnn_inference, 700, align="center"]
 
 このような複数の計算機を同時に走らせるようなアプリケーションをクラウド上で実現するには，どのようにすればよいのだろうか？
@@ -62,7 +62,7 @@ Docker は2013年に Solomon Hykes らを中心に開発され，以降爆発的
 仮想マシン(VM) とは，ホストとなるマシンの上に，仮想化されたOSを走らせる技術である (<<docker_vs_vm>>)．
 VM には **ハイパーバイザー (Hypervisor)** と呼ばれるレイヤーが存在する．
 Hypervisor はまず，物理的な計算機リソース (CPU, RAM, network など) を分割し，仮想化する．
-例えば， ホストマシンに物理的なCPUが4コアあるとして，ハイパーバイザーはそれを (2,2) 個の組に仮想的に分割することができる．
+例えば， ホストマシンに物理的な CPU が4コアあるとして，ハイパーバイザーはそれを (2,2) 個の組に仮想的に分割することができる．
 VM 上で起動する OS には，ハイパーバイザーによって仮想化されたハードウェアが割り当てられる．
 VM 上で起動する OS は基本的に完全に独立であり，例えば OS-A は OS-B に割り当てられたCPUやメモリー領域にアクセスすることはできない．
 VM を作成するための有名なソフトウェアとしては， https://www.vmware.com/[VMware]， https://www.virtualbox.org/[VirtualBox]， https://xenproject.org/[Xen] などがある．
@@ -82,6 +82,31 @@ Docker で走る仮想 OS は，**多くの部分をホストのOSに依存し�
 [[docker_vs_vm]]
 .Docker と VM の比較 (画像出典: https://www.docker.com/blog/containers-replacing-virtual-machines/)
 image::imgs/docker_vs_vm.png[docker_vs_vm, 700, align="center"]
+
+.コラム: プログラマー三種の神器?
+****
+職業的プログラマーにとっての"三種の神器"とはなんだろうか？
+多様な意見があると思うが，筆者は **Git**, **Vim** そして **Docker** を挙げたい．
+
+Git は多くの読者がご存じの通り，コードの変更を追跡するためのシステムである．
+Linux の作成者である Linus Torvalds によって2005年に誕生した．
+チームでの開発を進める際には欠かせないツールだ．
+
+Vim は1991年から30年以上の間プログラマーたちに愛されてきたテキストエディターである．
+https://insights.stackoverflow.com/survey/2019#technology-development-environments-and-tools-all-respondents[Stackoverflow が行った2019年のアンケート]
+によると，開発環境の部門で5位の人気を獲得している．
+たくさんのショートカットと様々なカスタム設定が提供されているので，初見の人にはなかなかハードルが高いが，一度マスターすれば他のモダンなエディターや統合開発環境に負けない，あるいはそれ以上の開発体験を実現することができる．
+
+これらの十年以上の歴史あるツールに並んで，第三番目の三種の神器として挙げたいのが Docker だ．
+Docker はプログラマーの開発のワークフローを一変させた．
+例えば，プロジェクトごとに Docker image を作成することで，どの OS でも全く同じ計算環境で開発・テストを実行することができるようになった．
+また， https://en.wikipedia.org/wiki/DevOps[DevOps] や https://en.wikipedia.org/wiki/Continuous_integration[CI] / https://en.wikipedia.org/wiki/Continuous_delivery[CD]
+といった最近の開発ワークフローも Docker のようなコンテナ技術の存在に立脚している．
+さらには Serverless computing (<<sec_serverless>>) といった概念も，コンテナ技術の生んだ大きな技術革新といえる．
+
+あなたにとっての三種の神器はなんだろうか？
+また，今後の未来ではどんな新しいツールが三種の神器としてプログラマーのワークフローを革新していくだろうか？
+****
 
 === Docker チュートリアル
 
@@ -124,13 +149,14 @@ $ docker run -it ubuntu:18.04
 ここで， `-it` とは，インタラクティブな shell のセッションを開始するために必要なオプションである．
 
 上のコマンドを実行すると，仮想化された Ubuntu が起動され，コマンドラインからコマンドが打ち込めるようになる (<<docker_shell>>)．
+なお，このように起動状態にある計算環境 (ランタイム) のことを **Container (コンテナ)** と呼ぶ．
 
 [[docker_shell]]
 .Docker を使って ubuntu:18.04 イメージを起動
 image::imgs/docker_shell.png[docker_shell, 600, align="center"]
 
 上で使った `ubuntu:18.04` のイメージは は，空の Ubuntu OS だが，既にプログラムがインストール済みのものもある．
-これは， <<sec_handson02>> でみた DLAMI と概念として似ている．
+これは， <<sec_jupyter_and_deep_learning>> でみた DLAMI と概念として似ている．
 たとえば， pytorch がインストール済みの Image は https://hub.docker.com/r/pytorch/pytorch/[こちら] で公開されている．
 
 これを起動してみよう．
@@ -164,15 +190,20 @@ False
 
 自分の使うソフトウェア・ライブラリがインストールされた，自分だけの Image を作ることも可能である．
 
-例えば， https://gitlab.com/tomomano/intro-aws/container_registry[本書で提供している docker image] には， Python, Node.js, AWS CLI, AWS CDK などのソフトウェアがインストール済みであり，ダウンロードしてくるだけですぐにハンズオンのプログラムが実行できるようになっている．
+例えば， https://hub.docker.com/repository/docker/tomomano/labc[本書で提供している docker image]
+には， Python, Node.js, AWS CLI, AWS CDK などのソフトウェアがインストール済みであり，ダウンロードしてくるだけですぐにハンズオンのプログラムが実行できるようになっている．
 
 カスタムの docker image を作るには， `Dockerfile` という名前のついたファイルを用意し，その中にどんなプログラムをインストールするかなどを記述していく．
 
-具体例として，本書で提供している Docker image のレシピを見てみよう (https://github.com/tomomano/intro-aws-2021/blob/main/docker/Dockerfile[/docker/Dockerfile])．
+具体例として，本書で提供している Docker image のレシピを見てみよう (https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile[/docker/Dockerfile])．
 
 [source, docker]
 ----
 FROM node:12
+LABEL maintainer="Tomoyuki Mano"
+
+RUN apt-get update \
+    && apt-get install nano
 
 # <1>
 RUN cd /opt \
@@ -188,15 +219,13 @@ RUN cd /opt \
     && ./aws/install
 
 # <2>
-RUN npm install -g aws-cdk@1.105
+RUN npm install -g aws-cdk@1.100
 
-# Make command line prettier...
-RUN echo "alias ls='ls --color=auto'" >> /root/.bashrc
-RUN echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@aws-handson\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" >> /root/.bashrc
+# clean up unnecessary files
+RUN rm -rf /opt/*
 
-RUN mkdir -p /root/.ssh
-WORKDIR /root
-ENTRYPOINT ["/bin/bash"]
+# copy hands-on source code in /root/
+COPY handson/ /root/handson
 ----
 
 `Dockerfile` の中身の説明は特に行わないが，例えば上のコードで <1> で示したところは， Python 3.7 のインストールを実行している．
@@ -207,7 +236,7 @@ ENTRYPOINT ["/bin/bash"]
 "ぼくの環境ではそのプログラム走ったのにな..." というのは，プログラミング初心者ではよく耳にする会話だが， docker を使いこなせばそのような心配とは無縁である．
 そのような意味で，クラウド以外の場面でも， Docker の有用性・汎用性は極めて高い．
 
-.Is Docker alone?
+.コラム: Is Docker alone?
 ****
 コンテナを用いた仮想計算環境ツールとして Docker を紹介したが， 他に選択肢はないのか？
 よくぞ聞いてくれた！
@@ -260,7 +289,7 @@ ECS の次の重要な役割はタスクの配置である．
 クラスターのスケーリングやタスクの配置に関してのパラメータを一度指定してしまえば，ユーザーは (ほとんどなにも考えずに) 大量のジョブを投入することができる．
 クラスターのスケーリングによってジョブの量にちょうど十分なだけのインスタンスが起動し，ジョブが完了した後は不要なインスタンスはインスタンスすべて停止される．
 
-さて，ここまで少し説明的な話が続いてしまったが，次章からは早速 Docker と AWS を使って大規模な並列計算システムを構築する
+さて，ここまで説明的な話が続いてしまったが，次章からは早速 Docker と AWS を使って大規模な並列計算システムを構築していこう！
 
 [[ecs_overview]]
 .ECS の概要

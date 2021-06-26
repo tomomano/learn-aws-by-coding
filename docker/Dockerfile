@@ -16,7 +16,7 @@ RUN cd /opt \
     && unzip awscliv2.zip \
     && ./aws/install
 
-RUN npm install -g aws-cdk@1.105
+RUN npm install -g aws-cdk@1.100
 
 # clean up unnecessary files
 RUN rm -rf /opt/*
