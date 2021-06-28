@@ -2,7 +2,7 @@ FROM node:12
 LABEL maintainer="Tomoyuki Mano"
 
 RUN apt-get update \
-    && apt-get install nano
+    && apt-get install nano less
 
 RUN cd /opt \
     && curl -q "https://www.python.org/ftp/python/3.7.6/Python-3.7.6.tgz" -o Python-3.7.6.tgz \
