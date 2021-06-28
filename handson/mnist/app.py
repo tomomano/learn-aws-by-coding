@@ -36,6 +36,7 @@ class Ec2ForDl(core.Stack):
             self, "Ec2ForDl-Instance",
             instance_type=ec2.InstanceType("g4dn.xlarge"), # <1>
             machine_image=ec2.MachineImage.generic_linux({
+                "us-east-1": "ami-042ccb235608c6046",
                 "ap-northeast-1": "ami-09c0c16fc46a29ed9"
             }), # <2>
             vpc=vpc,
