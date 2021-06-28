@@ -7,7 +7,7 @@ logging.disable(sys.maxsize)
 
 def main(context, question, item_id, save_flag):
 
-    nlp = pipeline("question-answering")
+    nlp = pipeline('question-answering', model='distilbert-base-cased-distilled-squad')
     answer = nlp({
         "question": question,
         "context": context
