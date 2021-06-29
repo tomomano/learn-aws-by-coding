@@ -1,5 +1,5 @@
-aws-cdk.aws-ec2==1.30.0
-aws-cdk.aws-ecs==1.30.0
-aws-cdk.aws-dynamodb==1.30.0
+aws-cdk.aws-ec2==1.100.0
+aws-cdk.aws-ecs==1.100.0
+aws-cdk.aws-dynamodb==1.100.0
 boto3
 colorama==0.4.3

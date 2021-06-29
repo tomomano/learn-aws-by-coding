@@ -148,7 +148,7 @@ $ docker run tomomano/qabot "${context}" "${question}" foo --no_save
 
 今度は， score が 0.52 と，少し自信がないようだが，それでも正しい答えにたどりつけていることがわかる．
 
-このように， ディープラーニングに支えられた言語モデルを用いることで，なかなかに賢い Q-A ボットを実現できていることがわかる．
+このように， ディープラーニングに支えられた言語モデルを用いることで，実用にも役に立ちそうな Q-A ボットを実現できていることがわかる．
 以降では，このプログラムをクラウドに展開することで，大量の質問に自動で対応できるようなシステムを設計していく．
 
 [TIP]
@@ -158,16 +158,10 @@ $ docker run tomomano/qabot "${context}" "${question}" foo --no_save
 また， huggingface/transformers の DistilBert についてのドキュメンテーションは https://huggingface.co/transformers/model_doc/distilbert.html[こちら]．
 ====
 
-[TIP]
-====
-https://github.com/huggingface/transformers[huggingface/transformers] には，様々な最新の言語モデルが実装されている．
-解けるタスクも， question-answering だけでなく，翻訳や要約など複数用意されている．
-興味のある読者は， https://huggingface.co/transformers/index.html[ドキュメンテーション] を参照．
-====
 
 [TIP]
 ====
-今回提供する Docker のソースコードは https://github.com/tomomano/intro-aws-2021/tree/main/handson/qa-bot/docker にある．
+今回提供する Q-A ボットの Docker のソースコードは https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/docker/Dockerfile にある．
 ====
 
 === アプリケーションの説明
@@ -175,21 +169,21 @@ https://github.com/huggingface/transformers[huggingface/transformers] には，�
 このハンズオンで作成するアプリケーションの概要を <<handson_03_architecture>> に示す．
 
 [[handson_03_architecture]]
-.ハンズオン#3で作製するアプリケーションのアーキテクチャ
+.アプリケーションのアーキテクチャ
 image::imgs/handson-03/handson-03-architecture.png[hands-on 03 architecture, 600, align="center"]
 
 簡単にまとめると，以下のような設計である．
 
 * クライアントは，質問を AWS 上のアプリケーションに送信する．
 * 質問のタスクは ECS によって処理される．
-* ECS は， GitLab container registry から， Docker image をダウンロードする．
-* 次に，ECS はクラスター内に新たな仮想インスタンスを立ち上げ，ダウンロードされた Docker image をこの新規インスタンスに配置する．
-** このとき，ひとつの質問に対し一つの仮想インスタンスを立ち上げることで，複数の質問を並列的に処理できるようにする．
+* ECS は， DockerHub から， Docker image をダウンロードする．
+* 次に，ECS はクラスター内に新たな Fargate インスタンスを立ち上げ，ダウンロードされた Docker image をこの新規インスタンスに配置する．
+** このとき，ひとつの質問に対し一つの Fargate インスタンスを立ち上げることで，複数の質問を並列的に処理できるようにする．
 * ジョブが実行される．
 * ジョブの実行結果 (質問への回答) は， データベース (DynamoDB) に書き込まれる．
 * 最後に，クライアントは DynamoDB から質問への回答を読み取る．
 
-それでは，プログラムのソースコードを見てみよう (https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/03-qa-bot/app.py[/handson/03-qa-bot/app.py])．
+それでは，プログラムのソースコードを見てみよう (https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot[/handson/qa-bot/app.py])．
 
 [source, python, linenums]
 ----
@@ -242,7 +236,7 @@ class EcsClusterQaBot(core.Stack):
         container = taskdef.add_container(
             "EcsClusterQaBot-Container",
             image=ecs.ContainerImage.from_registry(
-                "registry.gitlab.com/tomomano/intro-aws/handson03:latest"
+                "tomomano/qabot:latest"
             ),
         )
 ----
@@ -273,7 +267,7 @@ taskdef = ecs.FargateTaskDefinition(
 container = taskdef.add_container(
     "EcsClusterQaBot-Container",
     image=ecs.ContainerImage.from_registry(
-        "registry.gitlab.com/tomomano/intro-aws/handson03:latest"
+        "tomomano/qabot:latest"
     ),
 )
 ----
@@ -284,7 +278,7 @@ container = taskdef.add_container(
 また，このようにして定義されたタスクは，デフォルトで1タスクにつき1インスタンスが使用される．
 
 最後に， `container =` の箇所で，タスクの実行でで使用する Docker image を定義している．
-ここでは， GitLab container registry に置いてある image をダウンロードしてくるよう指定している．
+ここでは， DockerHub に置いてある image をダウンロードしてくるよう指定している．
 
 このようにわずか数行のコードであるが，これだけで上で説明したような，タスクのスケジューリングなどが自動で実行される．
 
@@ -330,22 +324,17 @@ container = taskdef.add_container(
 SSH によるログインの必要がないので，むしろ単純なくらいである．
 ここでは，コマンドのみ列挙する (`#` で始まる行はコメントである)．
 それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
+シークレットキーの設定も忘れずに (<<aws_cli_install>>)．
 
 [source, bash]
 ----
 # プロジェクトのディレクトリに移動
-$ cd intro-aws/handson/03-qa-bot
+$ cd handson/qa-bot
 
 # venv を作成し，依存ライブラリのインストールを行う
 $ python3 -m venv .env
 $ source .env/bin/activate
 $ pip install -r requirements.txt
-
-# AWS の認証情報をセットする
-# 自分自身の認証情報に置き換えること！
-export AWS_ACCESS_KEY_ID=XXXXXX
-export AWS_SECRET_ACCESS_KEY=YYYYYY
-export AWS_DEFAULT_REGION=ap-northeast-1
 
 # デプロイを実行
 $ cdk deploy
@@ -372,7 +361,7 @@ image::imgs/handson-03/ecs_console.png[ecs_console, 700, align="center"]
 
 それでは，早速，質問を実行してみよう．
 
-ECS にタスクを投入するのはやや複雑なので，タスクの投入を簡単にするプログラム (`run_task.py`) を用意した (https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/03-qa-bot/run_task.py[/handson/03-qa-bot/run_task.py])．
+ECS にタスクを投入するのはやや複雑なので，タスクの投入を簡単にするプログラム (`run_task.py`) を用意した (https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/run_task.py[/handson/qa-bot/run_task.py])．
 
 次のようなコマンドで，ECSクラスターに新しい質問を投入することができる．
 
@@ -383,12 +372,12 @@ $ python run_task.py ask "A giant peach was flowing in the river. She picked it 
 
 [WARNING]
 ====
-`run_task.py` を実行するには， 環境変数によって AWS の認証情報が設定されていることが前提である．
+`run_task.py` を実行するには， コマンドラインで AWS の認証情報が設定されていることが前提である．
 ====
 
 "ask" の引数に続き，文脈 (context) と質問を引数として渡している．
 
-上のコマンドを実行すると， "Waiting for the task to finish..." と出力が表示され，回答を得るまでしばらく待たされることになる．
+上のコマンドを実行すると， "Waiting for the task to finish..." と出力が表示され，回答を得るまでしばらく待たされる．
 この間， AWS では， ECS がタスクを受理し，新しい Fargate のインスタンスを起動し， Docker image をそのインスタンスに配置する，という一連の処理がなされている．
 AWS コンソールから，この一連の様子をモニタリングしてみよう．
 
@@ -400,14 +389,14 @@ AWS コンソールから，この一連の様子をモニタリングしてみ�
 .ECS のタスクの実行状況をモニタリング
 image::imgs/handson-03/ecs_task_monitoring.png[ecs_task_monitoring, 700, align="center"]
 
-<<ecs_task_monitoring>> で見て取れるように， "Desired status = RUNNING", "Last status = PENDING" となっていることから，この時点では，タスクを実行するための準備している段階である，ということがわかる．
+<<ecs_task_monitoring>> で見て取れるように， "Last status = Pending" となっていることから，この時点では，タスクを実行するための準備している段階である，ということがわかる．
 Fargate のインスタンスを起動し， Docker image を配置するまでおよそ1-2分の時間がかかる．
 
 しばらく待つうちに， Status が "RUNNING" に遷移し，計算が始まる．
 計算が終わると， Status は "STOPPED" に遷移し， ECS によって Fargate インスタンスは自動的にシャットダウンされる．
 
 <<ecs_task_monitoring>> の画面から， "Task" の列にあるタスクIDクリックすることで，タスクの詳細画面を開いてみよう (<<ecs_task_detail>>)．
-"Launch type = FARGATE", "Last status = STOPPED" など，タスクの情報が表示されている．
+"Last status", "Platform version" など，タスクの情報が表示されている．
 また， "Logs" のタブを開くことで， container の吐き出した実行ログを閲覧することができる．
 
 [[ecs_task_detail]]
@@ -427,7 +416,7 @@ image::imgs/handson-03/ask_question_output.png[ask_question_output, 700, align="
 実際に，たくさんの質問を一度に投入してみよう．
 
 `run_task.py` に `ask_many` というオプションを付けることで，複数の質問を一度に送信できる．
-質問の内容は https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/03-qa-bot/problems.json[/handson/03-qa-bot/problems.json] に定義されている．
+質問の内容は https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/problems.json[/handson/qa-bot/problems.json] に定義されている．
 
 次のようなコマンドを実行しよう．
 
@@ -452,7 +441,7 @@ $ python run_task.py list_answers
 ----
 
 結果として， <<ask_many_output>> のような出力が得られるだろう．
-それなりに複雑な文章問題に対し，高い正答率で回答できていることがわかるだろう．
+複雑な文章問題に対し，高い正答率で回答できていることがわかるだろう．
 
 [[ask_many_output]]
 .`$ python run_task.py list_answers` の実行結果
@@ -476,7 +465,8 @@ $ python run_task.py clear
 
 === スタックの削除
 
-これにて，第三回ハンズオンは終了である．最後にスタックを削除しよう．
+これにて，今回のハンズオンは終了である．
+最後にスタックを削除しよう．
 
 スタックを削除するには，次のコマンドを実行すればよい．
 
@@ -484,21 +474,3 @@ $ python run_task.py clear
 ----
 $ cdk destroy
 ----
-
-=== 講義第二回目のまとめ
-
-ここまでが，第二回目の講義の内容である．第一回に引き続き盛りだくさんの内容であったが，ついてこれたであろうか？
-
-第二回では，ディープラーニングの計算をクラウドで実行するため， GPU 搭載型の EC2 インスタンスの起動について解説した．
-その際， CUDA や PyTorch などのディープラーニング使うソフトウェアのインストールの手間を省くため， DLAMI を利用した．
-さらに，ハンズオン第二回では，クラウドで起動した仮想サーバーを使って， MNIST 文字認識タスクを解くニューラルネットを学習させた．
-
-また，より大規模な機械学習アプリケーションを作るための手段として， Docker と ECS による動的に計算リソースが管理されるクラスターの作り方の初歩を説明した．
-その応用として，英語で与えられた文章問題への回答を自動で生成するボットをクラウドに展開した．
-
-もちろん，この講義で紹介したプログラムはごく初歩的なものなので，現実的な問題を解くためにはプログラムのいろいろな側面を精緻化していく必要がある．
-しかしながら，このような技術を応用することでどのようにして現実世界の問題を解くのか，なんとなくイメージが伝わっただろうか？
-
-第三回では，さらにレベルアップし， Serverless architecture という最新のクラウドの設計方法について解説する．
-その応用として，簡単な SNS サービスをゼロから実装する予定である．
-お楽しみに！

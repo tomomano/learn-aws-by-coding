@@ -13,7 +13,7 @@ class Params:
         self.ECS_TASK_VPC_SUBNET_1 = ssm_client.get_parameter(Name="ECS_TASK_VPC_SUBNET_1")["Parameter"]["Value"]
         self.TABLE_NAME = ssm_client.get_parameter(Name="TABLE_NAME")["Parameter"]["Value"]
 
-def ask(context, question, timeout=120):
+def ask(context, question, timeout=240):
     """
     Given 'context' and 'question', this function asks a single question.
     """
@@ -74,7 +74,7 @@ def ask(context, question, timeout=120):
     print(Back.BLUE + "Question:", resp["question"])
     print(Back.MAGENTA + "Answer:", resp["answer"])
     print(Back.YELLOW + "Score:", resp["score"])
-        
+
 def ask_many():
     """
     Ask many questions at once. The questions are defined in "problems.json".

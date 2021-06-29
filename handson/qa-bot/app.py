@@ -65,7 +65,7 @@ class EcsClusterQaBot(core.Stack):
         container = taskdef.add_container(
             "EcsClusterQaBot-Container",
             image=ecs.ContainerImage.from_registry(
-                "registry.gitlab.com/tomomano/intro-aws/handson03:latest"
+                "tomomano/qabot:latest"
             ),
             logging=ecs.LogDrivers.aws_logs(
                 stream_prefix="EcsClusterQaBot",
