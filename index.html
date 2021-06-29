@@ -523,7 +523,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_タスクの実行">8.6. タスクの実行</a></li>
 <li><a href="#_タスクの同時実行">8.7. タスクの同時実行</a></li>
 <li><a href="#_スタックの削除_2">8.8. スタックの削除</a></li>
-<li><a href="#_講義第二回目のまとめ">8.9. 講義第二回目のまとめ</a></li>
 </ul>
 </li>
 <li><a href="#sec_aws_batch">9. Hands-on #4: AWS Batch を使って機械学習のハイパーパラメータサーチを並列化する</a>
@@ -4767,7 +4766,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 <p>今度は， score が 0.52 と，少し自信がないようだが，それでも正しい答えにたどりつけていることがわかる．</p>
 </div>
 <div class="paragraph">
-<p>このように， ディープラーニングに支えられた言語モデルを用いることで，なかなかに賢い Q-A ボットを実現できていることがわかる．
+<p>このように， ディープラーニングに支えられた言語モデルを用いることで，実用にも役に立ちそうな Q-A ボットを実現できていることがわかる．
 以降では，このプログラムをクラウドに展開することで，大量の質問に自動で対応できるようなシステムを設計していく．</p>
 </div>
 <div class="admonitionblock tip">
@@ -4794,23 +4793,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p><a href="https://github.com/huggingface/transformers">huggingface/transformers</a> には，様々な最新の言語モデルが実装されている．
-解けるタスクも， question-answering だけでなく，翻訳や要約など複数用意されている．
-興味のある読者は， <a href="https://huggingface.co/transformers/index.html">ドキュメンテーション</a> を参照．</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>今回提供する Docker のソースコードは <a href="https://github.com/tomomano/intro-aws-2021/tree/main/handson/qa-bot/docker" class="bare">https://github.com/tomomano/intro-aws-2021/tree/main/handson/qa-bot/docker</a> にある．</p>
+<p>今回提供する Q-A ボットの Docker のソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/docker/Dockerfile" class="bare">https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/docker/Dockerfile</a> にある．</p>
 </div>
 </td>
 </tr>
@@ -4826,7 +4809,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 <div class="content">
 <img src="imgs/handson-03/handson-03-architecture.png" alt="hands-on 03 architecture" width="600">
 </div>
-<div class="title">Figure 43. ハンズオン#3で作製するアプリケーションのアーキテクチャ</div>
+<div class="title">Figure 43. アプリケーションのアーキテクチャ</div>
 </div>
 <div class="paragraph">
 <p>簡単にまとめると，以下のような設計である．</p>
@@ -4840,14 +4823,14 @@ question: In what year did Einstein win the Nobel prize?</pre>
 <p>質問のタスクは ECS によって処理される．</p>
 </li>
 <li>
-<p>ECS は， GitLab container registry から， Docker image をダウンロードする．</p>
+<p>ECS は， DockerHub から， Docker image をダウンロードする．</p>
 </li>
 <li>
-<p>次に，ECS はクラスター内に新たな仮想インスタンスを立ち上げ，ダウンロードされた Docker image をこの新規インスタンスに配置する．</p>
+<p>次に，ECS はクラスター内に新たな Fargate インスタンスを立ち上げ，ダウンロードされた Docker image をこの新規インスタンスに配置する．</p>
 <div class="ulist">
 <ul>
 <li>
-<p>このとき，ひとつの質問に対し一つの仮想インスタンスを立ち上げることで，複数の質問を並列的に処理できるようにする．</p>
+<p>このとき，ひとつの質問に対し一つの Fargate インスタンスを立ち上げることで，複数の質問を並列的に処理できるようにする．</p>
 </li>
 </ul>
 </div>
@@ -4864,7 +4847,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>それでは，プログラムのソースコードを見てみよう (<a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/03-qa-bot/app.py">/handson/03-qa-bot/app.py</a>)．</p>
+<p>それでは，プログラムのソースコードを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot">/handson/qa-bot/app.py</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4969,7 +4952,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
         <span class="n">container</span> <span class="o">=</span> <span class="n">taskdef</span><span class="o">.</span><span class="n">add_container</span><span class="p">(</span>
             <span class="s">"EcsClusterQaBot-Container"</span><span class="p">,</span>
             <span class="n">image</span><span class="o">=</span><span class="n">ecs</span><span class="o">.</span><span class="n">ContainerImage</span><span class="o">.</span><span class="n">from_registry</span><span class="p">(</span>
-                <span class="s">"registry.gitlab.com/tomomano/intro-aws/handson03:latest"</span>
+                <span class="s">"tomomano/qabot:latest"</span>
             <span class="p">),</span>
         <span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre>
@@ -5038,7 +5021,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 <span class="n">container</span> <span class="o">=</span> <span class="n">taskdef</span><span class="o">.</span><span class="n">add_container</span><span class="p">(</span>
     <span class="s">"EcsClusterQaBot-Container"</span><span class="p">,</span>
     <span class="n">image</span><span class="o">=</span><span class="n">ecs</span><span class="o">.</span><span class="n">ContainerImage</span><span class="o">.</span><span class="n">from_registry</span><span class="p">(</span>
-        <span class="s">"registry.gitlab.com/tomomano/intro-aws/handson03:latest"</span>
+        <span class="s">"tomomano/qabot:latest"</span>
     <span class="p">),</span>
 <span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre>
@@ -5053,7 +5036,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 </div>
 <div class="paragraph">
 <p>最後に， <code>container =</code> の箇所で，タスクの実行でで使用する Docker image を定義している．
-ここでは， GitLab container registry に置いてある image をダウンロードしてくるよう指定している．</p>
+ここでは， DockerHub に置いてある image をダウンロードしてくるよう指定している．</p>
 </div>
 <div class="paragraph">
 <p>このようにわずか数行のコードであるが，これだけで上で説明したような，タスクのスケジューリングなどが自動で実行される．</p>
@@ -5122,23 +5105,18 @@ question: In what year did Einstein win the Nobel prize?</pre>
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 SSH によるログインの必要がないので，むしろ単純なくらいである．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
-それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．</p>
+それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="c"># プロジェクトのディレクトリに移動</span>
-<span class="nv">$ </span><span class="nb">cd </span>intro-aws/handson/03-qa-bot
+<span class="nv">$ </span><span class="nb">cd </span>handson/qa-bot
 
 <span class="c"># venv を作成し，依存ライブラリのインストールを行う</span>
 <span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
 <span class="nv">$ </span><span class="nb">source</span> .env/bin/activate
 <span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
-
-<span class="c"># AWS の認証情報をセットする</span>
-<span class="c"># 自分自身の認証情報に置き換えること！</span>
-<span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>XXXXXX
-<span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>YYYYYY
-<span class="nb">export </span><span class="nv">AWS_DEFAULT_REGION</span><span class="o">=</span>ap-northeast-1
 
 <span class="c"># デプロイを実行</span>
 <span class="nv">$ </span>cdk deploy</code></pre>
@@ -5175,7 +5153,7 @@ SSH によるログインの必要がないので，むしろ単純なくらい�
 <p>それでは，早速，質問を実行してみよう．</p>
 </div>
 <div class="paragraph">
-<p>ECS にタスクを投入するのはやや複雑なので，タスクの投入を簡単にするプログラム (<code>run_task.py</code>) を用意した (<a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/03-qa-bot/run_task.py">/handson/03-qa-bot/run_task.py</a>)．</p>
+<p>ECS にタスクを投入するのはやや複雑なので，タスクの投入を簡単にするプログラム (<code>run_task.py</code>) を用意した (<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/run_task.py">/handson/qa-bot/run_task.py</a>)．</p>
 </div>
 <div class="paragraph">
 <p>次のようなコマンドで，ECSクラスターに新しい質問を投入することができる．</p>
@@ -5193,7 +5171,7 @@ SSH によるログインの必要がないので，むしろ単純なくらい�
 </td>
 <td class="content">
 <div class="paragraph">
-<p><code>run_task.py</code> を実行するには， 環境変数によって AWS の認証情報が設定されていることが前提である．</p>
+<p><code>run_task.py</code> を実行するには， コマンドラインで AWS の認証情報が設定されていることが前提である．</p>
 </div>
 </td>
 </tr>
@@ -5203,7 +5181,7 @@ SSH によるログインの必要がないので，むしろ単純なくらい�
 <p>"ask" の引数に続き，文脈 (context) と質問を引数として渡している．</p>
 </div>
 <div class="paragraph">
-<p>上のコマンドを実行すると， "Waiting for the task to finish&#8230;&#8203;" と出力が表示され，回答を得るまでしばらく待たされることになる．
+<p>上のコマンドを実行すると， "Waiting for the task to finish&#8230;&#8203;" と出力が表示され，回答を得るまでしばらく待たされる．
 この間， AWS では， ECS がタスクを受理し，新しい Fargate のインスタンスを起動し， Docker image をそのインスタンスに配置する，という一連の処理がなされている．
 AWS コンソールから，この一連の様子をモニタリングしてみよう．</p>
 </div>
@@ -5219,7 +5197,7 @@ AWS コンソールから，この一連の様子をモニタリングしてみ�
 <div class="title">Figure 46. ECS のタスクの実行状況をモニタリング</div>
 </div>
 <div class="paragraph">
-<p><a href="#ecs_task_monitoring">Figure 46</a> で見て取れるように， "Desired status = RUNNING", "Last status = PENDING" となっていることから，この時点では，タスクを実行するための準備している段階である，ということがわかる．
+<p><a href="#ecs_task_monitoring">Figure 46</a> で見て取れるように， "Last status = Pending" となっていることから，この時点では，タスクを実行するための準備している段階である，ということがわかる．
 Fargate のインスタンスを起動し， Docker image を配置するまでおよそ1-2分の時間がかかる．</p>
 </div>
 <div class="paragraph">
@@ -5228,7 +5206,7 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 </div>
 <div class="paragraph">
 <p><a href="#ecs_task_monitoring">Figure 46</a> の画面から， "Task" の列にあるタスクIDクリックすることで，タスクの詳細画面を開いてみよう (<a href="#ecs_task_detail">Figure 47</a>)．
-"Launch type = FARGATE", "Last status = STOPPED" など，タスクの情報が表示されている．
+"Last status", "Platform version" など，タスクの情報が表示されている．
 また， "Logs" のタブを開くことで， container の吐き出した実行ログを閲覧することができる．</p>
 </div>
 <div id="ecs_task_detail" class="imageblock text-center">
@@ -5256,7 +5234,7 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 </div>
 <div class="paragraph">
 <p><code>run_task.py</code> に <code>ask_many</code> というオプションを付けることで，複数の質問を一度に送信できる．
-質問の内容は <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/03-qa-bot/problems.json">/handson/03-qa-bot/problems.json</a> に定義されている．</p>
+質問の内容は <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/problems.json">/handson/qa-bot/problems.json</a> に定義されている．</p>
 </div>
 <div class="paragraph">
 <p>次のようなコマンドを実行しよう．</p>
@@ -5287,7 +5265,7 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 </div>
 <div class="paragraph">
 <p>結果として， <a href="#ask_many_output">Figure 50</a> のような出力が得られるだろう．
-それなりに複雑な文章問題に対し，高い正答率で回答できていることがわかるだろう．</p>
+複雑な文章問題に対し，高い正答率で回答できていることがわかるだろう．</p>
 </div>
 <div id="ask_many_output" class="imageblock text-center">
 <div class="content">
@@ -5324,7 +5302,8 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 <div class="sect2">
 <h3 id="_スタックの削除_2">8.8. スタックの削除</h3>
 <div class="paragraph">
-<p>これにて，第三回ハンズオンは終了である．最後にスタックを削除しよう．</p>
+<p>これにて，今回のハンズオンは終了である．
+最後にスタックを削除しよう．</p>
 </div>
 <div class="paragraph">
 <p>スタックを削除するには，次のコマンドを実行すればよい．</p>
@@ -5333,30 +5312,6 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>cdk destroy</code></pre>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_講義第二回目のまとめ">8.9. 講義第二回目のまとめ</h3>
-<div class="paragraph">
-<p>ここまでが，第二回目の講義の内容である．第一回に引き続き盛りだくさんの内容であったが，ついてこれたであろうか？</p>
-</div>
-<div class="paragraph">
-<p>第二回では，ディープラーニングの計算をクラウドで実行するため， GPU 搭載型の EC2 インスタンスの起動について解説した．
-その際， CUDA や PyTorch などのディープラーニング使うソフトウェアのインストールの手間を省くため， DLAMI を利用した．
-さらに，ハンズオン第二回では，クラウドで起動した仮想サーバーを使って， MNIST 文字認識タスクを解くニューラルネットを学習させた．</p>
-</div>
-<div class="paragraph">
-<p>また，より大規模な機械学習アプリケーションを作るための手段として， Docker と ECS による動的に計算リソースが管理されるクラスターの作り方の初歩を説明した．
-その応用として，英語で与えられた文章問題への回答を自動で生成するボットをクラウドに展開した．</p>
-</div>
-<div class="paragraph">
-<p>もちろん，この講義で紹介したプログラムはごく初歩的なものなので，現実的な問題を解くためにはプログラムのいろいろな側面を精緻化していく必要がある．
-しかしながら，このような技術を応用することでどのようにして現実世界の問題を解くのか，なんとなくイメージが伝わっただろうか？</p>
-</div>
-<div class="paragraph">
-<p>第三回では，さらにレベルアップし， Serverless architecture という最新のクラウドの設計方法について解説する．
-その応用として，簡単な SNS サービスをゼロから実装する予定である．
-お楽しみに！</p>
 </div>
 </div>
 </div>
@@ -9328,7 +9283,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-06-28 14:40:10 UTC
+Last updated 2021-06-29 15:48:48 UTC
 </div>
 </div>
 <style>
