@@ -26,3 +26,4 @@ RUN echo "from torchvision import datasets; datasets.MNIST(root='/mnist', downlo
 COPY main.py simple_mnist.py ${HOME}/
 
 WORKDIR ${HOME}
+ENTRYPOINT ["python3", "main.py"]
