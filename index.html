@@ -538,6 +538,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_job_を実行する_まずはひとつだけ">9.9. Job を実行する (まずはひとつだけ)</a></li>
 <li><a href="#_並列にたくさんの_job_を実行する">9.10. 並列にたくさんの Job を実行する</a></li>
 <li><a href="#_スタックの削除_3">9.11. スタックの削除</a></li>
+<li><a href="#_小括_2">9.12. 小括</a></li>
 </ul>
 </li>
 <li><a href="#_web_サービスの作り方">10. Web サービスの作り方</a>
@@ -5345,8 +5346,11 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 <div class="paragraph">
 <p>ECS の概要を示した <a href="#ecs_overview">Figure 40</a> を振り返って見てほしい．
 前章 (<a href="#sec_fargate_qabot">Section 8</a>) でも説明したが， ECS のクラスターで計算を担う実体としては EC2 と Fargate を指定することができる．
-Fargate については，前章で記述した．
-クラスターで EC2 が選択された場合について，以下に簡単に説明を行っていきたい．</p>
+Fargate については前章で記述した．
+Fargate を用いると，自在にスケールする計算環境をとても簡単な設定で構築することができた．
+しかし， GPU を利用することができないなど，いくつかの制約があった．
+EC2 を使用した計算環境を指定することで，設定の複雑度は増すが， GPU やその他のより高度かつ複雑な設定を伴ったクラスターを構築することができる．
+クラスターで EC2 を用いる場合について，以下に簡単に説明を行っていきたい．</p>
 </div>
 <div class="paragraph">
 <p>EC2 クラスターには <strong>Auto scaling groups (ASG)</strong> と呼ばれるサービスが配置される．
@@ -5375,17 +5379,20 @@ ECS と ASG が協調することで，フレキシブルかつ効率的なタ�
 <div class="paragraph">
 <p>AWS Batch はその名の通りバッチ (Batch) 化されたジョブ (入力データだけが異なる独立した演算が繰り返し実行されること) を想定している．
 多くの科学計算や機械学習がバッチ計算に当てはまる．
-例えば，初期値のパラメータを変えてシミュレーションを走らせる，といったケースだ．
+例えば，初期値のパラメータを変えて複数のシミュレーションを走らせる，といったケースだ．
 AWS Batch を用いることの利点は，クラスターのスケーリングやジョブの割り振りはすべて自動で実行され，
-ユーザーはクラウドの背後で起こっている詳細を気にすることなく，大量のジョブを投入することのできるシステムが手に入る点である．</p>
+ユーザーはクラウドの舞台裏の詳細を気にすることなく，大量のジョブを投入することのできるシステムが手に入る点である．
+が，知識として背後では ECS/ASG/EC2 の三つ巴が強調して動作しているという点は知っておいてほしい．</p>
 </div>
 <div class="paragraph">
 <p>AWS Batch では，ジョブの投入・管理をスムーズに行うため，次のような概念が定義されている (<a href="#fig_batch_concept">Figure 52</a>)．
-まず， <code>Job</code> というのが，AWS Batch によって実行されるひとつひとつの計算の単位である．
-<code>Job Definitions</code> とは Job の内容を定義するものであり，これには実行されるべき Docker のイメージのアドレスや，割り当てる CPU・RAM の容量，環境変数などの設定が含まれる．
-ユーザーが Job の実行を実行すると， Job は <code>Job Queues</code> に入る．
-Job queues とは，実行されるのを待っているジョブの待ち列のことであり，時間的に最も先頭に投入されたジョブが最初に実行される．
-また，複数の queue を配置し， queue ごとに priority (優先度) を設定することが可能であり， priority の高い queue に溜まった Job が優先的に実行される．
+まず， <strong>Job</strong> というのが，AWS Batch によって実行されるひとつの計算の単位である．
+<strong>Job Definitions</strong> とは Job の内容を定義するものであり，これには実行されるべき Docker のイメージのアドレスや，割り当てる CPU・RAM の容量，環境変数などの設定が含まれる．
+Job definition に基づいて個々の Job が実行される．
+Job が実行されると， Job は <strong>Job Queues</strong> に入る．
+Job queues とは，実行待ち状態にジョブの列のことであり，時間的に最も先頭に投入されたジョブが最初に実行される．
+また，複数の queue を配置し， queue ごとに priority (優先度) を設定することが可能であり， priority の高い queue に溜まった Job が優先的に実行される
+(筆者はこれをディズニーランドの"ファストパス"を連想して捉えている)．
 <code>Compute environment</code> とは，先述したクラスターとほぼ同義の概念であり，計算が実際に実行される場所 (EC2 や Fargate からなるクラスター) を指す．
 Compute environment には，使用する EC2 のインスタンスタイプや同時に起動するインスタンス数の上限などの簡易なスケーリングポリシーが指定されている．
 Job queues は Compute environment の空き状況を監視しており， それに応じて Job を Compute environment に投下する．</p>
@@ -5445,7 +5452,7 @@ Job queues は Compute environment の空き状況を監視しており， そ�
 </div>
 <div class="paragraph">
 <p>ベイズ最適化を用いた方法では，過去の探索結果から次にどの組み合わせを探索すべきかという指標を計算し，次に探索するパラメータを決定する．
-これによりグリッドサーチやランダムサーチよりも少ない試行回数で最適なパラメータにたどり着くことができる．</p>
+これにより，理論的にはグリッドサーチやランダムサーチよりも少ない試行回数で最適なパラメータにたどり着くことができる．</p>
 </div>
 <div class="paragraph">
 <p>並列化の観点でいうと，グリッドサーチとランダムサーチは各ハイパーパラメータの組の計算は独立に実行することができるため並列化が容易である．
@@ -5466,27 +5473,49 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 <div class="sect2">
 <h3 id="sec_run_mnist_docker_local">9.5. ローカルで Docker を実行</h3>
 <div class="paragraph">
-<p>まずは，本ハンズオンで使用する Docker image をローカルで計算してみよう．</p>
+<p>まずは，本ハンズオンで使用する Docker image をローカルで実行してみよう．</p>
 </div>
 <div class="paragraph">
-<p>Docker image のソースコードは <a href="https://github.com/tomomano/intro-aws-2021/tree/main/handson/aws-batch/docker">handson/aws-batch/docker</a> にある．
+<p>Docker image のソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/aws-batch/docker">handson/aws-batch/docker</a> にある．
 基本的に <a href="#sec_mnist_using_jupyter">Section 6.8</a> のハンズオンを元にし，本ハンズオン専用の軽微な変更が施してある．
 興味のある読者はソースコードも含めて読んでいただきたい．</p>
 </div>
 <div class="paragraph">
-<p>次のコマンドで Docker image をローカルに pull してこよう．</p>
+<p>練習として，この Docker image を手元でビルドするところからはじめてみよう．
+<code>Dockerfile</code> が保存されているディレクトリに移動し， <code>mymnist</code> という名前 (Tag) をつけてビルドを実行する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker pull XXXXXXXXXXXXXX</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">cd </span>handson/aws-batch/docker
+<span class="nv">$ </span>docker build <span class="nt">-t</span> mymnist .</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>手元でビルドするかわりに， DockerHub から pull することも可能である．
+その場合は次のコマンドを実行する．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker pull tomomano/mymnist:latest</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Pull できたら，次のコマンドでコンテナを起動し，実行する．</p>
+<p>Image の準備ができたら，次のコマンドでコンテナを起動し，実行する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> mymnist python3 main.py <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 100</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 100</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5507,7 +5536,7 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> <span class="nt">--gpus</span> all mymnist python3 main.py <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 100</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> <span class="nt">--gpus</span> all mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 100</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5538,22 +5567,9 @@ Early stopping とは，訓練データの Loss を追跡し，それが減少�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>機械学習では基本的な概念であるが，教師あり学習によってモデルを訓練する際に使うデータセットは <strong>訓練 (Train)</strong>，<strong>検証 (Validation)</strong>，<strong>テスト (Test)</strong> データに分割する．
-訓練データとは，モデルのウェイトパラメータの最適化に使用されるデータセットである．
-検証データとは， Early stopping によって過学習のタイミングを判断したり，ハイパーパラメータの調整を行ったりするのに用いるデータセットである．
-最後に，テストデータとは，ハイパーパラメータの調整も済んで最終的に出来上がったモデルの性能を評価するために用いるデータセットである．
-論文などで報告するモデルのベンチマークの結果は，基本的にテストデータに対しての性能である．</p>
-</div>
-<div class="paragraph">
-<p>しばしば見かける重大な間違いが，テストデータを使ってハイパーパラメータを調整する，という行為である．
-これは絶対に行ってはいけない．
-というのは，このやり方だとテストデータに最適にフィットするようなハイパーパラメータが意図的に選択されてしまっているからである．
-モデルの性能を正しく評価するには，訓練に一度も使われていないデータを用いなければならない．</p>
-</div>
-<div class="paragraph">
 <p>MNIST 手書き文字データセットでは，訓練データとして 60,000 枚，テストデータとして 10,000 枚の画像が与えられている．
 本ハンズオンで使用するコードでは，訓練データのうち 80% の 48,000 枚を訓練データとして使用し，残り 20% の 12,000 枚を検証データとして用いている．
-詳しくは，ソースコードを参照のこと．</p>
+詳しくはソースコードを参照のこと．</p>
 </div>
 </td>
 </tr>
@@ -5600,7 +5616,7 @@ Early stopping とは，訓練データの Loss を追跡し，それが減少�
 </ul>
 </div>
 <div class="paragraph">
-<p>それでは，プログラムのソースコードを見てみよう (<a href="https://github.com/tomomano/intro-aws-2021/blob/main/handson/aws-batch/app.py">handson/aws-batch/app.py</a>)．</p>
+<p>それでは，プログラムのソースコードを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/app.py">handson/aws-batch/app.py</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5684,14 +5700,6 @@ Early stopping とは，訓練データの Loss を追跡し，それが減少�
 78
 79
 80
-81
-82
-83
-84
-85
-86
-87
-88
 </pre></td><td class="code"><pre>
 <span class="k">class</span> <span class="nc">SimpleBatch</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">Stack</span><span class="p">):</span>
 
@@ -5707,16 +5715,8 @@ Early stopping とは，訓練データの Loss を追跡し，それが減少�
 
         <span class="n">vpc</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">Vpc</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="s">"vpc"</span><span class="p">,</span>
-            <span class="n">max_azs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">cidr</span><span class="o">=</span><span class="s">"10.10.0.0/23"</span><span class="p">,</span>
-            <span class="n">subnet_configuration</span><span class="o">=</span><span class="p">[</span>
-                <span class="n">ec2</span><span class="o">.</span><span class="n">SubnetConfiguration</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="s">"public"</span><span class="p">,</span>
-                    <span class="n">subnet_type</span><span class="o">=</span><span class="n">ec2</span><span class="o">.</span><span class="n">SubnetType</span><span class="o">.</span><span class="n">PUBLIC</span><span class="p">,</span>
-                <span class="p">)</span>
-            <span class="p">],</span>
-            <span class="n">nat_gateways</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="c1"># other parameters...
+</span>        <span class="p">)</span>
 
         <i class="conum" data-value="2"></i><b>(2)</b>
         <span class="n">managed_env</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">ComputeEnvironment</span><span class="p">(</span>
@@ -5757,8 +5757,8 @@ Early stopping とは，訓練データの Loss を追跡し，それが減少�
         <span class="c1"># allow read and write access to S3 bucket
 </span>        <span class="n">bucket</span><span class="o">.</span><span class="n">grant_read_write</span><span class="p">(</span><span class="n">job_role</span><span class="p">)</span>
 
-        <span class="c1"># create a ECR repository to push docker image <i class="conum" data-value="5"></i><b>(5)</b>
-</span>        <span class="n">repo</span> <span class="o">=</span> <span class="n">ecr</span><span class="o">.</span><span class="n">Repository</span><span class="p">(</span>
+        <i class="conum" data-value="5"></i><b>(5)</b>
+        <span class="n">repo</span> <span class="o">=</span> <span class="n">ecr</span><span class="o">.</span><span class="n">Repository</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="s">"repository"</span><span class="p">,</span>
             <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span><span class="p">,</span>
         <span class="p">)</span>
@@ -5853,7 +5853,8 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 <div class="paragraph">
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (# で始まる行はコメントである)．
-それぞれの意味を忘れてしまった場合は，前のハンズオンに戻って復習していただきたい．</p>
+それぞれの意味を忘れてしまった場合は，前のハンズオンに戻って復習していただきたい．
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5864,12 +5865,6 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 <span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
 <span class="nv">$ </span><span class="nb">source</span> .env/bin/activate
 <span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
-
-<span class="c"># AWS の認証情報をセットする</span>
-<span class="c"># 自分自身の認証情報に置き換えること！</span>
-<span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>XXXXXX
-<span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>YYYYYY
-<span class="nb">export </span><span class="nv">AWS_DEFAULT_REGION</span><span class="o">=</span>ap-northeast-1
 
 <span class="c"># デプロイを実行</span>
 <span class="nv">$ </span>cdk deploy</code></pre>
@@ -5889,7 +5884,7 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 <p>まず目を向けてほしいのが，画面の一番下にある Compute environment overview の中の <code>SimpleBatchcompute-env</code> という名前の項目だ．
 Compute environment とは，先ほど述べたとおり，計算が実行される環境 (クラスターと読み替えても良い) である．
 上のプログラムで指定したとおり， <code>g4dn.xlarge</code> が実際に使用されるインスタンスタイプとして表示されている．
-また，この時点ではひとつのジョブが走っていないので， <code>desired vCPUs</code> は 0 になっている．</p>
+また，この時点ではひとつもジョブが走っていないので， <code>desired vCPUs</code> は 0 になっている．</p>
 </div>
 <div class="paragraph">
 <p>次に，Job queue overview にある <code>SimpleBatch-queue</code> という項目に注目してほしい．
@@ -5900,10 +5895,10 @@ Compute environment とは，先ほど述べたとおり，計算が実行され
 <h3 id="_docker_image_を_ecr_に配置する">9.8. Docker image を ECR に配置する</h3>
 <div class="paragraph">
 <p>さて， Batch がジョブを実行するには，どこか指定された場所から Docker image をダウンロード (pull) してくる必要がある．
-前回のハンズオン (<a href="#sec_fargate_qabot">Section 8</a>) では，公開設定にしてある GitHub Container Registry から Docker image を pull してきた．
+前回のハンズオン (<a href="#sec_fargate_qabot">Section 8</a>) では，公開設定にしてある DockerHub から image を pull してきた．
 今回のハンズオンでは， AWS から提供されているコンテナ置き場である <strong>ECR (Elastic Container Registry)</strong> に image を配置するという設計を採用する．
-Batch は ECR から image を pull してくることで，タスクを実行する (<a href="#fig_batch_architecture">Figure 55</a>)．
-ECR を利用する利点は，自分だけがアクセスすることのできるプライベートな image の置き場所を用意できる点である．</p>
+ECR を利用する利点は，自分だけがアクセスすることのできるプライベートな image の置き場所を用意できる点である．
+Batch は ECR から image を pull してくることで，タスクを実行する (<a href="#fig_batch_architecture">Figure 55</a>)．</p>
 </div>
 <div class="paragraph">
 <p>スタックのソースコードでいうと，以下の箇所が ECR を定義している．</p>
@@ -5935,7 +5930,7 @@ ECR を利用する利点は，自分だけがアクセスすることのでき�
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>で Job definition を定義する中で， image を &lt;1&gt; で作った ECR から取得するように指定している．
-同時に， Job definition には ECR へのアクセス権が自動的に付与されることになる．</td>
+これと同時に， Job definition には ECR へのアクセス権限が IAM を通じて自動的に付与される．</td>
 </tr>
 </table>
 </div>
@@ -5965,11 +5960,9 @@ ECR を利用する利点は，自分だけがアクセスすることのでき�
 <div class="title">Figure 59. ECR への push コマンド</div>
 </div>
 <div class="paragraph">
-<p>このポップアップ画面で表示されている４つのコマンドを順番に実行していくことで，手元の Docker image を ECR に push することができる．</p>
-</div>
-<div class="paragraph">
-<p>push を実行する前に， AWS の認証情報が設定されていることを確認しよう．
-その上で，ハンズオンのソースコードの中にある <code>docker/</code> という名前のディレクトリに移動する．
+<p>このポップアップ画面で表示されている４つのコマンドを順番に実行していくことで，手元の Docker image を ECR に push することができる．
+<strong>push を実行する前に， AWS の認証情報が設定されている</strong>ことを確認しよう．
+その上で，ハンズオンのソースコードの中にある <strong><code>docker/</code> という名前のディレクトリに移動</strong>する．
 そうしたら，ポップアップ画面で表示されたコマンドを上から順に実行していく．</p>
 </div>
 <div class="admonitionblock note">
@@ -6045,13 +6038,21 @@ ECR を利用する利点は，自分だけがアクセスすることのでき�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="python"><span class="c1"># [1]
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="c1"># [1]
 </span><span class="kn">import</span> <span class="nn">boto3</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 
 <span class="c1"># [2]
 </span><span class="k">def</span> <span class="nf">submit_job</span><span class="p">(</span><span class="n">lr</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">momentum</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">profile_name</span><span class="o">=</span><span class="s">"default"</span><span class="p">):</span>
-    <span class="c1"># 省略...</span></code></pre>
+    <span class="c1"># 省略...</span>
+</pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6060,11 +6061,11 @@ ECR を利用する利点は，自分だけがアクセスすることのでき�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> mymnist python3 main.py <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 100</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 100</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>ここで， <code>python3 main.py --lr 0.1 --momentum 0.5 --epochs 100</code> の部分が， Docker に渡されるコマンドである．</p>
+<p>ここで， <code>--lr 0.1 --momentum 0.5 --epochs 100</code> の部分が， Docker に渡されるコマンドである．</p>
 </div>
 <div class="paragraph">
 <p>AWS Batch でジョブを実行する際も，同じようなコマンドを Docker に渡せば良い．
@@ -6073,13 +6074,19 @@ ECR を利用する利点は，自分だけがアクセスすることのでき�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="python"><span class="n">containerOverrides</span><span class="o">=</span><span class="p">{</span>
-    <span class="s">"command"</span><span class="p">:</span> <span class="p">[</span><span class="s">"python3"</span><span class="p">,</span> <span class="s">"main.py"</span><span class="p">,</span>
-                <span class="s">"--lr"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lr</span><span class="p">),</span>
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="n">containerOverrides</span><span class="o">=</span><span class="p">{</span>
+    <span class="s">"command"</span><span class="p">:</span> <span class="p">[</span><span class="s">"--lr"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lr</span><span class="p">),</span>
                 <span class="s">"--momentum"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">momentum</span><span class="p">),</span>
                 <span class="s">"--epochs"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">epochs</span><span class="p">),</span>
                 <span class="s">"--uploadS3"</span><span class="p">,</span> <span class="s">"true"</span><span class="p">]</span>
-<span class="p">}</span></code></pre>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6091,11 +6098,11 @@ ECR を利用する利点は，自分だけがアクセスすることのでき�
 <pre class="rouge highlight"><code data-lang="python"><span class="n">submit_job</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span></code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock warning">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -6189,6 +6196,7 @@ AWS コンソールからこれを確認しよう．</p>
 22
 23
 24
+25
 </pre></td><td class="code"><pre><span class="c1"># [5]
 </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
 <span class="kn">import</span> <span class="nn">io</span>
@@ -6209,15 +6217,16 @@ AWS コンソールからこれを確認しよう．</p>
     <span class="k">return</span> <span class="n">df</span>
 
 <span class="c1"># [7]
-</span><span class="n">df</span> <span class="o">=</span> <span class="n">read_table_from_s3</span><span class="p">(</span>
-    <span class="s">"simplebatch-bucket43879c71-mbqaltx441fu"</span><span class="p">,</span>
+</span><span class="n">bucket_name</span> <span class="o">=</span> <span class="s">"simplebatch-bucket43879c71-mbqaltx441fu"</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">read_table_from_s3</span><span class="p">(</span>
+    <span class="n">bucket_name</span><span class="p">,</span>
     <span class="s">"metrics_lr0.0100_m0.1000.csv"</span>
 <span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>[7] を実行する際，最初の引数のバケットの名前を，<strong>自分自身のバケットの名前に置き換える</strong>ことに注意しよう．
+<p>[7] を実行する際， <code>bucket_name</code> という変数の値を，<strong>自分自身のバケットの名前に置き換える</strong>ことに注意しよう．
 (先ほど S3 コンソールから確認した <code>simplebatch-bucketXXXX</code> のことである．)</p>
 </div>
 <div class="paragraph">
@@ -6310,13 +6319,15 @@ Batch がジョブの投下に合わせて必要な数のインスタンスを�
 <div class="title">Figure 66. 複数のジョブを同時投入したときの EC2 インスタンスの一覧</div>
 </div>
 <div class="paragraph">
-<p>ここまで確認できたら，それぞれの Job が終了するまでしばらく待とう (だいたい 15 分くらいで終わる)．
-すべてのジョブが終了すると，ダッシュボードの <code>SUCCEEDED</code> が 9 となっているはずだ (&lt;&lt;&gt;&gt;)．
+<p>ここまで確認できたら，それぞれの Job が終了するまでしばらく待とう (だいたい 10-15 分くらいで終わる)．
+すべてのジョブが終了すると，ダッシュボードの <code>SUCCEEDED</code> が 9 となっているはずだ．
 また， Compute environment の <code>Desired vCPUs</code> も 0 に落ちていることを確認しよう．
 最後に EC2 コンソールに行って，すべての g4dn インスタンスが停止していることを確認しよう．</p>
 </div>
 <div class="paragraph">
-<p>以上から， AWS Batch を使うことで，ジョブの投入に応じて自動的に EC2 インスタンスが起動され，ジョブの完了とともに直ちにインスタンスの停止が行われる一連の挙動を観察することができた．</p>
+<p>以上から， AWS Batch を使うことで，<strong>ジョブの投入に応じて自動的に EC2 インスタンスが起動され，ジョブの完了とともに直ちにインスタンスの停止が行われる</strong>一連の挙動を観察することができた．
+一つのジョブがおよそ10分の時間がかかるので，9個のハイパーパラメータの組を逐次的に計算していた場合は90分の時間を要することになる．
+AWS Batch を使ってこれらの計算を並列に実行することで，ジョブ一個分の計算時間 (=10分) ですべての計算を終えることができた！</p>
 </div>
 <div class="paragraph">
 <p>さて，再び <code>run_sweep.ipynb</code> に戻ってこよう．</p>
@@ -6326,7 +6337,45 @@ Batch がジョブの投下に合わせて必要な数のインスタンスを�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="python"><span class="c1"># [5]
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+</pre></td><td class="code"><pre><span class="c1"># [5]
 </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
 <span class="kn">import</span> <span class="nn">io</span>
@@ -6363,7 +6412,8 @@ Batch がジョブの投下に合わせて必要な数のインスタンスを�
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">f</span><span class="s">"{grid[i, j]:0.1f}"</span><span class="p">,</span>
-                       <span class="n">ha</span><span class="o">=</span><span class="s">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s">"center"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"w"</span><span class="p">)</span></code></pre>
+                       <span class="n">ha</span><span class="o">=</span><span class="s">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s">"center"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"w"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6396,7 +6446,7 @@ Batch がジョブの投下に合わせて必要な数のインスタンスを�
 </div>
 <div class="paragraph">
 <p>また，今回は MNIST の訓練データ 60,000 枚のうち， 48,000 枚を訓練データ，残り 12,000 枚を検証データとして用いた．
-この分割は乱数を固定してランダムに行ったが，もしこの分割によるデータのバイアスを気にするならば，分割の乱数を変えて複数回モデルの評価を行う (<strong>k-fold cross-validation</strong>) のも，より精緻なアプローチとして考えられる．</p>
+この分割は乱数を固定してランダムに行ったが，もしこの分割によるデータのバイアスを気にするならば，分割の乱数を変えて複数回モデルの評価を行う (<strong>k-fold cross-validation</strong>) 方法も，より精緻なアプローチとして考えられる．</p>
 </div>
 </td>
 </tr>
@@ -6404,8 +6454,8 @@ Batch がジョブの投下に合わせて必要な数のインスタンスを�
 </div>
 <div class="paragraph">
 <p>以上のようにして， CNN を用いた MNIST 分類モデルのハイパーパラメータの最適化の一連の流れを体験した．
-今回紹介したスタックは， ECR に置く Docker イメージを入れ替えることで，任意のプログラムを実行することができる．
-興味にある読者は，ぜひ自分自身のアプリケーションを実行してもらいたい．</p>
+今回紹介したアプリケーションは， ECR に置く Docker image を入れ替えることで，任意のプログラムを実行することができる．
+興味のある読者は，ぜひ自分自身のカスタムの Docker image を作成して実行してみよう．</p>
 </div>
 </div>
 <div class="sect2">
@@ -6416,7 +6466,7 @@ Batch がジョブの投下に合わせて必要な数のインスタンスを�
 <div class="paragraph">
 <p>今回のスタックを削除するにあたり，ECR に配置された Docker のイメージは手動で削除されなければならない．
 (これをしないと， <code>cdk destroy</code> を実行したときにエラーになってしまう．
-これは CloudFormation の仕様なのでどうしようもない)．</p>
+これは CloudFormation の仕様なので従うしかない．)</p>
 </div>
 <div class="paragraph">
 <p>ECR の Docker image を削除するには， ECR のコンソールに行き，イメージが配置されたレポジトリを開く．
@@ -6429,12 +6479,46 @@ Batch がジョブの投下に合わせて必要な数のインスタンスを�
 <div class="title">Figure 68. ECR から Docker image を削除する</div>
 </div>
 <div class="paragraph">
-<p>これが完了したうえで，次のコマンドでスタックを削除する．</p>
+<p>あるいは， AWS CLI から同様の操作を行うには，以下のコマンドを用いる (<code>XXXX</code> は自分の ECR レポジトリ名に置き換える)．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>aws ecr batch-delete-image <span class="nt">--repository-name</span> XXXX <span class="nt">--image-ids</span> <span class="nv">imageTag</span><span class="o">=</span>latest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>image の削除が完了したうえで，次のコマンドでスタックを削除する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>cdk destroy</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_小括_2">9.12. 小括</h3>
+<div class="paragraph">
+<p>ここまでが，本書第二部の内容である．
+第一部に引き続き盛りだくさんの内容であったが，ついてこれたであろうか？</p>
+</div>
+<div class="paragraph">
+<p>第二部ではまず最初に，深層学習の計算をクラウドで実行するため， GPU 搭載型の EC2 インスタンスの起動について解説した．
+さらに，ハンズオンでは，クラウドに起動した仮想サーバーを使って MNIST 文字認識タスクを解くニューラルネットを学習させた．</p>
+</div>
+<div class="paragraph">
+<p>また，より大規模な機械学習アプリケーションを作るための手段として， Docker と ECS によるクラスターの初歩を説明した．
+その応用として，英語で与えられた文章問題への回答を自動で生成するボットをクラウドに展開した．
+タスクの投入に応じて動的に計算リソースが作成・削除される様子を実際に体験できただろう．</p>
+</div>
+<div class="paragraph">
+<p>さらに， <a href="#sec_aws_batch">Section 9</a> では AWS Batch を用いてニューラルネットの学習を並列に実行する方法を紹介した．
+ここで紹介した方法は，ミニマムであるが，計算機システムを大規模化していくためのエッセンスが網羅されている．
+これらのハンズオン体験から，クラウド技術を応用してどのように現実世界の問題を解いていくのか，なんとなくイメージが伝わっただろうか？</p>
+</div>
+<div class="paragraph">
+<p>本書の第三部では，さらにレベルアップし， Serverless architecture という最新のクラウドの設計手法について解説する．
+その応用として，ハンズオンでは簡単な SNS サービスをゼロから実装する．
+引き続きクラウドの最先端の世界を楽しんでいこう！</p>
 </div>
 </div>
 </div>
@@ -9283,7 +9367,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-06-29 23:58:09 UTC
+Last updated 2021-06-30 02:08:47 UTC
 </div>
 </div>
 <style>
