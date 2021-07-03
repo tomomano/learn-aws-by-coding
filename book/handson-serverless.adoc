@@ -1,27 +1,28 @@
-== Hands-on #4: サーバーレス入門
+== Hands-on #5: サーバーレス入門
 
-第四回目のハンズオンでは，サーバーレスクラウドを構成する主要な構成要素について，実際に動かしながら学んでもらう．
+前章ではサーバーレスアーキテクチャの概要の説明を行った．
+今回のハンズオンでは，サーバーレスクラウドを実際に動かしながら，具体的な使用方法を学んでいこう．
 
 今回のハンズオンで触れるのは以下の3つである．
+それぞれについて，短いチュートリアルを用意してある．
 
 * Lambda: サーバーレスの計算エンジン
 * DynamoDB: サーバーレス・データベース
-
-ハンズオンのソースコードはこちらのリンクに置いてある => https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless
+* S3: サーバーレス・ストレージ
 
 === Lambda ハンズオン
 
-ここでは，ショートハンズオンとして，実際に AWS 上に Lambda を使った関数を定義し，計算を実行してみよう．
-ここでは， AWS CDK を利用してとてもシンプルな Lambda の関数を作成する．
+まず最初に， Lambda を実際に動かしてみよう．
+以下では， AWS CDK を利用してとてもシンプルな Lambda の関数を作成する．
 
-ハンズオンのソースコードはこちらに置いてある => https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/lambda
+ハンズオンのソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda[こちらのリンク] に置いてある．
 
 [WARNING]
 ====
 このハンズオンは，基本的に https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[AWS Lambda の無料枠] の範囲内で実行することができる．
 ====
 
-https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/lambda/app.py[app.py] にデプロイするプログラムが書かれている．
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda/app.py[app.py] にデプロイするプログラムが書かれている．
 中身を見てみよう．
 
 [source, python, linenums]
@@ -55,9 +56,10 @@ class SimpleLambda(core.Stack):
         )
 ----
 <1> ここで， Lambda で実行されるべき関数を定義している．
-これは非常に単純な関数で，2-5秒のランダムな時間スリープした後，["Charmander", "Bulbasaur", "Squirtle"] のいずれかの文字列をランダムに返す (これらは初代ポケットモンスターのゲームでオーキド博士にもらうヒトカゲ・フシギダネ・ゼニガメのことだ)・
-<2> 次に， Lambda の関数の諸々のパラメータを設定している．
-それぞれのパラメータの意味は，文字通りの意味なので明瞭であるが，以下に解説する．
+これは非常に単純な関数で，2-5秒のランダムな時間スリープした後，["Charmander", "Bulbasaur", "Squirtle"] のいずれかの文字列をランダムに返す
+(これらは初代ポケットモンスターのゲームでオーキド博士にもらうヒトカゲ・フシギダネ・ゼニガメのことだ)．
+<2> 次に， Lambda に <1> で書いた関数を配置している．
+パラメータの意味は，文字通りの意味なので特に難しくはないが，以下に解説する．
 * `runtime=_lambda.Runtime.PYTHON_3_7`:
 ここでは， Python3.7 を使って上記で定義された関数を実行せよ，と指定している．
 Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定することが可能である．
@@ -69,7 +71,6 @@ Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定するこ
 `handler` という名前の関数をメイン関数として実行せよ，という意味である．
 * `memory_size=128`:
 メモリーは 128MB を最大で使用することを指定している．
-メモリーオーバーした場合は
 * `timeout=core.Duration.seconds(10)`
 タイムアウト時間を10秒に設定している．
 10秒以内に関数の実行が終了しなかった場合，エラーが返される．
@@ -84,22 +85,17 @@ Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定するこ
 デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (`#` で始まる行はコメントである)．
 それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
+シークレットキーの設定も忘れずに (<<aws_cli_install>>)．
 
 [source, bash]
 ----
 # プロジェクトのディレクトリに移動
-$ cd intro-aws/handson/04-serverless/lambda
+$ cd handson/serverless/lambda
 
 # venv を作成し，依存ライブラリのインストールを行う
 $ python3 -m venv .env
 $ source .env/bin/activate
 $ pip install -r requirements.txt
-
-# AWS の認証情報をセットする
-# 自分自身の認証情報に置き換えること！
-export AWS_ACCESS_KEY_ID=XXXXXX
-export AWS_SECRET_ACCESS_KEY=YYYYYY
-export AWS_DEFAULT_REGION=ap-northeast-1
 
 # デプロイを実行
 $ cdk deploy
@@ -129,11 +125,19 @@ image::imgs/handson-04/lambda_console_func_list.png[cdk output, 700, align="cent
 .Lambda コンソール - 関数の詳細
 image::imgs/handson-04/lambda_console_func_detail.png[lambda_console_func_detail, 700, align="center"]
 
+[TIP]
+====
+Lambda で実行されるコードは， Lambda のコンソール画面 (<<handson_04_lambda_console_func_detail>>) のエディターで編集することもできる．
+
+デバッグをする時などは，こちらを直接いじる方が早い場合もある．
+その場合は， CDK のコードに行った編集を反映させなおすことを忘れずに．
+====
+
 ==== Lambda 関数の実行
 
 それでは，作成した Lambda 関数を実際に実行 (invoke) してみよう．
 AWS の API を使うことで，関数の実行をスタートすることができる．
-今回は， https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/lambda/invoke_one.py[invoke_one.py] に関数を実行するための簡単なプログラムを提供している．
+今回は， https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_one.py[invoke_one.py] に関数を実行するための簡単なプログラムを提供している．
 興味のある読者はコードを読んでもらいたい．
 
 以下のコマンドで，Lambda の関数を実行する．
@@ -184,8 +188,8 @@ image::imgs/handson-04/lambda_console_monitoring.png[lambda_console_monitoring, 
 <<handson_04_lambda_console_monitoring>> で "Invocations" が関数が何度実行されたかを意味している．
 たしかに100回実行されていることがわかる．
 さらに， "Concurrent executions" が何個のタスクが同時に行われたかを示している．
-ここでは 96 となっていることから，96個のタスクが並列的に実行されたことを意味している．
-(これが，100とならないのは，タスクの開始のコマンドが送られたのが完全には同タイミングではないことに起因する)
+ここでは 96 となっていることから，96個のタスクが並列的に実行されたことを意味している
+(これが 100 とならないのは，タスクの開始のコマンドが送られたのが完全には同タイミングではないことに起因する)．
 
 このように，非常にシンプルではあるが， Lambda を使うことで，同時並列的に処理を実行することのできるクラウドシステムを簡単に作ることができた．
 
@@ -194,6 +198,7 @@ image::imgs/handson-04/lambda_console_monitoring.png[lambda_console_monitoring, 
 [TIP]
 ====
 興味がある人は，一気に1000個などのジョブを投入してみると良い．
+Lambda はそのような大量のリクエストにも対応することができることが確認できるだろう．
 が，あまりやりすぎると Lambda の無料利用枠を超えて料金が発生してしまうので注意．
 ====
 
@@ -210,10 +215,10 @@ $ cdk destroy
 
 === DynamoDB ハンズオン
 
-ここでは，ショートハンズオンとして，新しい DynamoDB のテーブルを作成する．
-そして実際にそこにデータの読み書きを行ってみる．
+続いて， DynamoDB の簡単なチュートリアルをやってみよう．
+ここでは，新しい DynamoDB のテーブルを作成し，そしてそこにデータの読み書きを行ってみる．
 
-ハンズオンのソースコードはこちらに置いてある => https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/dynamodb
+ハンズオンのソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb[こちらのリンク] に置いてある．
 
 [WARNING]
 ====
