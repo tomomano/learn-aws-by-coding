@@ -561,6 +561,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_lambda_ハンズオン">12.1. Lambda ハンズオン</a></li>
 <li><a href="#_dynamodb_ハンズオン">12.2. DynamoDB ハンズオン</a></li>
+<li><a href="#_s3_ハンズオン">12.3. S3 ハンズオン</a></li>
 </ul>
 </li>
 <li><a href="#sec_bashoutter">13. Hands-on #5: Bashoutter</a>
@@ -7431,7 +7432,7 @@ Lambda はそのような大量のリクエストにも対応することがで�
 </table>
 </div>
 <div class="paragraph">
-<p><a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/dynamodb/app.py">app.py</a> にデプロイするプログラムが書かれている．
+<p><a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/app.py">app.py</a> にデプロイするプログラムが書かれている．
 中身を見てみよう．</p>
 </div>
 <div class="listingblock">
@@ -7474,18 +7475,22 @@ Lambda はそのような大量のリクエストにも対応することがで�
 <li>
 <p><code>partition_key</code>:
 全ての DynamoDB テーブルには Partition Key が定義されていなければならない．
-Partition key とは，テーブル内のレコードごとに固有のIDのことである．
-同一の Partition key を持った要素はテーブルの中に一つしか存在することはできない．
+Partition key とは，テーブル内の要素 (レコード) ごとに固有のIDのことである．
+同一の Partition key を持った要素がテーブルの中に二つ以上存在することはできない．
 また， Partition key が定義されていない要素はテーブルの中に存在することはできない．
 ここでは，Partition key に <code>item_id</code> という名前をつけている．</p>
 </li>
 <li>
 <p><code>billing_mode</code>:
-<code>ddb.BillingMode.PAY_PER_REQUEST</code> を基本的に選択しておけばよい</p>
+<code>ddb.BillingMode.PAY_PER_REQUEST</code> を指定することで，
+<a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html#HowItWorks.OnDemand">On-demand Capacity Mode</a>
+の DynamoDB が作成される．
+他に <code>PROVISIONED</code> というモードがあるが，これはかなり高度なケースを除いて使用しないだろう．</p>
 </li>
 <li>
-<p><code>removal_policy</code>:
-省略</p>
+<p><code>removal_policy</code>: CloudFormation のスタックが消去されたときに， DynamoDB も一緒に消去されるかどうかを指定する．
+上のコードでは <code>DESTROY</code> を選んでいるので，すべて消去される．
+他のオプションを選択すると，スタックを消去しても DynamoDB のバックアップを残す，などの動作を定義することができる．</p>
 </li>
 </ul>
 </div>
@@ -7494,23 +7499,18 @@ Partition key とは，テーブル内のレコードごとに固有のIDのこ�
 <div class="paragraph">
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
-それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．</p>
+それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="c"># プロジェクトのディレクトリに移動</span>
-<span class="nv">$ </span><span class="nb">cd </span>intro-aws/handson/04-serverless/dynamodb
+<span class="nv">$ </span><span class="nb">cd </span>handson/serverless/dynamodb
 
 <span class="c"># venv を作成し，依存ライブラリのインストールを行う</span>
 <span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
 <span class="nv">$ </span><span class="nb">source</span> .env/bin/activate
 <span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
-
-<span class="c"># AWS の認証情報をセットする</span>
-<span class="c"># 自分自身の認証情報に置き換えること！</span>
-<span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>XXXXXX
-<span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>YYYYYY
-<span class="nb">export </span><span class="nv">AWS_DEFAULT_REGION</span><span class="o">=</span>ap-northeast-1
 
 <span class="c"># デプロイを実行</span>
 <span class="nv">$ </span>cdk deploy</code></pre>
@@ -7535,7 +7535,7 @@ Partition key とは，テーブル内のレコードごとに固有のIDのこ�
 <div class="content">
 <img src="imgs/handson-04/dynamodb_table_list.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 80. CDKデプロイ実行後の出力</div>
+<div class="title">Figure 80. DynamoDB のコンソール (テーブルの一覧)</div>
 </div>
 <div class="paragraph">
 <p>今回のアプリケーションで作成したのが SimpleDynamoDb-YYYY という名前のついたテーブルだ．
@@ -7548,7 +7548,7 @@ Partition key とは，テーブル内のレコードごとに固有のIDのこ�
 <div class="content">
 <img src="imgs/handson-04/dynamodb_table_detail.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 81. CDKデプロイ実行後の出力</div>
+<div class="title">Figure 81. DynamoDB のコンソール (テーブルの詳細画面)</div>
 </div>
 </div>
 <div class="sect3">
@@ -7558,25 +7558,75 @@ Partition key とは，テーブル内のレコードごとに固有のIDのこ�
 ここでは Python と <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">boto3</a> ライブラリを用いた方法を紹介する．</p>
 </div>
 <div class="paragraph">
-<p>まず最初に， boto3 ライブラリを用意する．
-次に，テーブルの名前から <code>Table</code> オブジェクトを作成する．
-"XXXX" の部分を自分がデプロイしたテーブルの名前 (<a href="#handson_04_dynamodb_cdk_output">Figure 79</a>) に置き換えた上で，以下のコードを実行しよう．</p>
+<p>まずは，テーブルに新しい要素を追加してみよう．
+ハンズオンのディレクトリにある <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/simple_write.py">simple_write.py</a> を開いてみよう．
+中には次のような関数が書かれている．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
-2
-3
-4
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
 </pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">uuid4</span>
 <span class="n">ddb</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s">'dynamodb'</span><span class="p">)</span>
 
-<span class="n">table</span> <span class="o">=</span> <span class="n">ddb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="s">"XXXX"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">write_item</span><span class="p">(</span><span class="n">table_name</span><span class="p">):</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">ddb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">put_item</span><span class="p">(</span>
+    <span class="n">Item</span><span class="o">=</span><span class="p">{</span>
+        <span class="s">'item_id'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>
+        <span class="s">'first_name'</span><span class="p">:</span> <span class="s">'John'</span><span class="p">,</span>
+        <span class="s">'last_name'</span><span class="p">:</span> <span class="s">'Doe'</span><span class="p">,</span>
+        <span class="s">'age'</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>新しいデータを書き込むには次のコードを実行する．</p>
+<p>コードを簡単に上から読んでいくと，まず最初に boto3 ライブラリをインポートし， <code>dynamodb</code> のリソースを呼び出している．
+<code>write_item()</code> 関数は， DynamoDB のテーブルの名前 (上で見たSimpleDynamoDb-YYYY) を引数として受け取る．
+そして， <code>put_item()</code> メソッドを呼ぶことで，新しいアイテムを DB に書き込んでいる．
+アイテムには <code>item_id</code>, <code>first_name</code>, <code>last_name</code>, <code>age</code> の4つの属性が定義されている．
+ここで， <code>item_id</code> は先ほど説明した Partition key に相当しており，
+<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID4</a>
+を用いたランダムな文字列を割り当てている．</p>
+</div>
+<div class="paragraph">
+<p>では， <code>simple_write.py</code> を実行してみよう．
+"YYYY" の部分を自分がデプロイしたテーブルの名前に置き換えた上で，次のコマンドを実行する．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_write.py SimpleDynamoDb-SimpleTableYYYY</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>新しい要素が正しく書き込めたか， AWS コンソールから確認してみよう．
+<a href="#handson_04_dynamodb_table_detail">Figure 81</a> と同じ手順で，テーブルの中身の要素の一覧を表示する．
+すると <a href="#dynamodb_table_new_item">[dynamodb_table_new_item]</a> のように，確かに新しい要素が見つかるだろう．</p>
+</div>
+<div id="fig:dynamodb_table_new_item" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-04/dynamodb_table_new_item.png" alt="cdk output" width="700">
+</div>
+<div class="title">Figure 82. DynamoDB に新しい要素が追加されたことを確認</div>
+</div>
+<div class="paragraph">
+<p>boto3 を使ってテーブルから要素を読みだすことも可能である．
+ハンズオンのディレクトリにある <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/simple_read.py">simple_read.py</a> を見てみよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7587,41 +7637,30 @@ Partition key とは，テーブル内のレコードごとに固有のIDのこ�
 5
 6
 7
-8
-</pre></td><td class="code"><pre><span class="n">table</span><span class="o">.</span><span class="n">put_item</span><span class="p">(</span>
-   <span class="n">Item</span><span class="o">=</span><span class="p">{</span>
-       <span class="s">'item_id'</span><span class="p">:</span> <span class="s">'bec7c265-46e2-4065-91d8-80b2e8dcc9c2'</span><span class="p">,</span>
-       <span class="s">'first_name'</span><span class="p">:</span> <span class="s">'John'</span><span class="p">,</span>
-       <span class="s">'last_name'</span><span class="p">:</span> <span class="s">'Doe'</span><span class="p">,</span>
-       <span class="s">'age'</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">)</span>
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="n">ddb</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s">'dynamodb'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">scan_table</span><span class="p">(</span><span class="n">table_name</span><span class="p">):</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">ddb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">"Items"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>テーブルの中のデータを，そのデータの Partition key を使って読み出すには，次のコードを実行する．</p>
+<p><code>table.scan().get("Items")</code> によって，テーブルの中にあるすべての要素を読みだしている．</p>
+</div>
+<div class="paragraph">
+<p>次のコマンドで，このスクリプトを実行してみよう
+("YYYY" の部分を正しく置き換えることを忘れずに）．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
-2
-3
-</pre></td><td class="code"><pre><span class="n">table</span><span class="o">.</span><span class="n">get_item</span><span class="p">(</span>
-   <span class="n">Key</span><span class="o">=</span><span class="p">{</span><span class="s">"item_id"</span><span class="p">:</span> <span class="s">'bec7c265-46e2-4065-91d8-80b2e8dcc9c2'</span><span class="p">}</span>
-<span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">"Item"</span><span class="p">)</span>
-</pre></td></tr></tbody></table></code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_read.py SimpleDynamoDb-SimpleTableYYYY</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>テーブルの中にあるデータを全て読み出したければ以下のコードを実行する．</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">table</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">"Items"</span><span class="p">)</span>
-</pre></td></tr></tbody></table></code></pre>
-</div>
+<p>先ほど書き込んだ要素が出力されることを確認しよう．</p>
 </div>
 </div>
 <div class="sect3">
@@ -7631,14 +7670,14 @@ Partition key とは，テーブル内のレコードごとに固有のIDのこ�
 </div>
 <div class="paragraph">
 <p>そこで，ここでは一度に大量のデータを書き込む場合をシミュレートしてみよう．
-<a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/dynamodb/batch_rw.py">batch_rw.py</a> に，一度に大量の書き込みを実行するためのプログラムが書いてある．</p>
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py">batch_rw.py</a> に，一度に大量の書き込みを実行するためのプログラムが書いてある．</p>
 </div>
 <div class="paragraph">
-<p>次のコマンドを実行してみよう (XXXX は自分のテーブルの名前に置き換える)．</p>
+<p>次のコマンドを実行してみよう (YYYY は自分のテーブルの名前に置き換える)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python batch_rw.py XXXX write 1000</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python batch_rw.py YYYY write 1000</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7647,14 +7686,36 @@ Partition key とは，テーブル内のレコードごとに固有のIDのこ�
 <div class="paragraph">
 <p>さらに，データベースの検索をかけてみよう．
 今回書き込んだデータには <code>age</code> という属性に1から50のランダムな整数が割り当てられている．
-<code>age</code> が2以下であるような要素だけを拾ってくるには，以下のコマンドを実行すればよい．</p>
+<code>age</code> が2以下であるような要素だけを検索し，拾ってくるには，以下のコマンドを実行すればよい．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python batch_rw.py XXXX search_under_age 2</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python batch_rw.py YYYY search_under_age 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上の2つのコマンドを何回か繰り返し実行してみて，データベースに負荷をかけてみよう．
+特に大きな遅延なく結果が返ってくることが確認できるだろう．</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_スタックの削除_5">12.2.4. スタックの削除</h4>
+<div class="paragraph">
+<p>DynamoDB で十分に遊ぶことができたら，忘れずにスタックを削除しよう．</p>
+</div>
+<div class="paragraph">
+<p>これまでのハンズオンと同様，スタックを削除するには，次のコマンドを実行すればよい．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>cdk destroy</code></pre>
 </div>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_s3_ハンズオン">12.3. S3 ハンズオン</h3>
+
 </div>
 </div>
 </div>
@@ -7665,7 +7726,7 @@ Partition key とは，テーブル内のレコードごとに固有のIDのこ�
 <p>さて，最終回となるハンズオン第五回では，これまで学んできたサーバーレスクラウドの技術を使って，簡単なウェブサービスを作ってみよう．
 具体的には，人々が自分の作った俳句を投稿するSNSサービス (<strong>Bashoutter</strong> と名付ける) を作成してみよう．
 これまでの講義の集大成として，コードの長さとしては最も長くなっているが，頑張ってついてきてもらいたい．
-最終的には， <a href="#handson_05_bashoutter">Figure 82</a> のような，ミニマルではあるがとても現代風な SNS サイトが完成する！</p>
+最終的には， <a href="#handson_05_bashoutter">Figure 83</a> のような，ミニマルではあるがとても現代風な SNS サイトが完成する！</p>
 </div>
 <div class="paragraph">
 <p>ハンズオンのソースコードはこちらのリンクに置いてある &#8658; <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/05-bashoutter" class="bare">https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/05-bashoutter</a></p>
@@ -7688,7 +7749,7 @@ Partition key とは，テーブル内のレコードごとに固有のIDのこ�
 <div class="content">
 <img src="imgs/handson-05/bashoutter.png" alt="bashoutter" width="700">
 </div>
-<div class="title">Figure 82. ハンズオン#5で作製する SNS アプリケーション "Bashoutter"</div>
+<div class="title">Figure 83. ハンズオン#5で作製する SNS アプリケーション "Bashoutter"</div>
 </div>
 <div class="sect2">
 <h3 id="_準備_4">13.1. 準備</h3>
@@ -7753,13 +7814,13 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 <div class="sect3">
 <h4 id="_アプリケーションアーキテクチャ">13.2.2. アプリケーションアーキテクチャ</h4>
 <div class="paragraph">
-<p>このハンズオンで作成するアプリケーションの概要を <a href="#handson_05_architecture">Figure 83</a> に示す．</p>
+<p>このハンズオンで作成するアプリケーションの概要を <a href="#handson_05_architecture">Figure 84</a> に示す．</p>
 </div>
 <div id="handson_05_architecture" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-05/handson-05-architecture.png" alt="hands-on 05 architecture" width="600">
 </div>
-<div class="title">Figure 83. ハンズオン#5で作製するアプリケーションのアーキテクチャ</div>
+<div class="title">Figure 84. ハンズオン#5で作製するアプリケーションのアーキテクチャ</div>
 </div>
 <div class="paragraph">
 <p>簡単にまとめると，以下のような設計である．</p>
@@ -8484,14 +8545,14 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 </div>
 </div>
 <div class="paragraph">
-<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_05_cdk_output">Figure 84</a> のような出力が得られるはずである．
+<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_05_cdk_output">Figure 85</a> のような出力が得られるはずである．
 ここで表示されている <code>Bashoutter.BashoutterApiEndpoint = XXXX</code>, <code>Bashoutter.BucketUrl = YYYY</code> の二つ文字列は次に使うのでメモしておこう．</p>
 </div>
 <div id="handson_05_cdk_output" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-05/cdk_output.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 84. CDKデプロイ実行後の出力</div>
+<div class="title">Figure 85. CDKデプロイ実行後の出力</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -8528,50 +8589,50 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 </div>
 <div class="paragraph">
 <p>AWS コンソールにログインして，デプロイされたスタックを確認してみよう．
-コンソールから， API Gateway のページに行くと， <a href="#handson_05_apigw_console_list">Figure 85</a> のような画面が表示され，デプロイ済みの API エンドポイントの一覧が確認できる．</p>
+コンソールから， API Gateway のページに行くと， <a href="#handson_05_apigw_console_list">Figure 86</a> のような画面が表示され，デプロイ済みの API エンドポイントの一覧が確認できる．</p>
 </div>
 <div id="handson_05_apigw_console_list" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-05/apigw_console_list.png" alt="apigw_console_list" width="700">
 </div>
-<div class="title">Figure 85. API Gateway コンソール画面 (1)</div>
+<div class="title">Figure 86. API Gateway コンソール画面 (1)</div>
 </div>
 <div class="paragraph">
-<p>今回デプロイした "BashoutterApi" という名前の API をクリックすることで <a href="#handson_05_apigw_console_detail">Figure 86</a> のような画面に遷移し，詳細情報を閲覧できる．
+<p>今回デプロイした "BashoutterApi" という名前の API をクリックすることで <a href="#handson_05_apigw_console_detail">Figure 87</a> のような画面に遷移し，詳細情報を閲覧できる．
 <code>GET /haiku</code>, <code>POST /haiku</code> などが定義されていることが確認できる．</p>
 </div>
 <div class="paragraph">
 <p>それぞれのメソッドをクリックすると，そのメソッドの詳細情報を確認できる．
 API Gateway は，上で説明したルーティングの機能だけでなく，認証機能などを追加することも可能であり，そのような理由で
-<a href="#handson_05_apigw_console_detail">Figure 86</a> で画面右端赤色で囲った部分に，この API で呼ばれる Lambda 関数が指定されている．
+<a href="#handson_05_apigw_console_detail">Figure 87</a> で画面右端赤色で囲った部分に，この API で呼ばれる Lambda 関数が指定されている．
 関数名をクリックすることで，関数の中身を閲覧することが可能である．</p>
 </div>
 <div id="handson_05_apigw_console_detail" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-05/apigw_console_detail.png" alt="apigw_console_detail" width="700">
 </div>
-<div class="title">Figure 86. API Gateway コンソール画面 (2)</div>
+<div class="title">Figure 87. API Gateway コンソール画面 (2)</div>
 </div>
 <div class="paragraph">
 <p>次に， S3 のコンソール画面に移ってみよう．
-"bashouter-XXXXX" という名前のバケットが見つかるはずである (<a href="#handson_05_s3_console">Figure 87</a>)．</p>
+"bashouter-XXXXX" という名前のバケットが見つかるはずである (<a href="#handson_05_s3_console">Figure 88</a>)．</p>
 </div>
 <div id="handson_05_s3_console" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-05/s3_console.png" alt="s3_console" width="700">
 </div>
-<div class="title">Figure 87. S3 コンソール画面</div>
+<div class="title">Figure 88. S3 コンソール画面</div>
 </div>
 <div class="paragraph">
 <p>バケットの名前をクリックすることで，バケットの中身を確認してみよう．
-<code>index.html</code> のほか， <code>css/</code>, <code>js/</code> などのディレクトリがあるのが確認できるだろう (<a href="#handson_05_s3_contents">Figure 88</a>)．
+<code>index.html</code> のほか， <code>css/</code>, <code>js/</code> などのディレクトリがあるのが確認できるだろう (<a href="#handson_05_s3_contents">Figure 89</a>)．
 これらが，ウェブページの"枠"を定義している静的コンテンツである．</p>
 </div>
 <div id="handson_05_s3_contents" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-05/s3_contents.png" alt="s3_contents" width="700">
 </div>
-<div class="title">Figure 88. S3 バケットの中身</div>
+<div class="title">Figure 89. S3 バケットの中身</div>
 </div>
 </div>
 <div class="sect2">
@@ -8774,18 +8835,18 @@ Content-Type: application/json
 最後に， API が GUI と統合されるとどうなるのか，見てみよう．</p>
 </div>
 <div class="paragraph">
-<p>デプロイを実行したときにコマンドラインで出力された， <code>ashoutter.BucketUrl=</code> に続く URL を確認しよう (<a href="#handson_05_cdk_output">Figure 84</a>)．
+<p>デプロイを実行したときにコマンドラインで出力された， <code>ashoutter.BucketUrl=</code> に続く URL を確認しよう (<a href="#handson_05_cdk_output">Figure 85</a>)．
 これは，先述したとおり， Public access mode の S3 バケットの URL である．</p>
 </div>
 <div class="paragraph">
 <p>ウェブブラウザを開き，そのURLへアクセスをしてみよう．
-すると， <a href="#handson_05_bashoutter_2">Figure 89</a> のようなページが表示されるはずである．</p>
+すると， <a href="#handson_05_bashoutter_2">Figure 90</a> のようなページが表示されるはずである．</p>
 </div>
 <div id="handson_05_bashoutter_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-05/bashoutter_2.png" alt="bashoutter" width="700">
 </div>
-<div class="title">Figure 89. "Bashoutter" の GUI 画面</div>
+<div class="title">Figure 90. "Bashoutter" の GUI 画面</div>
 </div>
 <div class="paragraph">
 <p>ページが表示されたら，一番上の "API Endpoint URL" と書いてあるテキストボックスに，今回デプロイした API Gateway の URL を入力する
@@ -8870,10 +8931,10 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <p>AWS コンソールにログインする．</p>
 </li>
 <li>
-<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 90</a>)</p>
+<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 91</a>)</p>
 </li>
 <li>
-<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 91</a>)</p>
+<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 92</a>)</p>
 </li>
 <li>
 <p>表示された Access key ID, Secret access key を記録しておく (画面を閉じると以降は表示されない)．</p>
@@ -8890,13 +8951,13 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <div class="content">
 <img src="imgs/aws_secret_key_1.png" alt="aws_secret_key_1" width="400">
 </div>
-<div class="title">Figure 90. AWS シークレットキーの発行1</div>
+<div class="title">Figure 91. AWS シークレットキーの発行1</div>
 </div>
 <div id="fig:aws_secret_key_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_2.png" alt="aws_secret_key_2" width="700">
 </div>
-<div class="title">Figure 91. AWS シークレットキーの発行2</div>
+<div class="title">Figure 92. AWS シークレットキーの発行2</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -8911,13 +8972,13 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <div class="ulist">
 <ul>
 <li>
-<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 92</a>)．</p>
+<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 93</a>)．</p>
 </li>
 <li>
 <p><code>Account Details</code> をクリックし，続いて <code>AWS CLI: Show</code> をクリックする．</p>
 </li>
 <li>
-<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 93</a>)．
+<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 94</a>)．
 ここで表示された内容を <code>~/.aws/credentials</code> にコピーする (<a href="#aws_cli_install">Section 15.2</a> 参照)．
 <code>aws_session_token</code> の箇所も漏らさずコピーすること．</p>
 </li>
@@ -8946,13 +9007,13 @@ output = json</pre>
 <div class="content">
 <img src="imgs/vocareum_console.png" alt="vocareum console" width="700">
 </div>
-<div class="title">Figure 92. vocareum コンソール</div>
+<div class="title">Figure 93. vocareum コンソール</div>
 </div>
 <div id="fig:vocareum_secret" class="imageblock text-center">
 <div class="content">
 <img src="imgs/vocareum_secret.png" alt="vocareum secret" width="700">
 </div>
-<div class="title">Figure 93. vocareum から AWS シークレットキーの発行</div>
+<div class="title">Figure 94. vocareum から AWS シークレットキーの発行</div>
 </div>
 </td>
 </tr>
@@ -9190,14 +9251,14 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 <p>と実行する．</p>
 </div>
 <div class="paragraph">
-<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 94</a>)．
+<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 95</a>)．
 これが， "いまあなたは venv の中にいますよ" というしるしになる．</p>
 </div>
 <div id="fig_venv_prompt" class="imageblock text-center">
 <div class="content">
 <img src="imgs/venv_shell.png" alt="venv shell" width="500">
 </div>
-<div class="title">Figure 94. venv を起動したときのプロンプト</div>
+<div class="title">Figure 95. venv を起動したときのプロンプト</div>
 </div>
 <div class="paragraph">
 <p>仮想環境を起動すると，それ以降実行する <code>pip</code> コマンドは， <code>.env/</code> 以下にインストールされる．このようにして，プロジェクトごとに使うライブラリのバージョンを切り分けることができる．</p>
@@ -9414,7 +9475,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-07-03 10:02:59 UTC
+Last updated 2021-07-03 13:25:33 UTC
 </div>
 </div>
 <style>
