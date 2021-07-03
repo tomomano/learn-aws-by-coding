@@ -505,7 +505,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_スタックの削除">6.9. スタックの削除</a></li>
 </ul>
 </li>
-<li><a href="#_docker_入門">7. Docker 入門</a>
+<li><a href="#sec_docker_introduction">7. Docker 入門</a>
 <ul class="sectlevel2">
 <li><a href="#_機械学習の大規模化">7.1. 機械学習の大規模化</a></li>
 <li><a href="#_docker_とは">7.2. Docker とは</a></li>
@@ -557,13 +557,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_その他のサーバーレスクラウドの構成要素">11.6. その他のサーバーレスクラウドの構成要素</a></li>
 </ul>
 </li>
-<li><a href="#_hands_on_4_サーバーレス入門">12. Hands-on #4: サーバーレス入門</a>
+<li><a href="#_hands_on_5_サーバーレス入門">12. Hands-on #5: サーバーレス入門</a>
 <ul class="sectlevel2">
 <li><a href="#_lambda_ハンズオン">12.1. Lambda ハンズオン</a></li>
 <li><a href="#_dynamodb_ハンズオン">12.2. DynamoDB ハンズオン</a></li>
 </ul>
 </li>
-<li><a href="#_hands_on_5_bashoutter">13. Hands-on #5: Bashoutter</a>
+<li><a href="#sec_bashoutter">13. Hands-on #5: Bashoutter</a>
 <ul class="sectlevel2">
 <li><a href="#_準備_4">13.1. 準備</a></li>
 <li><a href="#_アプリケーションの説明_5">13.2. アプリケーションの説明</a></li>
@@ -3082,6 +3082,23 @@ V100 が約百万円で売られていることを考えると，約3000時間 (
 </tr>
 </table>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>AWS Educate Starter Account を使用している読者へ:
+執筆時点においては， Starter Account には GPU 搭載型インスタンスを起動できないという制限が設けられている．
+従って， Starter Account のユーザーはこのハンズオンを実行することはできない．
+興味のある読者は，制限のない一般アカウントを自分自身で取得する必要があることに注意．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="sect2">
 <h3 id="_準備">6.1. 準備</h3>
 <div class="paragraph">
@@ -4157,7 +4174,7 @@ MNIST 文字認識のタスクを行うニューラルネットを，クラウ�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_docker_入門">7. Docker 入門</h2>
+<h2 id="sec_docker_introduction">7. Docker 入門</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="#sec_scientific_computing">Section 5</a>，<a href="#sec_jupyter_and_deep_learning">Section 6</a> にわたって， AWS 上に仮想サーバーを立ち上げ，深層学習のプログラムを走らせる方法を紹介してきた．
@@ -6506,12 +6523,12 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 第一部に引き続き盛りだくさんの内容であったが，ついてこれたであろうか？</p>
 </div>
 <div class="paragraph">
-<p>第二部ではまず最初に，深層学習の計算をクラウドで実行するため， GPU 搭載型の EC2 インスタンスの起動について解説した．
-さらに，ハンズオンでは，クラウドに起動した仮想サーバーを使って MNIST 文字認識タスクを解くニューラルネットを学習させた．</p>
+<p>第二部ではまず最初に，深層学習の計算をクラウドで実行するため， GPU 搭載型の EC2 インスタンスの起動について解説した (<a href="#sec_scientific_computing">Section 5</a>)．
+さらに，ハンズオンでは，クラウドに起動した仮想サーバーを使って MNIST 文字認識タスクを解くニューラルネットを学習させた (<a href="#sec_jupyter_and_deep_learning">Section 6</a>)．</p>
 </div>
 <div class="paragraph">
-<p>また，より大規模な機械学習アプリケーションを作るための手段として， Docker と ECS によるクラスターの初歩を説明した．
-その応用として，英語で与えられた文章問題への回答を自動で生成するボットをクラウドに展開した．
+<p>また，より大規模な機械学習アプリケーションを作るための手段として， Docker と ECS によるクラスターの初歩を説明した (<a href="#sec_docker_introduction">Section 7</a>)．
+その応用として，英語で与えられた文章問題への回答を自動で生成するボットをクラウドに展開した (<a href="#sec_fargate_qabot">Section 8</a>)．
 タスクの投入に応じて動的に計算リソースが作成・削除される様子を実際に体験できただろう．</p>
 </div>
 <div class="paragraph">
@@ -6531,30 +6548,32 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 <h2 id="_web_サービスの作り方">10. Web サービスの作り方</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ここからが，第三回目の講義の内容になる．</p>
+<p>ここからが，本書第三部の内容になる．</p>
 </div>
 <div class="paragraph">
-<p>これまでの講義では，仮想サーバーをクラウド上に起動し，そこで計算を走らせる方法について解説をしてきた．
-最初に，EC2上に個人で使用するためのサーバーを立ち上げ，機械学習の計算を実践した．
-第二回の最後では，大規模な機械学習システムのもっとも初歩的なものとして， ECS と Docker を使ったクラスターを作成する方法を解説した．
-ここまで紹介したクラウドの計算の利用は，個人的な用途に限られていたが，クラウドの重要な側面のひとつとして，広く一般に使ってもらえるような計算サービス・データベースを提供する，というものが挙げられるだろう．</p>
+<p>これまでのセクションでは，仮想サーバーをクラウド上に起動し，そこで計算を走らせる方法について解説をしてきた．
+最初に， EC2 上に個人で使用するためのサーバーを立ち上げ，機械学習の計算を実践した．
+また，大規模な計算システムを構築するための初歩として， ECS と Docker を使ったクラスターを作成する方法を解説した．
+ここまで紹介したクラウドの利用は，個人としての用途にフォーカスしていた．
+一方で，広く一般に使ってもらえるような計算サービス・データベースを提供する，というのもクラウドの重要な役割として挙げられる．</p>
 </div>
 <div class="paragraph">
-<p>今回の講義は，前回までとは少し方向性を変え，どのようにしてクラウド上にアプリケーションを展開し，広く一般の人に使ってもらうか，という点を講義したいと思う．
-講義を通じて，どのように世の中のウェブサービスが出来上がっているのかを知り，さらにどうやって自分でそのようなアプリケーションを作るのか，という点を学んでもらう．
+<p>第三部では，前回までとは少し方向性を変え，どのようにしてクラウド上にアプリケーションを展開し，広く一般の人に使ってもらうか，という点を講義したいと思う．
+これを通じて，どのようにして世の中のウェブサービスが出来上がっているのかを知り，さらにどうやって自分でそのようなアプリケーションをゼロから構築するのか，という点を学んでもらう．
 その過程で， Serverless アーキテクチャという最新のクラウド設計手法を解説する．</p>
 </div>
 <div class="sect2">
 <h3 id="_ウェブサービスの仕組みtwitter_を例に">10.1. ウェブサービスの仕組み&#8201;&#8212;&#8201;Twitter を例に</h3>
 <div class="paragraph">
 <p>あなたがパソコンやスマートフォンから Twitter, Facebook, YouTube などのウェブサービスにアクセスしたとき，
-実際にどのようなことが行われ，ページがロードされているのだろうか？</p>
+実際にどのようなことが行われ，コンテンツが提示されているのだろうか？</p>
 </div>
 <div class="paragraph">
-<p>ここは知っている人も多いと思うので簡潔な説明にとどめるが， <a href="https://twitter.com">Twitter</a> を具体例として，背後にあるサーバーとクライアントの間の通信を概説しよう．
-概念図としては <a href="#web_server">Figure 69</a> のような通信がクライアントとサーバーの間で行われていることになる．</p>
+<p>HTTP を通じたサーバーとクライアントのデータのやり取りは，既に知っている人も多いだろうし，逆にすべて解説しようとすると紙面が足りないので，ここではエッセンスの説明のみにとどめる．
+以降では <a href="https://twitter.com">Twitter</a> を具体例として，背後にあるサーバーとクライアントの間の通信を概説しよう．
+概念図としては <a href="#fig:web_server">Figure 69</a> のような通信がクライアントとサーバーの間で行われていることになる．</p>
 </div>
-<div id="web_server" class="imageblock text-center">
+<div id="fig:web_server" class="imageblock text-center">
 <div class="content">
 <img src="imgs/web_server.png" alt="web_server" width="700">
 </div>
@@ -6566,7 +6585,7 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 第一のステップとして，クライアントは HTTP(S) 通信によってサーバーから静的なコンテンツを取得する．
 静的なコンテンツとは， <strong>HTML (Hyptertext Markup Language)</strong> で記述されたウェブページの文書本体， <strong>CSS (Cascading Style Sheets)</strong> で記述されたページのデザインやレイアウトファイル，そして <strong>JavaScript (JS)</strong> で記述されたページの動的な挙動を定義したプログラム，が含まれる．
 Twitter を含む現代的なウェブアプリケーションの設計では，この静的なファイル群はページの”枠”を定義するだけで，中身となるコンテンツ (e.g. ツイートの一覧) は別途 <strong>API (Application Programming Interface)</strong> によって取得されなければならない．
-そこで，クライアントは先ほど取得された JavaScript で定義されたプログラムに従って，サーバーに API を送信し，ツイートや画像データを取得する．
+そこで，クライアントは先のステップで取得された JavaScript で定義されたプログラムに従って，サーバーに API を送信し，ツイートや画像データを取得する．
 この際，テキストデータのやり取りには <strong>JSON (JavaScript Object Notation)</strong> というフォーマットが用いられることが多い．
 画像や動画などのコンテンツも同様にAPIにより取得される．
 このようにして取得されたテキストや画像が，HTMLの文書に埋め込まれることで，最終的にユーザーに提示されるページが完成するのである．
@@ -6577,13 +6596,13 @@ Twitter を含む現代的なウェブアプリケーションの設計では，
 <h3 id="sec_rest_api">10.2. REST API</h3>
 <div class="paragraph">
 <p>API (Application Programming Interface) とはこれまで何度も出てきた言葉であるが，ここではよりフォーマルな定義付けを行う．
-API とはあるソフトウェア・アプリケーションが，外部のソフトウェアに対しコマンドやデータをやりするための"媒介"の一般的総称である．
+API とはあるソフトウェア・アプリケーションが，外部のソフトウェアに対しコマンドやデータをやりするための媒介の一般的総称である．
 とくに，ウェブサービスの文脈では，サーバーが外界に対して提示しているコマンドの一覧のことを意味する．
 クライアントは，提示されている API から適切なコマンドを使うことによって，所望のデータを取得したり，あるいはサーバーにデータを送信したりする．</p>
 </div>
 <div class="paragraph">
-<p>特に， <strong>REST (Representational State Transfer)</strong> とよばれる設計思想に基づいた API が現在では最も一般的に使われている．
-REST に従った API のことを <strong>REST API</strong> あるいは <strong>RESTful API</strong> と呼んだりする．</p>
+<p>特に，ウェブの文脈では <strong>REST (Representational State Transfer)</strong> とよばれる設計思想に基づいた API が現在では最も一般的に使われている．
+REST の設計指針に従った API のことを <strong>REST API</strong> あるいは <strong>RESTful API</strong> と呼んだりする．</p>
 </div>
 <div class="paragraph">
 <p>REST API は， <a href="#rest_api">Figure 70</a> に示したような <strong>Method</strong> と <strong>URI (Universal Resource Identifier)</strong> の組からなる．</p>
@@ -6595,15 +6614,12 @@ REST に従った API のことを <strong>REST API</strong> あるいは <stron
 <div class="title">Figure 70. REST API</div>
 </div>
 <div class="paragraph">
-<p>Method (メソッド) とは，"どのような操作を行いたいか"を抽象的に表す ("動詞"と捉えてもよい)．
-REST API では典型的には <a href="#rest_api_methods">Table 5</a> に示したメソッドが用いられる．</p>
+<p>Method (メソッド) とは，どのような操作を行いたいかを抽象的に表す，<strong>"動詞"</strong> として捉えることができる．
+メソッドには HTTP 規格で定義された9個の動詞 (verb) を使用することができる．
+この中でも， <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code> が主に使用され，他のメソッドはほとんど使われることはない (<a href="#tab:rest_api_methods">Table 5</a>)．
+この5つのメソッドによる操作を総称して <strong>CRUD</strong> (create, read, update, and delete) と呼ぶ．</p>
 </div>
-<div class="paragraph">
-<p>一方， URI は，操作が行われる対象 (リソースとも呼ばれる) を表す．
-メソッドが動詞であることに対して， URI は"目的語"であると捉えても良い．
-<a href="#rest_api">Figure 70</a> の例で言えば， <code>/status/home_timeline</code> というリソース (ホームタイムラインのツイートの一覧) を取得せよ，という意味になる．</p>
-</div>
-<table id="rest_api_methods" class="tableblock frame-all grid-all stretch">
+<table id="tab:rest_api_methods" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 5. REST API Methods</caption>
 <colgroup>
 <col style="width: 25%;">
@@ -6612,7 +6628,7 @@ REST API では典型的には <a href="#rest_api_methods">Table 5</a> に示し
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">メソッド</th>
-<th class="tableblock halign-left valign-top">動作</th>
+<th class="tableblock halign-left valign-top">意図される動作</th>
 </tr>
 </thead>
 <tbody>
@@ -6638,6 +6654,14 @@ REST API では典型的には <a href="#rest_api_methods">Table 5</a> に示し
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>一方， URI は操作が行われる対象，すなわち <strong>"目的語"</strong> を表す．
+ウェブの文脈では操作が行われる対象のことをしばしば <strong>リソース</strong> と呼ぶ．
+URI は多くの場合 http または https から始まるウェブサーバーのアドレスから始まり， / (スラッシュ) 以降に所望のリソースのパスが指定される．
+<a href="#rest_api">Figure 70</a> の例で言えば， <code><a href="https://api.twitter.com" class="bare">https://api.twitter.com</a></code> というアドレスの <code>/1.1/status/home_timeline</code> というリソースを取得 (GET) せよ，という意味になる
+(なお，ここで <code>1.1</code> という数字は API のバージョンを示している)．
+この API リクエストによって，ユーザーのホームのタイムラインのツイートの一覧が取得される．</p>
+</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -6646,14 +6670,12 @@ REST API では典型的には <a href="#rest_api_methods">Table 5</a> に示し
 </td>
 <td class="content">
 <div class="paragraph">
-<p>REST API のメソッドには， <a href="#rest_api_methods">Table 5</a> で挙げたもの以外に， HTTP プロトコルで定義されている他のメソッド (OPTIONS, TRACE など) を用いることもできるが，あまり一般的ではない．</p>
+<p>REST API のメソッドには， <a href="#tab:rest_api_methods">Table 5</a> で挙げたもの以外に， HTTP プロトコルで定義されている他のメソッド (OPTIONS, TRACE など) を用いることもできるが，あまり一般的ではない．</p>
 </div>
 <div class="paragraph">
 <p>また，これらのメソッドだけでは動詞として表現し切れないこともあるが，URIのパスなどでより意味を明確にすることもある．
-メソッドの使い方も，要素を削除する際は必ず <code>DELETE</code> を使わなければならない，という決まりもなく，例えば， Twitter API でツイートを消す API は <code>POST statuses/destroy/:id</code> で定義されている．</p>
-</div>
-<div class="paragraph">
-<p>最終的には，各ウェブサービスが公開している API ドキュメンテーションを読んで，それぞれの API がどんな操作をするのかをしっかりと調べる必要がある．</p>
+メソッドの使い方も，要素を削除する際は必ず <code>DELETE</code> を使わなければならない，という決まりもなく，例えば， Twitter API でツイートを消す API は <code>POST statuses/destroy/:id</code> で定義されている．
+最終的には，各ウェブサービスが公開している API ドキュメンテーションを読んで，それぞれの API がどんな操作をするのかを調べる必要がある．</p>
 </div>
 </td>
 </tr>
@@ -6680,34 +6702,34 @@ REST API では典型的には <a href="#rest_api_methods">Table 5</a> に示し
 <td class="tableblock halign-left valign-top"><p class="tableblock">ホームのタイムラインのツイートの一覧を取得する．</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET statuses/show/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /statuses/show/:id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:id</code> で指定されたツイートの詳細情報を取得する．</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/update</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /statuses/update</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">新しいツイートを投稿する．</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/retweet/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /statuses/retweet/:id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:id</code> で指定されたツイートをリツイートする．</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST favorites/create/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /favorites/create/:id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:id</code> で指定されたツイートを"いいね"する．</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/destroy/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /statuses/destroy/:id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:id</code> で指定されたツイートを削除する．</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Twitter のアプリまたはウェブサイトを開くと，背後では上記のような API が実行され，結果としてGUIのページがレンダリングされている．
-また， Twitter 上でボット (bot) を作るときは，開発者がこれらのAPIを自動で呼ぶようなプログラムを記述することで出来上がっている．</p>
+<p>Twitter のアプリまたはウェブサイトを開くと，背後では上記のような API が実行され，その結果ウェブページがレンダリングされている．
+また， Twitter 上でボット (bot) を作るときは，これらの API リクエストを自動で実行するプログラムを記述することで出来上がっている．</p>
 </div>
 <div class="paragraph">
 <p>このように， API はあらゆるウェブサービスを作る上で一番基礎となる要素である．
-次からの章では，どのようにしてクラウド上に API を構築していくかを解説しよう．</p>
+次からの章では本章で紹介した用語が何度も出てくるので，頭の片隅に置いたうえで読み進めていただきたい．</p>
 </div>
 </div>
 </div>
@@ -6734,20 +6756,20 @@ REST API では典型的には <a href="#rest_api_methods">Table 5</a> に示し
 API サーバーでは，リクエストの内容に応じてタスクが実行される．
 タスクには，APIサーバーだけで完結できるものもあるが，多くの場合，データベースの読み書きが必要である．
 データベースには，データベース専用の独立したサーバーマシンが用いられることが一般的である．
-また，画像や動画などもデータは，また別のストレージサーバーに保存されることが一般的である．
-これらの APIサーバー，データベースサーバー，ストレージサーバーはそれぞれ独立したサーバーマシンであり， AWS では EC2 を使った仮想インスタンスを想定してもらったら良い．</p>
+また，画像や動画などの容量の大きいデータは，また別のストレージサーバーに保存されることが多い．
+これらの APIサーバー，データベースサーバー，ストレージサーバーはそれぞれ独立したサーバーマシンであり， AWS の言葉では EC2 による仮想インスタンスを想定してもらったら良い．</p>
 </div>
 <div class="paragraph">
 <p>多くのウェブサービスでは，多数のクライアントからのリクエストを処理するため，複数のサーバーマシンがクラウド内で起動し，負荷を分散するような設計がなされている．
 クライアントから来たリクエストを計算容量に余裕のあるサーバーに振り分けるような操作を <strong>Load balancing</strong> とよび，そのような操作を担当するマシンのことを <strong>Load balancer</strong> という．</p>
 </div>
 <div class="paragraph">
-<p>Load balancing の目的でたくさんのインスタンスを起動するのはよいのだが，それぞれがなんの計算もせず，ただ新しいタスクが来るのを待っているようではコストと電力の無駄遣いである．
+<p>計算負荷を分散する目的で多数のインスタンスを起動するのはよいのだが，計算負荷が小さすぎてアイドリング状態にあるようではコストと電力の無駄遣いである．
 したがって，全てのサーバーが常に目標とする計算負荷を維持するよう，計算の負荷に応じてクラスター内の仮想サーバーの数を動的に増減させるような仕組みが必要である．
 そのような仕組みを<strong>クラスターのスケーリング</strong>とよび，負荷の増大に応答して新しい仮想インスタンスをクラスターに追加する操作を <strong>scale-out</strong>，負荷の減少に応答してインスタンスをシャットダウンする操作を <strong>scale-in</strong> と呼ぶ．
 クラスターのスケーリングは，各インスタンスを監視・統括するようなひとつ階層が上のサーバーを配置することで自動的に実行されるような設計がなされる．
-クラスターのスケーリングは， API サーバーではもちろんのこと，データベースサーバー・ストレージサーバーでも必要になることが多い．
-<strong>クラウドシステム内すべてのインスタンスで，負荷が均一になるような調整が必要なのである．</strong></p>
+クラスターのスケーリングは， API サーバーではもちろんのこと，データベースサーバー・ストレージサーバーでも必要になる．
+<strong>クラウドシステム内すべての箇所で，負荷が均一になるような調整が必要なのである．</strong></p>
 </div>
 <div id="serverful" class="imageblock text-center">
 <div class="content">
@@ -6791,9 +6813,10 @@ API サーバーでは，リクエストの内容に応じてタスクが実行�
 <div class="title">Figure 72. 従来のクラウドと Serverless クラウドの比較</div>
 </div>
 <div class="paragraph">
-<p>サーバーレスクラウドを利用することで，<strong>クラウドのコストは実際に使用した計算の総量 (CPU稼働時間) で決定される</strong>ことになる．
+<p>サーバーレスクラウドを利用することで，<strong>クラウドのコストは実際に使用した計算の総量 (稼働時間) で決定される</strong>ことになる．
 これは，計算の実行総量に関わらずインスタンスの起動時間で料金が決定されていた従来のシステムと比べて大きな違いである．
-一方で，クライアントが同時に大量のタスクを送信した場合でも，クラウドプロバイダー側はその需要に応えることのできるような計算リソースを瞬時に割り当てることができるので，非常に高いスケーラビリティを実現することができる．</p>
+一方で，クライアントが同時に大量のタスクを送信した場合でも，クラウドプロバイダー側はその需要に応えることのできるような計算リソースを瞬時に割り当てることができるので，非常に高いスケーラビリティを実現することができる．
+以降では，実際にクラウドを動かしながら，サーバーレスをより具体的に体験していこう．</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -6809,7 +6832,7 @@ API サーバーでは，リクエストの内容に応じてタスクが実行�
 </div>
 <div class="paragraph">
 <p>一方で，サーバーレスクラウドは，<strong>電気・水道・ガス料金</strong> と似ている．
-こちらは， (ある程度の基本料金はあるかもしれないが) 実際に使用した分で料金が決定されている．
+こちらは，実際に使用した量に比例して料金が決定されている．
 サーバーレスクラウドも，実際に計算を行った総時間で料金が決まる仕組みになっている．</p>
 </div>
 </td>
@@ -6827,10 +6850,10 @@ API サーバーでは，リクエストの内容に応じてタスクが実行�
 </div>
 <div class="paragraph">
 <p>Lambda の使い方を <a href="#lambda_workflow">Figure 73</a> に図示している．
-Lambda の仕組みはシンプルで，まずユーザーは実行したいプログラムを予め登録しておく．
+Lambda の仕組みはシンプルで，まずユーザーは実行したいプログラムのコードを予め登録しておく．
 プログラムは， Python, Node.js, ruby などの主要な言語がサポートされている．
-そして，プログラムを実行したいときに，そのプログラムを実行 (invoke する)コマンドを Lambda に送信する．
-Lambda では， invoke のリクエストを受け取ると直ちに (数ミリセカンドから数百ミリセカンドのレイテンシーで) プログラムの実行を開始する．
+そして，プログラムを実行したいときに，そのプログラムを実行 (invoke) するコマンドを Lambda に送信する．
+Lambda では， invoke のリクエストを受け取ると直ちに (数ミリセカンドから数百ミリセカンド程度の時間で) プログラムの実行を開始する．
 そして，実行結果をクライアントやその他の計算機に返す．</p>
 </div>
 <div id="lambda_workflow" class="imageblock text-center">
@@ -6840,14 +6863,16 @@ Lambda では， invoke のリクエストを受け取ると直ちに (数ミリ
 <div class="title">Figure 73. AWS Lambda</div>
 </div>
 <div class="paragraph">
-<p>このように，Lambda は仮想インスタンスを専有することはない．
-invoke のリクエストが来たときにのみ，動的に起動し，実行の終了とともに速やかにシャットダウンされる．
-また，同時に複数のリクエストが来た場合でも， AWS はそれらを実行するための計算リソースを割り当て，並列的に処理を行ってくれる．
+<p>このように，Lambda では占有された仮想インスタンスは存在せず，実行を待っているプログラムだけがある状態である．
+invoke のリクエストに応じて，プログラムが AWS の巨大な計算機プールのどこかに配置され，実行される．
+同時に複数のリクエストが来た場合でも， AWS はそれらを実行するための計算リソースを割り当て，並列的に処理を行ってくれる．
 原理上は，<strong>数千から数万のリクエストが同時に来たとしても， Lambda はそれらを同時に実行することができる</strong>．
-このような，占有された仮想サーバーの存在なしに，動的に関数を実行するサービスを <strong>FaaS (Function as a Service)</strong> と呼ぶ．</p>
+このような，占有された仮想サーバーの存在なしに，動的に関数を実行するサービスのことを総称して <strong>FaaS (Function as a Service)</strong> と呼ばれることがある．</p>
 </div>
 <div class="paragraph">
-<p>Lambda では 128MB から 3008MB のメモリーを使用することができる (2020/06時点)．
+<p>Lambda では 128MB から 10,240MB のメモリーを使用することができる (執筆時点)．
+また，実効的な CPU の容量はメモリーの量に比例する形で割り当てられる
+(しかし， RAM と CPU 容量の具体的な換算表は AWS からは公開されていない)．
 実行時間は100ミリ秒の単位で記録され，実行時間に比例して料金が決定される．
 <a href="#lambda_pricing">Table 7</a> は Lambda の利用料金の利用料金表である．</p>
 </div>
@@ -6899,22 +6924,20 @@ invoke のリクエストが来たときにのみ，動的に起動し，実行�
 <div class="paragraph">
 <p>従来的なストレージ (ファイルシステム) では，必ずホストとなるマシンと OS が存在しなければならない．
 従って，それほどパワーは必要ないまでも，ある程度の CPU リソースを割かなければならない．
-また，従来的なファイルシステムでは，データ領域のサイズは最初に作成するときに決めなければならず，後から容量を増加させることはしばしば困難である
-(ZFS などのファイルシステムを使えばある程度は自由にファイルシステムのサイズを増減できるが)．
-よって，従来的なクラウドでは，ストレージを借りるときには予めディスクのサイズを指定せねばならず，ディスクの容量が空であろうと満杯であろうと，同じ利用料金が発生することになる．</p>
+また，従来的なファイルシステムでは，データ領域のサイズは最初にディスクを初期化するときに決めなければならず，後から容量を増加させることはしばしば困難である
+(ZFS などのファイルシステムを使えばある程度は自由にファイルシステムのサイズを変更することは可能である)．
+よって，従来的なクラウドでは，ストレージを借りるときには予めディスクのサイズを指定せねばならず，ディスクの中身が空であろうと満杯であろうと，同じ利用料金が発生することになる (<a href="#fig:s3_vs_filesystem">Figure 74</a>)．</p>
 </div>
 <div class="paragraph">
-<p><a href="https://aws.amazon.com/s3/">Simple Storage Service (S3)</a> は，サーバーレスなストレージシステムを提供する．
-S3 では，予めデータ保存領域の上限は定められていない．
-データを入れれば入れた分だけ，保存領域は拡大していく
+<p><a href="https://aws.amazon.com/s3/">Simple Storage Service (S3)</a> は，サーバーレスなストレージシステムを提供する (<a href="#fig:s3_vs_filesystem">Figure 74</a>)．
+S3 は従来的なストレージシステムと異なり， OS に"マウントする”という概念はない．
+基本的に API を通じてデータの読み書きの操作が行われる．
+また，データの冗長化やバックアップなど，通常ならば OS と CPU が介在しなければならない操作も， API を通じて行うことができる．
+S3 では，予めデータ保存領域の上限は定められておらず，データを入れれば入れた分だけ，保存領域は拡大していく
 (仕様上はペタバイトスケールのデータを保存することが可能である)．
-ストレージにかかる料金も，保存してあるデータの総容量で決定される．</p>
+ストレージにかかる料金は，保存してあるデータの総容量で決定される．</p>
 </div>
-<div class="paragraph">
-<p>その他，データの冗長化やバックアップなど，通常ならば CPU が介在しなければならない操作も， API を通じて行うことができる．
-これらの観点から， S3 も サーバーレスクラウドの一部として取り扱われることが一般的である．</p>
-</div>
-<div id="s3_vs_filesystem" class="imageblock text-center">
+<div id="fig:s3_vs_filesystem" class="imageblock text-center">
 <div class="content">
 <img src="imgs/s3_vs_filesystem.png" alt="s3_vs_filesystem" width="700">
 </div>
@@ -6940,7 +6963,7 @@ AWS の Region をまたいだデータの転送には， $0.09 per GB のコス
 <p>サーバーレスの概念は，データベースにも適用することができる．</p>
 </div>
 <div class="paragraph">
-<p>ここでいうデータベースとは， Web サービスなどにおけるユーザー情報を記録しておくための保存領域のことを指している．
+<p>ここでいうデータベースとは， Web サービスなどにおけるユーザーや商品の情報を記録しておくための保存領域のことを指している．
 従来的に有名なデータベースとしては
 <a href="https://www.mysql.com/">MySQL</a>,
 <a href="https://www.postgresql.org/">PostgreSQL</a>,
@@ -6954,36 +6977,40 @@ AWS の Region をまたいだデータの転送には， $0.09 per GB のコス
 </div>
 <div class="paragraph">
 <p>このような検索機能を実現するには，当然 CPU の存在が必須である．
-従って，従来的なデータベースを構築する際は，ストレージ領域に加えて，たくさんのCPUを搭載したマシンが用いられることが多い．
-また，格納するデータが巨大な場合は複数マシンにまたがった分散型のシステムが設計される．
+従って，従来的なデータベースを構築する際は，ストレージ領域に加えて，たくさんの CPU コアを搭載したマシンが用いられることが多い．
+また，データベースが巨大な場合は複数マシンにまたがった分散型のシステムが設計される．
 分散型システムの場合は， <a href="#chap_serverful_cloud">Section 11.1</a> で議論したようにデータベースへのアクセス負荷に応じて適切なスケーリングがなされる必要がある．</p>
 </div>
 <div class="paragraph">
-<p><a href="https://aws.amazon.com/dynamodb/">DynamoDB</a> は，サーバーレスなデータベースである．</p>
+<p><a href="https://aws.amazon.com/dynamodb/">DynamoDB</a> は， AWS が提供しているサーバーレスな分散型データベースである．
+サーバーレスであるので，占有されたデータベース用仮想インスタンスは存在せず， API を通じてデータの書き込み・読み出し・検索などの操作を行う．
+S3 と同様に，データ保存領域の上限は定められておらず，データを入れれば入れた分だけ，保存領域は拡大していく．
+また，データベースへの負荷が増減したときのスケーリングは， DynamoDB が自動で行うので，ユーザーは心配する必要はない．</p>
 </div>
 <div class="paragraph">
-<p>DynamoDB は分散型のデータベースであるが，データベースのスケーリングは AWS によって行われる．
-ユーザーとしては，特になにも考えずに，送りたいだけのリクエストをデータベースに送信すればよい．
-データベースへの負荷が増減したときのスケーリングは， DynamoDB が自動で行ってくれる．</p>
+<p>DynamoDB での利用料金の計算はやや複雑なのだが， "On-demand Capacity" というモードで使用した場合，
+100万回の write request units (データの書き込み操作) で $1.25, 100万回の read request units (データの読み込み操作) で $0.25 の料金がかかる．
+また，保存されたデータ容量に対して $0.25 per GB per month のコストが発生する．</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_その他のサーバーレスクラウドの構成要素">11.6. その他のサーバーレスクラウドの構成要素</h3>
 <div class="paragraph">
-<p>その他，サーバーレスクラウドを構成するための構成要素を以下にあげる．
-API Gateway については，ハンズオン#5 で触れる．</p>
+<p>以上で紹介した Lambda, S3, DynamoDB がサーバーレスクラウドの中で最も使用する頻度が高いサービスになる．
+その他の，サーバーレスクラウドの構成要素を以下に列挙する．</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://aws.amazon.com/api-gateway/">API Gateway</a>: API を構築する際のルーティングを担う．</p>
+<p><a href="https://aws.amazon.com/api-gateway/">API Gateway</a>: API を構築する際のルーティングを担う．
+<a href="#sec_bashoutter">Section 13</a> で簡単に取り上げる．</p>
 </li>
 <li>
-<p><a href="https://aws.amazon.com/fargate/">Fargate</a>: ハンズオン第三回で触れた Fargate も，サーバーレスクラウドの要素の一部である．
-Lambda では実行できないような，メモリーや複数CPUを要するような計算などを行うために用いる．</p>
+<p><a href="https://aws.amazon.com/fargate/">Fargate</a>: <a href="#sec_fargate_qabot">Section 8</a> で触れた Fargate も，サーバーレスクラウドの要素の一部である．
+Lambda との違いは，Lambda よりも大容量のメモリーや CPU を要するような計算などを行うことができる点が挙げられる．</p>
 </li>
 <li>
-<p><a href="https://aws.amazon.com/sns/">Simple Notification Service (SNS)</a>: サーバーレスのサービス間 (Lambda と DynamoDB など) でイベントをやり取りするためのサービス．</p>
+<p><a href="https://aws.amazon.com/sns/">Simple Notification Service (SNS)</a>: サーバーレスのサービス間でイベントをやり取りするためのサービス．</p>
 </li>
 <li>
 <p><a href="https://aws.amazon.com/step-functions/">Step Functions</a>: サーバーレスのサービス間のオーケストレーションを担う．</p>
@@ -7004,7 +7031,7 @@ Lambda では実行できないような，メモリーや複数CPUを要する�
 <p>この問への答えは，筆者は NO であると考える．</p>
 </div>
 <div class="paragraph">
-<p>ここまで，サーバーレスの利点を強調して説明をしてきたが，まだまだ新しい技術なだけに，欠点，あるいはサーバーフルなシステムに劣る点は，数多くある．</p>
+<p>ここまで，サーバーレスの利点を強調して説明をしてきたが，まだまだ新しい技術なだけに，欠点，あるいはサーバーフルなシステムに劣る点は数多くある．</p>
 </div>
 <div class="paragraph">
 <p>ひとつ大きな欠点をあげるとすれば，サーバーレスのシステムは各クラウドプラットフォームに固有なものなので，特定のプラットフォームでしか運用できないシステムになってしまう点であろう．
@@ -7014,7 +7041,7 @@ AWS で作成したサーバーレスのシステムを， Google のクラウ�
 </div>
 <div class="paragraph">
 <p>その他，サーバーレスコンピューティングの欠点や今後の課題などは，次の論文で詳しく議論されている．
-興味のある読者は読んでみると良い．</p>
+興味のある読者はぜひ読んでいただきたい．</p>
 </div>
 <div class="ulist">
 <ul>
@@ -7031,13 +7058,15 @@ AWS で作成したサーバーレスのシステムを， Google のクラウ�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_hands_on_4_サーバーレス入門">12. Hands-on #4: サーバーレス入門</h2>
+<h2 id="_hands_on_5_サーバーレス入門">12. Hands-on #5: サーバーレス入門</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>第四回目のハンズオンでは，サーバーレスクラウドを構成する主要な構成要素について，実際に動かしながら学んでもらう．</p>
+<p>前章ではサーバーレスアーキテクチャの概要の説明を行った．
+今回のハンズオンでは，サーバーレスクラウドを実際に動かしながら，具体的な使用方法を学んでいこう．</p>
 </div>
 <div class="paragraph">
-<p>今回のハンズオンで触れるのは以下の3つである．</p>
+<p>今回のハンズオンで触れるのは以下の3つである．
+それぞれについて，短いチュートリアルを用意してある．</p>
 </div>
 <div class="ulist">
 <ul>
@@ -7047,19 +7076,19 @@ AWS で作成したサーバーレスのシステムを， Google のクラウ�
 <li>
 <p>DynamoDB: サーバーレス・データベース</p>
 </li>
+<li>
+<p>S3: サーバーレス・ストレージ</p>
+</li>
 </ul>
-</div>
-<div class="paragraph">
-<p>ハンズオンのソースコードはこちらのリンクに置いてある &#8658; <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless" class="bare">https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless</a></p>
 </div>
 <div class="sect2">
 <h3 id="_lambda_ハンズオン">12.1. Lambda ハンズオン</h3>
 <div class="paragraph">
-<p>ここでは，ショートハンズオンとして，実際に AWS 上に Lambda を使った関数を定義し，計算を実行してみよう．
-ここでは， AWS CDK を利用してとてもシンプルな Lambda の関数を作成する．</p>
+<p>まず最初に， Lambda を実際に動かしてみよう．
+以下では， AWS CDK を利用してとてもシンプルな Lambda の関数を作成する．</p>
 </div>
 <div class="paragraph">
-<p>ハンズオンのソースコードはこちらに置いてある &#8658; <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/lambda" class="bare">https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/lambda</a></p>
+<p>ハンズオンのソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda">こちらのリンク</a> に置いてある．</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -7076,7 +7105,7 @@ AWS で作成したサーバーレスのシステムを， Google のクラウ�
 </table>
 </div>
 <div class="paragraph">
-<p><a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/lambda/app.py">app.py</a> にデプロイするプログラムが書かれている．
+<p><a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda/app.py">app.py</a> にデプロイするプログラムが書かれている．
 中身を見てみよう．</p>
 </div>
 <div class="listingblock">
@@ -7143,12 +7172,13 @@ def handler(event, context):
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
 <td>ここで， Lambda で実行されるべき関数を定義している．
-これは非常に単純な関数で，2-5秒のランダムな時間スリープした後，["Charmander", "Bulbasaur", "Squirtle"] のいずれかの文字列をランダムに返す (これらは初代ポケットモンスターのゲームでオーキド博士にもらうヒトカゲ・フシギダネ・ゼニガメのことだ)・</td>
+これは非常に単純な関数で，2-5秒のランダムな時間スリープした後，["Charmander", "Bulbasaur", "Squirtle"] のいずれかの文字列をランダムに返す
+(これらは初代ポケットモンスターのゲームでオーキド博士にもらうヒトカゲ・フシギダネ・ゼニガメのことだ)．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>次に， Lambda の関数の諸々のパラメータを設定している．
-それぞれのパラメータの意味は，文字通りの意味なので明瞭であるが，以下に解説する．
+<td>次に， Lambda に &lt;1&gt; で書いた関数を配置している．
+パラメータの意味は，文字通りの意味なので特に難しくはないが，以下に解説する．
 <div class="ulist">
 <ul>
 <li>
@@ -7168,8 +7198,7 @@ Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定するこ
 </li>
 <li>
 <p><code>memory_size=128</code>:
-メモリーは 128MB を最大で使用することを指定している．
-メモリーオーバーした場合は</p>
+メモリーは 128MB を最大で使用することを指定している．</p>
 </li>
 <li>
 <p><code>timeout=core.Duration.seconds(10)</code>
@@ -7194,23 +7223,18 @@ Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定するこ
 <div class="paragraph">
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
-それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．</p>
+それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="c"># プロジェクトのディレクトリに移動</span>
-<span class="nv">$ </span><span class="nb">cd </span>intro-aws/handson/04-serverless/lambda
+<span class="nv">$ </span><span class="nb">cd </span>handson/serverless/lambda
 
 <span class="c"># venv を作成し，依存ライブラリのインストールを行う</span>
 <span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
 <span class="nv">$ </span><span class="nb">source</span> .env/bin/activate
 <span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
-
-<span class="c"># AWS の認証情報をセットする</span>
-<span class="c"># 自分自身の認証情報に置き換えること！</span>
-<span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>XXXXXX
-<span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>YYYYYY
-<span class="nb">export </span><span class="nv">AWS_DEFAULT_REGION</span><span class="o">=</span>ap-northeast-1
 
 <span class="c"># デプロイを実行</span>
 <span class="nv">$ </span>cdk deploy</code></pre>
@@ -7249,13 +7273,31 @@ Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定するこ
 </div>
 <div class="title">Figure 77. Lambda コンソール - 関数の詳細</div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Lambda で実行されるコードは， Lambda のコンソール画面 (<a href="#handson_04_lambda_console_func_detail">Figure 77</a>) のエディターで編集することもできる．</p>
+</div>
+<div class="paragraph">
+<p>デバッグをする時などは，こちらを直接いじる方が早い場合もある．
+その場合は， CDK のコードに行った編集を反映させなおすことを忘れずに．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_lambda_関数の実行">12.1.2. Lambda 関数の実行</h4>
 <div class="paragraph">
 <p>それでは，作成した Lambda 関数を実際に実行 (invoke) してみよう．
 AWS の API を使うことで，関数の実行をスタートすることができる．
-今回は， <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/lambda/invoke_one.py">invoke_one.py</a> に関数を実行するための簡単なプログラムを提供している．
+今回は， <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_one.py">invoke_one.py</a> に関数を実行するための簡単なプログラムを提供している．
 興味のある読者はコードを読んでもらいたい．</p>
 </div>
 <div class="paragraph">
@@ -7324,8 +7366,8 @@ Submitted 100 tasks to Lambda!</code></pre>
 <p><a href="#handson_04_lambda_console_monitoring">Figure 78</a> で "Invocations" が関数が何度実行されたかを意味している．
 たしかに100回実行されていることがわかる．
 さらに， "Concurrent executions" が何個のタスクが同時に行われたかを示している．
-ここでは 96 となっていることから，96個のタスクが並列的に実行されたことを意味している．
-(これが，100とならないのは，タスクの開始のコマンドが送られたのが完全には同タイミングではないことに起因する)</p>
+ここでは 96 となっていることから，96個のタスクが並列的に実行されたことを意味している
+(これが 100 とならないのは，タスクの開始のコマンドが送られたのが完全には同タイミングではないことに起因する)．</p>
 </div>
 <div class="paragraph">
 <p>このように，非常にシンプルではあるが， Lambda を使うことで，同時並列的に処理を実行することのできるクラウドシステムを簡単に作ることができた．</p>
@@ -7342,6 +7384,7 @@ Submitted 100 tasks to Lambda!</code></pre>
 <td class="content">
 <div class="paragraph">
 <p>興味がある人は，一気に1000個などのジョブを投入してみると良い．
+Lambda はそのような大量のリクエストにも対応することができることが確認できるだろう．
 が，あまりやりすぎると Lambda の無料利用枠を超えて料金が発生してしまうので注意．</p>
 </div>
 </td>
@@ -7367,11 +7410,11 @@ Submitted 100 tasks to Lambda!</code></pre>
 <div class="sect2">
 <h3 id="_dynamodb_ハンズオン">12.2. DynamoDB ハンズオン</h3>
 <div class="paragraph">
-<p>ここでは，ショートハンズオンとして，新しい DynamoDB のテーブルを作成する．
-そして実際にそこにデータの読み書きを行ってみる．</p>
+<p>続いて， DynamoDB の簡単なチュートリアルをやってみよう．
+ここでは，新しい DynamoDB のテーブルを作成し，そしてそこにデータの読み書きを行ってみる．</p>
 </div>
 <div class="paragraph">
-<p>ハンズオンのソースコードはこちらに置いてある &#8658; <a href="https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/dynamodb" class="bare">https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/dynamodb</a></p>
+<p>ハンズオンのソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb">こちらのリンク</a> に置いてある．</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -7616,7 +7659,7 @@ Partition key とは，テーブル内のレコードごとに固有のIDのこ�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_hands_on_5_bashoutter">13. Hands-on #5: Bashoutter</h2>
+<h2 id="sec_bashoutter">13. Hands-on #5: Bashoutter</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>さて，最終回となるハンズオン第五回では，これまで学んできたサーバーレスクラウドの技術を使って，簡単なウェブサービスを作ってみよう．
@@ -8727,7 +8770,7 @@ Content-Type: application/json
 <h3 id="_bashoutter_gui_を動かしてみる">13.6. Bashoutter GUI を動かしてみる</h3>
 <div class="paragraph">
 <p>前節ではコマンドラインから API を送信する演習を行った．
-ウェブアプリケーションでは，これらの API はウェブブラウザ上のウェブページから送信され，コンテンツが表示されている (<a href="#web_server">Figure 69</a> 参照)．
+ウェブアプリケーションでは，これらの API はウェブブラウザ上のウェブページから送信され，コンテンツが表示されている (<a href="#web_server">[web_server]</a> 参照)．
 最後に， API が GUI と統合されるとどうなるのか，見てみよう．</p>
 </div>
 <div class="paragraph">
@@ -9371,7 +9414,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-07-03 10:00:37 UTC
+Last updated 2021-07-03 10:02:59 UTC
 </div>
 </div>
 <style>
