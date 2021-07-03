@@ -225,7 +225,7 @@ $ cdk destroy
 このハンズオンは，基本的に https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[AWS DynamoDB の無料枠] の範囲内で実行することができる．
 ====
 
-https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/dynamodb/app.py[app.py] にデプロイするプログラムが書かれている．
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/app.py[app.py] にデプロイするプログラムが書かれている．
 中身を見てみよう．
 
 [source, python, linenums]
@@ -250,36 +250,35 @@ class SimpleDynamoDb(core.Stack):
 
 * `partition_key`:
 全ての DynamoDB テーブルには Partition Key が定義されていなければならない．
-Partition key とは，テーブル内のレコードごとに固有のIDのことである．
-同一の Partition key を持った要素はテーブルの中に一つしか存在することはできない．
+Partition key とは，テーブル内の要素 (レコード) ごとに固有のIDのことである．
+同一の Partition key を持った要素がテーブルの中に二つ以上存在することはできない．
 また， Partition key が定義されていない要素はテーブルの中に存在することはできない．
 ここでは，Partition key に `item_id` という名前をつけている．
 * `billing_mode`:
-`ddb.BillingMode.PAY_PER_REQUEST` を基本的に選択しておけばよい
-* `removal_policy`:
-省略
+`ddb.BillingMode.PAY_PER_REQUEST` を指定することで，
+https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html#HowItWorks.OnDemand[On-demand Capacity Mode]
+の DynamoDB が作成される．
+他に `PROVISIONED` というモードがあるが，これはかなり高度なケースを除いて使用しないだろう．
+* `removal_policy`: CloudFormation のスタックが消去されたときに， DynamoDB も一緒に消去されるかどうかを指定する．
+上のコードでは `DESTROY` を選んでいるので，すべて消去される．
+他のオプションを選択すると，スタックを消去しても DynamoDB のバックアップを残す，などの動作を定義することができる．
 
 ==== デプロイ
 
 デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (`#` で始まる行はコメントである)．
 それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
+シークレットキーの設定も忘れずに (<<aws_cli_install>>)．
 
 [source, bash]
 ----
 # プロジェクトのディレクトリに移動
-$ cd intro-aws/handson/04-serverless/dynamodb
+$ cd handson/serverless/dynamodb
 
 # venv を作成し，依存ライブラリのインストールを行う
 $ python3 -m venv .env
 $ source .env/bin/activate
 $ pip install -r requirements.txt
-
-# AWS の認証情報をセットする
-# 自分自身の認証情報に置き換えること！
-export AWS_ACCESS_KEY_ID=XXXXXX
-export AWS_SECRET_ACCESS_KEY=YYYYYY
-export AWS_DEFAULT_REGION=ap-northeast-1
 
 # デプロイを実行
 $ cdk deploy
@@ -297,7 +296,7 @@ AWS コンソールにログインして，デプロイされたスタックを�
 すると， <<handson_04_dynamodb_table_list>> のような画面からテーブルの一覧が確認できる．
 
 [[handson_04_dynamodb_table_list]]
-.CDKデプロイ実行後の出力
+.DynamoDB のコンソール (テーブルの一覧)
 image::imgs/handson-04/dynamodb_table_list.png[cdk output, 700, align="center"]
 
 今回のアプリケーションで作成したのが SimpleDynamoDb-YYYY という名前のついたテーブルだ．
@@ -307,7 +306,7 @@ image::imgs/handson-04/dynamodb_table_list.png[cdk output, 700, align="center"]
 現時点ではなにもデータを書き込んでいないので，空である．
 
 [[handson_04_dynamodb_table_detail]]
-.CDKデプロイ実行後の出力
+.DynamoDB のコンソール (テーブルの詳細画面)
 image::imgs/handson-04/dynamodb_table_detail.png[cdk output, 700, align="center"]
 
 ==== データの読み書き
@@ -315,70 +314,116 @@ image::imgs/handson-04/dynamodb_table_detail.png[cdk output, 700, align="center"
 それでは，上で作ったテーブルを使ってデータの読み書きを実践してみよう．
 ここでは Python と https://boto3.amazonaws.com/v1/documentation/api/latest/index.html[boto3] ライブラリを用いた方法を紹介する．
 
-まず最初に， boto3 ライブラリを用意する．
-次に，テーブルの名前から `Table` オブジェクトを作成する．
-"XXXX" の部分を自分がデプロイしたテーブルの名前 (<<handson_04_dynamodb_cdk_output>>) に置き換えた上で，以下のコードを実行しよう．
+まずは，テーブルに新しい要素を追加してみよう．
+ハンズオンのディレクトリにある https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/simple_write.py[simple_write.py] を開いてみよう．
+中には次のような関数が書かれている．
+
+[source, python, linenums]
+----
+import boto3
+from uuid import uuid4
+ddb = boto3.resource('dynamodb')
+
+def write_item(table_name):
+    table = ddb.Table(table_name)
+    table.put_item(
+    Item={
+        'item_id': str(uuid4()),
+        'first_name': 'John',
+        'last_name': 'Doe',
+        'age': 25,
+        }
+    )
+----
+
+コードを簡単に上から読んでいくと，まず最初に boto3 ライブラリをインポートし， `dynamodb` のリソースを呼び出している．
+`write_item()` 関数は， DynamoDB のテーブルの名前 (上で見たSimpleDynamoDb-YYYY) を引数として受け取る．
+そして， `put_item()` メソッドを呼ぶことで，新しいアイテムを DB に書き込んでいる．
+アイテムには `item_id`, `first_name`, `last_name`, `age` の4つの属性が定義されている．
+ここで， `item_id` は先ほど説明した Partition key に相当しており，
+https://en.wikipedia.org/wiki/Universally_unique_identifier[UUID4]
+を用いたランダムな文字列を割り当てている．
+
+では， `simple_write.py` を実行してみよう．
+"YYYY" の部分を自分がデプロイしたテーブルの名前に置き換えた上で，次のコマンドを実行する．
+
+[source, bash]
+----
+$ python simple_write.py SimpleDynamoDb-SimpleTableYYYY
+----
+
+新しい要素が正しく書き込めたか， AWS コンソールから確認してみよう．
+<<handson_04_dynamodb_table_detail>> と同じ手順で，テーブルの中身の要素の一覧を表示する．
+すると <<dynamodb_table_new_item>> のように，確かに新しい要素が見つかるだろう．
+
+[[fig:dynamodb_table_new_item]]
+.DynamoDB に新しい要素が追加されたことを確認
+image::imgs/handson-04/dynamodb_table_new_item.png[cdk output, 700, align="center"]
+
+boto3 を使ってテーブルから要素を読みだすことも可能である．
+ハンズオンのディレクトリにある https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/simple_read.py[simple_read.py] を見てみよう．
 
 [source, python, linenums]
 ----
 import boto3
 ddb = boto3.resource('dynamodb')
 
-table = ddb.Table("XXXX")
+def scan_table(table_name):
+    table = ddb.Table(table_name)
+    items = table.scan().get("Items")
+    print(items)
 ----
 
-新しいデータを書き込むには次のコードを実行する．
+`table.scan().get("Items")` によって，テーブルの中にあるすべての要素を読みだしている．
 
-[source, python, linenums]
+次のコマンドで，このスクリプトを実行してみよう
+("YYYY" の部分を正しく置き換えることを忘れずに）．
+
+[source, bash]
 ----
-table.put_item(
-   Item={
-       'item_id': 'bec7c265-46e2-4065-91d8-80b2e8dcc9c2',
-       'first_name': 'John',
-       'last_name': 'Doe',
-       'age': 25,
-    }
-)
+$ python simple_read.py SimpleDynamoDb-SimpleTableYYYY
 ----
 
-テーブルの中のデータを，そのデータの Partition key を使って読み出すには，次のコードを実行する．
-
-[source, python, linenums]
-----
-table.get_item(
-   Key={"item_id": 'bec7c265-46e2-4065-91d8-80b2e8dcc9c2'}
-).get("Item")
-----
-
-テーブルの中にあるデータを全て読み出したければ以下のコードを実行する．
-
-[source, python, linenums]
-----
-table.scan().get("Items")
-----
+先ほど書き込んだ要素が出力されることを確認しよう．
 
 ==== 大量のデータの読み書き
 
 DynamoDB の利点は，最初に述べた通り，負荷に応じて自在にその処理能力を拡大できる点である．
 
 そこで，ここでは一度に大量のデータを書き込む場合をシミュレートしてみよう．
-https://gitlab.com/tomomano/intro-aws/-/tree/master/handson/04-serverless/dynamodb/batch_rw.py[batch_rw.py] に，一度に大量の書き込みを実行するためのプログラムが書いてある．
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py[batch_rw.py] に，一度に大量の書き込みを実行するためのプログラムが書いてある．
 
-次のコマンドを実行してみよう (XXXX は自分のテーブルの名前に置き換える)．
+次のコマンドを実行してみよう (YYYY は自分のテーブルの名前に置き換える)．
 
 [source, bash]
 ----
-$ python batch_rw.py XXXX write 1000
+$ python batch_rw.py YYYY write 1000
 ----
 
 このコマンドを実行することで，ランダムなデータが1000個データベースに書き込まれる．
 
 さらに，データベースの検索をかけてみよう．
 今回書き込んだデータには `age` という属性に1から50のランダムな整数が割り当てられている．
-`age` が2以下であるような要素だけを拾ってくるには，以下のコマンドを実行すればよい．
+`age` が2以下であるような要素だけを検索し，拾ってくるには，以下のコマンドを実行すればよい．
 
 [source, bash]
 ----
-$ python batch_rw.py XXXX search_under_age 2
+$ python batch_rw.py YYYY search_under_age 2
 ----
+
+上の2つのコマンドを何回か繰り返し実行してみて，データベースに負荷をかけてみよう．
+特に大きな遅延なく結果が返ってくることが確認できるだろう．
+
+==== スタックの削除
+
+DynamoDB で十分に遊ぶことができたら，忘れずにスタックを削除しよう．
+
+これまでのハンズオンと同様，スタックを削除するには，次のコマンドを実行すればよい．
+
+[source, bash]
+----
+$ cdk destroy
+----
+
+=== S3 ハンズオン
 

@@ -33,7 +33,7 @@ def clear_database(table_name):
                 )
             else:
                 scan = table.scan()
-            
+
             for item in scan['Items']:
                 if count % 5000 == 0:
                     print(count)
