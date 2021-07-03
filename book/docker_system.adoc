@@ -155,7 +155,7 @@ $ docker run -it ubuntu:18.04
 .Docker を使って ubuntu:18.04 イメージを起動
 image::imgs/docker_shell.png[docker_shell, 600, align="center"]
 
-上で使った `ubuntu:18.04` のイメージは は，空の Ubuntu OS だが，既にプログラムがインストール済みのものもある．
+上で使った `ubuntu:18.04` のイメージは，空の Ubuntu OS だが，既にプログラムがインストール済みのものもある．
 これは， <<sec_jupyter_and_deep_learning>> でみた DLAMI と概念として似ている．
 たとえば， pytorch がインストール済みの Image は https://hub.docker.com/r/pytorch/pytorch/[こちら] で公開されている．
 

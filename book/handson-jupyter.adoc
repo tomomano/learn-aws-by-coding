@@ -533,7 +533,7 @@ from torchvision import datasets, transforms
 from matplotlib import pyplot as plt
 
 # custom functions and classes
-from simple_mnist import Model, train, test
+from simple_mnist import Model, train, evaluate
 ----
 
 https://pytorch.org/docs/stable/torchvision/index.html[torchvision] パッケージには，MNIST データセットをロードするなどの便利な関数が含まれている．
@@ -614,12 +614,14 @@ train_losses = []
 for epoch in range(5):
     losses = train(model, trainloader, optimizer, epoch)
     train_losses = train_losses + losses
-    test(model, testloader)
+    test_loss, test_accuracy = evaluate(model, testloader)
+    print(f"\nTest set: Average loss: {test_loss:.4f}, Accuracy: {test_accuracy:.1f}%\n")
 
 plt.figure(figsize=(7,5))
 plt.plot(train_losses)
 plt.xlabel("Iterations")
 plt.ylabel("Train loss")
+plt.show()
 ----
 
 ここでは5エポック分学習を行っている．
