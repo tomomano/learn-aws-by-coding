@@ -3906,7 +3906,7 @@ Wall time: 553 ms</code></pre>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="c1"># custom functions and classes
-</span><span class="kn">from</span> <span class="nn">simple_mnist</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span>
+</span><span class="kn">from</span> <span class="nn">simple_mnist</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">evaluate</span>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
@@ -4033,16 +4033,20 @@ CNN の学習ループを開始しよう!</p>
  8
  9
 10
+11
+12
 </pre></td><td class="code"><pre><span class="n">train_losses</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
     <span class="n">losses</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">trainloader</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
     <span class="n">train_losses</span> <span class="o">=</span> <span class="n">train_losses</span> <span class="o">+</span> <span class="n">losses</span>
-    <span class="n">test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">testloader</span><span class="p">)</span>
+    <span class="n">test_loss</span><span class="p">,</span> <span class="n">test_accuracy</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">testloader</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Test set: Average loss: {test_loss:.4f}, Accuracy: {test_accuracy:.1f}</span><span class="si">%</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_losses</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Iterations"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Train loss"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
@@ -4364,7 +4368,7 @@ Docker Hub 以外の registry から pull するには， <code>myregistry.local
 <div class="title">Figure 38. Docker を使って ubuntu:18.04 イメージを起動</div>
 </div>
 <div class="paragraph">
-<p>上で使った <code>ubuntu:18.04</code> のイメージは は，空の Ubuntu OS だが，既にプログラムがインストール済みのものもある．
+<p>上で使った <code>ubuntu:18.04</code> のイメージは，空の Ubuntu OS だが，既にプログラムがインストール済みのものもある．
 これは， <a href="#sec_jupyter_and_deep_learning">Section 6</a> でみた DLAMI と概念として似ている．
 たとえば， pytorch がインストール済みの Image は <a href="https://hub.docker.com/r/pytorch/pytorch/">こちら</a> で公開されている．</p>
 </div>
@@ -9367,7 +9371,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-06-30 09:25:57 UTC
+Last updated 2021-07-03 03:48:03 UTC
 </div>
 </div>
 <style>
