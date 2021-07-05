@@ -4,6 +4,8 @@ import requests
 
 def post_haiku(p):
     endpoint_url = p[0]
+    if endpoint_url.endswith("/"):
+        endpoint_url = endpoint_url[:-1]
     print("", end=".", flush=True)
     resp = requests.post(
         endpoint_url + "/haiku",
