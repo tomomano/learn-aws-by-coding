@@ -428,3 +428,82 @@ $ cdk destroy
 
 === S3 ハンズオン
 
+最後に， S3 の簡単なチュートリアルを紹介する．
+チュートリアルの内容は， S3 に新しいバケット (Bucket) を作成し，データのアップロード・ダウンロードを実行する．
+
+[WARNING]
+====
+このハンズオンは，基本的に https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[S3 の無料枠] の範囲内で実行することができる．
+====
+
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3/app.py[app.py] にデプロイするプログラムが書かれている．
+中身を見てみよう．
+
+[source, python, linenums]
+----
+class SimpleS3(core.Stack):
+    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
+        super().__init__(scope, name, **kwargs)
+
+        # S3 bucket to store data
+        bucket = s3.Bucket(
+            self, "bucket",
+            removal_policy=core.RemovalPolicy.DESTROY,
+            auto_delete_objects=True,
+        )
+----
+
+`s3.Bucket()` を呼ぶことによって空のバケットが新規に作成される．
+上記のコードだと，バケットの名前は自動生成される．
+もし，自分の指定した名前を与えたい場合は， `bucket_name` というパラメータを指定すればよい．
+その際， バケットの名前はユニークでなければならない (i.e. AWS のデプロイが行われるリージョン内で名前の重複がない) 点に注意しよう．
+もし，同じ名前のバケットが既に存在する場合はエラーが返ってくる．
+
+[NOTE]
+====
+デフォルトでは， CloudFormation スタックが削除されたとき， S3 バケットとその中に保存されたファイルは削除されない．
+これは，大切なデータを誤って消してしまうことを防止するための安全策である．
+`cdk destroy` を実行したときにバケットも含めてすべて削除されるようにするには， `removal_policy=core.RemovalPolicy.DESTROY, auto_delete_objects=True` とパラメータを設定する．
+結果もよく理解したうえで，自分の用途にあった適切なパラメータを設定しよう．
+====
+
+==== デプロイ
+
+デプロイの手順は，これまでのハンズオンとほとんど共通である．
+ここでは，コマンドのみ列挙する (`#` で始まる行はコメントである)．
+シークレットキーの設定も忘れずに (<<aws_cli_install>>)．
+
+[source, bash]
+----
+# プロジェクトのディレクトリに移動
+$ cd handson/serverless/s3
+
+# venv を作成し，依存ライブラリのインストールを行う
+$ python3 -m venv .env
+$ source .env/bin/activate
+$ pip install -r requirements.txt
+
+# デプロイを実行
+$ cdk deploy
+----
+
+==== データの読み書き
+
+新しい
+
+
+[source, bash]
+----
+$ echo "Hello world!" >> tmp.txt
+----
+
+[source, bash]
+----
+$ python simple_s3.py simples3-bucketXXXX upload tmp.txt
+----
+
+[source, bash]
+----
+$ python simple_s3.py simples3-bucketXXXX download tmp.txt
+----
+

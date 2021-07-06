@@ -1,3 +1,5 @@
+*tmp.txt
+
 .vscode
 *.pem
 cdk.out
