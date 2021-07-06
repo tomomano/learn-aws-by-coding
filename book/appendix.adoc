@@ -35,7 +35,7 @@ image::imgs/aws_secret_key_2.png[aws_secret_key_2, 700, align="center"]
 現時点では AWS Starter Account は `us-east-1` リージョンでしか利用できないためである．
 [source, bash]
 ----
-[profile default]
+[default]
 region = us-east-1
 output = json
 ----
