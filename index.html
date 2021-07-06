@@ -7715,7 +7715,120 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 </div>
 <div class="sect2">
 <h3 id="_s3_ハンズオン">12.3. S3 ハンズオン</h3>
+<div class="paragraph">
+<p>最後に， S3 の簡単なチュートリアルを紹介する．
+チュートリアルの内容は， S3 に新しいバケット (Bucket) を作成し，データのアップロード・ダウンロードを実行する．</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>このハンズオンは，基本的に <a href="https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&amp;all-free-tier.sort-order=asc">S3 の無料枠</a> の範囲内で実行することができる．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3/app.py">app.py</a> にデプロイするプログラムが書かれている．
+中身を見てみよう．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">SimpleS3</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">Stack</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">App</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
+        <span class="c1"># S3 bucket to store data
+</span>        <span class="n">bucket</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"bucket"</span><span class="p">,</span>
+            <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span><span class="p">,</span>
+            <span class="n">auto_delete_objects</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>s3.Bucket()</code> を呼ぶことによって空のバケットが新規に作成される．
+上記のコードだと，バケットの名前は自動生成される．
+もし，自分の指定した名前を与えたい場合は， <code>bucket_name</code> というパラメータを指定すればよい．
+その際， バケットの名前はユニークでなければならない (i.e. AWS のデプロイが行われるリージョン内で名前の重複がない) 点に注意しよう．
+もし，同じ名前のバケットが既に存在する場合はエラーが返ってくる．</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>デフォルトでは， CloudFormation スタックが削除されたとき， S3 バケットとその中に保存されたファイルは削除されない．
+これは，大切なデータを誤って消してしまうことを防止するための安全策である．
+<code>cdk destroy</code> を実行したときにバケットも含めてすべて削除されるようにするには， <code>removal_policy=core.RemovalPolicy.DESTROY, auto_delete_objects=True</code> とパラメータを設定する．
+結果もよく理解したうえで，自分の用途にあった適切なパラメータを設定しよう．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_デプロイ_3">12.3.1. デプロイ</h4>
+<div class="paragraph">
+<p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
+ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="c"># プロジェクトのディレクトリに移動</span>
+<span class="nv">$ </span><span class="nb">cd </span>handson/serverless/s3
+
+<span class="c"># venv を作成し，依存ライブラリのインストールを行う</span>
+<span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
+<span class="nv">$ </span><span class="nb">source</span> .env/bin/activate
+<span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+
+<span class="c"># デプロイを実行</span>
+<span class="nv">$ </span>cdk deploy</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_データの読み書き_2">12.3.2. データの読み書き</h4>
+<div class="paragraph">
+<p>新しい</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"Hello world!"</span> <span class="o">&gt;&gt;</span> tmp.txt</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_s3.py simples3-bucketXXXX upload tmp.txt</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_s3.py simples3-bucketXXXX download tmp.txt</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -9477,7 +9590,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-07-06 11:04:22 UTC
+Last updated 2021-07-06 11:28:25 UTC
 </div>
 </div>
 <style>
