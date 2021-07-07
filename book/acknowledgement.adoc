@@ -4,7 +4,7 @@
 
 **2021年バージョンの contributors**
 
-* yet to come...
+* 香取真知子氏 - ハンズオンプログラムの動作確認，文章校閲
 
 **https://gitlab.com/tomomano/intro-aws[2020年バージョン]の contributors**
 
