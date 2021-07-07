@@ -564,7 +564,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_s3_ハンズオン">12.3. S3 ハンズオン</a></li>
 </ul>
 </li>
-<li><a href="#sec_bashoutter">13. Hands-on #5: Bashoutter</a>
+<li><a href="#sec_bashoutter">13. Hands-on #6: Bashoutter</a>
 <ul class="sectlevel2">
 <li><a href="#_準備_4">13.1. 準備</a></li>
 <li><a href="#_アプリケーションの説明_5">13.2. アプリケーションの説明</a></li>
@@ -7247,7 +7247,7 @@ Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定するこ
 </div>
 <div id="handson_04_lambda_cdk_output" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-04/handson_04_lambda_cdk_output.png" alt="cdk output" width="700">
+<img src="imgs/handson-serverless/handson_04_lambda_cdk_output.png" alt="cdk output" width="700">
 </div>
 <div class="title">Figure 75. CDKデプロイ実行後の出力</div>
 </div>
@@ -7257,7 +7257,7 @@ Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定するこ
 </div>
 <div id="handson_04_lambda_console_func_list" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-04/lambda_console_func_list.png" alt="cdk output" width="700">
+<img src="imgs/handson-serverless/lambda_console_func_list.png" alt="cdk output" width="700">
 </div>
 <div class="title">Figure 76. Lambda コンソール - 関数の一覧</div>
 </div>
@@ -7270,7 +7270,7 @@ Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定するこ
 </div>
 <div id="handson_04_lambda_console_func_detail" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-04/lambda_console_func_detail.png" alt="lambda_console_func_detail" width="700">
+<img src="imgs/handson-serverless/lambda_console_func_detail.png" alt="lambda_console_func_detail" width="700">
 </div>
 <div class="title">Figure 77. Lambda コンソール - 関数の詳細</div>
 </div>
@@ -7345,7 +7345,7 @@ Submitted 100 tasks to Lambda!</code></pre>
 </div>
 <div id="handson_04_lambda_console_monitoring" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-04/lambda_console_monitoring.png" alt="lambda_console_monitoring" width="700">
+<img src="imgs/handson-serverless/lambda_console_monitoring.png" alt="lambda_console_monitoring" width="700">
 </div>
 <div class="title">Figure 78. Lambda コンソール - 関数の実行のモニタリング</div>
 </div>
@@ -7522,7 +7522,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 </div>
 <div id="handson_04_dynamodb_cdk_output" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-04/handson_04_dynamodb_cdk_output.png" alt="cdk output" width="700">
+<img src="imgs/handson-serverless/handson_04_dynamodb_cdk_output.png" alt="cdk output" width="700">
 </div>
 <div class="title">Figure 79. CDKデプロイ実行後の出力</div>
 </div>
@@ -7533,7 +7533,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 </div>
 <div id="handson_04_dynamodb_table_list" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-04/dynamodb_table_list.png" alt="cdk output" width="700">
+<img src="imgs/handson-serverless/dynamodb_table_list.png" alt="cdk output" width="700">
 </div>
 <div class="title">Figure 80. DynamoDB のコンソール (テーブルの一覧)</div>
 </div>
@@ -7546,7 +7546,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 </div>
 <div id="handson_04_dynamodb_table_detail" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-04/dynamodb_table_detail.png" alt="cdk output" width="700">
+<img src="imgs/handson-serverless/dynamodb_table_detail.png" alt="cdk output" width="700">
 </div>
 <div class="title">Figure 81. DynamoDB のコンソール (テーブルの詳細画面)</div>
 </div>
@@ -7620,7 +7620,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 </div>
 <div id="fig:dynamodb_table_new_item" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-04/dynamodb_table_new_item.png" alt="cdk output" width="700">
+<img src="imgs/handson-serverless/dynamodb_table_new_item.png" alt="cdk output" width="700">
 </div>
 <div class="title">Figure 82. DynamoDB に新しい要素が追加されたことを確認</div>
 </div>
@@ -7717,7 +7717,10 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 <h3 id="_s3_ハンズオン">12.3. S3 ハンズオン</h3>
 <div class="paragraph">
 <p>最後に， S3 の簡単なチュートリアルを紹介する．
-チュートリアルの内容は， S3 に新しいバケット (Bucket) を作成し，データのアップロード・ダウンロードを実行する．</p>
+チュートリアルの内容は， S3 に新しいバケット (Bucket) を作成し，データのアップロード・ダウンロードを実行するというものである．</p>
+</div>
+<div class="paragraph">
+<p>ハンズオンのソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3">こちらのリンク</a> に置いてある．</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -7807,25 +7810,163 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 <span class="nv">$ </span>cdk deploy</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>デプロイを実行すると， <a href="#fig:s3_deploy_output">Figure 83</a> のような出力が得られるはずである．
+ここで表示されている <code>SimpleS3.BucketName = XXXX</code> が，新しく作られたバケットの名前である
+(今回提供しているコードを使うとランダムな名前がバケットに割り当てられる）．
+これはあとで使うのでメモしておこう．</p>
+</div>
+<div id="fig:s3_deploy_output" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/s3_deploy_output.png" alt="cdk output" width="700">
+</div>
+<div class="title">Figure 83. デプロイ実行後の出力</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_データの読み書き_2">12.3.2. データの読み書き</h4>
 <div class="paragraph">
-<p>新しい</p>
+<p>スタックのデプロイが完了したら，早速バケットにデータをアップロードしてみよう．</p>
+</div>
+<div class="paragraph">
+<p>まずは，以下のコマンドを実行して， <code>tmp.txt</code> という仮のファイルを生成する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"Hello world!"</span> <span class="o">&gt;&gt;</span> tmp.txt</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>ハンズオンのディレクトリにある <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/s3/simple_s3.py">simple_s3.py</a> に
+<a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">boto3</a> ライブラリを使用した S3 のファイルのアップロード・ダウンロードのスクリプトが書いてある．
+<code>simple_s3.py</code> を使って，上で作成した <code>tmp.txt</code> を以下のコマンドによりバケットにアップロードする．
+<code>XXXX</code> のところは，自分自身のバケットの名前で置き換えること．</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_s3.py simples3-bucketXXXX upload tmp.txt</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_s3.py XXXX upload tmp.txt</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><code>simple_s3.py</code> のアップロードを担当している部分を以下に抜粋する．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">upload_file</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">bucket</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">bucket</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>bucket = s3.Bucket(bucket_name)</code> の行で <code>Bucket()</code> オブジェクトを呼び出している．
+そして， <code>upload_file()</code> メソッドを呼ぶことでファイルのアップロードを実行している．</p>
+</div>
+<div class="paragraph">
+<p>S3 においてファイルの識別子として使われるのが <strong>Key</strong> である．
+これは，従来的なファイルシステムにおけるパス (Path) と相同な概念で，それぞれのファイルに固有な Key が割り当てられる必要がある．
+Key という呼び方は， S3 が <a href="https://en.wikipedia.org/wiki/Object_storage">Object storage</a> と呼ばれるシステムに立脚していることに由来する．
+<code>--key</code> のオプションを追加して <code>simple_s3.py</code> を実行することで， Key を指定してアップロードを実行することができる．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ python simple_s3.py XXX upload tmp.txt --key /a/b/tmp.txt</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上ではアップロードされたファイルに <code>a/b/tmp.txt</code> という Key を割り当てている．</p>
+</div>
+<div class="paragraph">
+<p>ここまでコマンドを実行し終えたところで，一度 AWS コンソールに行き S3 の中身を確認してみよう．
+S3 のコンソールに行くと，バケットの一覧が見つかるはずである．
+その中から， <code>simples3-bucketXXXX</code> と名前のついたバケットを探し，クリックする．
+するとバケットの中に含まれるファイルの一覧が表示される (<a href="#fig:s3_bucket_filelist">Figure 84</a>)．</p>
+</div>
+<div id="fig:s3_bucket_filelist" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/s3_bucket_filelist.png" alt="cdk output" width="700">
+</div>
+<div class="title">Figure 84. S3 バケットの中のファイル一覧</div>
+</div>
+<div class="paragraph">
+<p>上で実行した2つのコマンドによって， <code>tmp.txt</code> というファイルと， <code>a/b/tmp.txt</code> というファイルが見つかることに注目しよう．
+従来的なファイルシステムと似た体験を提供するため， S3 では Key が <strong>"/" (スラッシュ)</strong> によって区切られていた場合，<strong>ツリー状の階層構造</strong>によってファイルを管理することができる．</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>オブジェクトストレージには本来ディレクトリという概念はない．
+上で紹介した "/" による階層づけはあくまでユーザー体験向上の目的のお化粧的な機能である．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>次に，バケットからファイルのダウンロードを実行してみよう．
+<code>simple_s3.py</code> を使って，以下のコマンドを実行すれば良い．
+<code>XXXX</code> のところは，自分自身のバケットの名前で置き換えること．</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_s3.py simples3-bucketXXXX download tmp.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>simple_s3.py</code> のダウンロードを担当している部分を以下に抜粋する．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">download_file</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">bucket</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="n">bucket</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>S3 からのダウンロードはシンプルで， <code>download_file()</code> メソッドを使って，ダウンロードしたい対象の Key を指定すればよい．
+ローカルのコンピュータでの保存先のパスを2個目の引数として渡している．</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_スタックの削除_6">12.3.3. スタックの削除</h4>
+<div class="paragraph">
+<p>以上のハンズオンで， S3 の一番基本的な使い方を紹介した．
+ここまでのハンズオンが理解できたら，忘れずにスタックを削除しよう．</p>
+</div>
+<div class="paragraph">
+<p>これまでのハンズオンと同様，スタックを削除するには，次のコマンドを実行すればよい．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>cdk destroy</code></pre>
 </div>
 </div>
 </div>
@@ -7833,13 +7974,13 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 </div>
 </div>
 <div class="sect1">
-<h2 id="sec_bashoutter">13. Hands-on #5: Bashoutter</h2>
+<h2 id="sec_bashoutter">13. Hands-on #6: Bashoutter</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>さて，最後のハンズオンとなる第六回では，これまで学んできたサーバーレスクラウドの技術を使って，簡単なウェブサービスを作ってみよう．
 具体的には，人々が自分の作った俳句を投稿するSNSサービス (<strong>Bashoutter</strong> と名付ける) を作成してみよう．
 これまでの講義の集大成として，コードの長さとしては最も長くなっているが，頑張ってついてきてもらいたい．
-最終的には， <a href="#handson_05_bashoutter">Figure 83</a> のような，ミニマルではあるがとても現代風な SNS サイトが完成する！</p>
+最終的には， <a href="#handson_05_bashoutter">Figure 85</a> のような，ミニマルではあるがとても現代風な SNS サイトが完成する！</p>
 </div>
 <div class="paragraph">
 <p>ハンズオンのソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter">こちらのリンク</a> に置いてある．</p>
@@ -7860,9 +8001,9 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 </div>
 <div id="handson_05_bashoutter" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-05/bashoutter.png" alt="bashoutter" width="700">
+<img src="imgs/handson-bashoutter/bashoutter.png" alt="bashoutter" width="700">
 </div>
-<div class="title">Figure 83. ハンズオン#5で作製する SNS アプリケーション "Bashoutter"</div>
+<div class="title">Figure 85. ハンズオン#5で作製する SNS アプリケーション "Bashoutter"</div>
 </div>
 <div class="sect2">
 <h3 id="_準備_4">13.1. 準備</h3>
@@ -7927,13 +8068,13 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 <div class="sect3">
 <h4 id="_アプリケーションアーキテクチャ">13.2.2. アプリケーションアーキテクチャ</h4>
 <div class="paragraph">
-<p>このハンズオンで作成するアプリケーションの概要を <a href="#handson_05_architecture">Figure 84</a> に示す．</p>
+<p>このハンズオンで作成するアプリケーションの概要を <a href="#handson_05_architecture">Figure 86</a> に示す．</p>
 </div>
 <div id="handson_05_architecture" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-05/handson-05-architecture.png" alt="hands-on 05 architecture" width="600">
+<img src="imgs/handson-bashoutter/handson-05-architecture.png" alt="hands-on 05 architecture" width="600">
 </div>
-<div class="title">Figure 84. ハンズオン#5で作製するアプリケーションのアーキテクチャ</div>
+<div class="title">Figure 86. ハンズオン#5で作製するアプリケーションのアーキテクチャ</div>
 </div>
 <div class="paragraph">
 <p>簡単にまとめると，以下のような設計である．</p>
@@ -8662,14 +8803,14 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 </div>
 </div>
 <div class="paragraph">
-<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_05_cdk_output">Figure 85</a> のような出力が得られるはずである．
+<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_05_cdk_output">Figure 87</a> のような出力が得られるはずである．
 ここで表示されている <code>Bashoutter.BashoutterApiEndpoint = XXXX</code>, <code>Bashoutter.BucketUrl = YYYY</code> の二つ文字列は次に使うのでメモしておこう．</p>
 </div>
 <div id="handson_05_cdk_output" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-05/cdk_output.png" alt="cdk output" width="700">
+<img src="imgs/handson-bashoutter/cdk_output.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 85. CDKデプロイ実行後の出力</div>
+<div class="title">Figure 87. CDKデプロイ実行後の出力</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -8691,51 +8832,51 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 </div>
 <div class="paragraph">
 <p>まずは，コンソールから API Gateway のページに行く．
-すると， <a href="#handson_05_apigw_console_list">Figure 86</a> のような画面が表示され，デプロイ済みの API エンドポイントの一覧が確認できる．</p>
+すると， <a href="#handson_05_apigw_console_list">Figure 88</a> のような画面が表示され，デプロイ済みの API エンドポイントの一覧が確認できる．</p>
 </div>
 <div id="handson_05_apigw_console_list" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-05/apigw_console_list.png" alt="apigw_console_list" width="700">
+<img src="imgs/handson-bashoutter/apigw_console_list.png" alt="apigw_console_list" width="700">
 </div>
-<div class="title">Figure 86. API Gateway コンソール画面 (1)</div>
+<div class="title">Figure 88. API Gateway コンソール画面 (1)</div>
 </div>
 <div class="paragraph">
-<p>今回デプロイした "BashoutterApi" という名前の API をクリックすることで <a href="#handson_05_apigw_console_detail">Figure 87</a> のような画面に遷移し，詳細情報を閲覧できる．
+<p>今回デプロイした "BashoutterApi" という名前の API をクリックすることで <a href="#handson_05_apigw_console_detail">Figure 89</a> のような画面に遷移し，詳細情報を閲覧できる．
 <code>GET /haiku</code>, <code>POST /haiku</code> などが定義されていることが確認できる．</p>
 </div>
 <div class="paragraph">
 <p>それぞれのメソッドをクリックすると，そのメソッドの詳細情報を確認できる．
 API Gateway は，上で説明したルーティングの機能だけでなく，認証機能などを追加することも可能である．
 このハンズオンでは特にこれらの機能は使用しないが， "Method Request" と書いてある項目などがそれに相当する．
-次に， <a href="#handson_05_apigw_console_detail">Figure 87</a> で画面右端の赤色で囲った部分に，この API で呼ばれる Lambda 関数が指定されていることに注目しよう．
+次に， <a href="#handson_05_apigw_console_detail">Figure 89</a> で画面右端の赤色で囲った部分に，この API で呼ばれる Lambda 関数が指定されていることに注目しよう．
 関数名をクリックと，該当する Lambda のコンソールに遷移し，関数の中身を閲覧することが可能である．</p>
 </div>
 <div id="handson_05_apigw_console_detail" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-05/apigw_console_detail.png" alt="apigw_console_detail" width="700">
+<img src="imgs/handson-bashoutter/apigw_console_detail.png" alt="apigw_console_detail" width="700">
 </div>
-<div class="title">Figure 87. API Gateway コンソール画面 (2)</div>
+<div class="title">Figure 89. API Gateway コンソール画面 (2)</div>
 </div>
 <div class="paragraph">
 <p>次に， S3 のコンソール画面に移ってみよう．
-"bashouter-XXXXX" という名前のバケットが見つかるはずである (<a href="#handson_05_s3_console">Figure 88</a>)．</p>
+"bashouter-XXXXX" という名前のバケットが見つかるはずである (<a href="#handson_05_s3_console">Figure 90</a>)．</p>
 </div>
 <div id="handson_05_s3_console" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-05/s3_console.png" alt="s3_console" width="700">
+<img src="imgs/handson-bashoutter/s3_console.png" alt="s3_console" width="700">
 </div>
-<div class="title">Figure 88. S3 コンソール画面</div>
+<div class="title">Figure 90. S3 コンソール画面</div>
 </div>
 <div class="paragraph">
 <p>バケットの名前をクリックすることで，バケットの中身を確認してみよう．
-<code>index.html</code> のほか， <code>css/</code>, <code>js/</code> などのディレクトリがあるのが確認できるだろう (<a href="#handson_05_s3_contents">Figure 89</a>)．
+<code>index.html</code> のほか， <code>css/</code>, <code>js/</code> などのディレクトリがあるのが確認できるだろう (<a href="#handson_05_s3_contents">Figure 91</a>)．
 これらが，ウェブページの"枠"を定義している静的コンテンツである．</p>
 </div>
 <div id="handson_05_s3_contents" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-05/s3_contents.png" alt="s3_contents" width="700">
+<img src="imgs/handson-bashoutter/s3_contents.png" alt="s3_contents" width="700">
 </div>
-<div class="title">Figure 89. S3 バケットの中身</div>
+<div class="title">Figure 91. S3 バケットの中身</div>
 </div>
 </div>
 <div class="sect2">
@@ -8938,18 +9079,18 @@ Content-Type: application/json
 最後に， API が GUI と統合されるとどうなるのか，見てみよう．</p>
 </div>
 <div class="paragraph">
-<p>デプロイを実行したときにコマンドラインで出力された， <code>Bashoutter.BucketUrl=</code> で与えられた URL を確認しよう (<a href="#handson_05_cdk_output">Figure 85</a>)．
+<p>デプロイを実行したときにコマンドラインで出力された， <code>Bashoutter.BucketUrl=</code> で与えられた URL を確認しよう (<a href="#handson_05_cdk_output">Figure 87</a>)．
 これは，先述したとおり， Public access mode の S3 バケットの URL である．</p>
 </div>
 <div class="paragraph">
 <p>ウェブブラウザを開き，アドレスバーに S3 の URL を入力しへアクセスしてみよう．
-すると， <a href="#handson_05_bashoutter_2">Figure 90</a> のようなページが表示されるはずである．</p>
+すると， <a href="#handson_05_bashoutter_2">Figure 92</a> のようなページが表示されるはずである．</p>
 </div>
 <div id="handson_05_bashoutter_2" class="imageblock text-center">
 <div class="content">
-<img src="imgs/handson-05/bashoutter_2.png" alt="bashoutter" width="700">
+<img src="imgs/handson-bashoutter/bashoutter_2.png" alt="bashoutter" width="700">
 </div>
-<div class="title">Figure 90. "Bashoutter" の GUI 画面</div>
+<div class="title">Figure 92. "Bashoutter" の GUI 画面</div>
 </div>
 <div class="paragraph">
 <p>ページが表示されたら，一番上の "API Endpoint URL" と書いてあるテキストボックスに，今回デプロイした <strong>API Gateway の URL を入力</strong>する
@@ -9046,10 +9187,10 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <p>AWS コンソールにログインする．</p>
 </li>
 <li>
-<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 91</a>)</p>
+<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 93</a>)</p>
 </li>
 <li>
-<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 92</a>)</p>
+<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 94</a>)</p>
 </li>
 <li>
 <p>表示された Access key ID, Secret access key を記録しておく (画面を閉じると以降は表示されない)．</p>
@@ -9066,13 +9207,13 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <div class="content">
 <img src="imgs/aws_secret_key_1.png" alt="aws_secret_key_1" width="400">
 </div>
-<div class="title">Figure 91. AWS シークレットキーの発行1</div>
+<div class="title">Figure 93. AWS シークレットキーの発行1</div>
 </div>
 <div id="fig:aws_secret_key_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_2.png" alt="aws_secret_key_2" width="700">
 </div>
-<div class="title">Figure 92. AWS シークレットキーの発行2</div>
+<div class="title">Figure 94. AWS シークレットキーの発行2</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -9087,13 +9228,13 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <div class="ulist">
 <ul>
 <li>
-<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 93</a>)．</p>
+<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 95</a>)．</p>
 </li>
 <li>
 <p><code>Account Details</code> をクリックし，続いて <code>AWS CLI: Show</code> をクリックする．</p>
 </li>
 <li>
-<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 94</a>)．
+<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 96</a>)．
 ここで表示された内容を <code>~/.aws/credentials</code> にコピーする (<a href="#aws_cli_install">Section 15.2</a> 参照)．
 <code>aws_session_token</code> の箇所も漏らさずコピーすること．</p>
 </li>
@@ -9122,13 +9263,13 @@ output = json</pre>
 <div class="content">
 <img src="imgs/vocareum_console.png" alt="vocareum console" width="700">
 </div>
-<div class="title">Figure 93. vocareum コンソール</div>
+<div class="title">Figure 95. vocareum コンソール</div>
 </div>
 <div id="fig:vocareum_secret" class="imageblock text-center">
 <div class="content">
 <img src="imgs/vocareum_secret.png" alt="vocareum secret" width="700">
 </div>
-<div class="title">Figure 94. vocareum から AWS シークレットキーの発行</div>
+<div class="title">Figure 96. vocareum から AWS シークレットキーの発行</div>
 </div>
 </td>
 </tr>
@@ -9366,14 +9507,14 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 <p>と実行する．</p>
 </div>
 <div class="paragraph">
-<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 95</a>)．
+<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 97</a>)．
 これが， "いまあなたは venv の中にいますよ" というしるしになる．</p>
 </div>
 <div id="fig_venv_prompt" class="imageblock text-center">
 <div class="content">
 <img src="imgs/venv_shell.png" alt="venv shell" width="500">
 </div>
-<div class="title">Figure 95. venv を起動したときのプロンプト</div>
+<div class="title">Figure 97. venv を起動したときのプロンプト</div>
 </div>
 <div class="paragraph">
 <p>仮想環境を起動すると，それ以降実行する <code>pip</code> コマンドは， <code>.env/</code> 以下にインストールされる．このようにして，プロジェクトごとに使うライブラリのバージョンを切り分けることができる．</p>
@@ -9590,7 +9731,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-07-06 11:28:25 UTC
+Last updated 2021-07-07 01:23:46 UTC
 </div>
 </div>
 <style>
