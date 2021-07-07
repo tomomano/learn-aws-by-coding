@@ -1,5 +1,5 @@
 [[sec_bashoutter]]
-== Hands-on #5: Bashoutter
+== Hands-on #6: Bashoutter
 
 さて，最後のハンズオンとなる第六回では，これまで学んできたサーバーレスクラウドの技術を使って，簡単なウェブサービスを作ってみよう．
 具体的には，人々が自分の作った俳句を投稿するSNSサービス (**Bashoutter** と名付ける) を作成してみよう．
@@ -15,7 +15,7 @@
 
 [[handson_05_bashoutter]]
 .ハンズオン#5で作製する SNS アプリケーション "Bashoutter"
-image::imgs/handson-05/bashoutter.png[bashoutter, 700, align="center"]
+image::imgs/handson-bashoutter/bashoutter.png[bashoutter, 700, align="center"]
 
 === 準備
 
@@ -61,7 +61,7 @@ https://gitlab.com/tomomano/intro-aws/-/blob/master/handson/05-bashoutter/specs/
 
 [[handson_05_architecture]]
 .ハンズオン#5で作製するアプリケーションのアーキテクチャ
-image::imgs/handson-05/handson-05-architecture.png[hands-on 05 architecture, 600, align="center"]
+image::imgs/handson-bashoutter/handson-05-architecture.png[hands-on 05 architecture, 600, align="center"]
 
 簡単にまとめると，以下のような設計である．
 
@@ -459,7 +459,7 @@ $ cdk deploy
 
 [[handson_05_cdk_output]]
 .CDKデプロイ実行後の出力
-image::imgs/handson-05/cdk_output.png[cdk output, 700, align="center"]
+image::imgs/handson-bashoutter/cdk_output.png[cdk output, 700, align="center"]
 
 
 [TIP]
@@ -475,7 +475,7 @@ AWS コンソールにログインして，デプロイされたスタックを�
 
 [[handson_05_apigw_console_list]]
 .API Gateway コンソール画面 (1)
-image::imgs/handson-05/apigw_console_list.png[apigw_console_list, 700, align="center"]
+image::imgs/handson-bashoutter/apigw_console_list.png[apigw_console_list, 700, align="center"]
 
 今回デプロイした "BashoutterApi" という名前の API をクリックすることで <<handson_05_apigw_console_detail>> のような画面に遷移し，詳細情報を閲覧できる．
 `GET /haiku`, `POST /haiku` などが定義されていることが確認できる．
@@ -488,14 +488,14 @@ API Gateway は，上で説明したルーティングの機能だけでなく�
 
 [[handson_05_apigw_console_detail]]
 .API Gateway コンソール画面 (2)
-image::imgs/handson-05/apigw_console_detail.png[apigw_console_detail, 700, align="center"]
+image::imgs/handson-bashoutter/apigw_console_detail.png[apigw_console_detail, 700, align="center"]
 
 次に， S3 のコンソール画面に移ってみよう．
 "bashouter-XXXXX" という名前のバケットが見つかるはずである (<<handson_05_s3_console>>)．
 
 [[handson_05_s3_console]]
 .S3 コンソール画面
-image::imgs/handson-05/s3_console.png[s3_console, 700, align="center"]
+image::imgs/handson-bashoutter/s3_console.png[s3_console, 700, align="center"]
 
 バケットの名前をクリックすることで，バケットの中身を確認してみよう．
 `index.html` のほか， `css/`, `js/` などのディレクトリがあるのが確認できるだろう (<<handson_05_s3_contents>>)．
@@ -503,7 +503,7 @@ image::imgs/handson-05/s3_console.png[s3_console, 700, align="center"]
 
 [[handson_05_s3_contents]]
 .S3 バケットの中身
-image::imgs/handson-05/s3_contents.png[s3_contents, 700, align="center"]
+image::imgs/handson-bashoutter/s3_contents.png[s3_contents, 700, align="center"]
 
 === API リクエストを送信する
 
@@ -672,7 +672,7 @@ $ python client.py $ENDPOINT_URL clear_database
 
 [[handson_05_bashoutter_2]]
 ."Bashoutter" の GUI 画面
-image::imgs/handson-05/bashoutter_2.png[bashoutter, 700, align="center"]
+image::imgs/handson-bashoutter/bashoutter_2.png[bashoutter, 700, align="center"]
 
 ページが表示されたら，一番上の "API Endpoint URL" と書いてあるテキストボックスに，今回デプロイした **API Gateway の URL を入力**する
 (今回のアプリケーションでは，API Gateway の URL はランダムに割り当てられるのでこのような GUI の仕様になっている)．

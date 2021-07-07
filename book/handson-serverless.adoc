@@ -107,14 +107,14 @@ $ cdk deploy
 
 [[handson_04_lambda_cdk_output]]
 .CDKデプロイ実行後の出力
-image::imgs/handson-04/handson_04_lambda_cdk_output.png[cdk output, 700, align="center"]
+image::imgs/handson-serverless/handson_04_lambda_cdk_output.png[cdk output, 700, align="center"]
 
 AWS コンソールにログインして，デプロイされたスタックを確認してみよう．
 コンソールから，Lambda のページに行くと <<handson_04_lambda_console_func_list>> のような画面から Lambda の関数の一覧が確認できる．
 
 [[handson_04_lambda_console_func_list]]
 .Lambda コンソール - 関数の一覧
-image::imgs/handson-04/lambda_console_func_list.png[cdk output, 700, align="center"]
+image::imgs/handson-serverless/lambda_console_func_list.png[cdk output, 700, align="center"]
 
 今回のアプリケーションで作成したのが `SimpleLambda-YYYY` という名前のついた関数だ．
 関数の名前をクリックして，詳細を見てみる．
@@ -124,7 +124,7 @@ image::imgs/handson-04/lambda_console_func_list.png[cdk output, 700, align="cent
 
 [[handson_04_lambda_console_func_detail]]
 .Lambda コンソール - 関数の詳細
-image::imgs/handson-04/lambda_console_func_detail.png[lambda_console_func_detail, 700, align="center"]
+image::imgs/handson-serverless/lambda_console_func_detail.png[lambda_console_func_detail, 700, align="center"]
 
 [TIP]
 ====
@@ -179,7 +179,7 @@ Submitted 100 tasks to Lambda!
 
 [[handson_04_lambda_console_monitoring]]
 .Lambda コンソール - 関数の実行のモニタリング
-image::imgs/handson-04/lambda_console_monitoring.png[lambda_console_monitoring, 700, align="center"]
+image::imgs/handson-serverless/lambda_console_monitoring.png[lambda_console_monitoring, 700, align="center"]
 
 [WARNING]
 ====
@@ -290,7 +290,7 @@ $ cdk deploy
 
 [[handson_04_dynamodb_cdk_output]]
 .CDKデプロイ実行後の出力
-image::imgs/handson-04/handson_04_dynamodb_cdk_output.png[cdk output, 700, align="center"]
+image::imgs/handson-serverless/handson_04_dynamodb_cdk_output.png[cdk output, 700, align="center"]
 
 AWS コンソールにログインして，デプロイされたスタックを確認してみよう．
 コンソールから， DynamoDB のページに行き，左のメニューバーから "Tables" を選択する．
@@ -298,7 +298,7 @@ AWS コンソールにログインして，デプロイされたスタックを�
 
 [[handson_04_dynamodb_table_list]]
 .DynamoDB のコンソール (テーブルの一覧)
-image::imgs/handson-04/dynamodb_table_list.png[cdk output, 700, align="center"]
+image::imgs/handson-serverless/dynamodb_table_list.png[cdk output, 700, align="center"]
 
 今回のアプリケーションで作成したのが SimpleDynamoDb-YYYY という名前のついたテーブルだ．
 テーブルの名前をクリックして，詳細を見てみる．
@@ -308,7 +308,7 @@ image::imgs/handson-04/dynamodb_table_list.png[cdk output, 700, align="center"]
 
 [[handson_04_dynamodb_table_detail]]
 .DynamoDB のコンソール (テーブルの詳細画面)
-image::imgs/handson-04/dynamodb_table_detail.png[cdk output, 700, align="center"]
+image::imgs/handson-serverless/dynamodb_table_detail.png[cdk output, 700, align="center"]
 
 ==== データの読み書き
 
@@ -359,7 +359,7 @@ $ python simple_write.py SimpleDynamoDb-SimpleTableYYYY
 
 [[fig:dynamodb_table_new_item]]
 .DynamoDB に新しい要素が追加されたことを確認
-image::imgs/handson-04/dynamodb_table_new_item.png[cdk output, 700, align="center"]
+image::imgs/handson-serverless/dynamodb_table_new_item.png[cdk output, 700, align="center"]
 
 boto3 を使ってテーブルから要素を読みだすことも可能である．
 ハンズオンのディレクトリにある https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/simple_read.py[simple_read.py] を見てみよう．
@@ -429,7 +429,9 @@ $ cdk destroy
 === S3 ハンズオン
 
 最後に， S3 の簡単なチュートリアルを紹介する．
-チュートリアルの内容は， S3 に新しいバケット (Bucket) を作成し，データのアップロード・ダウンロードを実行する．
+チュートリアルの内容は， S3 に新しいバケット (Bucket) を作成し，データのアップロード・ダウンロードを実行するというものである．
+
+ハンズオンのソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3[こちらのリンク] に置いてある．
 
 [WARNING]
 ====
@@ -487,23 +489,116 @@ $ pip install -r requirements.txt
 $ cdk deploy
 ----
 
+デプロイを実行すると， <<fig:s3_deploy_output>> のような出力が得られるはずである．
+ここで表示されている `SimpleS3.BucketName = XXXX` が，新しく作られたバケットの名前である
+(今回提供しているコードを使うとランダムな名前がバケットに割り当てられる）．
+これはあとで使うのでメモしておこう．
+
+[[fig:s3_deploy_output]]
+.デプロイ実行後の出力
+image::imgs/handson-serverless/s3_deploy_output.png[cdk output, 700, align="center"]
+
 ==== データの読み書き
 
-新しい
+スタックのデプロイが完了したら，早速バケットにデータをアップロードしてみよう．
 
+まずは，以下のコマンドを実行して， `tmp.txt` という仮のファイルを生成する．
 
 [source, bash]
 ----
 $ echo "Hello world!" >> tmp.txt
 ----
 
+ハンズオンのディレクトリにある https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/s3/simple_s3.py[simple_s3.py] に
+https://boto3.amazonaws.com/v1/documentation/api/latest/index.html[boto3] ライブラリを使用した S3 のファイルのアップロード・ダウンロードのスクリプトが書いてある．
+`simple_s3.py` を使って，上で作成した `tmp.txt` を以下のコマンドによりバケットにアップロードする．
+`XXXX` のところは，自分自身のバケットの名前で置き換えること．
+
 [source, bash]
 ----
-$ python simple_s3.py simples3-bucketXXXX upload tmp.txt
+$ python simple_s3.py XXXX upload tmp.txt
 ----
+
+`simple_s3.py` のアップロードを担当している部分を以下に抜粋する．
+
+[source, python, linenums]
+----
+def upload_file(bucket_name, filename, key=None):
+    bucket = s3.Bucket(bucket_name)
+
+    if key is None:
+        key = os.path.basename(filename)
+
+    bucket.upload_file(filename, key)
+----
+
+`bucket = s3.Bucket(bucket_name)` の行で `Bucket()` オブジェクトを呼び出している．
+そして， `upload_file()` メソッドを呼ぶことでファイルのアップロードを実行している．
+
+S3 においてファイルの識別子として使われるのが **Key** である．
+これは，従来的なファイルシステムにおけるパス (Path) と相同な概念で，それぞれのファイルに固有な Key が割り当てられる必要がある．
+Key という呼び方は， S3 が https://en.wikipedia.org/wiki/Object_storage[Object storage] と呼ばれるシステムに立脚していることに由来する．
+`--key` のオプションを追加して `simple_s3.py` を実行することで， Key を指定してアップロードを実行することができる．
+
+[sorce, bash]
+----
+$ python simple_s3.py XXX upload tmp.txt --key /a/b/tmp.txt
+----
+
+上ではアップロードされたファイルに `a/b/tmp.txt` という Key を割り当てている．
+
+ここまでコマンドを実行し終えたところで，一度 AWS コンソールに行き S3 の中身を確認してみよう．
+S3 のコンソールに行くと，バケットの一覧が見つかるはずである．
+その中から， `simples3-bucketXXXX` と名前のついたバケットを探し，クリックする．
+するとバケットの中に含まれるファイルの一覧が表示される (<<fig:s3_bucket_filelist>>)．
+
+[[fig:s3_bucket_filelist]]
+.S3 バケットの中のファイル一覧
+image::imgs/handson-serverless/s3_bucket_filelist.png[cdk output, 700, align="center"]
+
+上で実行した2つのコマンドによって， `tmp.txt` というファイルと， `a/b/tmp.txt` というファイルが見つかることに注目しよう．
+従来的なファイルシステムと似た体験を提供するため， S3 では Key が **"/" (スラッシュ)** によって区切られていた場合，**ツリー状の階層構造**によってファイルを管理することができる．
+
+[NOTE]
+====
+オブジェクトストレージには本来ディレクトリという概念はない．
+上で紹介した "/" による階層づけはあくまでユーザー体験向上の目的のお化粧的な機能である．
+====
+
+次に，バケットからファイルのダウンロードを実行してみよう．
+`simple_s3.py` を使って，以下のコマンドを実行すれば良い．
+`XXXX` のところは，自分自身のバケットの名前で置き換えること．
 
 [source, bash]
 ----
 $ python simple_s3.py simples3-bucketXXXX download tmp.txt
+----
+
+`simple_s3.py` のダウンロードを担当している部分を以下に抜粋する．
+
+[source, python, linenums]
+----
+def download_file(bucket_name, key, filename=None):
+    bucket = s3.Bucket(bucket_name)
+
+    if filename is None:
+        filename = os.path.basename(key)
+
+    bucket.download_file(key, filename)
+----
+
+S3 からのダウンロードはシンプルで， `download_file()` メソッドを使って，ダウンロードしたい対象の Key を指定すればよい．
+ローカルのコンピュータでの保存先のパスを2個目の引数として渡している．
+
+==== スタックの削除
+
+以上のハンズオンで， S3 の一番基本的な使い方を紹介した．
+ここまでのハンズオンが理解できたら，忘れずにスタックを削除しよう．
+
+これまでのハンズオンと同様，スタックを削除するには，次のコマンドを実行すればよい．
+
+[source, bash]
+----
+$ cdk destroy
 ----
 

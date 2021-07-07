@@ -31,11 +31,15 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers(dest="command")
     p1 = subparsers.add_parser("upload")
     p1.add_argument("filename", type=str)
+    p1.add_argument("--key", type=str, required=False)
     p2 = subparsers.add_parser("download")
     p2.add_argument("key", type=str)
     args = parser.parse_args()
 
     if args.command == "upload":
-        upload_file(args.bucket_name, args.filename)
+        if args.key:
+            upload_file(args.bucket_name, args.filename, args.key)
+        else:
+            upload_file(args.bucket_name, args.filename)
     elif args.command == "download":
         download_file(args.bucket_name, args.key)
