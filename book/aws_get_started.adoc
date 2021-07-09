@@ -318,6 +318,7 @@ $ aws s3 rb "s3://${bucketName}" --force
 以上のように，AWS CLI を使って S3 バケットに対しての一連の操作を実行することができた．
 EC2 や Lambda,  DynamoDB などについても同様に AWS CLI を使ってあらゆる操作を実行することができる．
 
+[[sec:intro_cloudformation]]
 === CloudFormation と AWS CDK
 
 ==== CloudFormation による Infrastructure as Code (IaC)
