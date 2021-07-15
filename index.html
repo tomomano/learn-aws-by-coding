@@ -7476,7 +7476,8 @@ Lambda はそのような大量のリクエストにも対応することがで�
 <p><code>partition_key</code>:
 全ての DynamoDB テーブルには Partition Key が定義されていなければならない．
 Partition key とは，テーブル内の要素 (レコード) ごとに固有のIDのことである．
-同一の Partition key を持った要素がテーブルの中に二つ以上存在することはできない．
+同一の Partition key を持った要素がテーブルの中に二つ以上存在することはできない
+(注: Sort Key を使用している場合は除く．詳しくは <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html">公式ドキュメンテーション</a> 参照)．
 また， Partition key が定義されていない要素はテーブルの中に存在することはできない．
 ここでは，Partition key に <code>item_id</code> という名前をつけている．</p>
 </li>
@@ -9731,7 +9732,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-07-09 12:59:45 UTC
+Last updated 2021-07-15 01:23:59 UTC
 </div>
 </div>
 <style>
