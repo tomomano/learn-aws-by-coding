@@ -252,7 +252,8 @@ class SimpleDynamoDb(core.Stack):
 * `partition_key`:
 全ての DynamoDB テーブルには Partition Key が定義されていなければならない．
 Partition key とは，テーブル内の要素 (レコード) ごとに固有のIDのことである．
-同一の Partition key を持った要素がテーブルの中に二つ以上存在することはできない．
+同一の Partition key を持った要素がテーブルの中に二つ以上存在することはできない
+(注: Sort Key を使用している場合は除く．詳しくは https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html[公式ドキュメンテーション] 参照)．
 また， Partition key が定義されていない要素はテーブルの中に存在することはできない．
 ここでは，Partition key に `item_id` という名前をつけている．
 * `billing_mode`:
