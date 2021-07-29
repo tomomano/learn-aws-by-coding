@@ -1,4 +1,79 @@
-== Appendix
+[[sec:appendix_settingup]]
+== Appendix: 環境構築
+
+本書を読み進めるにあたって，ハンズオンのプログラムを実行するための環境を自分のローカルマシンにセットアップしなければならない．
+ここでは， AWS やコマンドラインの初心者を想定して，本章で必要なソフトウェアやライブラリのインストールなどを簡単に解説する．
+以下に簡単な目次を示そう．
+既に環境構築が済んでいる場合は適宜読み飛ばしていただき，関係のある箇所のみ目を通せば良い．
+
+* AWS アカウントの取得 (<<sec:create_aws_account>>)
+* AWS シークレットキーの作成 (<<aws_secrets>>)
+* AWS CLI のインストール (<<aws_cli_install>>)
+* AWS CDK のインストール (<<aws_cdk_install>>)
+* WSL のインストール (<<sec:install_wsl>>)
+* Python venv クイックガイド (<<venv_quick_guide>>)
+* ハンズオン実行用の Docker image の使い方 (<<sec_handson_docker>>)
+
+本書で何度か繰り返し述べているが，
+本書のハンズオンを実行するための
+https://hub.docker.com/repository/docker/tomomano/labc[Docker image]
+を提供している．
+これを用いると， AWS CLI/CDK や Python の設定などをスキップできるので， Docker の使用方法を知っている読者には便利だろう．
+
+[[sec:create_aws_account]]
+=== AWS アカウントの取得
+
+本書で提供するハンズオンを実際に自分で試すには，読者自身で AWS のアカウントの作成をする必要がある．
+詳しいアカウントの作成の手順は https://aws.amazon.com/jp/register-flow/[公式のドキュメンテーション] に書かれているので，そちらも参照していただきたい．
+以下の手順に従ってアカウントの作成を行う．
+
+まず，ウェブブラウザから https://aws.amazon.com/console/[AWS コンソール] にアクセスし，右上の `Create an AWS Account` をクリックする
+(<<fig:aws-signup-1>> でピンクの箱で囲った部分)．
+
+[[fig:aws-signup-1]]
+.サインアップ (1): AWS コンソールにアクセス
+image::imgs/signup-1.png[signup-1, 500, align="center"]
+
+次に，遷移した先のページでメールアドレスとパスワードなどの登録を行う (<<fig:aws-signup-3>>)．
+
+[[fig:aws-signup-3]]
+.サインアップ (2): メールアドレス・パスワードなどの登録．
+image::imgs/signup-3.png[signup-3, 500, align="center"]
+
+続いて，住所や電話番号などを訊かれるので，すべて入力しよう (<<fig:aws-signup-4>>)．
+
+[[fig:aws-signup-4]]
+.サインアップ (3): 住所・電話番号の入力
+image::imgs/signup-4.png[signup-4, 500, align="center"]
+
+次に，クレジットカードの情報の登録を求められる (<<fig:aws-signup-5>>)．
+個人で AWS を利用する場合は，利用料金の請求はクレジットカードを経由して行われる．
+クレジットカードの登録なしには AWS を使い始めることはできないことに注意．
+
+[[fig:aws-signup-5]]
+.サインアップ (4): クレジットカードの登録
+image::imgs/signup-5.png[signup-5, 500, align="center"]
+
+次の画面では，携帯電話の SMS またはボイスメッセージを利用した本人確認が求められる (<<fig:aws-signup-6>>)．
+希望の認証方法を選択し，自分の携帯電話番号を入力しよう．
+
+[[fig:aws-signup-6]]
+.サインアップ (5): 携帯電話による本人確認
+image::imgs/signup-6.png[signup-6, 500, align="center"]
+
+無事に本人確認が完了すると，最後にサポートプランの選択を求められる (<<fig:aws-signup-8>>)．
+無料の Basic support を選択しておけば問題ない．
+
+[[fig:aws-signup-8]]
+.サインアップ (6): サポートプランの選択
+image::imgs/signup-8.png[signup-8, 500, align="center"]
+
+以上のステップにより，アカウントの作成が完了する (<<fig:aws-signup-9>>)．
+早速ログインをして， AWS コンソールにアクセスできるか確認しておこう．
+
+[[fig:aws-signup-9]]
+.サインアップ (7): アカウントの作成が完了した
+image::imgs/signup-9.png[signup-9, 500, align="center"]
 
 [[aws_secrets]]
 === AWS のシークレットキーの作成
@@ -51,7 +126,6 @@ image::imgs/vocareum_console.png[vocareum console, 700, align="center"]
 .vocareum から AWS シークレットキーの発行
 image::imgs/vocareum_secret.png[vocareum secret, 700, align="center"]
 ====
-
 
 [[aws_cli_install]]
 === AWS CLI のインストール
@@ -192,6 +266,173 @@ $ cdk bootstrap
 ====
 AWS CDK の認証情報の設定は AWS CLI と基本的に同じである．詳しくは <<aws_cli_install>> を参照．
 ====
+
+
+[[sec:install_wsl]]
+=== WSL のインストール
+
+本書のハンズオンではコマンドラインから AWS CLI のコマンドを実行したり， Python で書かれたプログラムを実行する．
+コマンドは基本的に UNIX のターミナルを想定して書かれている．
+Linux や Mac のユーザーは OS に標準搭載されているターミナルを用いれば良い．
+Windows を利用している読者は，
+https://docs.microsoft.com/en-us/windows/wsl/[Windows Subsystem for Linux (WSL)]
+を利用することで，仮想の Linux 環境を構築することを推奨する．
+https://www.cygwin.com/[Cygwin]
+などのほかの Linux をエミュレートするツールでも構わないが，本書のプログラムは WSL でのみ動作確認を行っている．
+
+WSL とは， Windows の OS 上で Linux の仮想環境を起動するための，マイクロソフト社が公式で提供しているソフトウェアである．
+Ubuntu など希望の Linux distribution が選択でき，基本的にすべての Linux 向けに作られたプログラム・ソフトウェアを使用することができる．
+
+執筆時点では
+https://docs.microsoft.com/en-us/windows/wsl/compare-versions#whats-new-in-wsl-2[WSL 2]
+が最新版として提供されているので，以下では WSL 2 のインストール手順を簡単に説明する．
+細かな詳細などは，
+https://docs.microsoft.com/en-us/windows/wsl/install-win10[公式ドキュメンテーション]
+を参照のこと．
+
+前提として，使用される OS は Windows 10 (Pro または Home エディション) でなければならない．
+さらに，使用している Windows 10のバージョンがWSLに対応するバージョンであるかを確認する．
+X64 のシステムでは Version 1903, Build 18362 以上でなければならない．
+バージョンが対応していない場合は、 Windows のアップデートを行う．
+
+まず最初に， Administrator 権限で PowerShell を起動する (<<fig:powershell>>)．
+左下の Windows メニューの検索バーに `powershell` と入力すると， PowerShell のプログラムが見つかるはずである，
+これを右クリックし、 `Run as administrator` を選択し起動する．
+
+[[fig:powershell]]
+.管理者権限での PowerShell の起動
+image::imgs/wsl/powershell.png[powershell, 500, align="center"]
+
+PowerShell が起動したら、次のコマンドを実行する．
+
+[source, bash]
+----
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+----
+
+実行して、“The operation completed successfully.” と出力されるのを確認する．
+これで WSL が enable される．
+
+次に，先ほどと同じ Administrator 権限で開いた PowerShell で次のコマンドを実行する。
+
+[source, bash]
+----
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+----
+
+実行して， “The operation completed successfully.” と出力されるのを確認する．
+これが確認出来たら、一度コンピュータを再起動する．
+
+続いて， Linux kernel update package を次のリンクからダウンロードする．
+https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+
+ダウンロードしたファイルをダブルクリックして実行する．
+ダイアローグに従ってインストールを完了させる．
+
+そうしたら，再び PowerShell を開き次のコマンドを実行する。
+
+[source, bash]
+----
+wsl --set-default-version 2
+----
+
+最後に、自分の好みの Linux distribution をインストールする．
+ここでは Ubuntu 20.04 をインストールしよう．
+
+Microsoft store のアプリを起動し，検索バーに `Ubuntu` と入力する．
+Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き， “Get” ボタンをクリックする (<<fig:microsoft_store>>)．
+しばらく待つと， Ubuntu 20.04 のインストールが完了する．
+
+[[fig:microsoft_store]]
+.Microsoft store から Ubuntu 20.04 をインストール
+image::imgs/wsl/microsoft_store.png[microsoft_store, 500, align="center"]
+
+Ubuntu 20.04 を初回に起動すると，初期設定が自動で開始され，数分待つことになる．
+初期設定が終わると，ユーザー名・パスワードを設定するようプロンプトが出るので，プロンプトに従い入力する．
+
+これで WSL2 のインストールが完了した．
+早速 WSL2 を起動してみよう．
+左下の Windows メニューの検索バーに `Ubuntu` と入力すると， Ubuntu 20.04 のプログラムが見つかるはずである (<<fig:ubuntu>>)．
+クリックして起動しよう．
+
+[[fig:ubuntu]]
+.Ubuntu 20.04 の起動
+image::imgs/wsl/ubuntu2004.png[ubuntu2004, 500, align="center"]
+
+すると，ターミナルの黒い画面が立ち上がるだろう (<<fig:wsl_window>>)．
+`ls`, `top` などのコマンドを打ってみて， WSL がきちんと動作していることを確認しよう．
+
+[[fig:wsl_window]]
+.WSL の起動画面
+image::imgs/wsl/wsl_window.png[wsl_window, 500, align="center"]
+
+オプションとして，
+https://docs.microsoft.com/en-us/windows/terminal/get-started[Windows Terminal]
+というマイクロソフトから提供されているツールを使うと，より快適に WSL を使用することができる．
+興味のある読者はこちらのインストールも推奨する．
+
+[[sec:install_docker]]
+=== Docker のインストール
+
+Docker のインストールの方法は OS によって異なる．
+
+Mac ユーザーは， Docker Desktop をインストールする．
+インストールの方法は，
+https://docs.docker.com/docker-for-mac/install/[Docker のウェブサイト]
+から， Mac 版の Docker Desktop をダウンロードし，ダウンロードされたファイルをダブルクリックし， `Applications` のフォルダーにドラッグするだけで良い．
+詳細は
+https://docs.docker.com/docker-for-mac/install/[公式ドキュメンテーション]
+を参照のこと．
+
+Windows ユーザーは， WSL に Docker をインストールすることを推奨する．
+その場合，インストールの手順は Linux のものと基本的に同一である．
+
+Linux ユーザー (特に Ubuntu ユーザー) については，インストールの方法はいくつかのアプローチがある．
+https://docs.docker.com/engine/install/ubuntu/[公式ドキュメンテーション]
+にいくつかのインストールの方法が示されているので，詳しい情報はそちらを参照いただきたい．
+
+最も簡単な方法は， Docker が公式で提供しているインストールスクリプトを用いる方法である．
+この場合，次のコマンドを実行することで Docker がインストールされる．
+
+[source, bash]
+----
+$ curl -fsSL https://get.docker.com -o get-docker.sh
+$ sudo sh get-docker.sh
+----
+
+デフォルトのインストールでは， root ユーザーのみが `docker` コマンドを使用できる設定になっている．
+従って，コマンドには毎回 `sudo` を付け加える必要がある．
+これが面倒だと感じる場合は，次のステップにより，使用するユーザーを `docker` というグループに追加する (詳細は
+https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[公式ドキュメンテーション "Post-installation steps for Linux"]
+を参照)．
+
+まず最初に， `docker` という名前にグループを追加する．
+インストールによっては，既に `docker` グループが作れらている場合もある．
+
+[source, bash]
+----
+$ sudo groupadd docker
+----
+
+次に，現在使用しているユーザーを `docker` グループに加える．
+
+[source, bash]
+----
+$ sudo usermod -aG docker $USER
+----
+
+ここまでできたら，一度ログアウトし，再度ログインする．
+これによって，グループの変更がターミナルのセッションに反映される．
+
+設定が正しくできているかを確認するため，次のコマンドを実行してみる．
+
+[source, bash]
+----
+$ docker run hello-world
+----
+
+`sudo` なしでコンテナが実行できたならば，設定は完了である．
+
 
 [[venv_quick_guide]]
 === Python `venv` クイックガイド

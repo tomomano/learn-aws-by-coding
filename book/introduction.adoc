@@ -84,7 +84,7 @@ image::imgs/earth_from_earth.jpg[cdk output, 500, align="center"]
 
 本書では，ハンズオン形式で AWS のクラウドを実際に動かす演習を提供する．
 自分でハンズオンを実行してみたい読者は，各自で AWS のアカウントの作成をしていただく．
-AWS のアカウントの作成の仕方は https://aws.amazon.com/jp/register-flow/[公式のドキュメンテーション] を参照のこと．
+AWS のアカウントの作成の仕方は巻末付録 (<<sec:create_aws_account>>) に簡単に記載したので，必要に応じて参照していただきたい．
 
 AWS にはいくつかの機能に対して無料利用枠が設定されており，いくつかのハンズオンは無料の範囲内で実行できる．
 一方，ほかのハンズオン (とくに機械学習を扱うもの) では数ドル程度のコストが発生する．
@@ -92,35 +92,45 @@ AWS にはいくつかの機能に対して無料利用枠が設定されてお�
 
 また，大学などの教育機関における講義で AWS を使用する際は， https://aws.amazon.com/education/awseducate/[AWS Educate] というプログラムを利用することも可能である．
 これは，講義の担当者が申請を行うことで，受講する学生に対し AWS クレジットが提供されるというプログラムである．
-これを利用することで金銭的な負担なしに AWS のクラウドを実際に使用することができる．
-また，講義を経由せず個人で AWS Educate に参加することも可能である．
+AWS Educate を利用することで金銭的な負担なしに AWS を体験することができる．
+また，講義を経由せず個人でも AWS Educate に参加することも可能である．
 AWS Educate からは様々な学習教材が提供されているので，ぜひ活用してもらいたい．
 
 [[environments]]
-=== 必要な計算機環境
+=== 環境構築
 
-講義では，AWS上にクラウドを展開するハンズオンを実施する．そこで紹介するプログラムを実行するため，以下の計算機環境が必要である．
+本書では， AWS 上にクラウドアプリケーションを展開するハンズオンを実施する．
+そこで紹介するプログラムを実行するためには，以下の計算機環境が必要である．
+それぞれのインストールの方法については，巻末付録 (<<sec:appendix_settingup>>) に記してある．
+必要に応じて参照しながら，環境構築を各自実施していただきたい．
 
 * **UNIX 系コンソール**:
 ハンズオンで紹介するコマンドを実行したり， SSH でサーバーにアクセスするため， UNIX 系のコンソール環境が必要である．
 Mac または Linux のユーザーは， OS に標準搭載のコンソール(ターミナルとも呼ばれる)を使用すればよい．
 Windows のユーザーは，
 https://docs.microsoft.com/en-us/windows/wsl/about[Windows Subsystem for Linux (WSL)]
-を使って Linux の仮想環境をインストールすることを推奨する．
-WSL のインストールについては，
-https://docs.microsoft.com/en-us/windows/wsl/install-win10[公式ドキュメンテーションを参照]
-のこと．
+を使って Linux の仮想環境をインストールすることを推奨する (<<sec:install_wsl>> 参照)．
 * **Docker**:
-本書では Docker の使い方を解説する．
-あらかじめ自身の計算機に Docker のインストールをしておくこと．
-Linux/Mac/Windows のインストール法については https://docs.docker.com/get-docker/[公式ドキュメンテーション]を参照．
-執筆時点において，**Windows 10 Home**　へのインストールには WSL2 バックエンドの設定が必要である．詳細は
-https://docs.docker.com/docker-for-windows/install/[こちらのドキュメンテーションを参照]
-のこと．
-* **Python** (Version 3.6以上) (venv の使い方は <<venv_quick_guide>> 参照)
-* **Node.js** (version 12.0以上)
-* **AWS CLI** (インストールについては <<aws_cli_install>> 参照)
-* **AWS CDK** (インストールについては <<aws_cdk_install>> 参照)
+本書では Docker と呼ばれる仮想計算環境の利用方法を解説する．
+インストール手順については <<sec:install_docker>> を参照のこと．
+* **Python**:
+Version 3.6 以上をインストールする．
+とくに，ハンズオンでは `venv` モジュールを使用する．
+`venv` の使い方は <<venv_quick_guide>> 参照のこと．
+* **Node.js**:
+version 12.0 以上 をインストールする．
+* **AWS CLI**:
+https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html[Version 2]
+をインストールする．
+インストール手順については <<aws_cli_install>> 参照のこと．
+* **AWS CDK**:
+Version 1.100 以上をインストールする．
+Version 2 以降には未対応である．
+インストール手順については <<aws_cdk_install>> 参照のこと．
+* **AWS 認証鍵の設定**:
+AWS API をコマンドラインから呼ぶには，認証鍵 (secret key) が設定されている必要がある．
+認証鍵の設定については <<aws_cli_install>> 参照のこと．
+
 
 ==== ハンズオン実行用の Docker Image
 
