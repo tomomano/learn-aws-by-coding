@@ -454,7 +454,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_本書の目的内容">1.1. 本書の目的・内容</a></li>
 <li><a href="#_本書のフィロソフィー">1.2. 本書のフィロソフィー</a></li>
 <li><a href="#aws_account">1.3. AWSアカウント</a></li>
-<li><a href="#environments">1.4. 必要な計算機環境</a></li>
+<li><a href="#environments">1.4. 環境構築</a></li>
 <li><a href="#_前提知識">1.5. 前提知識</a></li>
 <li><a href="#_講義に関連する資料">1.6. 講義に関連する資料</a></li>
 <li><a href="#_本書で使用するノーテーションなど">1.7. 本書で使用するノーテーションなど</a></li>
@@ -577,13 +577,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#_まとめ">14. まとめ</a></li>
-<li><a href="#_appendix">15. Appendix</a>
+<li><a href="#sec:appendix_settingup">15. Appendix: 環境構築</a>
 <ul class="sectlevel2">
-<li><a href="#aws_secrets">15.1. AWS のシークレットキーの作成</a></li>
-<li><a href="#aws_cli_install">15.2. AWS CLI のインストール</a></li>
-<li><a href="#aws_cdk_install">15.3. AWS CDK のインストール</a></li>
-<li><a href="#venv_quick_guide">15.4. Python <code>venv</code> クイックガイド</a></li>
-<li><a href="#sec_handson_docker">15.5. ハンズオン実行用の Docker image の使い方</a></li>
+<li><a href="#sec:create_aws_account">15.1. AWS アカウントの取得</a></li>
+<li><a href="#aws_secrets">15.2. AWS のシークレットキーの作成</a></li>
+<li><a href="#aws_cli_install">15.3. AWS CLI のインストール</a></li>
+<li><a href="#aws_cdk_install">15.4. AWS CDK のインストール</a></li>
+<li><a href="#sec:install_wsl">15.5. WSL のインストール</a></li>
+<li><a href="#sec:install_docker">15.6. Docker のインストール</a></li>
+<li><a href="#venv_quick_guide">15.7. Python <code>venv</code> クイックガイド</a></li>
+<li><a href="#sec_handson_docker">15.8. ハンズオン実行用の Docker image の使い方</a></li>
 </ul>
 </li>
 <li><a href="#_謝辞">16. 謝辞</a></li>
@@ -740,7 +743,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>本書では，ハンズオン形式で AWS のクラウドを実際に動かす演習を提供する．
 自分でハンズオンを実行してみたい読者は，各自で AWS のアカウントの作成をしていただく．
-AWS のアカウントの作成の仕方は <a href="https://aws.amazon.com/jp/register-flow/">公式のドキュメンテーション</a> を参照のこと．</p>
+AWS のアカウントの作成の仕方は巻末付録 (<a href="#sec:create_aws_account">Section 15.1</a>) に簡単に記載したので，必要に応じて参照していただきたい．</p>
 </div>
 <div class="paragraph">
 <p>AWS にはいくつかの機能に対して無料利用枠が設定されており，いくつかのハンズオンは無料の範囲内で実行できる．
@@ -750,15 +753,18 @@ AWS のアカウントの作成の仕方は <a href="https://aws.amazon.com/jp/r
 <div class="paragraph">
 <p>また，大学などの教育機関における講義で AWS を使用する際は， <a href="https://aws.amazon.com/education/awseducate/">AWS Educate</a> というプログラムを利用することも可能である．
 これは，講義の担当者が申請を行うことで，受講する学生に対し AWS クレジットが提供されるというプログラムである．
-これを利用することで金銭的な負担なしに AWS のクラウドを実際に使用することができる．
-また，講義を経由せず個人で AWS Educate に参加することも可能である．
+AWS Educate を利用することで金銭的な負担なしに AWS を体験することができる．
+また，講義を経由せず個人でも AWS Educate に参加することも可能である．
 AWS Educate からは様々な学習教材が提供されているので，ぜひ活用してもらいたい．</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="environments">1.4. 必要な計算機環境</h3>
+<h3 id="environments">1.4. 環境構築</h3>
 <div class="paragraph">
-<p>講義では，AWS上にクラウドを展開するハンズオンを実施する．そこで紹介するプログラムを実行するため，以下の計算機環境が必要である．</p>
+<p>本書では， AWS 上にクラウドアプリケーションを展開するハンズオンを実施する．
+そこで紹介するプログラムを実行するためには，以下の計算機環境が必要である．
+それぞれのインストールの方法については，巻末付録 (<a href="#sec:appendix_settingup">Section 15</a>) に記してある．
+必要に応じて参照しながら，環境構築を各自実施していただきたい．</p>
 </div>
 <div class="ulist">
 <ul>
@@ -768,31 +774,39 @@ AWS Educate からは様々な学習教材が提供されているので，ぜ�
 Mac または Linux のユーザーは， OS に標準搭載のコンソール(ターミナルとも呼ばれる)を使用すればよい．
 Windows のユーザーは，
 <a href="https://docs.microsoft.com/en-us/windows/wsl/about">Windows Subsystem for Linux (WSL)</a>
-を使って Linux の仮想環境をインストールすることを推奨する．
-WSL のインストールについては，
-<a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">公式ドキュメンテーションを参照</a>
-のこと．</p>
+を使って Linux の仮想環境をインストールすることを推奨する (<a href="#sec:install_wsl">Section 15.5</a> 参照)．</p>
 </li>
 <li>
 <p><strong>Docker</strong>:
-本書では Docker の使い方を解説する．
-あらかじめ自身の計算機に Docker のインストールをしておくこと．
-Linux/Mac/Windows のインストール法については <a href="https://docs.docker.com/get-docker/">公式ドキュメンテーション</a>を参照．
-執筆時点において，<strong>Windows 10 Home</strong>　へのインストールには WSL2 バックエンドの設定が必要である．詳細は
-<a href="https://docs.docker.com/docker-for-windows/install/">こちらのドキュメンテーションを参照</a>
-のこと．</p>
+本書では Docker と呼ばれる仮想計算環境の利用方法を解説する．
+インストール手順については <a href="#sec:install_docker">Section 15.6</a> を参照のこと．</p>
 </li>
 <li>
-<p><strong>Python</strong> (Version 3.6以上) (venv の使い方は <a href="#venv_quick_guide">Section 15.4</a> 参照)</p>
+<p><strong>Python</strong>:
+Version 3.6 以上をインストールする．
+とくに，ハンズオンでは <code>venv</code> モジュールを使用する．
+<code>venv</code> の使い方は <a href="#venv_quick_guide">Section 15.7</a> 参照のこと．</p>
 </li>
 <li>
-<p><strong>Node.js</strong> (version 12.0以上)</p>
+<p><strong>Node.js</strong>:
+version 12.0 以上 をインストールする．</p>
 </li>
 <li>
-<p><strong>AWS CLI</strong> (インストールについては <a href="#aws_cli_install">Section 15.2</a> 参照)</p>
+<p><strong>AWS CLI</strong>:
+<a href="https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html">Version 2</a>
+をインストールする．
+インストール手順については <a href="#aws_cli_install">Section 15.3</a> 参照のこと．</p>
 </li>
 <li>
-<p><strong>AWS CDK</strong> (インストールについては <a href="#aws_cdk_install">Section 15.3</a> 参照)</p>
+<p><strong>AWS CDK</strong>:
+Version 1.100 以上をインストールする．
+Version 2 以降には未対応である．
+インストール手順については <a href="#aws_cdk_install">Section 15.4</a> 参照のこと．</p>
+</li>
+<li>
+<p><strong>AWS 認証鍵の設定</strong>:
+AWS API をコマンドラインから呼ぶには，認証鍵 (secret key) が設定されている必要がある．
+認証鍵の設定については <a href="#aws_cli_install">Section 15.3</a> 参照のこと．</p>
 </li>
 </ul>
 </div>
@@ -812,7 +826,7 @@ Docker の使い方を知っている読者は，これを使えば，諸々の�
 </div>
 </div>
 <div class="paragraph">
-<p>この Docker image の使い方や詳細は <a href="#sec_handson_docker">Section 15.5</a> に記載している．</p>
+<p>この Docker image の使い方や詳細は <a href="#sec_handson_docker">Section 15.8</a> に記載している．</p>
 </div>
 </div>
 </div>
@@ -1477,7 +1491,7 @@ AWS CLI は先述のとおり， AWS 上の任意のリソースの操作が可�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>AWS CLI のインストールについては， <a href="#aws_cli_install">Section 15.2</a> を参照．</p>
+<p>AWS CLI のインストールについては， <a href="#aws_cli_install">Section 15.3</a> を参照．</p>
 </div>
 </td>
 </tr>
@@ -1507,7 +1521,7 @@ AWS CLI は先述のとおり， AWS 上の任意のリソースの操作が可�
 <div class="paragraph">
 <p>以下のコマンドを実行する前に，AWSの認証情報が正しく設定されていることを確認する．
 これには <code>~/.aws/credentials</code> のファイルに設定が書き込まれているか，環境変数 (<code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, <code>AWS_DEFAULT_REGION</code>) が定義されている必要がある．
-詳しくは <a href="#aws_cli_install">Section 15.2</a> を参照．</p>
+詳しくは <a href="#aws_cli_install">Section 15.3</a> を参照．</p>
 </div>
 </td>
 </tr>
@@ -1860,13 +1874,13 @@ AWSアカウントの取得については <a href="#aws_account">Section 1.3</a
 <div class="sect3">
 <h4 id="_aws_cli">4.1.3. AWS CLI</h4>
 <div class="paragraph">
-<p>AWS CLI のインストールについては， <a href="#aws_cli_install">Section 15.2</a> を参照．</p>
+<p>AWS CLI のインストールについては， <a href="#aws_cli_install">Section 15.3</a> を参照．</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_aws_cdk_2">4.1.4. AWS CDK</h4>
 <div class="paragraph">
-<p>AWS CDK のインストールについては， <a href="#aws_cdk_install">Section 15.3</a> を参照．</p>
+<p>AWS CDK のインストールについては， <a href="#aws_cdk_install">Section 15.4</a> を参照．</p>
 </div>
 </div>
 <div class="sect3">
@@ -1891,7 +1905,7 @@ AWSアカウントの取得については <a href="#aws_account">Section 1.3</a
 Docker の使い方を知っている読者は，これを使えば，諸々のインストールをする必要なく，すぐにハンズオンのプログラムを実行できる．</p>
 </div>
 <div class="paragraph">
-<p>使用方法については <a href="#sec_handson_docker">Section 15.5</a> を参照のこと．</p>
+<p>使用方法については <a href="#sec_handson_docker">Section 15.8</a> を参照のこと．</p>
 </div>
 </div>
 </div>
@@ -2430,7 +2444,7 @@ AWS で一時的に生じた余剰な空きCPUをユーザーに割安で貸し�
 </td>
 <td class="content">
 <div class="paragraph">
-<p><code>venv</code> の簡単な説明は <a href="#venv_quick_guide">Section 15.4</a> に記述してある．</p>
+<p><code>venv</code> の簡単な説明は <a href="#venv_quick_guide">Section 15.7</a> に記述してある．</p>
 </div>
 </td>
 </tr>
@@ -2455,8 +2469,8 @@ AWS で一時的に生じた余剰な空きCPUをユーザーに割安で貸し�
 <h4 id="_aws_のシークレットキーをセットする">4.4.2. AWS のシークレットキーをセットする</h4>
 <div class="paragraph">
 <p>AWS CLI および AWS CDK を使うには， AWS のシークレットキーが設定されている必要がある．
-シークレットキーの発行については <a href="#aws_secrets">Section 15.1</a> を参照のこと．
-シークレットキーを発行したら， <a href="#aws_cli_install">Section 15.2</a> を参照し，コマンドラインの設定を行う．</p>
+シークレットキーの発行については <a href="#aws_secrets">Section 15.2</a> を参照のこと．
+シークレットキーを発行したら， <a href="#aws_cli_install">Section 15.3</a> を参照し，コマンドラインの設定を行う．</p>
 </div>
 <div class="paragraph">
 <p>繰り返しになるがここに簡単に記すと，一つ目の方法は <code>AWS_ACCESS_KEY_ID</code> などの環境変数を設定するやり方である．
@@ -3336,7 +3350,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 <p>デプロイの手順は，ハンズオン1とほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
 それぞれのコマンドの意味を忘れてしまった場合は，ハンズオン1に戻って復習していただきたい．
-シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5137,7 +5151,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 SSH によるログインの必要がないので，むしろ単純なくらいである．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
 それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
-シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5884,7 +5898,7 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (# で始まる行はコメントである)．
 それぞれの意味を忘れてしまった場合は，前のハンズオンに戻って復習していただきたい．
-シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6144,7 +6158,7 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </div>
 <div class="paragraph">
 <p>もう一つの認証方法として， <code>sumit_job()</code> 関数に <code>profile_name</code> というパラメータを用意した．
-もし <code>~/.aws/credentials</code> に認証情報が書き込まれているのならば (詳しくは <a href="#aws_cli_install">Section 15.2</a>)， <code>profile_name</code> に使用したいプロファイルの名前を渡すだけで，
+もし <code>~/.aws/credentials</code> に認証情報が書き込まれているのならば (詳しくは <a href="#aws_cli_install">Section 15.3</a>)， <code>profile_name</code> に使用したいプロファイルの名前を渡すだけで，
 認証を行うことができる．</p>
 </div>
 <div class="paragraph">
@@ -7233,7 +7247,7 @@ Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定するこ
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
 それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
-シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7509,7 +7523,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
 それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
-シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7803,7 +7817,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに固有�
 <div class="paragraph">
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
-シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8795,7 +8809,7 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 <div class="paragraph">
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
-シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.2</a>)．</p>
+シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9181,10 +9195,125 @@ Content-Type: application/json
 </div>
 </div>
 <div class="sect1">
-<h2 id="_appendix">15. Appendix</h2>
+<h2 id="sec:appendix_settingup">15. Appendix: 環境構築</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>本書を読み進めるにあたって，ハンズオンのプログラムを実行するための環境を自分のローカルマシンにセットアップしなければならない．
+ここでは， AWS やコマンドラインの初心者を想定して，本章で必要なソフトウェアやライブラリのインストールなどを簡単に解説する．
+以下に簡単な目次を示そう．
+既に環境構築が済んでいる場合は適宜読み飛ばしていただき，関係のある箇所のみ目を通せば良い．</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>AWS アカウントの取得 (<a href="#sec:create_aws_account">Section 15.1</a>)</p>
+</li>
+<li>
+<p>AWS シークレットキーの作成 (<a href="#aws_secrets">Section 15.2</a>)</p>
+</li>
+<li>
+<p>AWS CLI のインストール (<a href="#aws_cli_install">Section 15.3</a>)</p>
+</li>
+<li>
+<p>AWS CDK のインストール (<a href="#aws_cdk_install">Section 15.4</a>)</p>
+</li>
+<li>
+<p>WSL のインストール (<a href="#sec:install_wsl">Section 15.5</a>)</p>
+</li>
+<li>
+<p>Python venv クイックガイド (<a href="#venv_quick_guide">Section 15.7</a>)</p>
+</li>
+<li>
+<p>ハンズオン実行用の Docker image の使い方 (<a href="#sec_handson_docker">Section 15.8</a>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>本書で何度か繰り返し述べているが，
+本書のハンズオンを実行するための
+<a href="https://hub.docker.com/repository/docker/tomomano/labc">Docker image</a>
+を提供している．
+これを用いると， AWS CLI/CDK や Python の設定などをスキップできるので， Docker の使用方法を知っている読者には便利だろう．</p>
+</div>
 <div class="sect2">
-<h3 id="aws_secrets">15.1. AWS のシークレットキーの作成</h3>
+<h3 id="sec:create_aws_account">15.1. AWS アカウントの取得</h3>
+<div class="paragraph">
+<p>本書で提供するハンズオンを実際に自分で試すには，読者自身で AWS のアカウントの作成をする必要がある．
+詳しいアカウントの作成の手順は <a href="https://aws.amazon.com/jp/register-flow/">公式のドキュメンテーション</a> に書かれているので，そちらも参照していただきたい．
+以下の手順に従ってアカウントの作成を行う．</p>
+</div>
+<div class="paragraph">
+<p>まず，ウェブブラウザから <a href="https://aws.amazon.com/console/">AWS コンソール</a> にアクセスし，右上の <code>Create an AWS Account</code> をクリックする
+(<a href="#fig:aws-signup-1">Figure 93</a> でピンクの箱で囲った部分)．</p>
+</div>
+<div id="fig:aws-signup-1" class="imageblock text-center">
+<div class="content">
+<img src="imgs/signup-1.png" alt="signup-1" width="500">
+</div>
+<div class="title">Figure 93. サインアップ (1): AWS コンソールにアクセス</div>
+</div>
+<div class="paragraph">
+<p>次に，遷移した先のページでメールアドレスとパスワードなどの登録を行う (<a href="#fig:aws-signup-3">Figure 94</a>)．</p>
+</div>
+<div id="fig:aws-signup-3" class="imageblock text-center">
+<div class="content">
+<img src="imgs/signup-3.png" alt="signup-3" width="500">
+</div>
+<div class="title">Figure 94. サインアップ (2): メールアドレス・パスワードなどの登録．</div>
+</div>
+<div class="paragraph">
+<p>続いて，住所や電話番号などを訊かれるので，すべて入力しよう (<a href="#fig:aws-signup-4">Figure 95</a>)．</p>
+</div>
+<div id="fig:aws-signup-4" class="imageblock text-center">
+<div class="content">
+<img src="imgs/signup-4.png" alt="signup-4" width="500">
+</div>
+<div class="title">Figure 95. サインアップ (3): 住所・電話番号の入力</div>
+</div>
+<div class="paragraph">
+<p>次に，クレジットカードの情報の登録を求められる (<a href="#fig:aws-signup-5">Figure 96</a>)．
+個人で AWS を利用する場合は，利用料金の請求はクレジットカードを経由して行われる．
+クレジットカードの登録なしには AWS を使い始めることはできないことに注意．</p>
+</div>
+<div id="fig:aws-signup-5" class="imageblock text-center">
+<div class="content">
+<img src="imgs/signup-5.png" alt="signup-5" width="500">
+</div>
+<div class="title">Figure 96. サインアップ (4): クレジットカードの登録</div>
+</div>
+<div class="paragraph">
+<p>次の画面では，携帯電話の SMS またはボイスメッセージを利用した本人確認が求められる (<a href="#fig:aws-signup-6">Figure 97</a>)．
+希望の認証方法を選択し，自分の携帯電話番号を入力しよう．</p>
+</div>
+<div id="fig:aws-signup-6" class="imageblock text-center">
+<div class="content">
+<img src="imgs/signup-6.png" alt="signup-6" width="500">
+</div>
+<div class="title">Figure 97. サインアップ (5): 携帯電話による本人確認</div>
+</div>
+<div class="paragraph">
+<p>無事に本人確認が完了すると，最後にサポートプランの選択を求められる (<a href="#fig:aws-signup-8">Figure 98</a>)．
+無料の Basic support を選択しておけば問題ない．</p>
+</div>
+<div id="fig:aws-signup-8" class="imageblock text-center">
+<div class="content">
+<img src="imgs/signup-8.png" alt="signup-8" width="500">
+</div>
+<div class="title">Figure 98. サインアップ (6): サポートプランの選択</div>
+</div>
+<div class="paragraph">
+<p>以上のステップにより，アカウントの作成が完了する (<a href="#fig:aws-signup-9">Figure 99</a>)．
+早速ログインをして， AWS コンソールにアクセスできるか確認しておこう．</p>
+</div>
+<div id="fig:aws-signup-9" class="imageblock text-center">
+<div class="content">
+<img src="imgs/signup-9.png" alt="signup-9" width="500">
+</div>
+<div class="title">Figure 99. サインアップ (7): アカウントの作成が完了した</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="aws_secrets">15.2. AWS のシークレットキーの作成</h3>
 <div class="paragraph">
 <p>AWS シークレットキーとは， AWS CLI や AWS CDK から AWS の API を操作する際に，ユーザー認証を行うための鍵のことである．
 AWS CLI/CDK を使うには，最初にシークレットキーを発行する必要がある．
@@ -9196,10 +9325,10 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <p>AWS コンソールにログインする．</p>
 </li>
 <li>
-<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 93</a>)</p>
+<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 100</a>)</p>
 </li>
 <li>
-<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 94</a>)</p>
+<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 101</a>)</p>
 </li>
 <li>
 <p>表示された Access key ID, Secret access key を記録しておく (画面を閉じると以降は表示されない)．</p>
@@ -9208,7 +9337,7 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <p>鍵を忘れてしまった場合などは，同じ手順で再発行が可能である．</p>
 </li>
 <li>
-<p>発行したシークレットキーは， <code>~/.aws/credentials</code> のファイルに書き込むか，環境変数に設定するなどして使う (詳しくは <a href="#aws_cli_install">Section 15.2</a>)．</p>
+<p>発行したシークレットキーは， <code>~/.aws/credentials</code> のファイルに書き込むか，環境変数に設定するなどして使う (詳しくは <a href="#aws_cli_install">Section 15.3</a>)．</p>
 </li>
 </ol>
 </div>
@@ -9216,13 +9345,13 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <div class="content">
 <img src="imgs/aws_secret_key_1.png" alt="aws_secret_key_1" width="400">
 </div>
-<div class="title">Figure 93. AWS シークレットキーの発行1</div>
+<div class="title">Figure 100. AWS シークレットキーの発行1</div>
 </div>
 <div id="fig:aws_secret_key_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_2.png" alt="aws_secret_key_2" width="700">
 </div>
-<div class="title">Figure 94. AWS シークレットキーの発行2</div>
+<div class="title">Figure 101. AWS シークレットキーの発行2</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -9237,14 +9366,14 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <div class="ulist">
 <ul>
 <li>
-<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 95</a>)．</p>
+<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 102</a>)．</p>
 </li>
 <li>
 <p><code>Account Details</code> をクリックし，続いて <code>AWS CLI: Show</code> をクリックする．</p>
 </li>
 <li>
-<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 96</a>)．
-ここで表示された内容を <code>~/.aws/credentials</code> にコピーする (<a href="#aws_cli_install">Section 15.2</a> 参照)．
+<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 103</a>)．
+ここで表示された内容を <code>~/.aws/credentials</code> にコピーする (<a href="#aws_cli_install">Section 15.3</a> 参照)．
 <code>aws_session_token</code> の箇所も漏らさずコピーすること．</p>
 </li>
 <li>
@@ -9264,7 +9393,7 @@ output = json</pre>
 <ul>
 <li>
 <p>上記の説明ではプロファイル名が <code>default</code> となっていたが，これは自分の好きな名前に変更しても良い．
-<code>default</code> 以外の名前を使用する場合は，コマンドを実行する際にプロファイル名を指定する必要がある (<a href="#aws_cli_install">Section 15.2</a>)．</p>
+<code>default</code> 以外の名前を使用する場合は，コマンドを実行する際にプロファイル名を指定する必要がある (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </li>
 </ul>
 </div>
@@ -9272,13 +9401,13 @@ output = json</pre>
 <div class="content">
 <img src="imgs/vocareum_console.png" alt="vocareum console" width="700">
 </div>
-<div class="title">Figure 95. vocareum コンソール</div>
+<div class="title">Figure 102. vocareum コンソール</div>
 </div>
 <div id="fig:vocareum_secret" class="imageblock text-center">
 <div class="content">
 <img src="imgs/vocareum_secret.png" alt="vocareum secret" width="700">
 </div>
-<div class="title">Figure 96. vocareum から AWS シークレットキーの発行</div>
+<div class="title">Figure 103. vocareum から AWS シークレットキーの発行</div>
 </div>
 </td>
 </tr>
@@ -9286,7 +9415,7 @@ output = json</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_cli_install">15.2. AWS CLI のインストール</h3>
+<h3 id="aws_cli_install">15.3. AWS CLI のインストール</h3>
 <div class="paragraph">
 <p>読者のために，執筆時点におけるインストールの手順 (Linux 向け) を簡単に記述する．
 将来のバージョンでは変更される可能性があるので，常に <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html">公式のドキュメンテーション</a> で最新の情報をチェックすることを忘れずに．</p>
@@ -9316,7 +9445,7 @@ output = json</pre>
 </div>
 <div class="paragraph">
 <p>コマンドを実行すると， <code>AWS Access Key ID</code>, <code>AWS Secret Access Key</code> を入力するよう指示される．
-シークレットキーの発行については <a href="#aws_secrets">Section 15.1</a> を参照．
+シークレットキーの発行については <a href="#aws_secrets">Section 15.2</a> を参照．
 コマンドは加えて，<code>Default region name</code> を訊いてくる．
 ここには自分の好きな地域 (例えば <code>ap-northeast-1</code> =東京リージョン) を指定すればよい．
 最後の <code>Default output format</code> は <code>JSON</code> としておくとよい．</p>
@@ -9397,7 +9526,7 @@ output <span class="o">=</span> json</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_cdk_install">15.3. AWS CDK のインストール</h3>
+<h3 id="aws_cdk_install">15.4. AWS CDK のインストール</h3>
 <div class="paragraph">
 <p>読者のために，執筆時点におけるインストールの手順 (Linux 向け) を簡単に記述する．
 将来のバージョンでは変更される可能性があるので，常に <a href="https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html">公式のドキュメンテーション</a> で最新の情報をチェックすることを忘れずに．</p>
@@ -9457,7 +9586,7 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 <div class="paragraph">
 <p><code>cdk bootstrap</code> を実行するときは，AWSの認証情報とリージョンが正しく設定されていることを確認する．
 デフォルトでは <code>~/.aws/config</code> にあるデフォルトのプロファイルが使用される．
-デフォルト以外のプロファイルを用いるときは <a href="#aws_cli_install">Section 15.2</a> で紹介したテクニックを使って切り替える．</p>
+デフォルト以外のプロファイルを用いるときは <a href="#aws_cli_install">Section 15.3</a> で紹介したテクニックを使って切り替える．</p>
 </div>
 </td>
 </tr>
@@ -9471,7 +9600,7 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 </td>
 <td class="content">
 <div class="paragraph">
-<p>AWS CDK の認証情報の設定は AWS CLI と基本的に同じである．詳しくは <a href="#aws_cli_install">Section 15.2</a> を参照．</p>
+<p>AWS CDK の認証情報の設定は AWS CLI と基本的に同じである．詳しくは <a href="#aws_cli_install">Section 15.3</a> を参照．</p>
 </div>
 </td>
 </tr>
@@ -9479,7 +9608,209 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 </div>
 </div>
 <div class="sect2">
-<h3 id="venv_quick_guide">15.4. Python <code>venv</code> クイックガイド</h3>
+<h3 id="sec:install_wsl">15.5. WSL のインストール</h3>
+<div class="paragraph">
+<p>本書のハンズオンではコマンドラインから AWS CLI のコマンドを実行したり， Python で書かれたプログラムを実行する．
+コマンドは基本的に UNIX のターミナルを想定して書かれている．
+Linux や Mac のユーザーは OS に標準搭載されているターミナルを用いれば良い．
+Windows を利用している読者は，
+<a href="https://docs.microsoft.com/en-us/windows/wsl/">Windows Subsystem for Linux (WSL)</a>
+を利用することで，仮想の Linux 環境を構築することを推奨する．
+<a href="https://www.cygwin.com/">Cygwin</a>
+などのほかの Linux をエミュレートするツールでも構わないが，本書のプログラムは WSL でのみ動作確認を行っている．</p>
+</div>
+<div class="paragraph">
+<p>WSL とは， Windows の OS 上で Linux の仮想環境を起動するための，マイクロソフト社が公式で提供しているソフトウェアである．
+Ubuntu など希望の Linux distribution が選択でき，基本的にすべての Linux 向けに作られたプログラム・ソフトウェアを使用することができる．</p>
+</div>
+<div class="paragraph">
+<p>執筆時点では
+<a href="https://docs.microsoft.com/en-us/windows/wsl/compare-versions#whats-new-in-wsl-2">WSL 2</a>
+が最新版として提供されているので，以下では WSL 2 のインストール手順を簡単に説明する．
+細かな詳細などは，
+<a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">公式ドキュメンテーション</a>
+を参照のこと．</p>
+</div>
+<div class="paragraph">
+<p>前提として，使用される OS は Windows 10 (Pro または Home エディション) でなければならない．
+さらに，使用している Windows 10のバージョンがWSLに対応するバージョンであるかを確認する．
+X64 のシステムでは Version 1903, Build 18362 以上でなければならない．
+バージョンが対応していない場合は、 Windows のアップデートを行う．</p>
+</div>
+<div class="paragraph">
+<p>まず最初に， Administrator 権限で PowerShell を起動する (<a href="#fig:powershell">Figure 104</a>)．
+左下の Windows メニューの検索バーに <code>powershell</code> と入力すると， PowerShell のプログラムが見つかるはずである，
+これを右クリックし、 <code>Run as administrator</code> を選択し起動する．</p>
+</div>
+<div id="fig:powershell" class="imageblock text-center">
+<div class="content">
+<img src="imgs/wsl/powershell.png" alt="powershell" width="500">
+</div>
+<div class="title">Figure 104. 管理者権限での PowerShell の起動</div>
+</div>
+<div class="paragraph">
+<p>PowerShell が起動したら、次のコマンドを実行する．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>実行して、“The operation completed successfully.” と出力されるのを確認する．
+これで WSL が enable される．</p>
+</div>
+<div class="paragraph">
+<p>次に，先ほどと同じ Administrator 権限で開いた PowerShell で次のコマンドを実行する。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>実行して， “The operation completed successfully.” と出力されるのを確認する．
+これが確認出来たら、一度コンピュータを再起動する．</p>
+</div>
+<div class="paragraph">
+<p>続いて， Linux kernel update package を次のリンクからダウンロードする．
+<a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" class="bare">https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi</a></p>
+</div>
+<div class="paragraph">
+<p>ダウンロードしたファイルをダブルクリックして実行する．
+ダイアローグに従ってインストールを完了させる．</p>
+</div>
+<div class="paragraph">
+<p>そうしたら，再び PowerShell を開き次のコマンドを実行する。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">wsl <span class="nt">--set-default-version</span> 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最後に、自分の好みの Linux distribution をインストールする．
+ここでは Ubuntu 20.04 をインストールしよう．</p>
+</div>
+<div class="paragraph">
+<p>Microsoft store のアプリを起動し，検索バーに <code>Ubuntu</code> と入力する．
+Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き， “Get” ボタンをクリックする (<a href="#fig:microsoft_store">Figure 105</a>)．
+しばらく待つと， Ubuntu 20.04 のインストールが完了する．</p>
+</div>
+<div id="fig:microsoft_store" class="imageblock text-center">
+<div class="content">
+<img src="imgs/wsl/microsoft_store.png" alt="microsoft_store" width="500">
+</div>
+<div class="title">Figure 105. Microsoft store から Ubuntu 20.04 をインストール</div>
+</div>
+<div class="paragraph">
+<p>Ubuntu 20.04 を初回に起動すると，初期設定が自動で開始され，数分待つことになる．
+初期設定が終わると，ユーザー名・パスワードを設定するようプロンプトが出るので，プロンプトに従い入力する．</p>
+</div>
+<div class="paragraph">
+<p>これで WSL2 のインストールが完了した．
+早速 WSL2 を起動してみよう．
+左下の Windows メニューの検索バーに <code>Ubuntu</code> と入力すると， Ubuntu 20.04 のプログラムが見つかるはずである (<a href="#fig:ubuntu">Figure 106</a>)．
+クリックして起動しよう．</p>
+</div>
+<div id="fig:ubuntu" class="imageblock text-center">
+<div class="content">
+<img src="imgs/wsl/ubuntu2004.png" alt="ubuntu2004" width="500">
+</div>
+<div class="title">Figure 106. Ubuntu 20.04 の起動</div>
+</div>
+<div class="paragraph">
+<p>すると，ターミナルの黒い画面が立ち上がるだろう (<a href="#fig:wsl_window">Figure 107</a>)．
+<code>ls</code>, <code>top</code> などのコマンドを打ってみて， WSL がきちんと動作していることを確認しよう．</p>
+</div>
+<div id="fig:wsl_window" class="imageblock text-center">
+<div class="content">
+<img src="imgs/wsl/wsl_window.png" alt="wsl_window" width="500">
+</div>
+<div class="title">Figure 107. WSL の起動画面</div>
+</div>
+<div class="paragraph">
+<p>オプションとして，
+<a href="https://docs.microsoft.com/en-us/windows/terminal/get-started">Windows Terminal</a>
+というマイクロソフトから提供されているツールを使うと，より快適に WSL を使用することができる．
+興味のある読者はこちらのインストールも推奨する．</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:install_docker">15.6. Docker のインストール</h3>
+<div class="paragraph">
+<p>Docker のインストールの方法は OS によって異なる．</p>
+</div>
+<div class="paragraph">
+<p>Mac ユーザーは， Docker Desktop をインストールする．
+インストールの方法は，
+<a href="https://docs.docker.com/docker-for-mac/install/">Docker のウェブサイト</a>
+から， Mac 版の Docker Desktop をダウンロードし，ダウンロードされたファイルをダブルクリックし， <code>Applications</code> のフォルダーにドラッグするだけで良い．
+詳細は
+<a href="https://docs.docker.com/docker-for-mac/install/">公式ドキュメンテーション</a>
+を参照のこと．</p>
+</div>
+<div class="paragraph">
+<p>Windows ユーザーは， WSL に Docker をインストールすることを推奨する．
+その場合，インストールの手順は Linux のものと基本的に同一である．</p>
+</div>
+<div class="paragraph">
+<p>Linux ユーザー (特に Ubuntu ユーザー) については，インストールの方法はいくつかのアプローチがある．
+<a href="https://docs.docker.com/engine/install/ubuntu/">公式ドキュメンテーション</a>
+にいくつかのインストールの方法が示されているので，詳しい情報はそちらを参照いただきたい．</p>
+</div>
+<div class="paragraph">
+<p>最も簡単な方法は， Docker が公式で提供しているインストールスクリプトを用いる方法である．
+この場合，次のコマンドを実行することで Docker がインストールされる．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>curl <span class="nt">-fsSL</span> https://get.docker.com <span class="nt">-o</span> get-docker.sh
+<span class="nv">$ </span><span class="nb">sudo </span>sh get-docker.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>デフォルトのインストールでは， root ユーザーのみが <code>docker</code> コマンドを使用できる設定になっている．
+従って，コマンドには毎回 <code>sudo</code> を付け加える必要がある．
+これが面倒だと感じる場合は，次のステップにより，使用するユーザーを <code>docker</code> というグループに追加する (詳細は
+<a href="https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user">公式ドキュメンテーション "Post-installation steps for Linux"</a>
+を参照)．</p>
+</div>
+<div class="paragraph">
+<p>まず最初に， <code>docker</code> という名前にグループを追加する．
+インストールによっては，既に <code>docker</code> グループが作れらている場合もある．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">sudo </span>groupadd docker</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>次に，現在使用しているユーザーを <code>docker</code> グループに加える．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">sudo </span>usermod <span class="nt">-aG</span> docker <span class="nv">$USER</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ここまでできたら，一度ログアウトし，再度ログインする．
+これによって，グループの変更がターミナルのセッションに反映される．</p>
+</div>
+<div class="paragraph">
+<p>設定が正しくできているかを確認するため，次のコマンドを実行してみる．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run hello-world</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>sudo</code> なしでコンテナが実行できたならば，設定は完了である．</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="venv_quick_guide">15.7. Python <code>venv</code> クイックガイド</h3>
 <div class="paragraph">
 <p>他人からもらったプログラムで， numpy や scipy のバージョンが違う！などの理由で，プログラムが動かない，という経験をしたことがある人は多いのではないだろうか．
 もし，自分の計算機の中に一つしか Python 環境がないとすると，プロジェクトを切り替えるごとに正しいバージョンをインストールし直さなければならず，これは大変な手間である．</p>
@@ -9516,14 +9847,14 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 <p>と実行する．</p>
 </div>
 <div class="paragraph">
-<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 97</a>)．
+<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 108</a>)．
 これが， "いまあなたは venv の中にいますよ" というしるしになる．</p>
 </div>
 <div id="fig_venv_prompt" class="imageblock text-center">
 <div class="content">
 <img src="imgs/venv_shell.png" alt="venv shell" width="500">
 </div>
-<div class="title">Figure 97. venv を起動したときのプロンプト</div>
+<div class="title">Figure 108. venv を起動したときのプロンプト</div>
 </div>
 <div class="paragraph">
 <p>仮想環境を起動すると，それ以降実行する <code>pip</code> コマンドは， <code>.env/</code> 以下にインストールされる．このようにして，プロジェクトごとに使うライブラリのバージョンを切り分けることができる．</p>
@@ -9555,7 +9886,7 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec_handson_docker">15.5. ハンズオン実行用の Docker image の使い方</h3>
+<h3 id="sec_handson_docker">15.8. ハンズオン実行用の Docker image の使い方</h3>
 <div class="paragraph">
 <p>ハンズオンを実行するために必要な， Node.js, Python, AWS CDK などがインストールされた Docker image を用意した．
 これを使用することで，自分のローカルマシンに諸々をインストールする必要なく，すぐにハンズオンのコードが実行できる．</p>
@@ -9617,7 +9948,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 </div>
 <div class="paragraph">
 <p>AWS の認証情報を設定することも忘れずに．
-<a href="#aws_cli_install">Section 15.2</a> で記述したように， <code>AWS_ACCESS_KEY_ID</code> などの環境変数を設定するのが簡単な方法である．
+<a href="#aws_cli_install">Section 15.3</a> で記述したように， <code>AWS_ACCESS_KEY_ID</code> などの環境変数を設定するのが簡単な方法である．
 あるいは，<strong>ローカルマシンの</strong> <code>~/.aws/credentials</code> に認証情報が書き込まれているなら，このディレクトリを container に<strong>マウント</strong>することで，同じ認証ファイルを container 内部から参照することが可能である．
 この選択肢を取る場合は，以下のコマンドで container を起動する．</p>
 </div>
@@ -9740,7 +10071,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-07-29 01:44:14 UTC
+Last updated 2021-07-29 15:33:00 UTC
 </div>
 </div>
 <style>
