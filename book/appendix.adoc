@@ -11,6 +11,7 @@
 * AWS CLI のインストール (<<aws_cli_install>>)
 * AWS CDK のインストール (<<aws_cdk_install>>)
 * WSL のインストール (<<sec:install_wsl>>)
+* Docker のインストール (<<sec:install_docker>>)
 * Python venv クイックガイド (<<venv_quick_guide>>)
 * ハンズオン実行用の Docker image の使い方 (<<sec_handson_docker>>)
 
