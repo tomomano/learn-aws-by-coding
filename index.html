@@ -513,7 +513,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_elastic_container_service_ecs">7.4. Elastic Container Service (ECS)</a></li>
 </ul>
 </li>
-<li><a href="#sec_fargate_qabot">8. Hands-on #3: AWSで自動質問回答ボットを走らせる</a>
+<li><a href="#sec_fargate_qabot">8. Hands-on #3: AWS で自動質問回答ボットを走らせる</a>
 <ul class="sectlevel2">
 <li><a href="#_fargate">8.1. Fargate</a></li>
 <li><a href="#_準備_2">8.2. 準備</a></li>
@@ -4642,19 +4642,21 @@ ECS の概要を示したのが <a href="#ecs_overview">Figure 42</a> である�
 </div>
 </div>
 <div class="sect1">
-<h2 id="sec_fargate_qabot">8. Hands-on #3: AWSで自動質問回答ボットを走らせる</h2>
+<h2 id="sec_fargate_qabot">8. Hands-on #3: AWS で自動質問回答ボットを走らせる</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>ハンズオン第三回では，前章で学んだ Docker と ECS を使うことで，大規模化可能な機械学習システムの最もシンプルなものを実装する．</p>
 </div>
 <div class="paragraph">
-<p>具体的には， Transformer と呼ばれるディープラーニングのモデルを使った自然言語処理を利用することで，
+<p>具体的には， Transformer とよばれる深層学習のモデルを使った自然言語処理を利用することで，
 英語で与えられた質問への回答を自動で生成するボットを作成してみる．
-特に，何百何千もの質問に同時に対応できるように，単一のサーバーに展開するのではなく，リクエストに応じて複数のサーバーを自動的に起動し，並列でジョブを実行させるシステムを設計する．
+とくに，何百何千もの質問に同時に対応できるように，単一のサーバーに展開するのではなく，リクエストに応じて複数のサーバーを自動的に起動し，並列でジョブを実行させるシステムを設計する．
 まさに，初歩的ながら， Siri・Alexa・Google assistant のようなシステムを作り上げるのである！</p>
 </div>
 <div class="paragraph">
-<p>ハンズオンのソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot">こちらのリンク</a> にある．</p>
+<p>ハンズオンのソースコードは GitHub の
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot">/handson/qa-bot</a>
+にある．</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -4707,8 +4709,8 @@ EC2 を用いた場合は，先の章 (<a href="#sec_first_ec2">Section 4</a>, <
 </div>
 <div class="paragraph">
 <p>Fargate とは， <strong>ECS での利用に特化</strong>して設計された，<strong>コンテナを使用した計算タスク</strong>を走らせるための仕組みである．
-計算を走らせるという点では EC2 と役割は似ているが， Fargate は EC2 インスタンスのような物理的実体は持たない．
-ECS の利用に専用設計がされているがために， ECS のクラスターとして Fargate を選択すると，とても簡単な設定・プログラムで，非常にパワフルかつスケーラブルな計算システムを構築することができる．</p>
+計算を走らせるという点では EC2 と役割は似ているが， Fargate は EC2 インスタンスのような物理的実体はもたない．
+ECS の利用に専用設計がなされているがために， ECS のクラスターとして Fargate を選択すると，とても簡単な設定・プログラムで，非常にパワフルかつスケーラブルな計算システムを構築できる．</p>
 </div>
 <div class="paragraph">
 <p>Fargate では， EC2 と同様に CPU とメモリーのサイズを必要な分だけ指定できる．
@@ -4741,11 +4743,11 @@ ECS の利用に専用設計がされているがために， ECS のクラス�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>"Fargate は EC2 インスタンスのような物理的実体は持たない"，と上に書いたが，少し語弊があるかもしれない．
+<p>"Fargate は EC2 インスタンスのような物理的実体はもたない"，と前述したが，少し語弊があるかもしれない．
 Fargate も，データセンターのどこかの CPU 上で起動するので，物理的な実体はどこかには必ず存在する．
-しかし，EC2 インスタンスと違って，例えば SSH でログインすることは基本的に想定されていないし，なにかのソフトウェアをインストールしたりなどの概念も存在しない
+しかし，EC2 インスタンスと違って，たとえば SSH でログインすることは基本的に想定されていないし，なにかのソフトウェアをインストールしたりなどの概念も存在しない
 (基本的に Docker のコンテナを介してすべてのプログラムが実行される)．
-その意味で "物理的実体を持たない" と表現したのである．
+その意味で "物理的実体をもたない" と表現したのである．
 実は， Fargate は <a href="#sec_serverless">Section 11</a> で紹介する， serverless architecture の重要な構成要素の一つである．</p>
 </div>
 </td>
@@ -4783,18 +4785,18 @@ question: In what year did Einstein win the Nobel prize?</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>人間にとっては，このような文章を理解することは容易であるが，コンピュータにそれをやらせることはなかなか難しいことは容易に想像ができるだろう．
-しかし，近年の深層学習を使った自然言語処理の進歩は著しく，上で示したような例題などは，極めて高い正答率で回答できるモデルを作ることができる．</p>
+<p>人間にとっては，このような文章を理解することは容易であるが，コンピュータにそれを解かせるのは難しいことは容易に想像ができるだろう．
+しかし，近年の深層学習を使った自然言語処理の進歩は著しく，上で示したような例題などは極めて高い正答率で回答できるモデルを作ることができる．</p>
 </div>
 <div class="paragraph">
 <p>今回は， <a href="https://github.com/huggingface/transformers">huggingface/transformers</a> で公開されている学習済みの言語モデルを利用することで，上で定義した問題を解く Q&amp;A ボットを作る．
 この Q&amp;A ボットは <a href="https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)">Transformer</a>
-と呼ばれるモデルを使った自然言語処理に支えられえている (<a href="#transformer_architecture">Figure 44</a>)．
+とよばれるモデルを使った自然言語処理に支えられえている (<a href="#transformer_architecture">Figure 44</a>)．
 このプログラムを， Docker にパッケージしたものが <a href="https://hub.docker.com/repository/docker/tomomano/qabot" class="bare">https://hub.docker.com/repository/docker/tomomano/qabot</a> に用意してある．
 クラウドの設計に入る前に，まずはこのプログラムを単体で動かしてみよう．</p>
 </div>
 <div class="paragraph">
-<p>なお，今回は学習済みのモデルを用いているので，私達が行うのは，与えられた入力をモデルに投入して予測を行う (推論) のみである．
+<p>なお，今回は学習済みのモデルを用いているので，私達が行うのは与えられた入力をモデルに投入して予測を行う (推論) のみである．
 推論の演算は， CPU だけでも十分高速に行うことができるので，コストの削減と，よりシンプルにシステムを設計をする目的で，このハンズオンでは GPU は利用しない．
 一般的に， ニューラルネットは学習のほうが圧倒的に計算コストが大きく，そのような場合に GPU はより威力を発揮する．</p>
 </div>
@@ -4824,10 +4826,10 @@ question: In what year did Einstein win the Nobel prize?</pre>
 </div>
 <div class="paragraph">
 <p>今回用意した Docker image は，第一引数に context となる文字列を，第二引数に question に相当する文字列を受けつける．
-第三引数，第四引数については，クラウドに展開するときの実装上の都合なので，今は気にしなくてよい．</p>
+第三引数，第四引数については，クラウドに展開するときの実装上の都合なので，いまは気にしなくてよい．</p>
 </div>
 <div class="paragraph">
-<p>上のコマンドを実行すると，以下のような出力が得られるはずである．</p>
+<p>このコマンドを実行すると，次のような出力が得られるはずである．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4862,7 +4864,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 <p>今度は， score が 0.52 と，少し自信がないようだが，それでも正しい答えにたどりつけていることがわかる．</p>
 </div>
 <div class="paragraph">
-<p>このように， ディープラーニングに支えられた言語モデルを用いることで，実用にも役に立ちそうな Q-A ボットを実現できていることがわかる．
+<p>このように， 深層学習に支えられた言語モデルを用いることで，実用にも役に立ちそうな Q&amp;A ボットを実現できていることがわかる．
 以降では，このプログラムをクラウドに展開することで，大量の質問に自動で対応できるようなシステムを設計していく．</p>
 </div>
 <div class="admonitionblock tip">
@@ -4875,7 +4877,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 <div class="paragraph">
 <p>今回使用する Question &amp; Answering システムには， DistilBERT という Transformer を基にした言語モデルが用いられている．
 興味のある読者は， <a href="https://arxiv.org/abs/1910.01108">原著論文</a> を参照してもらいたい．
-また， huggingface/transformers の DistilBert についてのドキュメンテーションは <a href="https://huggingface.co/transformers/model_doc/distilbert.html">こちら</a>．</p>
+また， huggingface/transformers による DistilBert の実装のドキュメンテーションは <a href="https://huggingface.co/transformers/model_doc/distilbert.html">公式ドキュメンテーション</a> を参照のこと．</p>
 </div>
 </td>
 </tr>
@@ -4926,7 +4928,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 <div class="ulist">
 <ul>
 <li>
-<p>このとき，ひとつの質問に対し一つの Fargate インスタンスを立ち上げることで，複数の質問を並列的に処理できるようにする．</p>
+<p>このとき，一つの質問に対し一つの Fargate インスタンスを立ち上げることで，複数の質問を並列的に処理できるようにする．</p>
 </li>
 </ul>
 </div>
@@ -5127,15 +5129,15 @@ question: In what year did Einstein win the Nobel prize?</pre>
 <p><code>cluster =</code> の箇所で，空の ECS クラスターを定義している．</p>
 </div>
 <div class="paragraph">
-<p>次に， <code>taskdef=ecs.FargateTaskDefinition</code> の箇所で， Fargate インスタンスを使ったタスクを定義しており，特にここでは 1 CPU, 4GB RAM というマシンスペックを指定している．
+<p>次に， <code>taskdef=ecs.FargateTaskDefinition</code> の箇所で， Fargate インスタンスを使ったタスクを定義しており，とくにここでは 1 CPU, 4GB RAM というマシンスペックを指定している．
 また，このようにして定義されたタスクは，デフォルトで1タスクにつき1インスタンスが使用される．</p>
 </div>
 <div class="paragraph">
-<p>最後に， <code>container =</code> の箇所で，タスクの実行でで使用する Docker image を定義している．
+<p>最後に， <code>container =</code> の箇所で，タスクの実行で使用する Docker image を定義している．
 ここでは， DockerHub に置いてある image をダウンロードしてくるよう指定している．</p>
 </div>
 <div class="paragraph">
-<p>このようにわずか数行のコードであるが，これだけで上で説明したような，タスクのスケジューリングなどが自動で実行される．</p>
+<p>このようにわずか数行のコードであるが，これだけで前述したような，タスクのスケジューリングなどが自動で実行される．</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -5145,13 +5147,13 @@ question: In what year did Einstein win the Nobel prize?</pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>上のコードで <code>cpu=1024</code> と指定されているのに注目してほしい．
+<p>このコードで <code>cpu=1024</code> と指定されているのに注目してほしい．
 これは CPU ユニットと呼ばれる数で， 以下の換算表に従って仮想CPU (virtual CPU; vCPU) が割り当てられる．
 1024 が 1 CPU に相当する．
 0.25 や 0.5 vCPU などの数字は，それぞれ実効的に 1/4, 1/2 の CPU 時間が割り当てられることを意味する．
 また， CPU ユニットによって使用できるメモリー量も変わってくる．
-例えば， 1024 CPU ユニットを選択した場合は， 2 から 8 GB の範囲でのみメモリー量を指定することができる．
-最新の情報は <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html">公式ドキュメンテーション</a> を参照のこと．</p>
+たとえば， 1024 CPU ユニットを選択した場合は， 2 から 8 GB の範囲でのみメモリー量を指定することができる．
+最新の情報は <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html">公式ドキュメンテーション "Amazon ECS on AWS Fargate"</a> を参照のこと．</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. CPU　ユニットと 指定可能なメモリー量の換算表</caption>
@@ -5233,7 +5235,7 @@ SSH によるログインの必要がないので，むしろ単純なくらい�
 </div>
 <div class="paragraph">
 <p>Cluster というのが，先ほど説明したとおり，複数の仮想インスタンスを束ねる一つの単位である．
-この時点ではひとつもタスクが走っていないので，タスクの数字はすべて0になっている．
+この時点では一つもタスクが走っていないので，タスクの数字はすべて0になっている．
 この画面にはまたすぐ戻ってくるので，開いたままにしておこう．</p>
 </div>
 <div id="handson_03_ecs_console" class="imageblock text-center">
@@ -5277,8 +5279,8 @@ SSH によるログインの必要がないので，むしろ単純なくらい�
 <p>"ask" の引数に続き，文脈 (context) と質問を引数として渡している．</p>
 </div>
 <div class="paragraph">
-<p>上のコマンドを実行すると， "Waiting for the task to finish&#8230;&#8203;" と出力が表示され，回答を得るまでしばらく待たされる．
-この間， AWS では， ECS がタスクを受理し，新しい Fargate のインスタンスを起動し， Docker image をそのインスタンスに配置する，という一連の処理がなされている．
+<p>このコマンドを実行すると， "Waiting for the task to finish&#8230;&#8203;" と出力が表示され，回答を得るまでしばらく待たされる．
+この間， AWS では ECS がタスクを受理し，新しい Fargate のインスタンスを起動し， Docker image をそのインスタンスに配置する，という一連の処理がなされている．
 AWS コンソールから，この一連の様子をモニタリングしてみよう．</p>
 </div>
 <div class="paragraph">
@@ -5293,7 +5295,7 @@ AWS コンソールから，この一連の様子をモニタリングしてみ�
 <div class="title">Figure 48. ECS のタスクの実行状況をモニタリング</div>
 </div>
 <div class="paragraph">
-<p><a href="#ecs_task_monitoring">Figure 48</a> で見て取れるように， "Last status = Pending" となっていることから，この時点では，タスクを実行するための準備している段階である，ということがわかる．
+<p><a href="#ecs_task_monitoring">Figure 48</a> で見て取れるように， "Last status = Pending" となっていることから，この時点では，タスクを実行する準備をしている段階である，ということがわかる．
 Fargate のインスタンスを起動し， Docker image を配置するまでおよそ1-2分の時間がかかる．</p>
 </div>
 <div class="paragraph">
@@ -5352,7 +5354,7 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 </div>
 <div class="paragraph">
 <p>すべてのタスクのステータスが "STOPPED" になったことを確認した上で，質問への回答を取得しよう．
-それには，次のコマンドを実行すれば良い．</p>
+それには，次のコマンドを実行する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5371,8 +5373,8 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 </div>
 <div class="paragraph">
 <p>おめでとう！
-ここまでついてこれた読者は，とても初歩的ながらも，ディープラーニングによる言語モデルを使って自動で質問への回答を生成するシステムを創り上げることができた！
-それも，数百の質問にも同時に対応できるような，とても高いスケーラビリティーを持ったシステムである！</p>
+ここまでついてこれた読者はとても初歩的ながらも，深層学習による言語モデルを使って自動で質問への回答を生成するシステムを創り上げることができた！
+それも，数百の質問にも同時に対応できるような，とても高いスケーラビリティーをもったシステムである！</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -10125,7 +10127,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-07-30 15:18:22 UTC
+Last updated 2021-07-31 01:49:45 UTC
 </div>
 </div>
 <style>
