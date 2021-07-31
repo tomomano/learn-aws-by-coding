@@ -61,6 +61,3 @@ DEPENDENCIES
   asciidoctor-pdf (~> 1.5.0.beta)
   asciidoctor-pdf-cjk (~> 0.1.3)
   rouge
-
-BUNDLED WITH
-   1.16.1

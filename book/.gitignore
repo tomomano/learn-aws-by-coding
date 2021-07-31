@@ -1,3 +1,4 @@
 .bundle/
 vendor/
 dist/
+Gemfile.lock
