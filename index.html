@@ -535,7 +535,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_アプリケーションの説明_4">9.6. アプリケーションの説明</a></li>
 <li><a href="#_スタックのデプロイ_3">9.7. スタックのデプロイ</a></li>
 <li><a href="#_docker_image_を_ecr_に配置する">9.8. Docker image を ECR に配置する</a></li>
-<li><a href="#_job_を実行する_まずはひとつだけ">9.9. Job を実行する (まずはひとつだけ)</a></li>
+<li><a href="#_job_を実行する_まずは一つだけ">9.9. Job を実行する (まずは一つだけ)</a></li>
 <li><a href="#_並列にたくさんの_job_を実行する">9.10. 並列にたくさんの Job を実行する</a></li>
 <li><a href="#_スタックの削除_3">9.11. スタックの削除</a></li>
 <li><a href="#_小括_2">9.12. 小括</a></li>
@@ -5420,16 +5420,16 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 <div class="paragraph">
 <p>ハンズオン第三回では， ECS と Fargate を使って自動質問回答システムを構築した．
 シンプルながらも，複数の質問が送られた場合には並列にジョブが実行され，ユーザーに答えが返されるシステムを作ることができた．
-ここでは，既に学習済みの言語モデルを用いてアプリケーションを構築した．
-しかし，機械学習のワークフローでは，まずは自分で作ったモデルを訓練することが最初のステップにあるはずである．
+ここでは，すでに学習済みの言語モデルを用いてアプリケーションを構築した．
+しかし，機械学習のワークフローでは，自分で作ったモデルを訓練することが最初のステップにあるはずである．
 そこで，ハンズオン第四回では，クラウドを用いて機械学習の訓練を並列化・高速化することを考える．</p>
 </div>
 <div class="paragraph">
 <p>具体的には，本ハンズオンでは深層学習におけるハイパーパラメータ最適化を取り上げる．
 ハイパーパラメータとは，勾配降下法によって最適化されるニューラルネットのパラメータの外にあるパラメータのことであり，具体的にはモデルの層の幅・深さなどネットワークのアーキテクチャに関わるもの，学習率やモメンタムなどパラメータの更新則に関わるものなどが含まる．
 深層学習においてハイパーパラメータの調整はとても重要なタスクである．
-しかしながら，ハイパーパラメータを調整するには，少しづつ条件を変えながら何度もニューラルネットを学習させる必要があり，多くの計算時間がかかる．
-本ハンズオンでは，クラウドの強力な計算リソースを利用し並列的にニューラルネットの訓練を実行することで，この問題を高速に解く方法を学んでいこう．</p>
+しかしながら，ハイパーパラメータを調整するには，少しずつ条件を変えながら何度もニューラルネットを学習させる必要があり，多くの計算時間がかかる．
+本ハンズオンでは，クラウドの強力な計算リソースを利用して並列的にニューラルネットの訓練を実行することで，この問題を高速に解く方法を学んでいこう．</p>
 </div>
 <div class="paragraph">
 <p>このハンズオンは，本書で扱うハンズオンの中でも最も難易度が高いものだ (もう少し正確に言うなら，最もステップ数が多い)．
@@ -5438,7 +5438,7 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 <div class="sect2">
 <h3 id="_auto_scaling_groups_asg">9.1. Auto scaling groups (ASG)</h3>
 <div class="paragraph">
-<p>ハンズオンに入っていく前に， <strong>Auto scaling groups (ASG)</strong> と呼ばれる EC2 の概念を知っておく必要がある．</p>
+<p>ハンズオンに入っていく前に， <strong>Auto scaling groups (ASG)</strong> とよばれる EC2 の概念を知っておく必要がある．</p>
 </div>
 <div class="paragraph">
 <p>ECS の概要を示した <a href="#ecs_overview">Figure 42</a> を振り返って見てほしい．
@@ -5447,14 +5447,14 @@ Fargate については前章で記述した．
 Fargate を用いると，自在にスケールする計算環境をとても簡単な設定で構築することができた．
 しかし， GPU を利用することができないなど，いくつかの制約があった．
 EC2 を使用した計算環境を指定することで，設定の複雑度は増すが， GPU やその他のより高度かつ複雑な設定を伴ったクラスターを構築することができる．
-クラスターで EC2 を用いる場合について，以下に簡単に説明を行っていきたい．</p>
+クラスターで EC2 を用いる場合について，以下に簡単な説明を行う．</p>
 </div>
 <div class="paragraph">
 <p>EC2 クラスターには <strong>Auto scaling groups (ASG)</strong> と呼ばれるサービスが配置される．
 ASG はクラスターのスケーリングを担っており，ASG によって新しいインスタンスの起動や，不要になったインスタンスの停止が実行される．
-どのような基準でインスタンスの起動・停止を行うかのルールのことを，<strong>スケーリングポリシー</strong>と呼ぶ．
+どのような基準でインスタンスの起動・停止を行うかのルールのことを，<strong>スケーリングポリシー</strong>とよぶ．
 ASG にはユーザーの指定したスケーリングポリシーを定義することが可能である．
-例えば，クラスター全体の稼働率 (負荷) を 80% に維持する，かつ，起動インスタンスの上限は100台とする，などのポリシーを設定できる．
+たとえば，クラスター全体の稼働率 (負荷) を 80% に維持する，かつ，起動インスタンスの上限は100台とする，などのポリシーを設定できる．
 あるいはユーザーの作成したカスタムのプログラムでスケーリングを制御することも可能である．
 ECS と ASG が協調することで，フレキシブルかつ効率的なタスクの配置とクラスターのスケーリングが可能になるのである．</p>
 </div>
@@ -5474,28 +5474,28 @@ ECS と ASG が協調することで，フレキシブルかつ効率的なタ�
 それが <strong>AWS Batch</strong> である．</p>
 </div>
 <div class="paragraph">
-<p>AWS Batch はその名の通りバッチ (Batch) 化されたジョブ (入力データだけが異なる独立した演算が繰り返し実行されること) を想定している．
+<p>AWS Batch はその名のとおりバッチ (Batch) 化されたジョブ (入力データだけが異なる独立した演算が繰り返し実行されること) を想定している．
 多くの科学計算や機械学習がバッチ計算に当てはまる．
-例えば，初期値のパラメータを変えて複数のシミュレーションを走らせる，といったケースだ．
+たとえば，初期値のパラメータを変えて複数のシミュレーションを走らせる，といったケースだ．
 AWS Batch を用いることの利点は，クラスターのスケーリングやジョブの割り振りはすべて自動で実行され，
-ユーザーはクラウドの舞台裏の詳細を気にすることなく，大量のジョブを投入することのできるシステムが手に入る点である．
+ユーザーはクラウドの舞台裏の詳細を気にすることなく，大量のジョブを投入できるシステムが手に入る点である．
 が，知識として背後では ECS/ASG/EC2 の三つ巴が強調して動作しているという点は知っておいてほしい．</p>
 </div>
 <div class="paragraph">
 <p>AWS Batch では，ジョブの投入・管理をスムーズに行うため，次のような概念が定義されている (<a href="#fig_batch_concept">Figure 54</a>)．
-まず， <strong>Job</strong> というのが，AWS Batch によって実行されるひとつの計算の単位である．
-<strong>Job Definitions</strong> とは Job の内容を定義するものであり，これには実行されるべき Docker のイメージのアドレスや，割り当てる CPU・RAM の容量，環境変数などの設定が含まれる．
+まず， <strong>Job</strong> というのが，AWS Batch によって実行される一つの計算の単位である．
+<strong>Job definitions</strong> とは Job の内容を定義するものであり，これには実行されるべき Docker のイメージのアドレスや，割り当てる CPU・RAM の容量，環境変数などの設定が含まれる．
 Job definition に基づいて個々の Job が実行される．
-Job が実行されると， Job は <strong>Job Queues</strong> に入る．
-Job queues とは，実行待ち状態にジョブの列のことであり，時間的に最も先頭に投入されたジョブが最初に実行される．
+Job が実行されると， Job は <strong>Job queues</strong> に入る．
+Job queues とは，実行待ち状態にあるジョブの列のことであり，時間的に最も先頭に投入されたジョブが最初に実行される．
 また，複数の queue を配置し， queue ごとに priority (優先度) を設定することが可能であり， priority の高い queue に溜まった Job が優先的に実行される
 (筆者はこれをディズニーランドの"ファストパス"を連想して捉えている)．
-<code>Compute environment</code> とは，先述したクラスターとほぼ同義の概念であり，計算が実際に実行される場所 (EC2 や Fargate からなるクラスター) を指す．
+<code>Compute environment</code> とは，先述したクラスターとほぼ同義の概念であり，計算が実行される場所 (EC2 や Fargate からなるクラスター) を指す．
 Compute environment には，使用する EC2 のインスタンスタイプや同時に起動するインスタンス数の上限などの簡易なスケーリングポリシーが指定されている．
 Job queues は Compute environment の空き状況を監視しており， それに応じて Job を Compute environment に投下する．</p>
 </div>
 <div class="paragraph">
-<p>以上が AWS Batch を使用する上で理解しておかなければならない概念であるが，くどくど言葉で説明してもなかなかピンとこないだろう．
+<p>以上が AWS Batch を使用するうえで理解しておかなければならない概念であるが，くどくど言葉で説明してもなかなかピンとこないだろう．
 ここからは，実際に自分で手を動かしながら学んでいこう．</p>
 </div>
 <div id="fig_batch_concept" class="imageblock text-center">
@@ -5518,8 +5518,8 @@ Job queues は Compute environment の空き状況を監視しており， そ�
 <p>今回のハンズオンでは，機械学習のハイパーパラメータ調整を取り上げると冒頭で述べた．
 その最もシンプルな例題として， <a href="#sec_mnist_using_jupyter">Section 6.8</a> で扱った MNIST 手書き文字認識の問題を再度取り上げよう．
 <a href="#sec_mnist_using_jupyter">Section 6.8</a> では，適当にチョイスしたハイパーパラメータを用いてモデルの訓練を行った．
-ここで使用したプログラムの中でのハイパーパラメータとしては，確率的勾配降下法 (SGD) における学習率やモメンタムが含まれる．
-コードでいうと，以下の行が該当する．</p>
+ここで使用したプログラムのハイパーパラメータとしては，確率的勾配降下法 (SGD) における学習率やモメンタムが含まれる．
+コードでいうと，次の行が該当する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5553,7 +5553,7 @@ Job queues は Compute environment の空き状況を監視しており， そ�
 </div>
 <div class="paragraph">
 <p>並列化の観点でいうと，グリッドサーチとランダムサーチは各ハイパーパラメータの組の計算は独立に実行することができるため並列化が容易である．
-このように独立したジョブとして分割・並列化可能な問題を Embarrassingly parallel な問題と呼ぶ (直訳すると"恥ずかしいほど並列化可能な問題"，ということになる)．
+このように独立したジョブとして分割・並列化可能な問題を Embarrassingly parallel な問題とよぶ (直訳すると"恥ずかしいほど並列化可能な問題"，ということになる)．
 Embarrassingly parallel な問題はクラウドの強力な計算リソースを用いることで，非常なシンプルな実装で解くことができる．
 この章ではこのようなタイプの並列計算を取り上げる．</p>
 </div>
@@ -5616,7 +5616,7 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 </div>
 </div>
 <div class="paragraph">
-<p>上記のコマンドを実行すると，指定したハイパーパラメータ (学習率とモメンタム) を使ってニューラルネットの最適化が始まる．
+<p>このコマンドを実行すると，指定したハイパーパラメータ (学習率とモメンタム) を使ってニューラルネットの最適化が始まる．
 学習を行う最大のエポック数は <code>--epochs</code> パラメータで指定する．
 <a href="#sec_jupyter_and_deep_learning">Section 6</a> のハンズオンで見たような， Loss の低下がコマンドライン上に出力されるだろう (<a href="#fig_mnist_log_output">Figure 55</a>)．</p>
 </div>
@@ -5629,7 +5629,7 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 <div class="paragraph">
 <p>上に示したコマンドを使うと，計算は CPU を使って実行される．
 もし，ローカルの計算機に GPU が備わっており， <a href="https://github.com/NVIDIA/nvidia-docker">nvidia-docker</a> の設定が済んでいるいるならば，
-以下のコマンドにより GPU を使って計算を実行することができる．</p>
+次のコマンドにより GPU を使って計算を実行できる．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5637,7 +5637,7 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 </div>
 </div>
 <div class="paragraph">
-<p>上のコマンドでは，<code>--gpus all</code> というパラメータが加わった．</p>
+<p>このコマンドでは，<code>--gpus all</code> というパラメータが加わった．</p>
 </div>
 <div class="paragraph">
 <p>CPU/GPU どちらで実行した場合でも，エポックを重ねるにつれて訓練データ (Train データ) の Loss は単調に減少していくのが見て取れるだろう．
@@ -5651,8 +5651,8 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 <div class="title">Figure 56. (左) Train/Validation データそれぞれの Loss のエポックごとの変化． (右) Validation データの Accuracy のエポックごとの変化</div>
 </div>
 <div class="paragraph">
-<p>これは<strong>オーバーフィッティング</strong>と呼ばれる現象で，ニューラルネットが訓練データに過度に最適化され，訓練データの外のデータに対しての精度 (汎化性能) が向上していないことを示している．
-このような場合の対処法として， <strong>Early stopping</strong> と呼ばれるテクニックが知られている．
+<p>これは<strong>オーバーフィッティング</strong>とよばれる現象で，ニューラルネットが訓練データに過度に最適化され，訓練データの外のデータに対しての精度 (汎化性能) が向上していないことを示している．
+このような場合の対処法として， <strong>Early stopping</strong> とよばれるテクニックが知られている．
 Early stopping とは，訓練データの Loss を追跡し，それが減少から増加に転じるエポックで学習をうち止め，そのエポックでのウェイトパラメータを採用する，というものである．
 本ハンズオンでも， Early stopping によって訓練の終了を判断し，モデルの性能評価を行っていく．</p>
 </div>
@@ -5685,7 +5685,7 @@ Early stopping とは，訓練データの Loss を追跡し，それが減少�
 <div class="title">Figure 57. アプリケーションのアーキテクチャ</div>
 </div>
 <div class="paragraph">
-<p>簡単にまとめると，以下のような設計である．</p>
+<p>簡単にまとめると，次のような設計である．</p>
 </div>
 <div class="ulist">
 <ul>
@@ -5920,7 +5920,7 @@ Early stopping とは，訓練データの Loss を追跡し，それが減少�
 </td>
 <td class="content">
 <div class="paragraph">
-<p><code>g4dn.xlarge</code> は 4 vCPU が割り当てられているので，上のプログラムで最大の vCPU 使用数が 64 だとすると，最大で 16 台のインスタンスが同時に起動することになる．</p>
+<p><code>g4dn.xlarge</code> は 1台あたり 4 vCPU が割り当てられているので，このプログラムで最大の vCPU 使用数が 64 だとすると，最大で 16 台のインスタンスが同時に起動することになる．</p>
 </div>
 <div class="paragraph">
 <p>ここで注意が一点ある．
@@ -5950,7 +5950,6 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 <div class="paragraph">
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (# で始まる行はコメントである)．
-それぞれの意味を忘れてしまった場合は，前のハンズオンに戻って復習していただきたい．
 シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </div>
 <div class="listingblock">
@@ -5979,9 +5978,9 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 </div>
 <div class="paragraph">
 <p>まず目を向けてほしいのが，画面の一番下にある Compute environment overview の中の <code>SimpleBatchcompute-env</code> という名前の項目だ．
-Compute environment とは，先ほど述べたとおり，計算が実行される環境 (クラスターと読み替えても良い) である．
-上のプログラムで指定したとおり， <code>g4dn.xlarge</code> が実際に使用されるインスタンスタイプとして表示されている．
-また，この時点ではひとつもジョブが走っていないので， <code>desired vCPUs</code> は 0 になっている．</p>
+Compute environment とは，先ほど述べたとおり，計算が実行される環境 (クラスターと読み替えてもよい) である．
+プログラムで指定したとおり， <code>g4dn.xlarge</code> が実際に使用されるインスタンスタイプとして表示されている．
+また，この時点では一つもジョブが走っていないので， <code>desired vCPUs</code> は 0 になっている．</p>
 </div>
 <div class="paragraph">
 <p>次に，Job queue overview にある <code>SimpleBatch-queue</code> という項目に注目してほしい．
@@ -5998,7 +5997,7 @@ ECR を利用する利点は，自分だけがアクセスすることのでき�
 Batch は ECR から image を pull してくることで，タスクを実行する (<a href="#fig_batch_architecture">Figure 57</a>)．</p>
 </div>
 <div class="paragraph">
-<p>スタックのソースコードでいうと，以下の箇所が ECR を定義している．</p>
+<p>スタックのソースコードでいうと，次の箇所が ECR を定義している．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6059,7 +6058,7 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 <div class="paragraph">
 <p>このポップアップ画面で表示されている４つのコマンドを順番に実行していくことで，手元の Docker image を ECR に push することができる．
 <strong>push を実行する前に， AWS の認証情報が設定されている</strong>ことを確認しよう．
-その上で，ハンズオンのソースコードの中にある <strong><code>docker/</code> という名前のディレクトリに移動</strong>する．
+そのうえで，ハンズオンのソースコードの中にある <strong><code>docker/</code> という名前のディレクトリに移動</strong>する．
 そうしたら，ポップアップ画面で表示されたコマンドを上から順に実行していく．</p>
 </div>
 <div class="admonitionblock note">
@@ -6071,7 +6070,7 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 <td class="content">
 <div class="paragraph">
 <p>ポップアップで表示されるコマンドの2つめを見てみると <code>docker build -t XXXXX .</code> となっている．
-最後の <code>.</code> が重要で，これは， <em>現在のディレクトリにある Dockerfile を使って image をビルドせよ</em> という意味である．
+最後の <code>.</code> が重要で，これは <em>現在のディレクトリにある Dockerfile を使って image をビルドせよ</em> という意味である．
 このような理由で， <code>Dockerfile</code> が置いてあるディレクトリに移動する必要がある．</p>
 </div>
 </td>
@@ -6108,7 +6107,7 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_job_を実行する_まずはひとつだけ">9.9. Job を実行する (まずはひとつだけ)</h3>
+<h3 id="_job_を実行する_まずは一つだけ">9.9. Job を実行する (まずは一つだけ)</h3>
 <div class="paragraph">
 <p>さて，ここからは実際に AWS Batch にジョブを投入する方法を見ていこう．</p>
 </div>
@@ -6131,30 +6130,74 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 <p>Jupyter notebook が起動したら， <code>run_single.ipynb</code> を開く．</p>
 </div>
 <div class="paragraph">
-<p>最初の [1], [3] 番のセルは，ジョブをサブミットするための関数 (<code>submit_job()</code>) を定義している．</p>
+<p>最初の [1], [2]. [3] 番のセルは，ジョブをサブミットするための関数 (<code>submit_job()</code>) を定義している．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
 </pre></td><td class="code"><pre><span class="c1"># [1]
 </span><span class="kn">import</span> <span class="nn">boto3</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 
 <span class="c1"># [2]
+# AWS 認証ヘルパー ...省略...
+</span>
+<span class="c1"># [3]
 </span><span class="k">def</span> <span class="nf">submit_job</span><span class="p">(</span><span class="n">lr</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">momentum</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">profile_name</span><span class="o">=</span><span class="s">"default"</span><span class="p">):</span>
-    <span class="c1"># 省略...</span>
+    <span class="k">if</span> <span class="n">profile_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">profile_name</span><span class="o">=</span><span class="n">profile_name</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s">"batch"</span><span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="s">"lr"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">lr</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"."</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span> <span class="o">+</span> <span class="s">"_m"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">momentum</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"."</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">submit_job</span><span class="p">(</span>
+        <span class="n">jobName</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="n">jobQueue</span><span class="o">=</span><span class="s">"SimpleBatchjob-queue"</span><span class="p">,</span>
+        <span class="n">jobDefinition</span><span class="o">=</span><span class="s">"SimpleBatchjob-definition"</span><span class="p">,</span>
+        <span class="n">containerOverrides</span><span class="o">=</span><span class="p">{</span>
+            <span class="s">"command"</span><span class="p">:</span> <span class="p">[</span><span class="s">"--lr"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lr</span><span class="p">),</span>
+                        <span class="s">"--momentum"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">momentum</span><span class="p">),</span>
+                        <span class="s">"--epochs"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">epochs</span><span class="p">),</span>
+                        <span class="s">"--uploadS3"</span><span class="p">,</span> <span class="s">"true"</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Job submitted!"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"job name"</span><span class="p">,</span> <span class="n">resp</span><span class="p">[</span><span class="s">"jobName"</span><span class="p">],</span> <span class="s">"job ID"</span><span class="p">,</span> <span class="n">resp</span><span class="p">[</span><span class="s">"jobId"</span><span class="p">])</span>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p><code>submit_job()</code> 関数について簡単に説明しよう．
-<a href="#sec_run_mnist_docker_local">Section 9.5</a> で， MNIST を学習する Docker をローカルで実行したとき，以下のようなコマンドを使用した．</p>
+<a href="#sec_run_mnist_docker_local">Section 9.5</a> で， MNIST の Docker をローカルで実行したとき，次のようなコマンドを使用した．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6165,7 +6208,7 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 <p>ここで， <code>--lr 0.1 --momentum 0.5 --epochs 100</code> の部分が， Docker に渡されるコマンドである．</p>
 </div>
 <div class="paragraph">
-<p>AWS Batch でジョブを実行する際も，同じようなコマンドを Docker に渡せば良い．
+<p>AWS Batch でジョブを実行する際も，同じようなコマンドを Docker に渡せばよい．
 <code>submit_job()</code> 関数は，このコマンドの文字列を生成し，ジョブに渡している．
 コードでは以下の部分が該当する．</p>
 </div>
@@ -6192,7 +6235,8 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="python"><span class="n">submit_job</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span></code></pre>
+<pre class="rouge highlight"><code data-lang="python"><span class="c1"># [4]
+</span><span class="n">submit_job</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span></code></pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -6233,7 +6277,7 @@ AWS Batch の管理コンソールを開くと， <a href="#fig_batch_running_jo
 </div>
 <div class="paragraph">
 <p><a href="#fig_batch_running_job">Figure 63</a> で赤で囲った箇所に注目してほしい．
-ひとつのジョブが投入されると，それは <code>SUBMITTED</code> という状態を経て <code>RUNNABLE</code> という状態に遷移する．
+一つのジョブが投入されると，それは <code>SUBMITTED</code> という状態を経て <code>RUNNABLE</code> という状態に遷移する．
 <code>RUNNABLE</code> とは， ジョブを実行するためのインスタンスが Compute Environment に不足しているため，新たなインスタンスが起動されるのを待っている状態に相当する．
 インスタンスの準備が整うと，ジョブの状態は <code>STARTING</code> を経て <code>RUNNING</code> に至る．</p>
 </div>
@@ -6265,7 +6309,7 @@ AWS コンソールからこれを確認しよう．</p>
 </div>
 <div class="paragraph">
 <p>さて，ここで <code>run_single.ipynb</code> に戻ってこよう．
-[5] から [9] 番のセルでは，学習結果の CSV ファイルをダウンロードしてきて，結果の確認と可視化を行っている．</p>
+[5] から [7] 番のセルでは，学習結果の CSV ファイルのダウンロードを行っている．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6323,11 +6367,11 @@ AWS コンソールからこれを確認しよう．</p>
 </div>
 </div>
 <div class="paragraph">
-<p>[7] を実行する際， <code>bucket_name</code> という変数の値を，<strong>自分自身のバケットの名前に置き換える</strong>ことに注意しよう．
-(先ほど S3 コンソールから確認した <code>simplebatch-bucketXXXX</code> のことである．)</p>
+<p>[7] を実行する際， <code>bucket_name</code> という変数の値を，<strong>自分自身のバケットの名前に置き換える</strong>ことに注意しよう
+(先ほど S3 コンソールから確認した <code>simplebatch-bucketXXXX</code> のことである)．</p>
 </div>
 <div class="paragraph">
-<p>[9] 番のセルで， CSV のデータをプロットしている (<a href="#fig_loss_epoch_profile2">Figure 65</a>)．
+<p>続いて， [9] 番のセルで， CSV のデータをプロットしている (<a href="#fig_loss_epoch_profile2">Figure 65</a>)．
 ローカルで実行したときと同じように， AWS Batch を用いて MNIST モデルを訓練することに成功した！</p>
 </div>
 <div class="listingblock">
@@ -6344,7 +6388,9 @@ AWS コンソールからこれを確認しよう．</p>
 10
 11
 12
-</pre></td><td class="code"><pre><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+13
+</pre></td><td class="code"><pre><span class="c1"># [9]
+</span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
 <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"train_loss"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s">"Train"</span><span class="p">)</span>
 <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_loss"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s">"Val"</span><span class="p">)</span>
@@ -6376,8 +6422,48 @@ AWS コンソールからこれを確認しよう．</p>
 <p>先ほど実行した <code>run_single.ipynb</code> と同じディレクトリにある <code>run_sweep.ipynb</code> を開く．</p>
 </div>
 <div class="paragraph">
-<p>セル [1], [2], [3] は <code>run_single.ipynb</code> と同一である．
-セル[4] の for ループを使って，グリッド状にハイパーパラメータの組み合わせを用意し， batch にジョブを投入している．</p>
+<p>セル [1], [2], [3] は <code>run_single.ipynb</code> と同一である．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+</pre></td><td class="code"><pre><span class="c1"># [1]
+</span><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="c1"># [2]
+# AWS 認証ヘルパー ...省略...
+</span>
+<span class="c1"># [3]
+</span><span class="k">def</span> <span class="nf">submit_job</span><span class="p">(</span><span class="n">lr</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">momentum</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">profile_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c1"># ...省略...</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>セル [4] の for ループを使って，グリッド状にハイパーパラメータの組み合わせを用意し， batch にジョブを投入している．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="c1"># [4]
+</span><span class="k">for</span> <span class="n">lr</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]:</span>
+        <span class="n">submit_job</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>セル [4] を実行したら， Batch のコンソールを開こう．
@@ -6422,8 +6508,8 @@ Batch がジョブの投下に合わせて必要な数のインスタンスを�
 最後に EC2 コンソールに行って，すべての g4dn インスタンスが停止していることを確認しよう．</p>
 </div>
 <div class="paragraph">
-<p>以上から， AWS Batch を使うことで，<strong>ジョブの投入に応じて自動的に EC2 インスタンスが起動され，ジョブの完了とともに直ちにインスタンスの停止が行われる</strong>一連の挙動を観察することができた．
-一つのジョブがおよそ10分の時間がかかるので，9個のハイパーパラメータの組を逐次的に計算していた場合は90分の時間を要することになる．
+<p>以上から， AWS Batch を使うことで，<strong>ジョブの投入に応じて自動的に EC2 インスタンスが起動され，ジョブの完了とともに，ただちにインスタンスの停止が行われる</strong>一連の挙動を観察することができた．
+一つのジョブの完了におよそ10分の時間がかかるので，9個のハイパーパラメータの組を逐次的に計算していた場合は90分の時間を要することになる．
 AWS Batch を使ってこれらの計算を並列に実行することで，ジョブ一個分の計算時間 (=10分) ですべての計算を終えることができた！</p>
 </div>
 <div class="paragraph">
@@ -6534,10 +6620,10 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>今回のパラメータサーチは学習用として極めて単純化されたものである点は承知いただきたい．</p>
+<p>今回のパラメータサーチは勉強用に極めて単純化されたものである点は承知いただきたい．</p>
 </div>
 <div class="paragraph">
-<p>例えば，今回は学習率が 0.1 が最も良いとされたが，それは訓練のエポックを 100 に限定しているからかもしれない．
+<p>たとえば，今回は学習率が 0.1 が最も良いとされたが，それは訓練のエポックを 100 に限定しているからかもしれない．
 学習率が低いとその分訓練に必要なエポック数も多くなる．
 訓練のエポック数をもっと増やせばまた違った結果が観察される可能性はある．</p>
 </div>
@@ -6561,9 +6647,9 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 <p>これにて，本ハンズオンは終了である．最後にスタックを削除しよう．</p>
 </div>
 <div class="paragraph">
-<p>今回のスタックを削除するにあたり，ECR に配置された Docker のイメージは手動で削除されなければならない．
+<p>今回のスタックを削除するにあたり，ECR に配置された Docker のイメージは手動で削除されなければならない
 (これをしないと， <code>cdk destroy</code> を実行したときにエラーになってしまう．
-これは CloudFormation の仕様なので従うしかない．)</p>
+これは CloudFormation の仕様なので従うしかない)．</p>
 </div>
 <div class="paragraph">
 <p>ECR の Docker image を削除するには， ECR のコンソールに行き，イメージが配置されたレポジトリを開く．
@@ -10127,7 +10213,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-07-31 01:49:45 UTC
+Last updated 2021-07-31 02:45:57 UTC
 </div>
 </div>
 <style>
