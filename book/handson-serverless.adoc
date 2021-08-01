@@ -13,10 +13,19 @@
 
 === Lambda ハンズオン
 
-まず最初に， Lambda を実際に動かしてみよう．
-以下では， AWS CDK を利用してとてもシンプルな Lambda の関数を作成する．
+まずは， Lambda を実際に動かしてみよう．
+ハンズオンのソースコードは GitHub の
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda[/handson/serverless/lambda]
+に置いてある．
 
-ハンズオンのソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda[こちらのリンク] に置いてある．
+このハンズオンで使用するアプリケーションのスケッチを <<fig:lambda_deploy>> に示す．
+STEP 1 では，AWS CDK を使用して Python で書かれたコードを Lambda に登録する．
+続いて STEP 2 では， Invoke API を使用して，同時にいくつもの Lambda を起動し，並列な計算を行う．
+Lambda のワークフローを体験する目的で最小限の設定である．
+
+[[fig:lambda_deploy]]
+.Lambda チュートリアルの概要
+image::imgs/handson-serverless/lambda_deploy.png[lambda_deploy, 700, align="center"]
 
 [WARNING]
 ====
@@ -60,10 +69,10 @@ class SimpleLambda(core.Stack):
 これは非常に単純な関数で，2-5秒のランダムな時間スリープした後，["Charmander", "Bulbasaur", "Squirtle"] のいずれかの文字列をランダムに返す
 (これらは初代ポケットモンスターのゲームでオーキド博士にもらうヒトカゲ・フシギダネ・ゼニガメのことだ)．
 <2> 次に， Lambda に <1> で書いた関数を配置している．
-パラメータの意味は，文字通りの意味なので特に難しくはないが，以下に解説する．
+パラメータの意味は，文字どおりの意味なので難しくはないが，以下に解説する．
 * `runtime=_lambda.Runtime.PYTHON_3_7`:
 ここでは， Python3.7 を使って上記で定義された関数を実行せよ，と指定している．
-Python3.7 の他に， Node.js, Java, Ruby, Go などの言語を指定することが可能である．
+Python3.7 のほかに， Node.js, Java, Ruby, Go などの言語を指定することが可能である．
 * `code=_lambda.Code.from_inline(FUNC)`:
 実行されるべき関数が書かれたコードを指定する．
 ここでは， `FUNC=...` で定義した文字列を渡しているが，文字列以外にもファイルのパスを渡すことも可能である．
@@ -119,8 +128,8 @@ image::imgs/handson-serverless/lambda_console_func_list.png[cdk output, 700, ali
 今回のアプリケーションで作成したのが `SimpleLambda-YYYY` という名前のついた関数だ．
 関数の名前をクリックして，詳細を見てみる．
 すると <<handson_04_lambda_console_func_detail>> のような画面が表示されるはずだ．
-先ほどプログラムの中で定義したPythonの関数がエディターから確認することができる．
-また，下の方にスクロールすると，関数の各種設定も確認することができる．
+先ほどプログラムの中で定義したPythonの関数がエディターから確認できる．
+さらに下の方にスクロールすると，関数の各種設定も確認できる．
 
 [[handson_04_lambda_console_func_detail]]
 .Lambda コンソール - 関数の詳細
@@ -129,20 +138,19 @@ image::imgs/handson-serverless/lambda_console_func_detail.png[lambda_console_fun
 [TIP]
 ====
 Lambda で実行されるコードは， Lambda のコンソール画面 (<<handson_04_lambda_console_func_detail>>) のエディターで編集することもできる．
-
-デバッグをする時などは，こちらを直接いじる方が早い場合もある．
+デバッグをするときなどは，こちらを直接いじる方が早い場合もある．
 その場合は， CDK のコードに行った編集を反映させなおすことを忘れずに．
 ====
 
 ==== Lambda 関数の実行
 
-それでは，作成した Lambda 関数を実際に実行 (invoke) してみよう．
+それでは，作成した Lambda 関数を実行 (invoke) してみよう．
 AWS の API を使うことで，関数の実行をスタートすることができる．
 今回は， https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_one.py[invoke_one.py] に関数を実行するための簡単なプログラムを提供している．
 興味のある読者はコードを読んでもらいたい．
 
 以下のコマンドで，Lambda の関数を実行する．
-コマンドの `XXXX` の部分はは，先ほどデプロイしたときに `SimpleLambda.FunctionName = XXXX` で得られた XXXX の文字列で置換する．
+コマンドの `XXXX` の部分は，先ほどデプロイしたときに `SimpleLambda.FunctionName = XXXX` で得られた XXXX の文字列で置換する．
 
 [source, bash]
 ----
@@ -150,14 +158,14 @@ $ python invoke_one.py XXXX
 ----
 
 すると， `"Congratulations! You are given Squirtle"` という出力が得られるはずだ．
-とてもシンプルではあるが，クラウド上で先ほどの関数が走り，乱数が生成された上で，ポケモンが選択されて出力が返されている．
-上のコマンドを何度か打ってみて，実行のごとに違うポケモンが返されることを確認しよう．
+とてもシンプルではあるが，クラウド上で先ほどの関数が走り，乱数が生成されたうえで，ポケモンが選択されて出力が返されている．
+このコマンドを何度か打ってみて，実行ごとに異なるポケモンが返されることを確認しよう．
 
-さて，上のコマンドは，一度につき一回の関数を実行したわけであるが， Lambda の本領は一度に大量のタスクを同時に実行できる点である．
+さて，このコマンドは，一度につき一回の関数を実行したわけであるが， Lambda の本領は一度に大量のタスクを同時に実行できる点である．
 そこで，今度は一度に100個のタスクを同時に送信してみよう．
 
-以下のコマンドを実行する．
-XXXX の部分は上と同様に置き換える．
+次のコマンドを実行する．
+XXXX の部分は前述と同様に置き換える．
 第二引数の `100` は 100個のタスクを投入せよ，という意味である．
 
 [source, bash]
@@ -165,7 +173,7 @@ XXXX の部分は上と同様に置き換える．
 $ python invoke_many.py XXXX 100
 ----
 
-すると以下のような出力が得られるはずだ．
+すると次のような出力が得られるはずだ．
 
 [source, bash]
 ----
@@ -188,7 +196,7 @@ image::imgs/handson-serverless/lambda_console_monitoring.png[lambda_console_moni
 
 <<handson_04_lambda_console_monitoring>> で "Invocations" が関数が何度実行されたかを意味している．
 たしかに100回実行されていることがわかる．
-さらに， "Concurrent executions" が何個のタスクが同時に行われたかを示している．
+さらに， "Concurrent executions" は何個のタスクが同時に行われたかを示している．
 ここでは 96 となっていることから，96個のタスクが並列的に実行されたことを意味している
 (これが 100 とならないのは，タスクの開始のコマンドが送られたのが完全には同タイミングではないことに起因する)．
 
@@ -198,8 +206,8 @@ image::imgs/handson-serverless/lambda_console_monitoring.png[lambda_console_moni
 
 [TIP]
 ====
-興味がある人は，一気に1000個などのジョブを投入してみると良い．
-Lambda はそのような大量のリクエストにも対応することができることが確認できるだろう．
+興味がある人は，一気に1000個などのジョブを投入してみるとよい．
+Lambda はそのような大量のリクエストにも対応できることが確認できるだろう．
 が，あまりやりすぎると Lambda の無料利用枠を超えて料金が発生してしまうので注意．
 ====
 
@@ -214,16 +222,25 @@ Lambda はそのような大量のリクエストにも対応することがで�
 $ cdk destroy
 ----
 
+[[sec:dynamodb_tutorial]]
 === DynamoDB ハンズオン
 
 続いて， DynamoDB の簡単なチュートリアルをやってみよう．
-ここでは，新しい DynamoDB のテーブルを作成し，そしてそこにデータの読み書きを行ってみる．
+ハンズオンのソースコードは GitHub の
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb[/handson/serverless/dynamodb]
+に置いてある．
 
-ハンズオンのソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb[こちらのリンク] に置いてある．
+このハンズオンで使用するアプリケーションのスケッチを <<fig:dynamodb_deploy>> に示す．
+STEP 1 では，AWS CDK を使用して DynamoDB のテーブルを初期化し，デプロイする．
+続いて STEP 2 では， API を使用してデータベースのデータの書き込み・読み出し・削除などの操作を練習する．
+
+[[fig:dynamodb_deploy]]
+.DynamoDB チュートリアルの概要
+image::imgs/handson-serverless/dynamodb_deploy.png[dynamodb_deploy, 700, align="center"]
 
 [WARNING]
 ====
-このハンズオンは，基本的に https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[AWS DynamoDB の無料枠] の範囲内で実行することができる．
+このハンズオンは，基本的に https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[AWS DynamoDB の無料枠] の範囲内で実行できる．
 ====
 
 https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/app.py[app.py] にデプロイするプログラムが書かれている．
@@ -246,25 +263,26 @@ class SimpleDynamoDb(core.Stack):
         )
 ----
 
-以上のコードで，最低限の設定がなされた空の DynamoDB テーブルを作成することができる．
+このコードで，最低限の設定がなされた空の DynamoDB テーブルが作成される．
 それぞれのパラメータの意味を簡単に解説しよう．
 
 * `partition_key`:
-全ての DynamoDB テーブルには Partition Key が定義されていなければならない．
-Partition key とは，テーブル内の要素 (レコード) ごとに固有のIDのことである．
-同一の Partition key を持った要素がテーブルの中に二つ以上存在することはできない
-(注: Sort Key を使用している場合は除く．詳しくは https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html[公式ドキュメンテーション] 参照)．
+すべての DynamoDB テーブルには Partition Key が定義されていなければならない．
+Partition key とは，テーブル内の要素 (レコード) ごとに存在する固有のIDのことである．
+同一の Partition key をもった要素がテーブルの中に二つ以上存在することはできない
+(注: Sort Key を使用している場合は除く．詳しくは https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html[公式ドキュメンテーション "Core Components of Amazon DynamoDB"] 参照)．
 また， Partition key が定義されていない要素はテーブルの中に存在することはできない．
-ここでは，Partition key に `item_id` という名前をつけている．
+ここでは， Partition key に `item_id` という名前をつけている．
 * `billing_mode`:
 `ddb.BillingMode.PAY_PER_REQUEST` を指定することで，
 https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html#HowItWorks.OnDemand[On-demand Capacity Mode]
 の DynamoDB が作成される．
-他に `PROVISIONED` というモードがあるが，これはかなり高度なケースを除いて使用しないだろう．
+ほかに `PROVISIONED` というモードがあるが，これはかなり高度なケースを除いて使用しないだろう．
 * `removal_policy`: CloudFormation のスタックが消去されたときに， DynamoDB も一緒に消去されるかどうかを指定する．
-上のコードでは `DESTROY` を選んでいるので，すべて消去される．
-他のオプションを選択すると，スタックを消去しても DynamoDB のバックアップを残す，などの動作を定義することができる．
+このコードでは `DESTROY` を選んでいるので，すべて消去される．
+ほかのオプションを選択すると，スタックを消去しても DynamoDB のバックアップを残す，などの動作を定義することができる．
 
+[[sec:serverless_dynamodb_deploy]]
 ==== デプロイ
 
 デプロイの手順は，これまでのハンズオンとほとんど共通である．
@@ -304,7 +322,7 @@ image::imgs/handson-serverless/dynamodb_table_list.png[cdk output, 700, align="c
 今回のアプリケーションで作成したのが SimpleDynamoDb-YYYY という名前のついたテーブルだ．
 テーブルの名前をクリックして，詳細を見てみる．
 すると <<handson_04_dynamodb_table_detail>> のような画面が表示されるはずだ．
-"Items" のタブをクリックすると，テーブルの中のレコードを確認することができる．
+"Items" のタブをクリックすると，テーブルの中のレコードを確認できる．
 現時点ではなにもデータを書き込んでいないので，空である．
 
 [[handson_04_dynamodb_table_detail]]
@@ -313,7 +331,7 @@ image::imgs/handson-serverless/dynamodb_table_detail.png[cdk output, 700, align=
 
 ==== データの読み書き
 
-それでは，上で作ったテーブルを使ってデータの読み書きを実践してみよう．
+それでは， <<sec:serverless_dynamodb_deploy>> で作ったテーブルを使ってデータの読み書きを実践してみよう．
 ここでは Python と https://boto3.amazonaws.com/v1/documentation/api/latest/index.html[boto3] ライブラリを用いた方法を紹介する．
 
 まずは，テーブルに新しい要素を追加してみよう．
@@ -338,7 +356,7 @@ def write_item(table_name):
     )
 ----
 
-コードを簡単に上から読んでいくと，まず最初に boto3 ライブラリをインポートし， `dynamodb` のリソースを呼び出している．
+コードを上から読んでいくと，まず最初に boto3 ライブラリをインポートし， `dynamodb` のリソースを呼び出している．
 `write_item()` 関数は， DynamoDB のテーブルの名前 (上で見たSimpleDynamoDb-YYYY) を引数として受け取る．
 そして， `put_item()` メソッドを呼ぶことで，新しいアイテムを DB に書き込んでいる．
 アイテムには `item_id`, `first_name`, `last_name`, `age` の4つの属性が定義されている．
@@ -347,7 +365,7 @@ https://en.wikipedia.org/wiki/Universally_unique_identifier[UUID4]
 を用いたランダムな文字列を割り当てている．
 
 では， `simple_write.py` を実行してみよう．
-"YYYY" の部分を自分がデプロイしたテーブルの名前に置き換えた上で，次のコマンドを実行する．
+"YYYY" の部分を自分がデプロイしたテーブルの名前に置き換えたうえで，次のコマンドを実行する．
 
 [source, bash]
 ----
@@ -356,7 +374,7 @@ $ python simple_write.py SimpleDynamoDb-SimpleTableYYYY
 
 新しい要素が正しく書き込めたか， AWS コンソールから確認してみよう．
 <<handson_04_dynamodb_table_detail>> と同じ手順で，テーブルの中身の要素の一覧を表示する．
-すると <<dynamodb_table_new_item>> のように，確かに新しい要素が見つかるだろう．
+すると <<fig:dynamodb_table_new_item>> のように，期待通り新しい要素が見つかるだろう．
 
 [[fig:dynamodb_table_new_item]]
 .DynamoDB に新しい要素が追加されたことを確認
@@ -390,7 +408,7 @@ $ python simple_read.py SimpleDynamoDb-SimpleTableYYYY
 
 ==== 大量のデータの読み書き
 
-DynamoDB の利点は，最初に述べた通り，負荷に応じて自在にその処理能力を拡大できる点である．
+DynamoDB の利点は，最初に述べたとおり，負荷に応じて自在にその処理能力を拡大できる点である．
 
 そこで，ここでは一度に大量のデータを書き込む場合をシミュレートしてみよう．
 https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py[batch_rw.py] に，一度に大量の書き込みを実行するためのプログラムが書いてある．
@@ -406,7 +424,7 @@ $ python batch_rw.py YYYY write 1000
 
 さらに，データベースの検索をかけてみよう．
 今回書き込んだデータには `age` という属性に1から50のランダムな整数が割り当てられている．
-`age` が2以下であるような要素だけを検索し，拾ってくるには，以下のコマンドを実行すればよい．
+`age` が2以下であるような要素だけを検索し拾ってくるには，次のコマンドを実行すればよい．
 
 [source, bash]
 ----
@@ -414,7 +432,7 @@ $ python batch_rw.py YYYY search_under_age 2
 ----
 
 上の2つのコマンドを何回か繰り返し実行してみて，データベースに負荷をかけてみよう．
-特に大きな遅延なく結果が返ってくることが確認できるだろう．
+とくに大きな遅延なく結果が返ってくることが確認できるだろう．
 
 ==== スタックの削除
 
@@ -431,9 +449,17 @@ $ cdk destroy
 === S3 ハンズオン
 
 最後に， S3 の簡単なチュートリアルを紹介する．
-チュートリアルの内容は， S3 に新しいバケット (Bucket) を作成し，データのアップロード・ダウンロードを実行するというものである．
+ハンズオンのソースコードは GitHub の
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3[/handson/serverless/s3]
+に置いてある．
 
-ハンズオンのソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3[こちらのリンク] に置いてある．
+<<fig:s3_deploy>> が今回提供する S3 チュートリアルの概要である．
+STEP 1 として， AWS CDK を用いて S3 に新しい空のバケット (Bucket) を作成する．
+続いて STEP 2 では，データのアップロード・ダウンロードの方法を解説する．
+
+[[fig:s3_deploy]]
+.S3 チュートリアルの概要
+image::imgs/handson-serverless/s3_deploy.png[s3_deploy, 700, align="center"]
 
 [WARNING]
 ====
