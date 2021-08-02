@@ -7466,7 +7466,7 @@ Python3.7 のほかに， Node.js, Java, Ruby, Go などの言語を指定する
 <div class="title">Figure 80. Lambda コンソール - 関数の一覧</div>
 </div>
 <div class="paragraph">
-<p>今回のアプリケーションで作成したのが <code>SimpleLambda-YYYY</code> という名前のついた関数だ．
+<p>今回のアプリケーションで作成したのが <code>SimpleLambda</code> で始まるランダムな名前のついた関数だ．
 関数の名前をクリックして，詳細を見てみる．
 すると <a href="#handson_04_lambda_console_func_detail">Figure 81</a> のような画面が表示されるはずだ．
 先ほどプログラムの中で定義したPythonの関数がエディターから確認できる．
@@ -7751,7 +7751,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 <div class="title">Figure 85. DynamoDB のコンソール (テーブルの一覧)</div>
 </div>
 <div class="paragraph">
-<p>今回のアプリケーションで作成したのが SimpleDynamoDb-YYYY という名前のついたテーブルだ．
+<p>今回のアプリケーションで作成したのが <code>SimpleDynamoDb</code> ではじまるランダムな名前のついたテーブルだ．
 テーブルの名前をクリックして，詳細を見てみる．
 すると <a href="#handson_04_dynamodb_table_detail">Figure 86</a> のような画面が表示されるはずだ．
 "Items" のタブをクリックすると，テーブルの中のレコードを確認できる．
@@ -7819,11 +7819,11 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 </div>
 <div class="paragraph">
 <p>では， <code>simple_write.py</code> を実行してみよう．
-"YYYY" の部分を自分がデプロイしたテーブルの名前に置き換えたうえで，次のコマンドを実行する．</p>
+"XXXX" の部分を自分がデプロイしたテーブルの名前 (<code>SimpleDynamoDb</code> で始まる文字列) に置き換えたうえで，次のコマンドを実行する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_write.py SimpleDynamoDb-SimpleTableYYYY</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_write.py XXXX</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7865,11 +7865,11 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 </div>
 <div class="paragraph">
 <p>次のコマンドで，このスクリプトを実行してみよう
-("YYYY" の部分を正しく置き換えることを忘れずに）．</p>
+("XXXX" の部分を正しく置き換えることを忘れずに）．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_read.py SimpleDynamoDb-SimpleTableYYYY</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_read.py XXXX</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7886,11 +7886,11 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py">batch_rw.py</a> に，一度に大量の書き込みを実行するためのプログラムが書いてある．</p>
 </div>
 <div class="paragraph">
-<p>次のコマンドを実行してみよう (YYYY は自分のテーブルの名前に置き換える)．</p>
+<p>次のコマンドを実行してみよう (XXXX は自分のテーブルの名前に置き換える)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python batch_rw.py YYYY write 1000</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python batch_rw.py XXXX write 1000</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7903,7 +7903,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python batch_rw.py YYYY search_under_age 2</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python batch_rw.py XXXX search_under_age 2</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8104,7 +8104,7 @@ Key という呼び方は， S3 が <a href="https://en.wikipedia.org/wiki/Objec
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ python simple_s3.py XXX upload tmp.txt --key /a/b/tmp.txt</pre>
+<pre>$ python simple_s3.py XXXX upload tmp.txt --key /a/b/tmp.txt</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8113,7 +8113,7 @@ Key という呼び方は， S3 が <a href="https://en.wikipedia.org/wiki/Objec
 <div class="paragraph">
 <p>ここまでコマンドを実行し終えたところで，一度 AWS コンソールに行き S3 の中身を確認してみよう．
 S3 のコンソールに行くと，バケットの一覧が見つかるはずである．
-その中から， <code>simples3-bucketXXXX</code> と名前のついたバケットを探し，クリックする．
+その中から， <code>simples3-bucket</code> から始まるランダムな名前のついたバケットを探し，クリックする．
 するとバケットの中に含まれるファイルの一覧が表示される (<a href="#fig:s3_bucket_filelist">Figure 90</a>)．</p>
 </div>
 <div id="fig:s3_bucket_filelist" class="imageblock text-center">
@@ -8148,7 +8148,7 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_s3.py simples3-bucketXXXX download tmp.txt</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_s3.py XXXX download tmp.txt</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -9010,7 +9010,7 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="c"># プロジェクトのディレクトリに移動</span>
-<span class="nv">$ </span><span class="nb">cd </span>intro-aws/handson/05-bashoutter
+<span class="nv">$ </span><span class="nb">cd </span>intro-aws/handson/bashoutter
 
 <span class="c"># venv を作成し，依存ライブラリのインストールを行う</span>
 <span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
@@ -9063,7 +9063,7 @@ API Gateway は，前述したルーティングの機能だけでなく，認�
 </div>
 <div class="paragraph">
 <p>次に， S3 のコンソール画面に移ってみよう．
-"bashouter-XXXXX" という名前のバケットが見つかるはずである (<a href="#handson_05_s3_console">Figure 96</a>)．</p>
+<code>bashouter-</code> で始まるランダムな名前のバケットが見つかるはずである (<a href="#handson_05_s3_console">Figure 96</a>)．</p>
 </div>
 <div id="handson_05_s3_console" class="imageblock text-center">
 <div class="content">
@@ -9101,7 +9101,7 @@ HTTPie は，スタックをデプロイするときに Python 仮想環境 (ven
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">export </span><span class="nv">ENDPOINT_URL</span><span class="o">=</span><span class="s2">"https://OOOO.execute-api.ap-northeast-1.amazonaws.com/prod/"</span></code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">export </span><span class="nv">ENDPOINT_URL</span><span class="o">=</span>XXXX</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -10244,7 +10244,7 @@ Docker Image のビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-08-02 04:03:20 UTC
+Last updated 2021-08-02 09:50:38 UTC
 </div>
 </div>
 <style>
