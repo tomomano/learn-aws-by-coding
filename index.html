@@ -8206,7 +8206,9 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 最終的には， <a href="#handson_05_bashoutter">Figure 91</a> のような，ミニマルではあるがとても現代風な SNS サイトが完成する！</p>
 </div>
 <div class="paragraph">
-<p>ハンズオンのソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter">こちらのリンク</a> に置いてある．</p>
+<p>ハンズオンのソースコードは GitHub の
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter">/handson/bashoutter</a>
+に置いてある．</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -8216,7 +8218,7 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>このハンズオンは，基本的に <a href="https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&amp;all-free-tier.sort-order=asc">AWS の無料枠</a> の範囲内で実行することができる．</p>
+<p>このハンズオンは，基本的に <a href="https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&amp;all-free-tier.sort-order=asc">AWS の無料枠</a> の範囲内で実行できる．</p>
 </div>
 </td>
 </tr>
@@ -8240,7 +8242,7 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 <h4 id="_api">13.2.1. API</h4>
 <div class="paragraph">
 <p>今回のアプリケーションでは，人々からの俳句の投稿を受け付けたり，投稿された俳句の一覧を取得する，といった機能を実装したい．
-この機能を実現するための最小限の設計として， <a href="#tab_handson_05_api">Table 8</a> に示すような４つの REST API を今回は実装する．</p>
+この機能を実現するための最小限の設計として， <a href="#tab_handson_05_api">Table 8</a> に示すような四つの REST API を今回は実装する．</p>
 </div>
 <table id="tab_handson_05_api" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 8. Hands-on #5 で実装するAPI</caption>
@@ -8278,10 +8280,12 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 </td>
 <td class="content">
 <div class="paragraph">
-<p><strong>Open API Specification</strong> (OAS; 少し以前は Swagger Specification と呼ばれていた) は， REST API のための記述フォーマットである．
+<p><strong>Open API Specification</strong> (OAS; 少し前は Swagger Specification とよばれていた) は， REST API のための記述フォーマットである．
 OAS に従って API の仕様が記述されていると，簡単にドキュメンテーションを生成したり，クライアントアプリケーションを自動生成することができる．
-<a href="https://gitlab.com/tomomano/intro-aws/-/blob/master/handson/05-bashoutter/specs/swagger.yml">今回用意したAPI仕様</a> も， OAS に従って書いてあるので，非常に見やすいドキュメンテーションを瞬時に生成することができる．
-詳しくは <a href="https://swagger.io/docs/specification/about/">このページ</a> などを参照．</p>
+<a href="https://gitlab.com/tomomano/intro-aws/-/blob/master/handson/05-bashoutter/specs/swagger.yml">今回用意したAPI仕様</a> も， OAS に従って書いてあるので，非常に見やすいドキュメンテーションを瞬時に生成できる．
+詳しくは
+<a href="https://swagger.io/docs/specification/about/">Swagger の公式ドキュメンテーション</a>
+などを参照．</p>
 </div>
 </td>
 </tr>
@@ -8289,7 +8293,7 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 </div>
 </div>
 <div class="sect3">
-<h4 id="_アプリケーションアーキテクチャ">13.2.2. アプリケーションアーキテクチャ</h4>
+<h4 id="sec:bashoutter_application">13.2.2. アプリケーションアーキテクチャ</h4>
 <div class="paragraph">
 <p>このハンズオンで作成するアプリケーションの概要を <a href="#handson_05_architecture">Figure 92</a> に示す．</p>
 </div>
@@ -8300,7 +8304,7 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 <div class="title">Figure 92. ハンズオン#5で作製するアプリケーションのアーキテクチャ</div>
 </div>
 <div class="paragraph">
-<p>簡単にまとめると，以下のような設計である．</p>
+<p>簡単にまとめると，次のような設計である．</p>
 </div>
 <div class="ulist">
 <ul>
@@ -8541,19 +8545,19 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>続いて，静的コンテンツを配信するための S3 バケットを用意している．
+<td>静的コンテンツを配信するための S3 バケットを用意している．
 また，スタックのデプロイ時に，必要なファイル群を自動的にアップロードするような設定を行っている．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>続いて，それぞれの API で実行される Lambda 関数を定義している．
+<td>それぞれの API で実行される Lambda 関数を定義している．
 関数は Python3.7 で書かれており，コードは
 <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py">/handson/bashoutter/api/api.py</a>
 にある．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>次に，2で定義された Lambda 関数に対し，データベースへの読み書きのアクセス権限を付与している．</td>
+<td>&lt;2&gt; で定義された Lambda 関数に対し，データベースへの読み書きのアクセス権限を付与している．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -8562,7 +8566,7 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 </table>
 </div>
 <div class="paragraph">
-<p>それぞれについて，もう少し詳しく説明しよう．</p>
+<p>それぞれの項目について，もう少し詳しく説明しよう．</p>
 </div>
 </div>
 <div class="sect3">
@@ -8591,8 +8595,8 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 <p>ここで注目してほしいのは <code>public_read_access=True</code> の部分だ．</p>
 </div>
 <div class="paragraph">
-<p>前章で， S3 について説明を行った時には触れなかったが， S3 には <strong>Public access mode</strong> という機能がある．
-Public access mode をオンにしておくと，バケットの中のファイルは基本的にすべて認証無しで (i.e. インターネット上の誰でも) 閲覧できるようになる．
+<p>前章で， S3 について説明を行ったときには触れなかったが， S3 には <strong>Public access mode</strong> という機能がある．
+Public access mode をオンにしておくと，バケットの中のファイルは認証なしで (i.e. インターネット上の誰でも) 閲覧できるようになる．
 この設定は，一般公開されているウェブサイトの静的なコンテンツを置いておくのに最適であり，多くのサーバーレスによるウェブサービスでこのような設計が行われる．
 public access mode を設定しておくと， <code><a href="http://XXXX.s3-website-ap-northeast-1.amazonaws.com/" class="bare">http://XXXX.s3-website-ap-northeast-1.amazonaws.com/</a></code> のような固有の URL がバケットに対して付与される．
 そして，クライアントがこの URL にアクセスをすると，バケットの中にある <code>index.html</code> がクライアントに返され，ページがロードされる
@@ -8606,20 +8610,14 @@ public access mode を設定しておくと， <code><a href="http://XXXX.s3-web
 </td>
 <td class="content">
 <div class="paragraph">
-<p>より本格的なウェブページを運用する際には， public access mode の S3 バケットに， <a href="https://aws.amazon.com/cloudfront/">CloudFront</a> という機能を追加することが一般的である．</p>
+<p>より本格的なウェブページを運用する際には， public access mode の S3 バケットに， <a href="https://aws.amazon.com/cloudfront/">CloudFront</a> という機能を追加することが一般的である．
+CloudFront により，　<strong>Content Delivery Nework (CDN)</strong> や暗号化された HTTPS 通信を設定することができる．
+CloudFront についての詳細は
+<a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html">公式ドキュメンテーション "What is Amazon CloudFront?"</a>
+などを参照いただきたい．</p>
 </div>
 <div class="paragraph">
-<p>CloudFront はいくつかの役割を担っているのだが，最も重要な機能が <strong>Content Delivery Nework (CDN)</strong> である．
-CDN とは，頻繁にアクセスされるデータをメモリーなどの高速記録媒体にキャッシュしておくことで，クライアントがより高速にデータをダウンロードすることを可能にする仕組みである．
-また，世界各地のデータセンターにそのようなキャッシュを配置することで，クライアントと地理的に最も近いデータセンターからデータを配信する，というような設定も可能である．</p>
-</div>
-<div class="paragraph">
-<p>また，CloudFront を配置することで， HTTPS 通信を設定することができる
-(逆に言うと， S3 単体では HTTP 通信しか行うことができない)．
-現代的なウェブサービスでは，秘匿情報を扱う扱わないに関わらず， HTTPS を用いることが標準となっている．</p>
-</div>
-<div class="paragraph">
-<p>今回のハンズオンでは説明の簡略化のため CloudFront の設定を行わなかったが，興味のある読者は以下のリンクのプログラムが参考になるだろう．</p>
+<p>今回のハンズオンでは説明の簡略化のため CloudFront の設定を行わなかったが，興味のある読者は次のリンクのプログラムが参考になるだろう．</p>
 </div>
 <div class="ulist">
 <ul>
@@ -8648,7 +8646,7 @@ CDN とは，頻繁にアクセスされるデータをメモリーなどの高�
 </table>
 </div>
 <div class="paragraph">
-<p>Public access mode の S3 バケットを作成した後，バケットの中に配置するウェブサイトコンテンツを，以下のコードによりアップロードしている．</p>
+<p>Public access mode の S3 バケットを作成した後，バケットの中に配置するウェブサイトコンテンツを，次のコードによりアップロードしている．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8668,9 +8666,9 @@ CDN とは，頻繁にアクセスされるデータをメモリーなどの高�
 </div>
 </div>
 <div class="paragraph">
-<p>上のコードの意味は， <code>./gui/dist</code> のディレクトリの中にあるファイルをバケットに配置せよ，と言っている．
+<p>このコードの意味は， <code>./gui/dist</code> のディレクトリの中にあるファイルをバケットに配置せよ，と言っている．
 <code>./gui/dist</code> にはビルド済みのウェブサイトの静的コンテンツ (HTML/CSS/JavaScript) が入っている．
-今回は GUI の説明は特に行わないが，コードは
+今回は GUI の説明はとくに行わないが，コードは
 <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter/gui">/handson/bashoutter/gui</a>
 のディレクトリの中にある．
 興味のある読者は中身を確認してみるとよい．</p>
@@ -8694,7 +8692,7 @@ Vue を使うことで， Single page application (SPA) の技術でウェブサ
 <div class="sect3">
 <h4 id="_api_のハンドラ関数">13.2.4. API のハンドラ関数</h4>
 <div class="paragraph">
-<p>API リクエストが来たときに，リクエストされた処理を行う関数のことを特にハンドラ (handler) 関数と呼ぶ．
+<p>API リクエストが来たときに，リクエストされた処理を行う関数のことをハンドラ (handler) 関数とよぶ．
 <code>GET /haiku</code> の API に対してのハンドラ関数を定義している部分を見てみよう．</p>
 </div>
 <div class="listingblock">
@@ -8717,8 +8715,7 @@ Vue を使うことで， Single page application (SPA) の技術でウェブサ
 </div>
 </div>
 <div class="paragraph">
-<p><code>code=_lambda.Code.from_asset("api"), handler="api.get_haiku"</code>
-簡単なところから見ていくと， <code>memory_size=512</code> の箇所でメモリーの使用量を512MBに指定している．
+<p>簡単なところから見ていくと， <code>memory_size=512</code> の箇所でメモリーの使用量を512MBに指定している．
 また， <code>code=_lambda.Code.from_asset("api")</code> によって外部のディレクトリ (<code>api/</code>) を参照せよと指定しており，
 <code>handler="api.get_haiku"</code> のところで <code>api.py</code> というファイルの <code>get_haiku()</code> という関数をハンドラ関数として実行せよ，と定義している．
 次に，ハンドラ関数として使用されている <code>get_haiku()</code> のコードを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py">/handson/bashoutter/api/api.py</a>)．</p>
@@ -8769,11 +8766,11 @@ Vue を使うことで， Single page application (SPA) の技術でウェブサ
 </div>
 </div>
 <div class="paragraph">
-<p><code>response = table.scan()</code> で，俳句の格納された DynamoDB テーブルから，全ての要素を取り出している．
+<p><code>response = table.scan()</code> で，俳句の格納された DynamoDB テーブルから，すべての要素を取り出している．
 もしなにもエラーが起きなければステータスコード200が返され，もしなにかエラーが起こればステータスコード500が返されるようになっている．</p>
 </div>
 <div class="paragraph">
-<p>上記のような操作を，他の API についても繰り返すことで，すべての API のハンドラ関数が定義されている．</p>
+<p>上記のような操作を，ほかの API についても繰り返すことで，すべての API のハンドラ関数が定義されている．</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -8785,7 +8782,7 @@ Vue を使うことで， Single page application (SPA) の技術でウェブサ
 <div class="paragraph">
 <p><code>GET /haiku</code> のハンドラ関数で， <code>response = table.scan()</code> という部分があるが，実はこれは最善の書き方ではない．
 DynamoDB の <code>scan()</code> メソッドは，最大で 1MB までのデータしか返さない．
-データベースのサイズが大きく， 1MB 以上のデータがある場合には，再帰的に <code>scan()</code> メソッドを呼ぶ必要がある．
+データベースのサイズが大きく， 1MB 以上のデータがある場合には，再帰的に <code>scan()</code> メソッドをよぶ必要がある．
 詳しくは <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Table.scan">boto3 ドキュメンテーション</a> を参照．</p>
 </div>
 </td>
@@ -8812,9 +8809,9 @@ DynamoDB の <code>scan()</code> メソッドは，最大で 1MB までのデー
 </div>
 </div>
 <div class="paragraph">
-<p>これまでは説明の簡略化のため敢えて触れてこなかったが， AWS には <a href="https://aws.amazon.com/iam/">IAM (Identity and Access Management)</a> という重要な概念がある．
-IAM は基本的に，あるリソースが他のリソースに対してどのような権限を持っているか，を規定するものである．
-Lambdaは，デフォルトの状態では他のリソースにアクセスする権限をなにも有していない．
+<p>これまでは説明の簡略化のためにあえて触れてこなかったが， AWS には <a href="https://aws.amazon.com/iam/">IAM (Identity and Access Management)</a> という重要な概念がある．
+IAM は基本的に，あるリソースがほかのリソースに対してどのような権限をもっているか，を規定するものである．
+Lambdaは，デフォルトの状態ではほかのリソースにアクセスする権限をなにも有していない．
 したがって， Lambda 関数が DynamoDB のデータを読み書きするためには，それを許可するような IAM が Lambda 関数に付与されていなければならない．</p>
 </div>
 <div class="paragraph">
@@ -8832,7 +8829,7 @@ Lambdaは，デフォルトの状態では他のリソースにアクセスす�
 これにより，セキュリティを向上させるだけでなく，意図していないプログラムからのデータベースへの読み書きを防止するという点で，バグを未然に防ぐことができる．</p>
 </div>
 <div class="paragraph">
-<p>そのような理由により，上のコードでは <code>GET</code> のハンドラー関数に対しては <code>grant_read_data()</code> によって， read 権限のみを付与している．</p>
+<p>そのような理由により，このコードでは <code>GET</code> のハンドラー関数に対しては <code>grant_read_data()</code> によって， read 権限のみを付与している．</p>
 </div>
 </td>
 </tr>
@@ -8843,15 +8840,15 @@ Lambdaは，デフォルトの状態では他のリソースにアクセスす�
 <h4 id="_api_gateway">13.2.6. API Gateway</h4>
 <div class="paragraph">
 <p><a href="https://aws.amazon.com/api-gateway/">API Gateway</a> とは， API の"入り口"として，APIのリクエストパスに従って Lambda 関数などに接続を行うという機能を担う．
-このような API のリソースパスに応じて接続先を振り分けるようなサーバーを<strong>ルーター</strong>，あるいは<strong>リバースプロキシ</strong>と呼んだりする．
+このような API のリソースパスに応じて接続先を振り分けるようなサーバーを<strong>ルーター</strong>，あるいは<strong>リバースプロキシ</strong>とよんだりする．
 従来的には，ルーターにはそれ専用の仮想サーバーが置かれることが一般的であった．
 しかし， API Gateway はサーバーレスなルーターとして，固定されたサーバーを配置することなく， API のリクエストが来たときのみ起動し，API のルーティングを実行する．
-サーバーレスであることの当然の帰結として，アクセスの件数が増大した時にはそれにルーティングの処理能力を自動で増やしす機能も備わっている．</p>
+サーバーレスであることの当然の帰結として，アクセスの件数が増大したときにはそれにルーティングの処理能力を自動で増やす機能も備わっている．</p>
 </div>
 <div class="paragraph">
-<p>API Gateway を配置することで，大量　(1秒間に数千から数万件) の API リクエストに対応することのできるシステムを容易に構築することができる．
+<p>API Gateway を配置することで，大量 (1秒間に数千から数万件) の API リクエストに対応することのできるシステムを容易に構築することができる．
 API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> のように設定されている．
-また，無料利用枠により，月ごとに100万件までのリクエストは0円で使用できる．</p>
+また，無料利用枠により，月ごとに100万件までのリクエストは0円で利用できる．</p>
 </div>
 <table id="tab_handson_05_apigateway_price" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 9. API Gateway の利用料金設定 (<a href="https://aws.amazon.com/api-gateway/pricing/">参照</a>)</caption>
@@ -8976,7 +8973,7 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>上記のプログラムで 新規 API を作成すると， ランダムな URL がその API のエンドポイントとして割り当てられる．
+<p>このプログラムで 新規 API を作成すると， ランダムな URL がその API のエンドポイントとして割り当てられる．
 これを． <code>api.example.com</code> のような自分のドメインでホストしたければ， AWS によって付与された URL を自分のドメインの DNS レコードに追加すればよい．</p>
 </div>
 </td>
@@ -8992,8 +8989,7 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 <td class="content">
 <div class="paragraph">
 <p>API Gateway で新規 API を作成したとき， <code>default_cors_preflight_options=</code> というパラメータで <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">Cross Origin Resource Sharing (CORS)</a> の設定を行っている．
-これは，ブラウザで走る Web アプリケーションと API を接続する際に必要な設定である．
-興味のある読者は各自 CORS について調べてもらいたい．</p>
+これは，ブラウザで走る Web アプリケーションと API を接続するときに必要な設定である．</p>
 </div>
 </td>
 </tr>
@@ -9035,21 +9031,6 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 </div>
 <div class="title">Figure 93. CDKデプロイ実行後の出力</div>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>上記のデプロイで得られた API のエンドポイントは API Gateway によりランダムに作成されたアドレスである．
-このアドレスを DNS に登録することで，自分の管理するドメイン名 (例: api.example.com) と結びつけることが可能である．</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>AWS コンソールにログインして，デプロイされたスタックを確認してみよう．</p>
 </div>
@@ -9069,8 +9050,8 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 </div>
 <div class="paragraph">
 <p>それぞれのメソッドをクリックすると，そのメソッドの詳細情報を確認できる．
-API Gateway は，上で説明したルーティングの機能だけでなく，認証機能などを追加することも可能である．
-このハンズオンでは特にこれらの機能は使用しないが， "Method Request" と書いてある項目などがそれに相当する．
+API Gateway は，前述したルーティングの機能だけでなく，認証機能などを追加することも可能である．
+このハンズオンではとくにこれらの機能は使用しないが， "Method Request" と書いてある項目などがそれに相当する．
 次に， <a href="#handson_05_apigw_console_detail">Figure 95</a> で画面右端の赤色で囲った部分に，この API で呼ばれる Lambda 関数が指定されていることに注目しよう．
 関数名をクリックと，該当する Lambda のコンソールに遷移し，関数の中身を閲覧することが可能である．</p>
 </div>
@@ -9106,35 +9087,22 @@ API Gateway は，上で説明したルーティングの機能だけでなく�
 <h3 id="_api_リクエストを送信する">13.4. API リクエストを送信する</h3>
 <div class="paragraph">
 <p>それでは，デプロイしたアプリケーションに対し，実際に API リクエストを送信してみよう
-(S3 にあるGUIの方は一旦おいておく．今回のアプリケーションでより本質的なのは API の方だからである)．</p>
+(S3 にある GUI は一旦おいておく．
+なぜなら，今回のアプリケーションでより本質的なのは API の方だからである)．</p>
 </div>
 <div class="paragraph">
 <p>ここではコマンドラインから HTTP API リクエストを送信するためのシンプルなHTTPクライアントである <a href="https://httpie.org/">HTTPie</a> を使ってみよう．
-HTTPie は，スタックをデプロイするときに Python 仮想環境 (venv) を作成した際，一緒にインストールされている．
+HTTPie は，スタックをデプロイするときに Python 仮想環境 (venv) を作成したとき，一緒にインストールされている．
 念のためインストールがうまくいっているか確認するには，コマンドラインに <code>http</code> と打ってみる．
 ヘルプのメッセージが出力されたら準備OKである．</p>
 </div>
 <div class="paragraph">
-<p>まず最初に，先ほどデプロイを実行した際に得られた API のエンドポイントの URL (<code>Bashoutter.BashoutterApiEndpoint = XXXX</code> で得られた <code>XXXX</code> の文字列) をコマンドラインの変数に設定しておく．</p>
+<p>まず，先ほどデプロイを実行したときに得られた API のエンドポイントの URL (<code>Bashoutter.BashoutterApiEndpoint = XXXX</code> で得られた <code>XXXX</code> の文字列) をコマンドラインの変数に設定しておく．</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">export </span><span class="nv">ENDPOINT_URL</span><span class="o">=</span><span class="s2">"https://OOOO.execute-api.ap-northeast-1.amazonaws.com/prod/"</span></code></pre>
 </div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>上のコマンドで，URLは自分のデプロイしたスタックのURLに置き換える．</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
 <p>次に，俳句の一覧を取得するため， <code>GET /haiku</code> の API を送信してみよう．</p>
@@ -9160,7 +9128,7 @@ HTTPie は，スタックをデプロイするときに Python 仮想環境 (ven
 </div>
 </div>
 <div class="paragraph">
-<p>以下のような出力が得られるだろう．</p>
+<p>次のような出力が得られるだろう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9205,7 +9173,7 @@ Content-Type: application/json
 </div>
 <div class="paragraph">
 <p>次に， <code>PATCH /haiku/{item_id}</code> を呼ぶことでこの俳句にいいねを追加してみよう．
-上のコマンドで取得した俳句の <code>item_id</code> を，下のコマンドの <code>XXXX</code></p>
+一つ前のコマンドで取得した俳句の <code>item_id</code> を，次のコマンドの <code>XXXX</code> に代入した上で実行しよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9230,7 +9198,7 @@ Content-Type: application/json
 </div>
 <div class="paragraph">
 <p>最後に， DELETE リクエストを送ることで俳句をデータベースから削除しよう．
-<code>XXXX</code> は <code>item_id</code> の値で置き換えた上で以下のコマンドを実行する．</p>
+<code>XXXX</code> は <code>item_id</code> の値で置き換えたうえで次のコマンドを実行する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9247,8 +9215,8 @@ Content-Type: application/json
 <div class="sect2">
 <h3 id="_大量の_api_リクエストをシミュレートする">13.5. 大量の API リクエストをシミュレートする</h3>
 <div class="paragraph">
-<p>さて，前節ではマニュアルでひとつづづ俳句を投稿した．
-多数のユーザーがいるような SNS では，一秒間に数千件以上の投稿がされている．
+<p>さて，前節ではマニュアルで一つずつ俳句を投稿した．
+多数のユーザーがいるような SNS では，1秒間に数千件以上の投稿がされている．
 今回はサーバーレスアーキテクチャを採用したことで，そのような瞬間的な大量アクセスにも容易に対応できるようなシステムが自動的に構築されている．
 このポイントを実証するため，ここでは大量の API が送信された状況をシミュレートしてみよう．</p>
 </div>
@@ -9259,7 +9227,7 @@ Content-Type: application/json
 </div>
 <div class="paragraph">
 <p>テストとして， API を300回送ってみよう．
-以下のコマンドを実行する．</p>
+次のコマンドを実行する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9270,7 +9238,7 @@ Content-Type: application/json
 <p>数秒のうちに実行が完了するだろう．
 これがもし，単一のサーバーからなる API だったとしたら，このような大量のリクエストの処理にはもっと時間がかかっただろう．
 最悪の場合には，サーバーダウンにもつながっていたかもしれない．
-従って，今回作成したサーバーレスアプリケーションは，とてもシンプルながらも一秒間に数百件の処理を行えるような，スケーラブルなクラウドシステムであることがわかる．
+したがって，今回作成したサーバーレスアプリケーションは，とてもシンプルながらも1秒間に数百件の処理を行えるような，スケーラブルなクラウドシステムであることがわかる．
 サーバーレスでクラウドを設計することの利点を垣間見ることができただろうか？</p>
 </div>
 <div class="admonitionblock tip">
@@ -9281,8 +9249,8 @@ Content-Type: application/json
 </td>
 <td class="content">
 <div class="paragraph">
-<p>上記のコマンドにより，大量の俳句を投稿するとデータベースに無駄なデータがどんどん溜まってしまう．
-データベースを完全に空にするには，以下のコマンドを使用する．</p>
+<p>先述のコマンドにより大量の俳句を投稿するとデータベースに無駄なデータがどんどん溜まってしまう．
+データベースを完全に空にするには，次のコマンドを使用する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9354,7 +9322,7 @@ Content-Type: application/json
 この場合はスタックを削除する前に， S3 バケットの中身をすべて削除しなければならない．</p>
 </div>
 <div class="paragraph">
-<p>コンソールから実行するには， S3 コンソールに行き，バケットの中身を開いた上で，全てのファイルを選択し， "Actions" &#8594; "Delete" を実行すれば良い．</p>
+<p>コンソールから実行するには， S3 コンソールに行き，バケットの中身を開いたうえで，すべてのファイルを選択し， "Actions" &#8594; "Delete" を実行すればよいい．</p>
 </div>
 <div class="paragraph">
 <p>コマンドラインから実行するには， 次のコマンドを使う．
@@ -9382,7 +9350,7 @@ Content-Type: application/json
 最後に， <a href="#sec_bashoutter">Section 13</a> では，これらの技術を統合することで，完全サーバーレスなウェブアプリケーション "Bashoutter" を作成した．</p>
 </div>
 <div class="paragraph">
-<p>これらの演習を通じて，世の中のウェブサービスがどのようにして出来上がっているのか，少し理解が深まっただろうか？
+<p>これらの演習を通じて，世の中のウェブサービスがどのようにしてでき上がっているのか，少し理解が深まっただろうか？
 また，そのようなウェブアプリケーションを自分が作りたいと思ったとき，今回のハンズオンがその出発点となることができたならば幸いである．</p>
 </div>
 </div>
@@ -9518,7 +9486,7 @@ Content-Type: application/json
 <div class="sect2">
 <h3 id="aws_secrets">15.2. AWS のシークレットキーの作成</h3>
 <div class="paragraph">
-<p>AWS シークレットキーとは， AWS CLI や AWS CDK から AWS の API を操作する際に，ユーザー認証を行うための鍵のことである．
+<p>AWS シークレットキーとは， AWS CLI や AWS CDK から AWS の API を操作するときに，ユーザー認証を行うための鍵のことである．
 AWS CLI/CDK を使うには，最初にシークレットキーを発行する必要がある．
 AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html">公式ドキュメンテーション</a> を参照．</p>
 </div>
@@ -9564,7 +9532,7 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 </td>
 <td class="content">
 <div class="paragraph">
-<p><strong>AWS Educate Starter Account</strong> を用いている場合は，以下の手順でシークレットキーを確認する．</p>
+<p><strong>AWS Educate Starter Account</strong> を用いている場合は，次の手順でシークレットキーを確認する．</p>
 </div>
 <div class="ulist">
 <ul>
@@ -9595,8 +9563,8 @@ output = json</pre>
 <div class="ulist">
 <ul>
 <li>
-<p>上記の説明ではプロファイル名が <code>default</code> となっていたが，これは自分の好きな名前に変更しても良い．
-<code>default</code> 以外の名前を使用する場合は，コマンドを実行する際にプロファイル名を指定する必要がある (<a href="#aws_cli_install">Section 15.3</a>)．</p>
+<p>上記の説明ではプロファイル名が <code>default</code> となっていたが，これは自分の好きな名前に変更してもよい．
+<code>default</code> 以外の名前を使用する場合は，コマンドを実行するときにプロファイル名を指定する必要がある (詳しくは <a href="#aws_cli_install">Section 15.3</a>)．</p>
 </li>
 </ul>
 </div>
@@ -9631,7 +9599,7 @@ output = json</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>インストールできたか確認するため，以下のコマンドを打ってバージョン情報が出力されることを確認する．</p>
+<p>インストールできたか確認するため，次のコマンドを打ってバージョン情報が出力されることを確認する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9639,7 +9607,8 @@ output = json</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>インストールができたら，以下のコマンドにより初期設定を行う (<a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">参照</a>)．</p>
+<p>インストールができたら，次のコマンドにより初期設定を行う
+(<a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">参照</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9654,8 +9623,8 @@ output = json</pre>
 最後の <code>Default output format</code> は <code>JSON</code> としておくとよい．</p>
 </div>
 <div class="paragraph">
-<p>上記のコマンドを完了すると， <code>~/.aws/credentials</code> と <code>~/.aws/config</code>　という名前のファイルが生成されているはずである．
-念の為，中身をしてみるとよい．</p>
+<p>このコマンドを完了すると， <code>~/.aws/credentials</code> と <code>~/.aws/config</code>　という名前のファイルが生成されているはずである．
+念のため， <code>cat</code> コマンドを使って中身を確認してみるとよい．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9671,14 +9640,11 @@ output <span class="o">=</span> json</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>上記のような出力が得られるはずである．</p>
-</div>
-<div class="paragraph">
 <p><code>~/.aws/credentials</code> には認証鍵の情報が， <code>~/.aws/config</code> には AWS CLI の設定が記録されている．</p>
 </div>
 <div class="paragraph">
 <p>デフォルトでは， <code>[default]</code> という名前でプロファイルが保存される．
-いくつかのプロファイルを使い分けたければ， default の例に従って，例えば <code>[myprofile]</code> などという名前でプロファイルを追加すればよい．</p>
+いくつかのプロファイルを使い分けたければ， default の例に従って，たとえば <code>[myprofile]</code> などという名前でプロファイルを追加すればよい．</p>
 </div>
 <div class="paragraph">
 <p>AWS CLI でコマンドを打つときに，プロファイルを使い分けるには，</p>
@@ -9710,7 +9676,8 @@ output <span class="o">=</span> json</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>上の環境変数は， <code>~/.aws/credentials</code> よりも高い優先度を持つので，環境変数が設定されていればそちらの情報が使用される (<a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">参照</a>)．</p>
+<p>これらの環境変数は， <code>~/.aws/credentials</code> よりも高い優先度をもつので，環境変数が設定されていればそちらの情報が使用される
+(<a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">参照</a>)．</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -9735,7 +9702,7 @@ output <span class="o">=</span> json</code></pre>
 将来のバージョンでは変更される可能性があるので，常に <a href="https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html">公式のドキュメンテーション</a> で最新の情報をチェックすることを忘れずに．</p>
 </div>
 <div class="paragraph">
-<p>Node.js がインストールされていれば，基本的に以下のコマンドを実行すれば良い．</p>
+<p>Node.js がインストールされていれば，基本的に次のコマンドを実行すればよい．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9764,7 +9731,7 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 </table>
 </div>
 <div class="paragraph">
-<p>インストールできたか確認するため，以下のコマンドを打って正しくバージョンが表示されることを確認する．</p>
+<p>インストールできたか確認するため，次のコマンドを打って正しくバージョンが表示されることを確認する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9772,7 +9739,8 @@ APIの変更によりエラーが生じた場合は， version 1.100.0 を使用
 </div>
 </div>
 <div class="paragraph">
-<p>インストールができたら，以下のコマンドによりAWS側の初期設定を行う．これは一度実行すればOK．</p>
+<p>インストールができたら，次のコマンドによりAWS側の初期設定を行う．
+これは一度実行すればOK．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10020,10 +9988,10 @@ Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き
 </div>
 <div class="paragraph">
 <p>コードのシェアをよりスムーズにするためには，ライブラリのバージョンはプロジェクトごとに管理されるべきである．
-それを可能にするのが Python 仮想環境と呼ばれるツールであり， <a href="https://docs.python.org/3/tutorial/venv.html">venv</a>, <a href="https://github.com/pyenv/pyenv">pyenv</a>, <a href="https://docs.conda.io/en/latest/">conda</a> などがよく使われる．</p>
+それを可能にするのが Python 仮想環境とよばれるツールであり， <a href="https://docs.python.org/3/tutorial/venv.html">venv</a>, <a href="https://github.com/pyenv/pyenv">pyenv</a>, <a href="https://docs.conda.io/en/latest/">conda</a> などがよく使われる．</p>
 </div>
 <div class="paragraph">
-<p>そのなかでも， <code>venv</code> は Python に標準搭載されているので，とても便利である．
+<p>そのなかでも， <code>venv</code> は Python に標準搭載されているのでとても便利である．
 <code>pyenv</code> や <code>conda</code> は，別途インストールの必要があるが，それぞれの長所もある．</p>
 </div>
 <div class="paragraph">
@@ -10063,7 +10031,7 @@ Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き
 <p>仮想環境を起動すると，それ以降実行する <code>pip</code> コマンドは， <code>.env/</code> 以下にインストールされる．このようにして，プロジェクトごとに使うライブラリのバージョンを切り分けることができる．</p>
 </div>
 <div class="paragraph">
-<p>Python では <code>requirements.txt</code> というファイルにに依存ライブラリを記述するのが一般的な慣例である．他人からもらったプログラムに， <code>requirements.txt</code> が定義されていれば，</p>
+<p>Python では <code>requirements.txt</code> というファイルに依存ライブラリを記述するのが一般的な慣例である．他人からもらったプログラムに， <code>requirements.txt</code> が定義されていれば，</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10111,7 +10079,9 @@ Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き
 </div>
 <div class="paragraph">
 <p>Docker Image は <a href="https://hub.docker.com/repository/docker/tomomano/labc">Docker Hub</a> においてある．
-Docker Image のビルドファイルは <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile">こちら</a> にある．</p>
+Docker Image のビルドファイルは GitHub の
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile">/docker/Dockerfile</a>
+にある．</p>
 </div>
 <div class="paragraph">
 <p>次のコマンドで container を起動する．</p>
@@ -10153,7 +10123,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <p>AWS の認証情報を設定することも忘れずに．
 <a href="#aws_cli_install">Section 15.3</a> で記述したように， <code>AWS_ACCESS_KEY_ID</code> などの環境変数を設定するのが簡単な方法である．
 あるいは，<strong>ローカルマシンの</strong> <code>~/.aws/credentials</code> に認証情報が書き込まれているなら，このディレクトリを container に<strong>マウント</strong>することで，同じ認証ファイルを container 内部から参照することが可能である．
-この選択肢を取る場合は，以下のコマンドで container を起動する．</p>
+この選択肢を取る場合は，次のコマンドで container を起動する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10274,7 +10244,7 @@ Docker Image のビルドファイルは <a href="https://github.com/tomomano/le
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-08-01 00:22:28 UTC
+Last updated 2021-08-02 04:03:20 UTC
 </div>
 </div>
 <style>
