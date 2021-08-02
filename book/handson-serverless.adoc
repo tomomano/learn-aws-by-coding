@@ -125,7 +125,7 @@ AWS コンソールにログインして，デプロイされたスタックを�
 .Lambda コンソール - 関数の一覧
 image::imgs/handson-serverless/lambda_console_func_list.png[cdk output, 700, align="center"]
 
-今回のアプリケーションで作成したのが `SimpleLambda-YYYY` という名前のついた関数だ．
+今回のアプリケーションで作成したのが `SimpleLambda` で始まるランダムな名前のついた関数だ．
 関数の名前をクリックして，詳細を見てみる．
 すると <<handson_04_lambda_console_func_detail>> のような画面が表示されるはずだ．
 先ほどプログラムの中で定義したPythonの関数がエディターから確認できる．
@@ -319,7 +319,7 @@ AWS コンソールにログインして，デプロイされたスタックを�
 .DynamoDB のコンソール (テーブルの一覧)
 image::imgs/handson-serverless/dynamodb_table_list.png[cdk output, 700, align="center"]
 
-今回のアプリケーションで作成したのが SimpleDynamoDb-YYYY という名前のついたテーブルだ．
+今回のアプリケーションで作成したのが `SimpleDynamoDb` ではじまるランダムな名前のついたテーブルだ．
 テーブルの名前をクリックして，詳細を見てみる．
 すると <<handson_04_dynamodb_table_detail>> のような画面が表示されるはずだ．
 "Items" のタブをクリックすると，テーブルの中のレコードを確認できる．
@@ -365,11 +365,11 @@ https://en.wikipedia.org/wiki/Universally_unique_identifier[UUID4]
 を用いたランダムな文字列を割り当てている．
 
 では， `simple_write.py` を実行してみよう．
-"YYYY" の部分を自分がデプロイしたテーブルの名前に置き換えたうえで，次のコマンドを実行する．
+"XXXX" の部分を自分がデプロイしたテーブルの名前 (`SimpleDynamoDb` で始まる文字列) に置き換えたうえで，次のコマンドを実行する．
 
 [source, bash]
 ----
-$ python simple_write.py SimpleDynamoDb-SimpleTableYYYY
+$ python simple_write.py XXXX
 ----
 
 新しい要素が正しく書き込めたか， AWS コンソールから確認してみよう．
@@ -397,11 +397,11 @@ def scan_table(table_name):
 `table.scan().get("Items")` によって，テーブルの中にあるすべての要素を読みだしている．
 
 次のコマンドで，このスクリプトを実行してみよう
-("YYYY" の部分を正しく置き換えることを忘れずに）．
+("XXXX" の部分を正しく置き換えることを忘れずに）．
 
 [source, bash]
 ----
-$ python simple_read.py SimpleDynamoDb-SimpleTableYYYY
+$ python simple_read.py XXXX
 ----
 
 先ほど書き込んだ要素が出力されることを確認しよう．
@@ -413,11 +413,11 @@ DynamoDB の利点は，最初に述べたとおり，負荷に応じて自在�
 そこで，ここでは一度に大量のデータを書き込む場合をシミュレートしてみよう．
 https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py[batch_rw.py] に，一度に大量の書き込みを実行するためのプログラムが書いてある．
 
-次のコマンドを実行してみよう (YYYY は自分のテーブルの名前に置き換える)．
+次のコマンドを実行してみよう (XXXX は自分のテーブルの名前に置き換える)．
 
 [source, bash]
 ----
-$ python batch_rw.py YYYY write 1000
+$ python batch_rw.py XXXX write 1000
 ----
 
 このコマンドを実行することで，ランダムなデータが1000個データベースに書き込まれる．
@@ -428,7 +428,7 @@ $ python batch_rw.py YYYY write 1000
 
 [source, bash]
 ----
-$ python batch_rw.py YYYY search_under_age 2
+$ python batch_rw.py XXXX search_under_age 2
 ----
 
 上の2つのコマンドを何回か繰り返し実行してみて，データベースに負荷をかけてみよう．
@@ -570,14 +570,14 @@ Key という呼び方は， S3 が https://en.wikipedia.org/wiki/Object_storage
 
 [sorce, bash]
 ----
-$ python simple_s3.py XXX upload tmp.txt --key /a/b/tmp.txt
+$ python simple_s3.py XXXX upload tmp.txt --key /a/b/tmp.txt
 ----
 
 上ではアップロードされたファイルに `a/b/tmp.txt` という Key を割り当てている．
 
 ここまでコマンドを実行し終えたところで，一度 AWS コンソールに行き S3 の中身を確認してみよう．
 S3 のコンソールに行くと，バケットの一覧が見つかるはずである．
-その中から， `simples3-bucketXXXX` と名前のついたバケットを探し，クリックする．
+その中から， `simples3-bucket` から始まるランダムな名前のついたバケットを探し，クリックする．
 するとバケットの中に含まれるファイルの一覧が表示される (<<fig:s3_bucket_filelist>>)．
 
 [[fig:s3_bucket_filelist]]
@@ -599,7 +599,7 @@ image::imgs/handson-serverless/s3_bucket_filelist.png[cdk output, 700, align="ce
 
 [source, bash]
 ----
-$ python simple_s3.py simples3-bucketXXXX download tmp.txt
+$ python simple_s3.py XXXX download tmp.txt
 ----
 
 `simple_s3.py` のダウンロードを担当している部分を以下に抜粋する．
