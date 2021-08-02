@@ -79,7 +79,7 @@ image::imgs/signup-9.png[signup-9, 500, align="center"]
 [[aws_secrets]]
 === AWS のシークレットキーの作成
 
-AWS シークレットキーとは， AWS CLI や AWS CDK から AWS の API を操作する際に，ユーザー認証を行うための鍵のことである．
+AWS シークレットキーとは， AWS CLI や AWS CDK から AWS の API を操作するときに，ユーザー認証を行うための鍵のことである．
 AWS CLI/CDK を使うには，最初にシークレットキーを発行する必要がある．
 AWS シークレットキーの詳細は https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html[公式ドキュメンテーション] を参照．
 
@@ -100,7 +100,7 @@ image::imgs/aws_secret_key_2.png[aws_secret_key_2, 700, align="center"]
 
 [WARNING]
 ====
-**AWS Educate Starter Account** を用いている場合は，以下の手順でシークレットキーを確認する．
+**AWS Educate Starter Account** を用いている場合は，次の手順でシークレットキーを確認する．
 
 - AWS Educate のコンソール画面から， `vocareum` のコンソールに移動する (<<fig:vocareum_console>>)．
 - `Account Details` をクリックし，続いて `AWS CLI: Show` をクリックする．
@@ -115,9 +115,8 @@ image::imgs/aws_secret_key_2.png[aws_secret_key_2, 700, align="center"]
 region = us-east-1
 output = json
 ----
-- 上記の説明ではプロファイル名が `default` となっていたが，これは自分の好きな名前に変更しても良い．
-`default` 以外の名前を使用する場合は，コマンドを実行する際にプロファイル名を指定する必要がある (<<aws_cli_install>>)．
-
+- 上記の説明ではプロファイル名が `default` となっていたが，これは自分の好きな名前に変更してもよい．
+`default` 以外の名前を使用する場合は，コマンドを実行するときにプロファイル名を指定する必要がある (詳しくは <<aws_cli_install>>)．
 
 [[fig:vocareum_console]]
 .vocareum コンソール
@@ -141,14 +140,15 @@ $ unzip awscliv2.zip
 $ sudo ./aws/install
 ----
 
-インストールできたか確認するため，以下のコマンドを打ってバージョン情報が出力されることを確認する．
+インストールできたか確認するため，次のコマンドを打ってバージョン情報が出力されることを確認する．
 
 [source, bash]
 ----
 $ aws --version
 ----
 
-インストールができたら，以下のコマンドにより初期設定を行う (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html[参照])．
+インストールができたら，次のコマンドにより初期設定を行う
+(https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html[参照])．
 
 [source, bash]
 ----
@@ -161,8 +161,8 @@ $ aws configure
 ここには自分の好きな地域 (例えば `ap-northeast-1` =東京リージョン) を指定すればよい．
 最後の `Default output format` は `JSON` としておくとよい．
 
-上記のコマンドを完了すると， `~/.aws/credentials` と `~/.aws/config`　という名前のファイルが生成されているはずである．
-念の為，中身をしてみるとよい．
+このコマンドを完了すると， `~/.aws/credentials` と `~/.aws/config`　という名前のファイルが生成されているはずである．
+念のため， `cat` コマンドを使って中身を確認してみるとよい．
 
 [source, bash]
 ----
@@ -177,12 +177,10 @@ region = ap-northeast-1
 output = json
 ----
 
-上記のような出力が得られるはずである．
-
 `~/.aws/credentials` には認証鍵の情報が， `~/.aws/config` には AWS CLI の設定が記録されている．
 
 デフォルトでは， `[default]` という名前でプロファイルが保存される．
-いくつかのプロファイルを使い分けたければ， default の例に従って，例えば `[myprofile]` などという名前でプロファイルを追加すればよい．
+いくつかのプロファイルを使い分けたければ， default の例に従って，たとえば `[myprofile]` などという名前でプロファイルを追加すればよい．
 
 AWS CLI でコマンドを打つときに，プロファイルを使い分けるには，
 
@@ -209,7 +207,8 @@ export AWS_SECRET_ACCESS_KEY=YYYYYY
 export AWS_DEFAULT_REGION=ap-northeast-1
 ----
 
-上の環境変数は， `~/.aws/credentials` よりも高い優先度を持つので，環境変数が設定されていればそちらの情報が使用される (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html[参照])．
+これらの環境変数は， `~/.aws/credentials` よりも高い優先度をもつので，環境変数が設定されていればそちらの情報が使用される
+(https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html[参照])．
 
 [WARNING]
 ====
@@ -223,7 +222,7 @@ export AWS_DEFAULT_REGION=ap-northeast-1
 読者のために，執筆時点におけるインストールの手順 (Linux 向け) を簡単に記述する．
 将来のバージョンでは変更される可能性があるので，常に https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html[公式のドキュメンテーション] で最新の情報をチェックすることを忘れずに．
 
-Node.js がインストールされていれば，基本的に以下のコマンドを実行すれば良い．
+Node.js がインストールされていれば，基本的に次のコマンドを実行すればよい．
 
 [source, bash]
 ----
@@ -242,14 +241,15 @@ $ npm install -g aws-cdk@1.100
 ----
 ====
 
-インストールできたか確認するため，以下のコマンドを打って正しくバージョンが表示されることを確認する．
+インストールできたか確認するため，次のコマンドを打って正しくバージョンが表示されることを確認する．
 
 [source, bash]
 ----
 $ cdk --version
 ----
 
-インストールができたら，以下のコマンドによりAWS側の初期設定を行う．これは一度実行すればOK．
+インストールができたら，次のコマンドによりAWS側の初期設定を行う．
+これは一度実行すればOK．
 
 [source, bash]
 ----
@@ -442,9 +442,9 @@ $ docker run hello-world
 もし，自分の計算機の中に一つしか Python 環境がないとすると，プロジェクトを切り替えるごとに正しいバージョンをインストールし直さなければならず，これは大変な手間である．
 
 コードのシェアをよりスムーズにするためには，ライブラリのバージョンはプロジェクトごとに管理されるべきである．
-それを可能にするのが Python 仮想環境と呼ばれるツールであり， https://docs.python.org/3/tutorial/venv.html[venv], https://github.com/pyenv/pyenv[pyenv], https://docs.conda.io/en/latest/[conda] などがよく使われる．
+それを可能にするのが Python 仮想環境とよばれるツールであり， https://docs.python.org/3/tutorial/venv.html[venv], https://github.com/pyenv/pyenv[pyenv], https://docs.conda.io/en/latest/[conda] などがよく使われる．
 
-そのなかでも， `venv` は Python に標準搭載されているので，とても便利である．
+そのなかでも， `venv` は Python に標準搭載されているのでとても便利である．
 `pyenv` や `conda` は，別途インストールの必要があるが，それぞれの長所もある．
 
 `venv` を使って仮想環境を作成するには，
@@ -475,7 +475,7 @@ image::imgs/venv_shell.png[venv shell, 500, align="center"]
 
 仮想環境を起動すると，それ以降実行する `pip` コマンドは， `.env/` 以下にインストールされる．このようにして，プロジェクトごとに使うライブラリのバージョンを切り分けることができる．
 
-Python では `requirements.txt` というファイルにに依存ライブラリを記述するのが一般的な慣例である．他人からもらったプログラムに， `requirements.txt` が定義されていれば，
+Python では `requirements.txt` というファイルに依存ライブラリを記述するのが一般的な慣例である．他人からもらったプログラムに， `requirements.txt` が定義されていれば，
 
 [source, bash]
 ----
@@ -502,7 +502,9 @@ venv による仮想環境を保存するディレクトリの名前は任意に
 ====
 
 Docker Image は https://hub.docker.com/repository/docker/tomomano/labc[Docker Hub] においてある．
-Docker Image のビルドファイルは https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile[こちら] にある．
+Docker Image のビルドファイルは GitHub の
+https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile[/docker/Dockerfile]
+にある．
 
 次のコマンドで container を起動する．
 
@@ -537,7 +539,7 @@ $ cd handson
 AWS の認証情報を設定することも忘れずに．
 <<aws_cli_install>> で記述したように， `AWS_ACCESS_KEY_ID` などの環境変数を設定するのが簡単な方法である．
 あるいは，**ローカルマシンの** `~/.aws/credentials` に認証情報が書き込まれているなら，このディレクトリを container に**マウント**することで，同じ認証ファイルを container 内部から参照することが可能である．
-この選択肢を取る場合は，以下のコマンドで container を起動する．
+この選択肢を取る場合は，次のコマンドで container を起動する．
 
 [source, bash]
 ----
