@@ -497,6 +497,7 @@ image::imgs/handson-bashoutter/s3_console.png[s3_console, 700, align="center"]
 .S3 バケットの中身
 image::imgs/handson-bashoutter/s3_contents.png[s3_contents, 700, align="center"]
 
+[[sec:bashoutter_test_api]]
 === API リクエストを送信する
 
 それでは，デプロイしたアプリケーションに対し，実際に API リクエストを送信してみよう
