@@ -39,7 +39,7 @@ image::imgs/handson-jupyter/handson-02-architecture.png[hands-on 01 architecture
 
 * GPUを搭載した `g4dn.xlarge` インスタンスタイプを使用．
 * ディープラーニングに使うプログラムがあらかじめインストールされた DLAMI (後述) を使用．
-* SSHにポートフォワーディングのオプションつけてサーバーに接続し，サーバーで起動しているJupyter notebook (後述) を使ってプログラムを書いたり実行したりする．
+* SSHにポートフォワーディングのオプションつけてサーバーに接続し，サーバーで起動しているJupyter Notebook (後述) を使ってプログラムを書いたり実行したりする．
 
 ハンズオンで使用するプログラムのコードをみてみよう (https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist/app.py[/handson/mnist/app.py])．
 コードは第一回目とほとんど共通である．変更点のみ解説を行う．
@@ -159,7 +159,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 
 これに加えて， "Conda" とよばれるタイプには， "Base" のプログラム基盤の上に， `TensorFlow` や `PyTorch` などのライブラリがインストールされている．
 さらに， https://docs.conda.io/projects/conda/en/latest/index.html[Anaconda] による仮想環境を使うことによって， `TensorFlow` の環境・ `PyTorch` の環境・ `MxNet` の環境など，フレームワークを簡単に切り替えることができる (これについては，後のハンズオンで触れる)．
-また， Jupyter notebook もインストール済みである．
+また， Jupyter Notebook もインストール済みである．
 ====
 
 === スタックのデプロイ
@@ -207,7 +207,7 @@ image::imgs/handson-jupyter/cdk_output.png[cdk output, 700, align="center"]
 
 早速，デプロイしたインスタンスにSSHでログインしてみよう．
 
-ここでは，この後で使う Jupyter notebook に接続するため，**ポートフォワーディング** のオプション (`-L`) をつけてログインする．
+ここでは，この後で使う Jupyter Notebook に接続するため，**ポートフォワーディング** のオプション (`-L`) をつけてログインする．
 
 [source, bash]
 ----
@@ -216,8 +216,8 @@ $ ssh -i ~/.ssh/HirakeGoma.pem -L localhost:8931:localhost:8888 ec2-user@<IP add
 
 ポートフォワーディングとは，クライアントマシンの特定のアドレスへの接続を， SSH の暗号化された通信を介して，リモートマシンの特定のアドレスへ転送する，という意味である．
 このコマンドの `-L localhost:8931:localhost:8888` は，自分のローカルマシンの `localhost:8931` へのアクセスを，リモートサーバーの `localhost:8888` のアドレスに転送せよ，という意味である (`:` につづく数字はポート番号を意味している)．
-リモートサーバーのポート8888には，後述する Jupyter notebook が起動している．
-したがって，ローカルマシンの `localhost:8931` にアクセスすることで，リモートサーバーの Jupyter notebook にアクセスすることができるのである (<<fig:ssh_port_forwarding>>)．
+リモートサーバーのポート8888には，後述する Jupyter Notebook が起動している．
+したがって，ローカルマシンの `localhost:8931` にアクセスすることで，リモートサーバーの Jupyter Notebook にアクセスすることができるのである (<<fig:ssh_port_forwarding>>)．
 このようなSSHによる接続方式を**トンネル接続**とよぶ．
 
 [[fig:ssh_port_forwarding]]
@@ -228,7 +228,7 @@ image::imgs/ssh_port_forwarding.png[ssh_port_forwarding, 700, align="center"]
 ====
 ポートフォワーディングのオプションで，ポートの番号 (`:8931`, `:8888` など) には1から65535までの任意の整数を指定できる．
 しかし，たとえば ポート 22 (SSH) やポート 80 (HTTP) など，いくつかすでに使われているポート番号もあることに注意する．
-また， Jupyter notebook はデフォルトではポート8888番を使用する．
+また， Jupyter Notebook はデフォルトではポート8888番を使用する．
 したがって，リモート側のポート番号は，8888を使うのがよい．
 ====
 
@@ -268,17 +268,17 @@ $ nvidia-smi
 .nvidia-smi の出力
 image::imgs/handson-jupyter/nvidia-smi.png[nvidia-smi, 700, align="center"]
 
-=== Jupyter notebook の起動
+=== Jupyter Notebook の起動
 
-https://jupyter.org/[Jupyter notebook] とは，インタラクティブに Python のプログラムを書いたり実行したりするためのツールである．
+https://jupyter.org/[Jupyter Notebook] とは，インタラクティブに Python のプログラムを書いたり実行したりするためのツールである．
 Jupyter は GUI としてウェブブラウザを介してアクセスする形式をとっており，まるでノートを書くように，プロットやテーブルのデータも美しく表示することができる (<<handson_02_welcome_jupyter>>)．
 Python に慣れている読者は，きっと一度は使ったことがあるだろう．
 
 [[handson_02_welcome_jupyter]]
-.Jupyter notebook の画面
+.Jupyter Notebook の画面
 image::imgs/handson-jupyter/welcome_to_jupyter.png[welcome to jupyter, 700, align="center"]
 
-このハンズオンでは， Jupyter notebook を使ってディープラーニングのプログラムをインタラクティブに実行していく．
+このハンズオンでは， Jupyter Notebook を使ってディープラーニングのプログラムをインタラクティブに実行していく．
 DLAMI には既に Jupyter がインストールされているので，特段の設定なしに使い始めることができる．
 
 早速， Jupyter を起動しよう．
@@ -295,12 +295,12 @@ $ jupyter notebook
 また， `localhost:8888` に続く `?token=XXXXXXX` は，アクセスに使うための一時的なトークンである．
 
 [[handson_02_jupyter_launch]]
-.Jupyter notebook サーバーを起動
+.Jupyter Notebook サーバーを起動
 image::imgs/handson-jupyter/jupyter_launch.png[jupyter launch, 700, align="center"]
 
 [NOTE]
 ====
-Jupyter notebook を初回に起動するときは，起動に数分程度の時間がかかることがある．
+Jupyter Notebook を初回に起動するときは，起動に数分程度の時間がかかることがある．
 ほかの動作も起動直後は遅く，いくつかプログラムを走らせていくうちに俊敏に反応するようになってくる．
 これは， AWS の GPU 搭載型仮想マシンの運用方法に起因する現象だと考えられる．
 ====
@@ -325,7 +325,7 @@ image::imgs/handson-jupyter/jupyter_home.png[jupyter home, 700, align="center"]
 
 [NOTE]
 ====
-Jupyter notebook の使い方 (超簡易版)
+Jupyter Notebook の使い方 (超簡易版)
 
 * `Shift` + `Enter`: セルを実行
 * `Esc`: **Command mode** に遷移
