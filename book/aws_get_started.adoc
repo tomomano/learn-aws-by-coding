@@ -172,7 +172,7 @@ CLIに加えて，いろいろなプログラミング言語での SDK (Software
 
 * Python => https://boto3.amazonaws.com/v1/documentation/api/latest/index.html[boto3]
 * Ruby => https://aws.amazon.com/sdk-for-ruby/[AWS SDK for Ruby]
-* node.js => https://aws.amazon.com/sdk-for-node-js/[AWS SDK for Node.js]
+* Node.js => https://aws.amazon.com/sdk-for-node-js/[AWS SDK for Node.js]
 
 具体的な API の使用例を見てみよう．
 
