@@ -543,7 +543,7 @@ AWS の認証情報を設定することも忘れずに．
 
 [source, bash]
 ----
-$ docker run -it -v ~/.aws:/root/.aws:ro docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest
+$ docker run -it -v ~/.aws:/root/.aws:ro tomomano/labc:latest
 ----
 
 これにより，ローカルマシンの `~/.aws` を container の `/root/.aws` にマウントすることができる．
