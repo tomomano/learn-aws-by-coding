@@ -159,9 +159,9 @@ $ aws configure
 シークレットキーの発行については <<aws_secrets>> を参照．
 コマンドは加えて，`Default region name` を訊いてくる．
 ここには自分の好きな地域 (例えば `ap-northeast-1` =東京リージョン) を指定すればよい．
-最後の `Default output format` は `JSON` としておくとよい．
+最後の `Default output format` は `json` としておくとよい．
 
-このコマンドを完了すると， `~/.aws/credentials` と `~/.aws/config`　という名前のファイルが生成されているはずである．
+このコマンドを完了すると， `~/.aws/credentials` と `~/.aws/config` という名前のファイルが生成されているはずである．
 念のため， `cat` コマンドを使って中身を確認してみるとよい．
 
 [source, bash]
@@ -172,7 +172,7 @@ aws_access_key_id = XXXXXXXXXXXXXXXXXX
 aws_secret_access_key = YYYYYYYYYYYYYYYYYYY
 
 $ cat ~/.aws/config
-[profile default]
+[default]
 region = ap-northeast-1
 output = json
 ----
