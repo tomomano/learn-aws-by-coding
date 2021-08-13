@@ -102,7 +102,7 @@ image::imgs/cloud_cost.png[Cost, 500, align="center"]
 
 一方，商用のサービスとしてのクラウドも，現在は多くの企業から提供されている．
 このような，一般の顧客に向けたクラウドサービスのことを，パブリッククラウド (public cloud) とよぶ．
-有名なクラウドプラットフォームの例を挙げると， Google社が提供する https://cloud.google.com/[Google Cloud Platform (GCP)]， Microsoft 社が提供する https://azure.microsoft.com[Azure]， Amazon 社が提供する https://aws.amazon.com[Amazon Web Service (AWS)] などがある．
+有名なクラウドプラットフォームの例を挙げると， Google社が提供する https://cloud.google.com/[Google Cloud Platform (GCP)]， Microsoft 社が提供する https://azure.microsoft.com[Azure]， Amazon 社が提供する https://aws.amazon.com[Amazon Web Services (AWS)] などがある．
 
 プライベートクラウドは，組織の構成員ならば無料もしくは極めて割安のコストで計算を実行できる．
 しかし，使用できる計算資源の量は，研究提案の申請により決定される場合が多く，柔軟性に欠ける場合もある．

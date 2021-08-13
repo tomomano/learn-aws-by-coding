@@ -6,7 +6,7 @@
 本書では，クラウドの実践を行うプラットフォームとして， AWS を用いる．
 実践にあたって，最低限必要な AWS の知識を本章では解説しよう．
 
-https://aws.amazon.com[AWS (Amazon Web Service)] はAmazon社が提供する総合的なクラウドプラットフォームである．
+https://aws.amazon.com[AWS (Amazon Web Services)] はAmazon社が提供する総合的なクラウドプラットフォームである．
 AWS は Amazon 社が持つ膨大な計算リソースを貸し出すクラウドサービスとして，2006年に誕生した．
 2021年では，クラウドプロバイダーとして最大のマーケットシェア (約32%) を保持している
 (https://www.canalys.com/newsroom/global-cloud-market-Q121[参照])．
@@ -109,7 +109,7 @@ image::imgs/aws_regions2.png[AWS console select regions, 600, align="center"]
 
 `Avaialibity Zone (AZ)` とは，リージョン内で地理的に隔離されたデータセンターのことである．
 それぞれのリージョンは2個以上のAZを有しており，もし一つのAZで火災や停電などが起きた場合でも，ほかのAZがその障害をカバーすることができる．
-また， AZ 間は高速な AWS 専用ネットワーク回線で結ばれているため， AZ 間のデータ転送は極めて早い．
+また， AZ 間は高速な AWS 専用ネットワーク回線で結ばれているため， AZ 間のデータ転送は極めて速い．
 AZ は，ビジネスなどでサーバーダウンが許容されない場合などに注意すべき概念であり，個人的な用途で使う限りにおいてはあまり深く考慮する必要はない．言葉の意味だけ知っておけば十分である．
 
 [TIP]
@@ -137,9 +137,9 @@ AWS Educate を利用している読者へ
 
 === AWSでのクラウド開発
 
-AWS のクラウドの全体像がわかってきたところで，次のトピックとして，どのようにしてAWS上にクラウドの開発を行い，展開していくかについての概略を解説をしよう．
+AWS のクラウドの全体像がわかってきたところで，次のトピックとして，どのようにしてAWS上にクラウドの開発を行い，展開していくかについての概略を解説しよう．
 
-AWS のリソースを追加・編集・削除などの操作を実行するには，**コンソールを用いる**方法と，** API を用いる方法**の，二つの経路がある．
+AWS のリソースに追加・編集・削除などの操作を実行するには，**コンソールを用いる**方法と，** API を用いる方法**の，二つの経路がある．
 
 ==== コンソール画面からリソースを操作する
 
@@ -172,7 +172,7 @@ CLIに加えて，いろいろなプログラミング言語での SDK (Software
 
 * Python => https://boto3.amazonaws.com/v1/documentation/api/latest/index.html[boto3]
 * Ruby => https://aws.amazon.com/sdk-for-ruby/[AWS SDK for Ruby]
-* node.js => https://aws.amazon.com/sdk-for-node-js/[AWS SDK for Node.js]
+* Node.js => https://aws.amazon.com/sdk-for-node-js/[AWS SDK for Node.js]
 
 具体的な API の使用例を見てみよう．
 
@@ -220,9 +220,9 @@ ec2_client = boto3.client("ec2")
 ec2_client.run_instances(
     ImageId="ami-xxxxxxxxx",
     MinCount=1, 
-	MaxCount=1,
-	KeyName="MyKeyPair",
-	InstanceType="t2.micro",
+    MaxCount=1,
+    KeyName="MyKeyPair",
+    InstanceType="t2.micro",
     SecurityGroupIds=["sg-903004f8"],
     SubnetId="subnet-6e7f829e",
 )
