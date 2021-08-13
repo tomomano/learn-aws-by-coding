@@ -194,7 +194,7 @@ private subnet は基本的にインターネットとは遮断されたサブ�
 Public subnet とはインターネットに繋がったサブネットである．
 本ハンズオンで作成するサーバーは，外からSSHでログインを行いたいので， Public subnet 内に配置する．
 より詳細な記述は https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html#vpc-subnet-basics[公式ドキュメンテーション] を参照．
-* `natgateways=0` : これは少し高度な内容なので省略する
+* `nat_gateways=0` : これは少し高度な内容なので省略する
 (興味のある読者は https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html[公式ドキュメンテーション]を参照)．
 が，**これを0にしておかないと，NAT Gateway の利用料金が発生してしまうので，注意！**
 ====
@@ -311,7 +311,7 @@ AWS には https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFie
 [TIP]
 ====
 上記で t2.micro の $0.0116 / hour という金額は， On-demand インスタンスというタイプを選択した場合の価格である．
-EC2 ではほかに， https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html[Spot instance] とよばれるインスタンスも存在しする．
+EC2 ではほかに， https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html[Spot instance] とよばれるインスタンスも存在する．
 Spot instance は，AWSのデータセンターの負荷が増えた場合，ユーザーのプログラムが実行中であってもAWSの判断により強制シャットダウンされる，という不便さを抱えているのだが，その分大幅に安い料金設定になっている．
 AWS で一時的に生じた余剰な空きCPUをユーザーに割安で貸し出す，という発想である．
 科学計算で，コストを削減する目的で，この Spot Instance を活用する事例も報告されている (https://arxiv.org/abs/1904.10489[Wu+, 2019])．

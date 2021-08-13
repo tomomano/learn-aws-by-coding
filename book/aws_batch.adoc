@@ -445,10 +445,10 @@ image::imgs/aws_batch/ecr_console2.png[ecr console 2, 700, align="center"]
 さて，ここからは実際に AWS Batch にジョブを投入する方法を見ていこう．
 
 ハンズオンのディレクトリの `notebook/` というディレクトリの中に， `run_single.ipynb` というファイルが見つかるはずである (`.ipynb` は Jupyter notebook のファイル形式)．
-これを Jupyter notebook から開こう．
+これを Jupyter Notebook から開こう．
 
-今回のハンズオンでは， `venv` による仮想環境の中に Jupyter notebook もインストール済みである．
-なので，以下のコマンドで Jupyter notebook を立ち上げる．
+今回のハンズオンでは， `venv` による仮想環境の中に Jupyter Notebook もインストール済みである．
+なので，以下のコマンドで Jupyter Notebook を立ち上げる．
 
 [source, bash]
 ----
@@ -457,7 +457,7 @@ image::imgs/aws_batch/ecr_console2.png[ecr console 2, 700, align="center"]
 (.env) $ jupyter notebook
 ----
 
-Jupyter notebook が起動したら， `run_single.ipynb` を開く．
+Jupyter Notebook が起動したら， `run_single.ipynb` を開く．
 
 最初の [1], [2]. [3] 番のセルは，ジョブをサブミットするための関数 (`submit_job()`) を定義している．
 
@@ -809,14 +809,14 @@ $ cdk destroy
 本章の最後の話題として，クラウドを用いた機械学習アプリケーションの開発とデバッグの方法について述べよう．
 
 ローカルに GPU を搭載した強力なマシンがなく，クラウドを利用する予算が確保されているのであれば， <<fig:cloud_development>> のような開発のスキームが理想的であると考える．
-最初の段階では， <<sec_jupyter_and_deep_learning>> で見たような方法で， GPU 搭載型の EC2 インスタンスを作成し， Jupyter notebook などのインタラクティブな環境で様々なモデルを試し実験を行う．
+最初の段階では， <<sec_jupyter_and_deep_learning>> で見たような方法で， GPU 搭載型の EC2 インスタンスを作成し， Jupyter Notebook などのインタラクティブな環境で様々なモデルを試し実験を行う．
 Jupyter である程度アプリケーションが完成してきたタイミングで，作成したアプリケーションを Docker イメージにパッケージングする．
 そして， EC2 上で `docker run` を行い，作成した Image がバグなく動作するか確認を行う．
 その次に，ハイパーパラメータの最適化などのチューニングを， <<sec_aws_batch>> のハンズオンで学んだ AWS Batch などの計算システムを利用して行う．
 ローカルに十分なスペックを有した GPU があるのならば，最初の実験はローカルマシンで行うのが経済的だろう．
 
 実際，本書ではこの流れに沿って演習を進めてきた．
-MNIST タスクを解くモデルを，最初 Jupyter notebook を使用して実験し，そのコードをほとんどそのまま Docker にパッケージし， AWS Batch を用いてハイパーパラメータサーチを行った．
+MNIST タスクを解くモデルを，最初 Jupyter Notebook を使用して実験し，そのコードをほとんどそのまま Docker にパッケージし， AWS Batch を用いてハイパーパラメータサーチを行った．
 このサイクルを繰り返すことで，クラウドを最大限に活用した機械学習アプリケーションの開発を進めることができる．
 
 本章のハンズオンで提供しているプログラムは， ECR に配置するイメージを入れ替えることで，任意のアプリケーションを AWS Batch を通じて実行することができる．
