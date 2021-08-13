@@ -498,7 +498,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_アプリケーションの説明_2">6.2. アプリケーションの説明</a></li>
 <li><a href="#_スタックのデプロイ">6.3. スタックのデプロイ</a></li>
 <li><a href="#_ログイン">6.4. ログイン</a></li>
-<li><a href="#_jupyter_notebook_の起動">6.5. Jupyter notebook の起動</a></li>
+<li><a href="#_jupyter_notebook_の起動">6.5. Jupyter Notebook の起動</a></li>
 <li><a href="#_pytorchはじめの一歩">6.6. PyTorchはじめの一歩</a></li>
 <li><a href="#_cpu_vs_gpu_の簡易ベンチマーク">6.7. CPU vs GPU の簡易ベンチマーク</a></li>
 <li><a href="#sec_mnist_using_jupyter">6.8. 実践ディープラーニング! MNIST手書き数字認識タスク</a></li>
@@ -640,7 +640,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="paragraph">
 <p>本書の目的は，クラウドの初心者を対象とし，クラウドの基礎的な知識・概念を解説する．
-また， Amazon Web Service (以下， AWS) の提供するクラウド環境を実例として，具体的なクラウドの利用方法をハンズオンを通して学ぶ．</p>
+また， Amazon Web Services (以下， AWS) の提供するクラウド環境を実例として，具体的なクラウドの利用方法をハンズオンを通して学ぶ．</p>
 </div>
 <div class="paragraph">
 <p>とくに，科学・エンジニアリングの学生を対象として，研究などの目的でクラウドを利用するための実践的な手順を紹介する．
@@ -716,7 +716,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 あわせて，
 <a href="https://www.docker.com/">Docker</a>
 とよばれる仮想計算環境の使用方法を紹介する．
-ハンズオンでは， AWS のクラウドで Jupyter notebook を起動し簡単な機械学習の計算を走らせる課題を実践する．
+ハンズオンでは， AWS のクラウドで Jupyter Notebook を起動し簡単な機械学習の計算を走らせる課題を実践する．
 さらに，深層学習を用いた自然言語処理により，質問に自動で回答を生成するボットを作成する．
 また，同時に複数の GPU インスタンスを起動し，深層学習のハイパーパラメータサーチを行う方法を紹介する．</p>
 </div>
@@ -1117,7 +1117,7 @@ CPUが1000個欲しいと思ったならば，そのようにクラウドプロ�
 <div class="paragraph">
 <p>一方，商用のサービスとしてのクラウドも，現在は多くの企業から提供されている．
 このような，一般の顧客に向けたクラウドサービスのことを，パブリッククラウド (public cloud) とよぶ．
-有名なクラウドプラットフォームの例を挙げると， Google社が提供する <a href="https://cloud.google.com/">Google Cloud Platform (GCP)</a>， Microsoft 社が提供する <a href="https://azure.microsoft.com">Azure</a>， Amazon 社が提供する <a href="https://aws.amazon.com">Amazon Web Service (AWS)</a> などがある．</p>
+有名なクラウドプラットフォームの例を挙げると， Google社が提供する <a href="https://cloud.google.com/">Google Cloud Platform (GCP)</a>， Microsoft 社が提供する <a href="https://azure.microsoft.com">Azure</a>， Amazon 社が提供する <a href="https://aws.amazon.com">Amazon Web Services (AWS)</a> などがある．</p>
 </div>
 <div class="paragraph">
 <p>プライベートクラウドは，組織の構成員ならば無料もしくは極めて割安のコストで計算を実行できる．
@@ -1166,7 +1166,7 @@ CPUが1000個欲しいと思ったならば，そのようにクラウドプロ�
 実践にあたって，最低限必要な AWS の知識を本章では解説しよう．</p>
 </div>
 <div class="paragraph">
-<p><a href="https://aws.amazon.com">AWS (Amazon Web Service)</a> はAmazon社が提供する総合的なクラウドプラットフォームである．
+<p><a href="https://aws.amazon.com">AWS (Amazon Web Services)</a> はAmazon社が提供する総合的なクラウドプラットフォームである．
 AWS は Amazon 社が持つ膨大な計算リソースを貸し出すクラウドサービスとして，2006年に誕生した．
 2021年では，クラウドプロバイダーとして最大のマーケットシェア (約32%) を保持している
 (<a href="https://www.canalys.com/newsroom/global-cloud-market-Q121">参照</a>)．
@@ -1300,7 +1300,7 @@ EC2, S3 などのAWSのリソースは，リージョンごとに完全に独立
 <div class="paragraph">
 <p><code>Avaialibity Zone (AZ)</code> とは，リージョン内で地理的に隔離されたデータセンターのことである．
 それぞれのリージョンは2個以上のAZを有しており，もし一つのAZで火災や停電などが起きた場合でも，ほかのAZがその障害をカバーすることができる．
-また， AZ 間は高速な AWS 専用ネットワーク回線で結ばれているため， AZ 間のデータ転送は極めて早い．
+また， AZ 間は高速な AWS 専用ネットワーク回線で結ばれているため， AZ 間のデータ転送は極めて速い．
 AZ は，ビジネスなどでサーバーダウンが許容されない場合などに注意すべき概念であり，個人的な用途で使う限りにおいてはあまり深く考慮する必要はない．言葉の意味だけ知っておけば十分である．</p>
 </div>
 <div class="admonitionblock tip">
@@ -1356,10 +1356,10 @@ AZ は，ビジネスなどでサーバーダウンが許容されない場合�
 <div class="sect2">
 <h3 id="_awsでのクラウド開発">3.5. AWSでのクラウド開発</h3>
 <div class="paragraph">
-<p>AWS のクラウドの全体像がわかってきたところで，次のトピックとして，どのようにしてAWS上にクラウドの開発を行い，展開していくかについての概略を解説をしよう．</p>
+<p>AWS のクラウドの全体像がわかってきたところで，次のトピックとして，どのようにしてAWS上にクラウドの開発を行い，展開していくかについての概略を解説しよう．</p>
 </div>
 <div class="paragraph">
-<p>AWS のリソースを追加・編集・削除などの操作を実行するには，<strong>コンソールを用いる</strong>方法と，<strong> API を用いる方法</strong>の，二つの経路がある．</p>
+<p>AWS のリソースに追加・編集・削除などの操作を実行するには，<strong>コンソールを用いる</strong>方法と，<strong> API を用いる方法</strong>の，二つの経路がある．</p>
 </div>
 <div class="sect3">
 <h4 id="_コンソール画面からリソースを操作する">3.5.1. コンソール画面からリソースを操作する</h4>
@@ -1408,7 +1408,7 @@ API とは，端的に言えば AWS が公開しているコマンドの一覧�
 <p>Ruby &#8658; <a href="https://aws.amazon.com/sdk-for-ruby/">AWS SDK for Ruby</a></p>
 </li>
 <li>
-<p>node.js &#8658; <a href="https://aws.amazon.com/sdk-for-node-js/">AWS SDK for Node.js</a></p>
+<p>Node.js &#8658; <a href="https://aws.amazon.com/sdk-for-node-js/">AWS SDK for Node.js</a></p>
 </li>
 </ul>
 </div>
@@ -1483,9 +1483,9 @@ AWS CLI を使った場合は，次のようなコマンドを打てばよい．
 <span class="n">ec2_client</span><span class="o">.</span><span class="n">run_instances</span><span class="p">(</span>
     <span class="n">ImageId</span><span class="o">=</span><span class="s">"ami-xxxxxxxxx"</span><span class="p">,</span>
     <span class="n">MinCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-	<span class="n">MaxCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-	<span class="n">KeyName</span><span class="o">=</span><span class="s">"MyKeyPair"</span><span class="p">,</span>
-	<span class="n">InstanceType</span><span class="o">=</span><span class="s">"t2.micro"</span><span class="p">,</span>
+    <span class="n">MaxCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">KeyName</span><span class="o">=</span><span class="s">"MyKeyPair"</span><span class="p">,</span>
+    <span class="n">InstanceType</span><span class="o">=</span><span class="s">"t2.micro"</span><span class="p">,</span>
     <span class="n">SecurityGroupIds</span><span class="o">=</span><span class="p">[</span><span class="s">"sg-903004f8"</span><span class="p">],</span>
     <span class="n">SubnetId</span><span class="o">=</span><span class="s">"subnet-6e7f829e"</span><span class="p">,</span>
 <span class="p">)</span>
@@ -2181,7 +2181,7 @@ Public subnet とはインターネットに繋がったサブネットである
 より詳細な記述は <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html#vpc-subnet-basics">公式ドキュメンテーション</a> を参照．</p>
 </li>
 <li>
-<p><code>natgateways=0</code> : これは少し高度な内容なので省略する
+<p><code>nat_gateways=0</code> : これは少し高度な内容なので省略する
 (興味のある読者は <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">公式ドキュメンテーション</a>を参照)．
 が，<strong>これを0にしておかないと，NAT Gateway の利用料金が発生してしまうので，注意！</strong></p>
 </li>
@@ -2381,7 +2381,7 @@ EC2 はサーバーの起動時間を秒単位で記録しており，<strong>�
 <td class="content">
 <div class="paragraph">
 <p>上記で t2.micro の $0.0116 / hour という金額は， On-demand インスタンスというタイプを選択した場合の価格である．
-EC2 ではほかに， <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html">Spot instance</a> とよばれるインスタンスも存在しする．
+EC2 ではほかに， <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html">Spot instance</a> とよばれるインスタンスも存在する．
 Spot instance は，AWSのデータセンターの負荷が増えた場合，ユーザーのプログラムが実行中であってもAWSの判断により強制シャットダウンされる，という不便さを抱えているのだが，その分大幅に安い料金設定になっている．
 AWS で一時的に生じた余剰な空きCPUをユーザーに割安で貸し出す，という発想である．
 科学計算で，コストを削減する目的で，この Spot Instance を活用する事例も報告されている (<a href="https://arxiv.org/abs/1904.10489">Wu+, 2019</a>)．</p>
@@ -3178,7 +3178,7 @@ V100 が約百万円で売られていることを考えると，約3000時間 (
 <p>ディープラーニングに使うプログラムがあらかじめインストールされた DLAMI (後述) を使用．</p>
 </li>
 <li>
-<p>SSHにポートフォワーディングのオプションつけてサーバーに接続し，サーバーで起動しているJupyter notebook (後述) を使ってプログラムを書いたり実行したりする．</p>
+<p>SSHにポートフォワーディングのオプションつけてサーバーに接続し，サーバーで起動しているJupyter Notebook (後述) を使ってプログラムを書いたり実行したりする．</p>
 </li>
 </ul>
 </div>
@@ -3316,7 +3316,7 @@ AMI には，たとえば <a href="https://ubuntu.com/">Ubuntu</a> などの Lin
 </div>
 <div class="paragraph">
 <p>しかしながら， AMI を単なる OS と理解するのは過剰な単純化である．
-AMI には，ベースとなる (空っぽの) OS を選択できることもできるが，それに加えて，各種のプログラムがインストール済みの AMI も定義することができる．
+AMI には，ベースとなる (空っぽの) OS を選択できるが，それに加えて，各種のプログラムがインストール済みの AMI も定義することができる．
 必要なプログラムがインストールされている AMI を見つけることができれば，自身でインストールを行ったり環境設定したりする手間が大幅に省ける．
 具体例を挙げると，ハンズオン第一回では EC2 インスタンスに Python 3.6 をインストールする例を示したが，そのような操作をインスタンスが起動するたびに行うのは手間である！</p>
 </div>
@@ -3379,7 +3379,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 <div class="paragraph">
 <p>これに加えて， "Conda" とよばれるタイプには， "Base" のプログラム基盤の上に， <code>TensorFlow</code> や <code>PyTorch</code> などのライブラリがインストールされている．
 さらに， <a href="https://docs.conda.io/projects/conda/en/latest/index.html">Anaconda</a> による仮想環境を使うことによって， <code>TensorFlow</code> の環境・ <code>PyTorch</code> の環境・ <code>MxNet</code> の環境など，フレームワークを簡単に切り替えることができる (これについては，後のハンズオンで触れる)．
-また， Jupyter notebook もインストール済みである．</p>
+また， Jupyter Notebook もインストール済みである．</p>
 </div>
 </td>
 </tr>
@@ -3449,7 +3449,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 <p>早速，デプロイしたインスタンスにSSHでログインしてみよう．</p>
 </div>
 <div class="paragraph">
-<p>ここでは，この後で使う Jupyter notebook に接続するため，<strong>ポートフォワーディング</strong> のオプション (<code>-L</code>) をつけてログインする．</p>
+<p>ここでは，この後で使う Jupyter Notebook に接続するため，<strong>ポートフォワーディング</strong> のオプション (<code>-L</code>) をつけてログインする．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3459,8 +3459,8 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 <div class="paragraph">
 <p>ポートフォワーディングとは，クライアントマシンの特定のアドレスへの接続を， SSH の暗号化された通信を介して，リモートマシンの特定のアドレスへ転送する，という意味である．
 このコマンドの <code>-L localhost:8931:localhost:8888</code> は，自分のローカルマシンの <code>localhost:8931</code> へのアクセスを，リモートサーバーの <code>localhost:8888</code> のアドレスに転送せよ，という意味である (<code>:</code> につづく数字はポート番号を意味している)．
-リモートサーバーのポート8888には，後述する Jupyter notebook が起動している．
-したがって，ローカルマシンの <code>localhost:8931</code> にアクセスすることで，リモートサーバーの Jupyter notebook にアクセスすることができるのである (<a href="#fig:ssh_port_forwarding">Figure 21</a>)．
+リモートサーバーのポート8888には，後述する Jupyter Notebook が起動している．
+したがって，ローカルマシンの <code>localhost:8931</code> にアクセスすることで，リモートサーバーの Jupyter Notebook にアクセスすることができるのである (<a href="#fig:ssh_port_forwarding">Figure 21</a>)．
 このようなSSHによる接続方式を<strong>トンネル接続</strong>とよぶ．</p>
 </div>
 <div id="fig:ssh_port_forwarding" class="imageblock text-center">
@@ -3479,7 +3479,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 <div class="paragraph">
 <p>ポートフォワーディングのオプションで，ポートの番号 (<code>:8931</code>, <code>:8888</code> など) には1から65535までの任意の整数を指定できる．
 しかし，たとえば ポート 22 (SSH) やポート 80 (HTTP) など，いくつかすでに使われているポート番号もあることに注意する．
-また， Jupyter notebook はデフォルトではポート8888番を使用する．
+また， Jupyter Notebook はデフォルトではポート8888番を使用する．
 したがって，リモート側のポート番号は，8888を使うのがよい．</p>
 </div>
 </td>
@@ -3548,9 +3548,9 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jupyter_notebook_の起動">6.5. Jupyter notebook の起動</h3>
+<h3 id="_jupyter_notebook_の起動">6.5. Jupyter Notebook の起動</h3>
 <div class="paragraph">
-<p><a href="https://jupyter.org/">Jupyter notebook</a> とは，インタラクティブに Python のプログラムを書いたり実行したりするためのツールである．
+<p><a href="https://jupyter.org/">Jupyter Notebook</a> とは，インタラクティブに Python のプログラムを書いたり実行したりするためのツールである．
 Jupyter は GUI としてウェブブラウザを介してアクセスする形式をとっており，まるでノートを書くように，プロットやテーブルのデータも美しく表示することができる (<a href="#handson_02_welcome_jupyter">Figure 23</a>)．
 Python に慣れている読者は，きっと一度は使ったことがあるだろう．</p>
 </div>
@@ -3558,10 +3558,10 @@ Python に慣れている読者は，きっと一度は使ったことがある�
 <div class="content">
 <img src="imgs/handson-jupyter/welcome_to_jupyter.png" alt="welcome to jupyter" width="700">
 </div>
-<div class="title">Figure 23. Jupyter notebook の画面</div>
+<div class="title">Figure 23. Jupyter Notebook の画面</div>
 </div>
 <div class="paragraph">
-<p>このハンズオンでは， Jupyter notebook を使ってディープラーニングのプログラムをインタラクティブに実行していく．
+<p>このハンズオンでは， Jupyter Notebook を使ってディープラーニングのプログラムをインタラクティブに実行していく．
 DLAMI には既に Jupyter がインストールされているので，特段の設定なしに使い始めることができる．</p>
 </div>
 <div class="paragraph">
@@ -3583,7 +3583,7 @@ SSHでログインした先の EC2 インスタンスで，次のコマンドを
 <div class="content">
 <img src="imgs/handson-jupyter/jupyter_launch.png" alt="jupyter launch" width="700">
 </div>
-<div class="title">Figure 24. Jupyter notebook サーバーを起動</div>
+<div class="title">Figure 24. Jupyter Notebook サーバーを起動</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3593,7 +3593,7 @@ SSHでログインした先の EC2 インスタンスで，次のコマンドを
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Jupyter notebook を初回に起動するときは，起動に数分程度の時間がかかることがある．
+<p>Jupyter Notebook を初回に起動するときは，起動に数分程度の時間がかかることがある．
 ほかの動作も起動直後は遅く，いくつかプログラムを走らせていくうちに俊敏に反応するようになってくる．
 これは， AWS の GPU 搭載型仮想マシンの運用方法に起因する現象だと考えられる．</p>
 </div>
@@ -3633,7 +3633,7 @@ SSHでログインした先の EC2 インスタンスで，次のコマンドを
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Jupyter notebook の使い方 (超簡易版)</p>
+<p>Jupyter Notebook の使い方 (超簡易版)</p>
 </div>
 <div class="ulist">
 <ul>
@@ -4345,7 +4345,7 @@ VM を作成するための有名なソフトウェアとしては， <a href="h
 <p>Docker も， VM と同様に，仮想化された OS をホストのOS上に走らせるための技術である．
 VM に対し， Docker ではハードウェアレベルの仮想化は行われておらず，すべての<strong>仮想化はソフトウェアレベルで実現されている</strong> (<a href="#docker_vs_vm">Figure 38</a>)．
 Docker で走る仮想 OS は，<strong>多くの部分をホストのOSに依存しており，結果として非常にコンパクトである</strong>．
-その結果， Docker で仮想 OS を起動するために要する時間は， VM に比べて圧倒的に早い．
+その結果， Docker で仮想 OS を起動するために要する時間は， VM に比べて圧倒的に速い．
 また， パッケージ化された環境 (=image) のサイズも完全なOSに比べ圧倒的に小さくなるので，ネットワークを通じたやり取りが非常に高速化される点も重要である．
 加えて， VM のいくつかの実装では，メタル (仮想化マシンに対して，物理的なハードウェア上で直接起動する場合のこと) と比べ，ハイパーバイザーレイヤでのオーバーヘッドなどにより性能が低下することが知られているが， Docker ではメタルとほぼ同様の性能を引き出すことができるとされている．</p>
 </div>
@@ -6135,11 +6135,11 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </div>
 <div class="paragraph">
 <p>ハンズオンのディレクトリの <code>notebook/</code> というディレクトリの中に， <code>run_single.ipynb</code> というファイルが見つかるはずである (<code>.ipynb</code> は Jupyter notebook のファイル形式)．
-これを Jupyter notebook から開こう．</p>
+これを Jupyter Notebook から開こう．</p>
 </div>
 <div class="paragraph">
-<p>今回のハンズオンでは， <code>venv</code> による仮想環境の中に Jupyter notebook もインストール済みである．
-なので，以下のコマンドで Jupyter notebook を立ち上げる．</p>
+<p>今回のハンズオンでは， <code>venv</code> による仮想環境の中に Jupyter Notebook もインストール済みである．
+なので，以下のコマンドで Jupyter Notebook を立ち上げる．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6149,7 +6149,7 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </div>
 </div>
 <div class="paragraph">
-<p>Jupyter notebook が起動したら， <code>run_single.ipynb</code> を開く．</p>
+<p>Jupyter Notebook が起動したら， <code>run_single.ipynb</code> を開く．</p>
 </div>
 <div class="paragraph">
 <p>最初の [1], [2]. [3] 番のセルは，ジョブをサブミットするための関数 (<code>submit_job()</code>) を定義している．</p>
@@ -6708,7 +6708,7 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 </div>
 <div class="paragraph">
 <p>ローカルに GPU を搭載した強力なマシンがなく，クラウドを利用する予算が確保されているのであれば， <a href="#fig:cloud_development">Figure 71</a> のような開発のスキームが理想的であると考える．
-最初の段階では， <a href="#sec_jupyter_and_deep_learning">Section 6</a> で見たような方法で， GPU 搭載型の EC2 インスタンスを作成し， Jupyter notebook などのインタラクティブな環境で様々なモデルを試し実験を行う．
+最初の段階では， <a href="#sec_jupyter_and_deep_learning">Section 6</a> で見たような方法で， GPU 搭載型の EC2 インスタンスを作成し， Jupyter Notebook などのインタラクティブな環境で様々なモデルを試し実験を行う．
 Jupyter である程度アプリケーションが完成してきたタイミングで，作成したアプリケーションを Docker イメージにパッケージングする．
 そして， EC2 上で <code>docker run</code> を行い，作成した Image がバグなく動作するか確認を行う．
 その次に，ハイパーパラメータの最適化などのチューニングを， <a href="#sec_aws_batch">Section 9</a> のハンズオンで学んだ AWS Batch などの計算システムを利用して行う．
@@ -6716,7 +6716,7 @@ Jupyter である程度アプリケーションが完成してきたタイミン
 </div>
 <div class="paragraph">
 <p>実際，本書ではこの流れに沿って演習を進めてきた．
-MNIST タスクを解くモデルを，最初 Jupyter notebook を使用して実験し，そのコードをほとんどそのまま Docker にパッケージし， AWS Batch を用いてハイパーパラメータサーチを行った．
+MNIST タスクを解くモデルを，最初 Jupyter Notebook を使用して実験し，そのコードをほとんどそのまま Docker にパッケージし， AWS Batch を用いてハイパーパラメータサーチを行った．
 このサイクルを繰り返すことで，クラウドを最大限に活用した機械学習アプリケーションの開発を進めることができる．</p>
 </div>
 <div class="paragraph">
@@ -9642,10 +9642,10 @@ output = json</pre>
 シークレットキーの発行については <a href="#aws_secrets">Section 15.2</a> を参照．
 コマンドは加えて，<code>Default region name</code> を訊いてくる．
 ここには自分の好きな地域 (例えば <code>ap-northeast-1</code> =東京リージョン) を指定すればよい．
-最後の <code>Default output format</code> は <code>JSON</code> としておくとよい．</p>
+最後の <code>Default output format</code> は <code>json</code> としておくとよい．</p>
 </div>
 <div class="paragraph">
-<p>このコマンドを完了すると， <code>~/.aws/credentials</code> と <code>~/.aws/config</code>　という名前のファイルが生成されているはずである．
+<p>このコマンドを完了すると， <code>~/.aws/credentials</code> と <code>~/.aws/config</code> という名前のファイルが生成されているはずである．
 念のため， <code>cat</code> コマンドを使って中身を確認してみるとよい．</p>
 </div>
 <div class="listingblock">
@@ -9656,7 +9656,7 @@ aws_access_key_id <span class="o">=</span> XXXXXXXXXXXXXXXXXX
 aws_secret_access_key <span class="o">=</span> YYYYYYYYYYYYYYYYYYY
 
 <span class="nv">$ </span><span class="nb">cat</span> ~/.aws/config
-<span class="o">[</span>profile default]
+<span class="o">[</span>default]
 region <span class="o">=</span> ap-northeast-1
 output <span class="o">=</span> json</code></pre>
 </div>
@@ -10149,7 +10149,7 @@ Docker Image のビルドファイルは GitHub の
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> <span class="nt">-v</span> ~/.aws:/root/.aws:ro docker.pkg.github.com/tomomano/learn-aws-by-coding/labc:latest</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> <span class="nt">-v</span> ~/.aws:/root/.aws:ro tomomano/labc:latest</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -10266,7 +10266,7 @@ Docker Image のビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-08-10 07:53:56 UTC
+Last updated 2021-08-13 04:21:03 UTC
 </div>
 </div>
 <style>
