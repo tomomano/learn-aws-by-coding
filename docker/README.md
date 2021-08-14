@@ -9,7 +9,7 @@ The image is pre-installed with
 - AWS CLI
 - AWS CDK
 
-## (For developer) Building docker image locally
+## (For developer) Building Docker image locally
 
 `cd` to the root of the repository, and run
 

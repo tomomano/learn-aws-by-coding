@@ -208,10 +208,10 @@ False
 
 自分の使うソフトウェア・ライブラリがインストールされた，自分だけの Image を作ることも可能である．
 
-たとえば， https://hub.docker.com/repository/docker/tomomano/labc[本書で提供している docker image]
+たとえば， https://hub.docker.com/repository/docker/tomomano/labc[本書で提供している Docker image]
 には， Python, Node.js, AWS CLI, AWS CDK などのソフトウェアがインストール済みであり，ダウンロードしてくるだけですぐにハンズオンのプログラムが実行できるようになっている．
 
-カスタムの docker image を作るには， `Dockerfile` という名前のついたファイルを用意し，その中にどんなプログラムをインストールするかなどを記述していく．
+カスタムの Docker image を作るには， `Dockerfile` という名前のついたファイルを用意し，その中にどんなプログラムをインストールするかなどを記述していく．
 
 具体例として，本書で提供している Docker image のレシピを見てみよう (https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile[/docker/Dockerfile])．
 

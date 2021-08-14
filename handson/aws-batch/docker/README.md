@@ -1,4 +1,4 @@
-# docker image for training mnist
+# Docker image for training mnist
 
 Read the following to debug or customize the program.
 
