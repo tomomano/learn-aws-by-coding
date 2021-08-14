@@ -455,7 +455,7 @@ Jupyter の画面右上の "Upload" からこのファイルをアップロー�
 
 === CPU vs GPU の簡易ベンチマーク
 
-実際にベンチマークを取ることでGPUとCPUの速度を比較をしてみよう．
+実際にベンチマークを取ることでGPUとCPUの速度を比較してみよう．
 実行時間を計測するツールとして， Jupyter の提供する https://ipython.readthedocs.io/en/stable/interactive/magics.html[%time] マジックコマンドを利用する．
 
 まずは CPU を使用して，10000x10000 の行列の行列積を計算した場合の速度を測ってみよう．
@@ -564,7 +564,7 @@ from simple_mnist import Model, train, evaluate
 ----
 
 https://pytorch.org/docs/stable/torchvision/index.html[torchvision] パッケージには，MNIST データセットをロードするなどの便利な関数が含まれている．
-また，今回のハンズオンで使うカスタムのクラス・関数 (`Model`, `train`, `test`) のインポートを行っている．
+また，今回のハンズオンで使うカスタムのクラス・関数 (`Model`, `train`, `evaluate`) のインポートを行っている．
 
 次に，MNIST テストデータをダウンロードしよう．
 同時に，画像データの輝度の正規化も行っている．

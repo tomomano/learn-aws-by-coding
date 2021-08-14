@@ -38,7 +38,7 @@ Submit a single question:
 python run_task.py ask "A giant peach was flowing in the river. She picked it up and brought it home. Later, a healthy baby was born from the peach. She named the baby Momotaro." "What is the name of the baby?"
 ```
 
-Submit many questions (questions are defined in [problem.json](problem.json)):
+Submit many questions (questions are defined in [problems.json](problems.json)):
 
 ```bash
 python run_task.py ask_many

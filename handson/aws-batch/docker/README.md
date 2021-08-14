@@ -18,7 +18,7 @@ Read the following to debug or customize the program.
     ```
     docker run -it --gpus device=0 -v ${PWD}:/data mymnist
     ```
-    In side the container, go to `/data` and run `main.py`.
+    Inside the container, go to `/data` and run `main.py`.
     For example,
     ```
     $ cd /data

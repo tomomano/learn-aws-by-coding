@@ -97,7 +97,7 @@ answer: 1921
 クラウドの設計に入る前に，まずはこのプログラムを単体で動かしてみよう．
 
 なお，今回は学習済みのモデルを用いているので，私達が行うのは与えられた入力をモデルに投入して予測を行う (推論) のみである．
-推論の演算は， CPU だけでも十分高速に行うことができるので，コストの削減と，よりシンプルにシステムを設計をする目的で，このハンズオンでは GPU は利用しない．
+推論の演算は， CPU だけでも十分高速に行うことができるので，コストの削減と，よりシンプルにシステムを設計する目的で，このハンズオンでは GPU は利用しない．
 一般的に， ニューラルネットは学習のほうが圧倒的に計算コストが大きく，そのような場合に GPU はより威力を発揮する．
 
 [[transformer_architecture]]
@@ -184,7 +184,7 @@ image::imgs/handson-03/handson-03-architecture.png[hands-on 03 architecture, 600
 * ジョブの実行結果 (質問への回答) は， データベース (DynamoDB) に書き込まれる．
 * 最後に，クライアントは DynamoDB から質問への回答を読み取る．
 
-それでは，プログラムのソースコードを見てみよう (https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot[/handson/qa-bot/app.py])．
+それでは，プログラムのソースコードを見てみよう (https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot/app.py[/handson/qa-bot/app.py])．
 
 [source, python, linenums]
 ----
@@ -450,7 +450,7 @@ image::imgs/handson-03/ask_many_output.png[ask_many_output, 700, align="center"]
 
 おめでとう！
 ここまでついてこれた読者はとても初歩的ながらも，深層学習による言語モデルを使って自動で質問への回答を生成するシステムを創り上げることができた！
-それも，数百の質問にも同時に対応できるような，とても高いスケーラビリティーをもったシステムである！
+それも，数百の質問にも同時に対応できるような，とても高いスケーラビリティをもったシステムである！
 
 [NOTE]
 ====
