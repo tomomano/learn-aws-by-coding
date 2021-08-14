@@ -124,7 +124,7 @@ Docker を使い始めるに当たり，最初に主要な用語を解説しよ�
 
 Docker を起動する際の大まかなステップを示したのが <<fig:docker_image_container>> である．
 パッケージされた一つの計算環境のことを **イメージ (Image) **とよぶ．
-Image は， DockerHub などのレポジトリで配布されているものをダウンロードするか，自分でカスタムの Image を作成することも可能である．
+Image は， Docker Hub などのレポジトリで配布されているものをダウンロードするか，自分でカスタムの Image を作成することも可能である．
 Image を作成するための”レシピ”を記述したファイルが **Dockerfile** である．
 Dockerfile から Image を作成する操作を **build** とよぶ．
 Image がホストマシンのメモリにロードされ，起動状態にある計算環境のことを **コンテナ (Container)** とよぶ．
@@ -175,7 +175,7 @@ image::imgs/docker_shell.png[docker_shell, 600, align="center"]
 
 ここで使用した `ubuntu:18.04` のイメージは，空の Ubuntu OS だが，すでにプログラムがインストール済みのものもある．
 これは， <<sec_jupyter_and_deep_learning>> でみた DLAMI と概念として似ている．
-たとえば， pytorch がインストール済みの Image は https://hub.docker.com/r/pytorch/pytorch[PyTorch 公式の DockerHub ページ] で公開されている．
+たとえば， pytorch がインストール済みの Image は https://hub.docker.com/r/pytorch/pytorch[PyTorch 公式の Docker Hub ページ] で公開されている．
 
 これを起動してみよう．
 
@@ -289,7 +289,7 @@ ECS の概要を示したのが <<ecs_overview>> である．
 
 ECS は，**タスク (Task)** と呼ばれる単位で管理された計算ジョブを受け付ける．
 システムにタスクが投入されると，ECS は最初にタスクで指定された Docker イメージを外部レジストリからダウンロードしてくる．
-外部レジストリとしては， DockerHub や AWS 独自の Docker レジストリである **ECR (Elastic Container Registry)** を指定することができる．
+外部レジストリとしては， Docker Hub や AWS 独自の Docker レジストリである **ECR (Elastic Container Registry)** を指定することができる．
 
 ECS の次の重要な役割はタスクの配置である．
 あらかじめ定義されたクラスター内で，計算負荷が小さい仮想インスタンスを選び出し，そこに Docker イメージを配置することで指定された計算タスクが開始される．

@@ -177,7 +177,7 @@ image::imgs/handson-03/handson-03-architecture.png[hands-on 03 architecture, 600
 
 * クライアントは，質問を AWS 上のアプリケーションに送信する．
 * 質問のタスクは ECS によって処理される．
-* ECS は， DockerHub から， Docker image をダウンロードする．
+* ECS は， Docker Hub から， Docker image をダウンロードする．
 * 次に，ECS はクラスター内に新たな Fargate インスタンスを立ち上げ，ダウンロードされた Docker image をこの新規インスタンスに配置する．
 ** このとき，一つの質問に対し一つの Fargate インスタンスを立ち上げることで，複数の質問を並列的に処理できるようにする．
 * ジョブが実行される．
@@ -279,7 +279,7 @@ container = taskdef.add_container(
 また，このようにして定義されたタスクは，デフォルトで1タスクにつき1インスタンスが使用される．
 
 最後に， `container =` の箇所で，タスクの実行で使用する Docker image を定義している．
-ここでは， DockerHub に置いてある image をダウンロードしてくるよう指定している．
+ここでは， Docker Hub に置いてある image をダウンロードしてくるよう指定している．
 
 このようにわずか数行のコードであるが，これだけで前述したような，タスクのスケジューリングなどが自動で実行される．
 

@@ -141,7 +141,7 @@ $ docker build -t mymnist .
 
 [NOTE]
 ====
-手元でビルドするかわりに， DockerHub から pull することも可能である．
+手元でビルドするかわりに， Docker Hub から pull することも可能である．
 その場合は次のコマンドを実行する．
 
 [source, bash]
@@ -367,7 +367,7 @@ Compute environment とは，先ほど述べたとおり，計算が実行され
 === Docker image を ECR に配置する
 
 さて， Batch がジョブを実行するには，どこか指定された場所から Docker image をダウンロード (pull) してくる必要がある．
-前回のハンズオン (<<sec_fargate_qabot>>) では，公開設定にしてある DockerHub から image を pull してきた．
+前回のハンズオン (<<sec_fargate_qabot>>) では，公開設定にしてある Docker Hub から image を pull してきた．
 今回のハンズオンでは， AWS から提供されているコンテナ置き場である **ECR (Elastic Container Registry)** に image を配置するという設計を採用する．
 ECR を利用する利点は，自分だけがアクセスすることのできるプライベートな image の置き場所を用意できる点である．
 Batch は ECR から image を pull してくることで，タスクを実行する (<<fig_batch_architecture>>)．
