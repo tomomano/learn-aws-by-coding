@@ -16,9 +16,9 @@
 このハンズオンは，本書で扱うハンズオンの中でも最も難易度が高いものだ (もう少し正確に言うなら，最もステップ数が多い)．
 内容が少し難しく感じる読者もいるかもしれないが，頑張ってついてきてほしい．
 
-=== Auto scaling groups (ASG)
+=== Auto Scaling group (ASG)
 
-ハンズオンに入っていく前に， **Auto scaling groups (ASG)** とよばれる EC2 の概念を知っておく必要がある．
+ハンズオンに入っていく前に， **Auto Scaling group (ASG)** とよばれる EC2 の概念を知っておく必要がある．
 
 ECS の概要を示した <<ecs_overview>> を振り返って見てほしい．
 前章 (<<sec_fargate_qabot>>) でも説明したが， ECS のクラスターで計算を担う実体としては EC2 と Fargate を指定することができる．
