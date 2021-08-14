@@ -337,7 +337,7 @@ Jupyter Notebook の使い方 (超簡易版)
 
 === PyTorchはじめの一歩
 
-https://pytorch.org/[PyTorch] は Facebook AI Research LAB (FAIR) が中心となって開発を進めている，オープンソースのディープラーニングのライブラリである．
+https://pytorch.org/[PyTorch] は Facebook AI Research (FAIR) LAB が中心となって開発を進めている，オープンソースのディープラーニングのライブラリである．
 PyTorch は 有名な例で言えば Tesla 社の自動運転プロジェクトなどで使用されており，執筆時点において最も人気の高いディープラーニングライブラリの一つである．
 本ハンズオンでは， PyTorch を使ってディープラーニングの実践を行う．
 
