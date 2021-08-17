@@ -124,7 +124,7 @@ Docker を使い始めるに当たり，最初に主要な用語を解説しよ�
 
 Docker を起動する際の大まかなステップを示したのが <<fig:docker_image_container>> である．
 パッケージされた一つの計算環境のことを **イメージ (Image) **とよぶ．
-Image は， DockerHub などのレポジトリで配布されているものをダウンロードするか，自分でカスタムの Image を作成することも可能である．
+Image は， Docker Hub などのレポジトリで配布されているものをダウンロードするか，自分でカスタムの Image を作成することも可能である．
 Image を作成するための”レシピ”を記述したファイルが **Dockerfile** である．
 Dockerfile から Image を作成する操作を **build** とよぶ．
 Image がホストマシンのメモリにロードされ，起動状態にある計算環境のことを **コンテナ (Container)** とよぶ．
@@ -175,7 +175,7 @@ image::imgs/docker_shell.png[docker_shell, 600, align="center"]
 
 ここで使用した `ubuntu:18.04` のイメージは，空の Ubuntu OS だが，すでにプログラムがインストール済みのものもある．
 これは， <<sec_jupyter_and_deep_learning>> でみた DLAMI と概念として似ている．
-たとえば， pytorch がインストール済みの Image は https://hub.docker.com/r/pytorch/pytorch[PyTorch 公式の DockerHub ページ] で公開されている．
+たとえば， pytorch がインストール済みの Image は https://hub.docker.com/r/pytorch/pytorch[PyTorch 公式の Docker Hub ページ] で公開されている．
 
 これを起動してみよう．
 
@@ -208,10 +208,10 @@ False
 
 自分の使うソフトウェア・ライブラリがインストールされた，自分だけの Image を作ることも可能である．
 
-たとえば， https://hub.docker.com/repository/docker/tomomano/labc[本書で提供している docker image]
+たとえば， https://hub.docker.com/repository/docker/tomomano/labc[本書で提供している Docker image]
 には， Python, Node.js, AWS CLI, AWS CDK などのソフトウェアがインストール済みであり，ダウンロードしてくるだけですぐにハンズオンのプログラムが実行できるようになっている．
 
-カスタムの docker image を作るには， `Dockerfile` という名前のついたファイルを用意し，その中にどんなプログラムをインストールするかなどを記述していく．
+カスタムの Docker image を作るには， `Dockerfile` という名前のついたファイルを用意し，その中にどんなプログラムをインストールするかなどを記述していく．
 
 具体例として，本書で提供している Docker image のレシピを見てみよう (https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile[/docker/Dockerfile])．
 
@@ -270,7 +270,7 @@ root 権限での実行は Web サーバーのように個人・企業がある�
 
 https://github.com/containers/podman[podman] は Red Hat 社によって開発されたもう一つのコンテナプラットフォームである．
 podman は基本的に Docker と同一のコマンドを採用しているが，実装は Red Hat によってスクラッチから行われた．
-podman では， Singularity と同様にユーザー権限でのプログラムの実行を可能であり，クラウドおよび HPC の両方の環境に対応するコンテナプラットフォームを目指して作られた．
+podman では， Singularity と同様にユーザー権限でのプログラムの実行が可能であり，クラウドおよび HPC の両方の環境に対応するコンテナプラットフォームを目指して作られた．
 また，その名前にあるとおり pod とよばれる独自の概念が導入されている．
 
 著者の個人的な意見としては，現時点では Docker をマスターしておけば当面は困ることはないと考えるが，興味のある読者はぜひこれらのツールも試してみてはいかがだろうか？
@@ -289,7 +289,7 @@ ECS の概要を示したのが <<ecs_overview>> である．
 
 ECS は，**タスク (Task)** と呼ばれる単位で管理された計算ジョブを受け付ける．
 システムにタスクが投入されると，ECS は最初にタスクで指定された Docker イメージを外部レジストリからダウンロードしてくる．
-外部レジストリとしては， DockerHub や AWS 独自の Docker レジストリである **ECR (Elastic Container Registry)** を指定することができる．
+外部レジストリとしては， Docker Hub や AWS 独自の Docker レジストリである **ECR (Elastic Container Registry)** を指定することができる．
 
 ECS の次の重要な役割はタスクの配置である．
 あらかじめ定義されたクラスター内で，計算負荷が小さい仮想インスタンスを選び出し，そこに Docker イメージを配置することで指定された計算タスクが開始される．
@@ -300,7 +300,7 @@ ECS の次の重要な役割はタスクの配置である．
 クラスター全体の計算負荷が指定された閾値 (たとえば80%の稼働率) を超えていた場合，新たな仮想インスタンスをクラスター内に立ち上げる操作を scale-out (スケールアウト) とよび，
 負荷が減った場合に不要なインスタンスを停止する操作を scale-in (スケールイン) とよぶ．
 クラスターのスケーリングは， ECS がほかの AWS のサービスと連携することで実現される．
-具体的には， EC2 の **Auto scaling group (ASG)** や **Fargate** の２つの選択肢が多くの場合選択される．
+具体的には， EC2 の **Auto Scaling group (ASG)** や **Fargate** の２つの選択肢が多くの場合選択される．
 **ASG** については <<sec_aws_batch>>, Fargate については <<sec_fargate_qabot>> でより詳細に解説する．
 
 これら一連のタスクの管理を， ECS は自動でやってくれる．

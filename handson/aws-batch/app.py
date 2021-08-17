@@ -70,7 +70,7 @@ class SimpleBatch(core.Stack):
         # allow read and write access to S3 bucket
         bucket.grant_read_write(job_role)
 
-        # create a ECR repository to push docker image
+        # create a ECR repository to push Docker image
         repo = ecr.Repository(
             self, "repository",
             removal_policy=core.RemovalPolicy.DESTROY,
