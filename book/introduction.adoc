@@ -9,9 +9,8 @@ https://github.com/tomomano/learn-aws-by-coding
 この資料を気に入っていただいた方は，手に取っていただけるとありがたいです．
 ここで公開している資料は引き続きオンラインで無料で読めますので，ご安心ください🙇
 
-- **Amazon** => https://www.amazon.co.jp/dp/4839977607/
-- **マイナビブックス** => https://book.mynavi.jp/ec/products/detail/id=124113
-- **マイナビブックス (電子書籍)** => Coming soon!!
+- **Amazon (紙媒体 or Kindle)** => https://www.amazon.co.jp/dp/4839977607/
+- **マイナビブックス (紙媒体 or PDF)** => https://book.mynavi.jp/ec/products/detail/id=124113
 
 == はじめに
 
