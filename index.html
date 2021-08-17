@@ -527,7 +527,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#sec_aws_batch">9. Hands-on #4: AWS Batch を使って機械学習のハイパーパラメータサーチを並列化する</a>
 <ul class="sectlevel2">
-<li><a href="#_auto_scaling_groups_asg">9.1. Auto scaling groups (ASG)</a></li>
+<li><a href="#_auto_scaling_group_asg">9.1. Auto Scaling group (ASG)</a></li>
 <li><a href="#_aws_batch">9.2. AWS Batch</a></li>
 <li><a href="#_準備_3">9.3. 準備</a></li>
 <li><a href="#_mnist_手書き文字認識_再訪">9.4. MNIST 手書き文字認識 (再訪)</a></li>
@@ -3654,7 +3654,7 @@ SSHでログインした先の EC2 インスタンスで，次のコマンドを
 <div class="sect2">
 <h3 id="_pytorchはじめの一歩">6.6. PyTorchはじめの一歩</h3>
 <div class="paragraph">
-<p><a href="https://pytorch.org/">PyTorch</a> は Facebook AI Research LAB (FAIR) が中心となって開発を進めている，オープンソースのディープラーニングのライブラリである．
+<p><a href="https://pytorch.org/">PyTorch</a> は Facebook AI Research (FAIR) LAB が中心となって開発を進めている，オープンソースのディープラーニングのライブラリである．
 PyTorch は 有名な例で言えば Tesla 社の自動運転プロジェクトなどで使用されており，執筆時点において最も人気の高いディープラーニングライブラリの一つである．
 本ハンズオンでは， PyTorch を使ってディープラーニングの実践を行う．</p>
 </div>
@@ -3831,7 +3831,7 @@ Jupyter の画面右上の "Upload" からこのファイルをアップロー�
 <div class="sect2">
 <h3 id="_cpu_vs_gpu_の簡易ベンチマーク">6.7. CPU vs GPU の簡易ベンチマーク</h3>
 <div class="paragraph">
-<p>実際にベンチマークを取ることでGPUとCPUの速度を比較をしてみよう．
+<p>実際にベンチマークを取ることでGPUとCPUの速度を比較してみよう．
 実行時間を計測するツールとして， Jupyter の提供する <a href="https://ipython.readthedocs.io/en/stable/interactive/magics.html">%time</a> マジックコマンドを利用する．</p>
 </div>
 <div class="paragraph">
@@ -3997,7 +3997,7 @@ Wall time: 553 ms</code></pre>
 </div>
 <div class="paragraph">
 <p><a href="https://pytorch.org/docs/stable/torchvision/index.html">torchvision</a> パッケージには，MNIST データセットをロードするなどの便利な関数が含まれている．
-また，今回のハンズオンで使うカスタムのクラス・関数 (<code>Model</code>, <code>train</code>, <code>test</code>) のインポートを行っている．</p>
+また，今回のハンズオンで使うカスタムのクラス・関数 (<code>Model</code>, <code>train</code>, <code>evaluate</code>) のインポートを行っている．</p>
 </div>
 <div class="paragraph">
 <p>次に，MNIST テストデータをダウンロードしよう．
@@ -4404,7 +4404,7 @@ Docker のインストールが完了している前提で，以下は話を進�
 <div class="paragraph">
 <p>Docker を起動する際の大まかなステップを示したのが <a href="#fig:docker_image_container">Figure 39</a> である．
 パッケージされた一つの計算環境のことを <strong>イメージ (Image) </strong>とよぶ．
-Image は， DockerHub などのレポジトリで配布されているものをダウンロードするか，自分でカスタムの Image を作成することも可能である．
+Image は， Docker Hub などのレポジトリで配布されているものをダウンロードするか，自分でカスタムの Image を作成することも可能である．
 Image を作成するための”レシピ”を記述したファイルが <strong>Dockerfile</strong> である．
 Dockerfile から Image を作成する操作を <strong>build</strong> とよぶ．
 Image がホストマシンのメモリにロードされ，起動状態にある計算環境のことを <strong>コンテナ (Container)</strong> とよぶ．
@@ -4477,7 +4477,7 @@ Docker Hub 以外の registry から pull するには， <code>myregistry.local
 <div class="paragraph">
 <p>ここで使用した <code>ubuntu:18.04</code> のイメージは，空の Ubuntu OS だが，すでにプログラムがインストール済みのものもある．
 これは， <a href="#sec_jupyter_and_deep_learning">Section 6</a> でみた DLAMI と概念として似ている．
-たとえば， pytorch がインストール済みの Image は <a href="https://hub.docker.com/r/pytorch/pytorch">PyTorch 公式の DockerHub ページ</a> で公開されている．</p>
+たとえば， pytorch がインストール済みの Image は <a href="https://hub.docker.com/r/pytorch/pytorch">PyTorch 公式の Docker Hub ページ</a> で公開されている．</p>
 </div>
 <div class="paragraph">
 <p>これを起動してみよう．</p>
@@ -4525,11 +4525,11 @@ False</code></pre>
 <p>自分の使うソフトウェア・ライブラリがインストールされた，自分だけの Image を作ることも可能である．</p>
 </div>
 <div class="paragraph">
-<p>たとえば， <a href="https://hub.docker.com/repository/docker/tomomano/labc">本書で提供している docker image</a>
+<p>たとえば， <a href="https://hub.docker.com/repository/docker/tomomano/labc">本書で提供している Docker image</a>
 には， Python, Node.js, AWS CLI, AWS CDK などのソフトウェアがインストール済みであり，ダウンロードしてくるだけですぐにハンズオンのプログラムが実行できるようになっている．</p>
 </div>
 <div class="paragraph">
-<p>カスタムの docker image を作るには， <code>Dockerfile</code> という名前のついたファイルを用意し，その中にどんなプログラムをインストールするかなどを記述していく．</p>
+<p>カスタムの Docker image を作るには， <code>Dockerfile</code> という名前のついたファイルを用意し，その中にどんなプログラムをインストールするかなどを記述していく．</p>
 </div>
 <div class="paragraph">
 <p>具体例として，本書で提供している Docker image のレシピを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile">/docker/Dockerfile</a>)．</p>
@@ -4595,7 +4595,7 @@ root 権限での実行は Web サーバーのように個人・企業がある�
 <div class="paragraph">
 <p><a href="https://github.com/containers/podman">podman</a> は Red Hat 社によって開発されたもう一つのコンテナプラットフォームである．
 podman は基本的に Docker と同一のコマンドを採用しているが，実装は Red Hat によってスクラッチから行われた．
-podman では， Singularity と同様にユーザー権限でのプログラムの実行を可能であり，クラウドおよび HPC の両方の環境に対応するコンテナプラットフォームを目指して作られた．
+podman では， Singularity と同様にユーザー権限でのプログラムの実行が可能であり，クラウドおよび HPC の両方の環境に対応するコンテナプラットフォームを目指して作られた．
 また，その名前にあるとおり pod とよばれる独自の概念が導入されている．</p>
 </div>
 <div class="paragraph">
@@ -4624,7 +4624,7 @@ ECS の概要を示したのが <a href="#ecs_overview">Figure 42</a> である�
 <div class="paragraph">
 <p>ECS は，<strong>タスク (Task)</strong> と呼ばれる単位で管理された計算ジョブを受け付ける．
 システムにタスクが投入されると，ECS は最初にタスクで指定された Docker イメージを外部レジストリからダウンロードしてくる．
-外部レジストリとしては， DockerHub や AWS 独自の Docker レジストリである <strong>ECR (Elastic Container Registry)</strong> を指定することができる．</p>
+外部レジストリとしては， Docker Hub や AWS 独自の Docker レジストリである <strong>ECR (Elastic Container Registry)</strong> を指定することができる．</p>
 </div>
 <div class="paragraph">
 <p>ECS の次の重要な役割はタスクの配置である．
@@ -4637,7 +4637,7 @@ ECS の概要を示したのが <a href="#ecs_overview">Figure 42</a> である�
 クラスター全体の計算負荷が指定された閾値 (たとえば80%の稼働率) を超えていた場合，新たな仮想インスタンスをクラスター内に立ち上げる操作を scale-out (スケールアウト) とよび，
 負荷が減った場合に不要なインスタンスを停止する操作を scale-in (スケールイン) とよぶ．
 クラスターのスケーリングは， ECS がほかの AWS のサービスと連携することで実現される．
-具体的には， EC2 の <strong>Auto scaling group (ASG)</strong> や <strong>Fargate</strong> の２つの選択肢が多くの場合選択される．
+具体的には， EC2 の <strong>Auto Scaling group (ASG)</strong> や <strong>Fargate</strong> の２つの選択肢が多くの場合選択される．
 <strong>ASG</strong> については <a href="#sec_aws_batch">Section 9</a>, Fargate については <a href="#sec_fargate_qabot">Section 8</a> でより詳細に解説する．</p>
 </div>
 <div class="paragraph">
@@ -4813,7 +4813,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 </div>
 <div class="paragraph">
 <p>なお，今回は学習済みのモデルを用いているので，私達が行うのは与えられた入力をモデルに投入して予測を行う (推論) のみである．
-推論の演算は， CPU だけでも十分高速に行うことができるので，コストの削減と，よりシンプルにシステムを設計をする目的で，このハンズオンでは GPU は利用しない．
+推論の演算は， CPU だけでも十分高速に行うことができるので，コストの削減と，よりシンプルにシステムを設計する目的で，このハンズオンでは GPU は利用しない．
 一般的に， ニューラルネットは学習のほうが圧倒的に計算コストが大きく，そのような場合に GPU はより威力を発揮する．</p>
 </div>
 <div id="transformer_architecture" class="imageblock text-center">
@@ -4937,7 +4937,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 <p>質問のタスクは ECS によって処理される．</p>
 </li>
 <li>
-<p>ECS は， DockerHub から， Docker image をダウンロードする．</p>
+<p>ECS は， Docker Hub から， Docker image をダウンロードする．</p>
 </li>
 <li>
 <p>次に，ECS はクラスター内に新たな Fargate インスタンスを立ち上げ，ダウンロードされた Docker image をこの新規インスタンスに配置する．</p>
@@ -4961,7 +4961,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 </ul>
 </div>
 <div class="paragraph">
-<p>それでは，プログラムのソースコードを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot">/handson/qa-bot/app.py</a>)．</p>
+<p>それでは，プログラムのソースコードを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot/app.py">/handson/qa-bot/app.py</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5150,7 +5150,7 @@ question: In what year did Einstein win the Nobel prize?</pre>
 </div>
 <div class="paragraph">
 <p>最後に， <code>container =</code> の箇所で，タスクの実行で使用する Docker image を定義している．
-ここでは， DockerHub に置いてある image をダウンロードしてくるよう指定している．</p>
+ここでは， Docker Hub に置いてある image をダウンロードしてくるよう指定している．</p>
 </div>
 <div class="paragraph">
 <p>このようにわずか数行のコードであるが，これだけで前述したような，タスクのスケジューリングなどが自動で実行される．</p>
@@ -5390,7 +5390,7 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 <div class="paragraph">
 <p>おめでとう！
 ここまでついてこれた読者はとても初歩的ながらも，深層学習による言語モデルを使って自動で質問への回答を生成するシステムを創り上げることができた！
-それも，数百の質問にも同時に対応できるような，とても高いスケーラビリティーをもったシステムである！</p>
+それも，数百の質問にも同時に対応できるような，とても高いスケーラビリティをもったシステムである！</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -5452,9 +5452,9 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 内容が少し難しく感じる読者もいるかもしれないが，頑張ってついてきてほしい．</p>
 </div>
 <div class="sect2">
-<h3 id="_auto_scaling_groups_asg">9.1. Auto scaling groups (ASG)</h3>
+<h3 id="_auto_scaling_group_asg">9.1. Auto Scaling group (ASG)</h3>
 <div class="paragraph">
-<p>ハンズオンに入っていく前に， <strong>Auto scaling groups (ASG)</strong> とよばれる EC2 の概念を知っておく必要がある．</p>
+<p>ハンズオンに入っていく前に， <strong>Auto Scaling group (ASG)</strong> とよばれる EC2 の概念を知っておく必要がある．</p>
 </div>
 <div class="paragraph">
 <p>ECS の概要を示した <a href="#ecs_overview">Figure 42</a> を振り返って見てほしい．
@@ -5575,7 +5575,7 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 </div>
 <div class="paragraph">
 <p>一方，ベイズ最適化による方法は，過去の結果をもとに次の探索が決定されるので，並列化はそれほど単純ではない．
-最近では <a href="https://optuna.org/">optuna</a> などのハイパーパラメータ探索のためのライブラリが発達しており，ベイズ最適化の数理的な処理を自動で実行してくれるので便利である．
+最近では <a href="https://optuna.org/">Optuna</a> などのハイパーパラメータ探索のためのライブラリが発達しており，ベイズ最適化の数理的な処理を自動で実行してくれるので便利である．
 これらのライブラリを使うと，もし一台のコンピュータ (ノード) の中に複数の GPU が存在する場合は，並列に計算を実行することができる．
 しかしながら，一台のノードにとどまらず，複数のノードをまたいだ並列化は，高度なプログラミングテクニックが必要とされるだけでなく，ノード間の接続様式などクラウドのアーキテクチャにも深く依存するものである．
 本書ではここまで高度なクラウドの使用方法には立ち入らない．</p>
@@ -5611,7 +5611,7 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>手元でビルドするかわりに， DockerHub から pull することも可能である．
+<p>手元でビルドするかわりに， Docker Hub から pull することも可能である．
 その場合は次のコマンドを実行する．</p>
 </div>
 <div class="listingblock">
@@ -5644,7 +5644,7 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 </div>
 <div class="paragraph">
 <p>上に示したコマンドを使うと，計算は CPU を使って実行される．
-もし，ローカルの計算機に GPU が備わっており， <a href="https://github.com/NVIDIA/nvidia-docker">nvidia-docker</a> の設定が済んでいるいるならば，
+もし，ローカルの計算機に GPU が備わっており， <a href="https://github.com/NVIDIA/nvidia-docker">nvidia-docker</a> の設定が済んでいるならば，
 次のコマンドにより GPU を使って計算を実行できる．</p>
 </div>
 <div class="listingblock">
@@ -6005,7 +6005,7 @@ Compute environment とは，先ほど述べたとおり，計算が実行され
 <h3 id="_docker_image_を_ecr_に配置する">9.8. Docker image を ECR に配置する</h3>
 <div class="paragraph">
 <p>さて， Batch がジョブを実行するには，どこか指定された場所から Docker image をダウンロード (pull) してくる必要がある．
-前回のハンズオン (<a href="#sec_fargate_qabot">Section 8</a>) では，公開設定にしてある DockerHub から image を pull してきた．
+前回のハンズオン (<a href="#sec_fargate_qabot">Section 8</a>) では，公開設定にしてある Docker Hub から image を pull してきた．
 今回のハンズオンでは， AWS から提供されているコンテナ置き場である <strong>ECR (Elastic Container Registry)</strong> に image を配置するという設計を採用する．
 ECR を利用する利点は，自分だけがアクセスすることのできるプライベートな image の置き場所を用意できる点である．
 Batch は ECR から image を pull してくることで，タスクを実行する (<a href="#fig_batch_architecture">Figure 57</a>)．</p>
@@ -10258,7 +10258,7 @@ Docker Image のビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-08-17 15:39:17 UTC
+Last updated 2021-08-17 15:42:05 UTC
 </div>
 </div>
 <style>
