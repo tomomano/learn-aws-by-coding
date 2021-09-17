@@ -353,7 +353,7 @@ $ cdk deploy
 コンソールの検索バーで `batch` と入力し， AWS Batch の管理画面を開く (<<fig_batch_console>>)．
 
 [[fig_batch_console]]
-.AWSBatch のコンソール画面 (ダッシュボード)
+.AWS Batch のコンソール画面 (ダッシュボード)
 image::imgs/aws_batch/batch_console.png[batch console, 700, align="center"]
 
 まず目を向けてほしいのが，画面の一番下にある Compute environment overview の中の `SimpleBatchcompute-env` という名前の項目だ．
@@ -677,7 +677,7 @@ for lr in [0.1, 0.01, 0.001]:
 image::imgs/aws_batch/batch_many_parallel_jobs.png[batch many parallel jobs, 700, align="center"]
 
 次に，Batch のコンソールの左側のメニューから `Jobs` をクリックしてみよう．
-ここでは，実行中の Job の一覧が確認することができる (<<fig_batch_parallel_job_list>>)．
+ここでは，実行中の Job の一覧を確認することができる (<<fig_batch_parallel_job_list>>)．
 Job のステータスでフィルタリングをすることも可能である．
 9個のジョブがどれも `RUNNING` 状態にあることが確認できるだろう．
 
@@ -783,7 +783,7 @@ image::imgs/aws_batch/grid_search_result.png[grid_search_result, 400, align="cen
 これは CloudFormation の仕様なので従うしかない)．
 
 ECR の Docker image を削除するには， ECR のコンソールに行き，イメージが配置されたレポジトリを開く．
-そして，画面右上の `DELETE` ボタンを押して削除する (<<fig_delete_ecr>>)．
+そして，画面右上の `Delete` ボタンを押して削除する (<<fig_delete_ecr>>)．
 
 [[fig_delete_ecr]]
 .ECR から Docker image を削除する
