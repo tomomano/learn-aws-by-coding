@@ -1,0 +1,37 @@
+== Introduction
+
+=== Purpose and content of this document
+
+This document was prepared as a lecture material for "Special Lectures on Information Physics and Computing", which was offered in the S1/S2 term of the 2021 academic year at the Department of Mathematical Engineering and Information Physics, the University of Tokyo.
+
+The purpose of this book is to explain the basic knowledge and concepts of cloud computing for beginners.
+It provides hands-on tutorials to use real cloud environment provided by Amazon Web Services (AWS).
+
+I assume that the readers would be students majoring science or engineering at universities, or software engineers who are starting to develop cloud applications.
+I will introduce pracitcal steps to use the cloud for research and web application development.
+I plan to keep this course as interactive and practical as I can, and for that purpose, less emphasis is placed on the theories and knowledge, and more effort is placed on writing real programs.
+I hope that this document serves as a stepping stone for readers to use cloud computing in their future research and applications.
+
+The document is divided into three parts:
+
+[cols="1,2,2", options="header"] 
+.Structure of this document
+|===
+| | Theme | Hands-on
+|1st Part (Section 1 to 4)
+|Cloud Fundamentals
+a|
+* Launching an EC2 instance
+|2nd Part (Section 5 to 9)
+|Machine Learning using Cloud
+a|
+* Deep Learning by using AWS and Jupyter
+* Creating a scalable question-answering bot
+* Massively parallelized hyperparameter search
+|3rd Part (Section 10 to 13)
+|Introduction to Serverless Architecture
+a|
+* Tutorials on Lambda, DynamoDB, and S3
+* "Bashoutter", a SNS for Haiku
+|===
+

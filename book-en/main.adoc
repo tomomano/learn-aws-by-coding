@@ -1,0 +1,37 @@
+= Learn AWS by Coding (LABC)
+Tomoyuki Mano <tomoyukimano@gmail.com>
+v1.0-en, 2021-09-17
+:toc: left
+:sectnums:
+:source-highlighter: rouge
+:rouge-style: github
+:icons: font
+:xrefstyle: short
+
+include::introduction.adoc[]
+// include::cloud.adoc[]
+// include::aws_get_started.adoc[]
+// include::handson-ec2.adoc[]
+// include::scientific_computing.adoc[]
+// include::handson-jupyter.adoc[]
+// include::docker_system.adoc[]
+// include::handson-qabot.adoc[]
+// include::aws_batch.adoc[]
+// include::webserver.adoc[]
+// include::serverless.adoc[]
+// include::handson-serverless.adoc[]
+// include::handson-bashoutter.adoc[]
+// include::closing.adoc[]
+// include::appendix.adoc[]
+// include::acknowledgement.adoc[]
+// include::author.adoc[]
+// include::license.adoc[]
+
+// Additional styles
+++++
+<style>
+  .imageblock > .title {
+    text-align: inherit;
+  }
+</style>
+++++
