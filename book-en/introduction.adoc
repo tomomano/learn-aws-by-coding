@@ -7,9 +7,9 @@ This document was prepared as a lecture material for "Special Lectures on Inform
 The purpose of this book is to explain the basic knowledge and concepts of cloud computing for beginners.
 It provides hands-on tutorials to use real cloud environment provided by Amazon Web Services (AWS).
 
-I assume that the readers would be students majoring science or engineering at universities, or software engineers who are starting to develop cloud applications.
-I will introduce pracitcal steps to use the cloud for research and web application development.
-I plan to keep this course as interactive and practical as I can, and for that purpose, less emphasis is placed on the theories and knowledge, and more effort is placed on writing real programs.
+We assume that the readers would be students majoring science or engineering at college, or software engineers who are starting to develop cloud applications.
+We will introduce pracitcal steps to use the cloud for research and web application development.
+We plan to keep this course as interactive and practical as possible, and for that purpose, less emphasis is placed on the theories and knowledge, and more effort is placed on writing real programs.
 I hope that this document serves as a stepping stone for readers to use cloud computing in their future research and applications.
 
 The document is divided into three parts:
@@ -34,4 +34,48 @@ a|
 * Tutorials on Lambda, DynamoDB, and S3
 * "Bashoutter", a SNS for Haiku
 |===
+
+In the first part, we explain the basic concepts and knowledge of cloud computing.
+Essential ideas necessary to safely and cleverly use cloud will be covered, including security and networking.
+In the hands-on session, we will practice setting up **a simple virtual server on AWS using AWS API and AWS CDK**.
+
+In the second part, we introduce the cocenpts and techniques for running **scientific computing** (especially **machine learning**) in the cloud.
+In parallel, we will learn a modern virtual coumputing environment called https://www.docker.com/[Docker].
+In the first hands-on session, we will run Jupyter Notebook in the AWS cloud and run a simple machine learning program.
+In the second hands-on, we will create a bot that automatically generates answers to questions using natural language model powered by deep neural network.
+In the third hands-on, we will show how to launch a cluster with multiple GPU instances and perform massively parallel hyperparameter search for deep learning.
+
+In the third part, we introduce the latest cloud architecture called **serverless architecture**.
+This architecture introduces radically different design concept to the cloud than the previous one (often referred to as Serverful), as it allows the processing capacity of the cloud system to be scaled up or down more flexibly depending on the load.
+In the first hands-on session, we will provide exercises on Lambda, DynamoDB, and S3, which are the main components of the serverless cloud.
+In addition, we will create a simple yet quite useful social network service (SNS) in the cloud using serverless technology.
+
+These extensive hands-on sessions will provide you with the knowledge and skills to develop your own cloud system on AWS.
+All of the hands-on programs are designed to be practical, and can be customized for a variety of applications.
+
+=== Philosophy of this document
+
+The philosophy of this document can be summed up in one word:
+**"Let's fly to space in a rocket and look at the earth once!"**
+
+What does that mean?
+
+The "Earth" here refers to the whole picture of cloud computing.
+Needless to say, cloud computing is a very broad and complex concept, and it is the sum of many information technologies, hardware, and algorithms that have been elaborately woven together.
+Today, many parts of our society, from scientific research to everyday infrastructure, are supported by cloud technology.
+
+The word "rocket" here refers to this lecture.
+In this lecture, readers will fly into space on a rocket and look at the entire earth (cloud) with their own eyes.
+In this journey, we do not ask deeply about the detailed machinery of the rocket (i.e. elaborate theories and algorithms).
+Rather, the purpose of this document is to let you actually touch the cutting edge technologies of cloud computing and realize what kind of views (and applications) are possible from there.
+
+For this reason, this document covers a wide range of topics from the basics to advanced applications of cloud computing.
+The first part of the book starts with the basics of cloud computing, and the second part takes it to the next level by explaining how to execute machine learning algorithms in the cloud.
+In the third part, we will explain serverless architecture, a completely new cloud design that has been established in the last few years.
+Each of these topic is worth more than one book, but this document was written with the ambitious intention of combining them into a single volume and providing a integrative and comprehensive overview.
+
+It may not be an easy ride, but we promise you that if you hang on to this rocket, you will get to see some very exciting sights.
+
+.Earth viewed from space (Image from NASA https://www.nasa.gov/image-feature/planet-of-clouds)
+image::imgs/earth_from_earth.jpg[earth, 500, align="center"]
 
