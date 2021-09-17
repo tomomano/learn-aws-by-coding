@@ -5996,7 +5996,7 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 <div class="content">
 <img src="imgs/aws_batch/batch_console.png" alt="batch console" width="700">
 </div>
-<div class="title">Figure 59. AWSBatch のコンソール画面 (ダッシュボード)</div>
+<div class="title">Figure 59. AWS Batch のコンソール画面 (ダッシュボード)</div>
 </div>
 <div class="paragraph">
 <p>まず目を向けてほしいのが，画面の一番下にある Compute environment overview の中の <code>SimpleBatchcompute-env</code> という名前の項目だ．
@@ -6501,7 +6501,7 @@ AWS コンソールからこれを確認しよう．</p>
 </div>
 <div class="paragraph">
 <p>次に，Batch のコンソールの左側のメニューから <code>Jobs</code> をクリックしてみよう．
-ここでは，実行中の Job の一覧が確認することができる (<a href="#fig_batch_parallel_job_list">Figure 67</a>)．
+ここでは，実行中の Job の一覧を確認することができる (<a href="#fig_batch_parallel_job_list">Figure 67</a>)．
 Job のステータスでフィルタリングをすることも可能である．
 9個のジョブがどれも <code>RUNNING</code> 状態にあることが確認できるだろう．</p>
 </div>
@@ -6675,7 +6675,7 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 </div>
 <div class="paragraph">
 <p>ECR の Docker image を削除するには， ECR のコンソールに行き，イメージが配置されたレポジトリを開く．
-そして，画面右上の <code>DELETE</code> ボタンを押して削除する (<a href="#fig_delete_ecr">Figure 70</a>)．</p>
+そして，画面右上の <code>Delete</code> ボタンを押して削除する (<a href="#fig_delete_ecr">Figure 70</a>)．</p>
 </div>
 <div id="fig_delete_ecr" class="imageblock text-center">
 <div class="content">
@@ -6797,7 +6797,7 @@ MNIST タスクを解くモデルを，最初 Jupyter Notebook を使用して�
 <p>前提として，クライアントとサーバーの通信は <strong>HTTP (Hypertext Transfer Protocol)</strong> を使って行われる．
 また，最近では，暗号化された HTTP である <strong>HTTPS</strong> を用いることがスタンダードになってきている．
 第一のステップとして，クライアントは HTTP(S) 通信によってサーバーから静的なコンテンツを取得する．
-静的なコンテンツとは， <strong>HTML (Hyptertext Markup Language)</strong> で記述されたウェブページの文書本体， <strong>CSS (Cascading Style Sheets)</strong> で記述されたページのデザインやレイアウトファイル，そして <strong>JavaScript (JS)</strong> で記述されたページの動的な挙動を定義したプログラム，が含まれる．
+静的なコンテンツとは， <strong>HTML (HyperText Markup Language)</strong> で記述されたウェブページの文書本体， <strong>CSS (Cascading Style Sheets)</strong> で記述されたページのデザインやレイアウトファイル，そして <strong>JavaScript (JS)</strong> で記述されたページの動的な挙動を定義したプログラム，が含まれる．
 Twitter を含む現代的なウェブアプリケーションの設計では，この静的なファイル群はページの”枠”を定義するだけで，中身となるコンテンツ (例: ツイートの一覧) は別途 <strong>API (Application Programming Interface)</strong> によって取得されなければならない．
 そこで，クライアントは先のステップで取得された JavaScript で定義されたプログラムに従って，サーバーに API を送信し，ツイートや画像データを取得する．
 この際，テキストデータのやり取りには <strong>JSON (JavaScript Object Notation)</strong> というフォーマットが用いられることが多い．
@@ -6915,7 +6915,7 @@ URI は多くの場合 http または https から始まるウェブサーバー
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /statuses/home_time_line</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /statuses/home_timeline</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ホームのタイムラインのツイートの一覧を取得する．</p></td>
 </tr>
 <tr>
@@ -7005,7 +7005,7 @@ API サーバーでは，リクエストの内容に応じてタスクが実行�
 <p>さらに問題を複雑にするのは，APIサーバーで処理されるべきタスクが，非一様な点である．
 非一様であるとは，たとえばタスクAは3000ミリ秒の実行時間と 512MB のメモリーを消費し，別のタスクBは1000ミリ秒の実行時間と 128MB のメモリーを消費する，というような状況を差している．
 一つのサーバーマシンが計算負荷が異なる複数のタスクを処理する場合，クラスターのスケーリングはより複雑になる．
-この状況をシンプルにするために，１サーバーで実行するタスクは１種類に限る，という設計も可能であるが，そうするとで生まれる弊害も多い (ほとんど使われないタスクに対してもサーバー一台をまるまる割り当てなければならない = ほとんどアイドリング状態になってしまう，など)．</p>
+この状況をシンプルにするために，１サーバーで実行するタスクは１種類に限る，という設計も可能であるが，そうすることで生まれる弊害も多い (ほとんど使われないタスクに対してもサーバー一台をまるまる割り当てなければならない = ほとんどアイドリング状態になってしまう，など)．</p>
 </div>
 <div class="paragraph">
 <p>もっとシンプルで見通しのよいクラウドシステムのスケーリングの仕組みはないだろうか？</p>
@@ -7067,7 +7067,7 @@ API サーバーでは，リクエストの内容に応じてタスクが実行�
 <div class="paragraph">
 <p>Lambda の使い方を <a href="#lambda_workflow">Figure 76</a> に図示している．
 Lambda の仕組みはシンプルで，まずユーザーは実行したいプログラムのコードを事前に登録しておく．
-プログラムは， Python, Node.js, ruby などの主要な言語がサポートされている．
+プログラムは， Python, Node.js, Ruby などの主要な言語がサポートされている．
 そして，プログラムを実行したいときに，そのプログラムを実行 (invoke) するコマンドを Lambda に送信する．
 Lambda では， invoke のリクエストを受け取るとただちに (数ミリセカンドから数百ミリセカンド程度の時間で) プログラムの実行を開始する．
 そして，実行結果をクライアントやその他の計算機に返す．</p>
@@ -7090,7 +7090,7 @@ invoke のリクエストに応じて，プログラムが AWS の巨大な計�
 また，実効的な CPU の容量はメモリーの量に比例する形で割り当てられる
 (しかし， RAM と CPU 容量の具体的な換算表は AWS からは公開されていない)．
 実行時間は100ミリ秒の単位で記録され，実行時間に比例して料金が決定される．
-<a href="#lambda_pricing">Table 7</a> は Lambda の利用料金の利用料金表である．</p>
+<a href="#lambda_pricing">Table 7</a> は Lambda の利用料金表である．</p>
 </div>
 <table id="lambda_pricing" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 7. Lambda の料金表</caption>
@@ -7125,7 +7125,7 @@ invoke のリクエストに応じて，プログラムが AWS の巨大な計�
 </table>
 <div class="paragraph">
 <p>たとえば， 128MB のメモリーを使用する関数を，それぞれ200ミリ秒，合計で100万回実行した場合，
-0.0000002083 * 2 * 10^6 = <strong>$0.4</strong> の料金となる．
+0.0000002083 * 2 * 10^6 ≒ <strong>$0.4</strong> の料金となる．
 ウェブサーバーのデータベースの更新など簡単な計算であれば，200ミリ秒程度で実行できる関数も多いことから，100万回データベースの更新を行ったとしても，たった $0.4 しかコストが発生しないことになる．</p>
 </div>
 </div>
@@ -10266,7 +10266,7 @@ Docker Image のビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-09-04 02:00:44 UTC
+Last updated 2021-09-17 13:50:38 UTC
 </div>
 </div>
 <style>
