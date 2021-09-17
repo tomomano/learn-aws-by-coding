@@ -26,6 +26,9 @@ jobs:
         run: |
           cd book
           ./generate.sh main.adoc
+          cd ../book-en/
+          ./generate.sh main.adoc
+          cp dist/* ../book/dist/en/
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3 # See https://github.com/peaceiris/actions-gh-pages
