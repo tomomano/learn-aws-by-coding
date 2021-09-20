@@ -28,7 +28,7 @@ image::imgs/web_server.png[web_server, 700, align="center"]
 前提として，クライアントとサーバーの通信は **HTTP (Hypertext Transfer Protocol)** を使って行われる．
 また，最近では，暗号化された HTTP である **HTTPS** を用いることがスタンダードになってきている．
 第一のステップとして，クライアントは HTTP(S) 通信によってサーバーから静的なコンテンツを取得する．
-静的なコンテンツとは， **HTML (Hyptertext Markup Language)** で記述されたウェブページの文書本体， **CSS (Cascading Style Sheets)** で記述されたページのデザインやレイアウトファイル，そして **JavaScript (JS)** で記述されたページの動的な挙動を定義したプログラム，が含まれる．
+静的なコンテンツとは， **HTML (HyperText Markup Language)** で記述されたウェブページの文書本体， **CSS (Cascading Style Sheets)** で記述されたページのデザインやレイアウトファイル，そして **JavaScript (JS)** で記述されたページの動的な挙動を定義したプログラム，が含まれる．
 Twitter を含む現代的なウェブアプリケーションの設計では，この静的なファイル群はページの”枠”を定義するだけで，中身となるコンテンツ (例: ツイートの一覧) は別途 **API (Application Programming Interface)** によって取得されなければならない．
 そこで，クライアントは先のステップで取得された JavaScript で定義されたプログラムに従って，サーバーに API を送信し，ツイートや画像データを取得する．
 この際，テキストデータのやり取りには **JSON (JavaScript Object Notation)** というフォーマットが用いられることが多い．
@@ -110,7 +110,7 @@ https://developer.twitter.com/en/docs/api-reference-index[Twitter の Developer 
 [cols="1,1"]
 .Twitter API
 |===
-|`GET /statuses/home_time_line`
+|`GET /statuses/home_timeline`
 |ホームのタイムラインのツイートの一覧を取得する．
 
 |`GET /statuses/show/:id`

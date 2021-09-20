@@ -28,7 +28,7 @@ jobs:
           ./generate.sh main.adoc
           cd ../book-en/
           ./generate.sh main.adoc
-          mkdir ./book/dist/en/
+          mkdir ../book/dist/en/
           cp dist/* ../book/dist/en/
 
       - name: Deploy
