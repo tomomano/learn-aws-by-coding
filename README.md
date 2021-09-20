@@ -4,7 +4,11 @@
 
 - テキスト(HTML版)は [こちら](https://tomomano.github.io/learn-aws-by-coding/)
 - テキスト(PDF版)は [こちら](https://tomomano.github.io/learn-aws-by-coding/main.pdf)
-- ハンズオンで使用するプログラム は [handson/](handson/) 以下にあります．
+- ハンズオンで使用するプログラム は [handson/](handson/) 以下にあります
+- 英語版も鋭意作成中！
+完成途中のものは
+[こちら](https://tomomano.github.io/learn-aws-by-coding/en)
+で見れます
 
 2020年バージョン (初代) は [こちら](https://tomomano.gitlab.io/intro-aws/)
 (GitLab は [こちら](https://gitlab.com/tomomano/intro-aws))
@@ -12,6 +16,7 @@
 ## 更新履歴
 
 - 6/21: Version 1.0 公開
+- 9/17: 英語版の作成を開始
 
 ## 📗告知📗
 

@@ -15,9 +15,11 @@
 * Python venv クイックガイド (<<venv_quick_guide>>)
 * ハンズオン実行用の Docker image の使い方 (<<sec_handson_docker>>)
 
-本書で何度か繰り返し述べているが，
-本書のハンズオンを実行するための
-https://hub.docker.com/repository/docker/tomomano/labc[Docker image]
+使用する OS は Linux/Mac/Windows のどれを用いても構わない．
+Windows のユーザーは， Windows Subsytem for Linux (WSL) を使用することを想定している (<<sec:install_wsl>>))．
+
+また，本書のハンズオンを実行するための
+https://hub.docker.com/repository/docker/tomomano/labc[Docker イメージ]
 を提供している．
 これを用いると， AWS CLI/CDK や Python の設定などをスキップできるので， Docker の使用方法を知っている読者には便利だろう．
 
@@ -29,7 +31,7 @@ https://hub.docker.com/repository/docker/tomomano/labc[Docker image]
 以下の手順に従ってアカウントの作成を行う．
 
 まず，ウェブブラウザから https://aws.amazon.com/console/[AWS コンソール] にアクセスし，右上の `Create an AWS Account` をクリックする
-(<<fig:aws-signup-1>> でピンクの箱で囲った部分)．
+(<<fig:aws-signup-1>> で実線で囲った部分)．
 
 [[fig:aws-signup-1]]
 .サインアップ (1): AWS コンソールにアクセス
@@ -81,12 +83,14 @@ image::imgs/signup-9.png[signup-9, 500, align="center"]
 
 AWS シークレットキーとは， AWS CLI や AWS CDK から AWS の API を操作するときに，ユーザー認証を行うための鍵のことである．
 AWS CLI/CDK を使うには，最初にシークレットキーを発行する必要がある．
-AWS シークレットキーの詳細は https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html[公式ドキュメンテーション] を参照．
+AWS シークレットキーの詳細は
+https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html[公式ドキュメンテーション "Understanding and getting your AWS credentials"]
+を参照．
 
 . AWS コンソールにログインする．
 . 画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<<fig:aws_secret_key_1>>)
 . "Access keys for CLI, SDK, & API access" の下にある "Create accesss key" のボタンをクリックする (<<fig:aws_secret_key_2>>)
-. 表示された Access key ID, Secret access key を記録しておく (画面を閉じると以降は表示されない)．
+. 表示された Access key ID, Secret access key を記録しておく (画面を閉じると二度と表示されない)．
 . 鍵を忘れてしまった場合などは，同じ手順で再発行が可能である．
 . 発行したシークレットキーは， `~/.aws/credentials` のファイルに書き込むか，環境変数に設定するなどして使う (詳しくは <<aws_cli_install>>)．
 
@@ -161,7 +165,7 @@ $ aws configure
 ここには自分の好きな地域 (例えば `ap-northeast-1` =東京リージョン) を指定すればよい．
 最後の `Default output format` は `json` としておくとよい．
 
-このコマンドを完了すると， `~/.aws/credentials` と `~/.aws/config` という名前のファイルが生成されているはずである．
+このコマンドを完了すると， `~/.aws/credentials` と `~/.aws/config`　という名前のファイルが生成されているはずである．
 念のため， `cat` コマンドを使って中身を確認してみるとよい．
 
 [source, bash]
@@ -172,7 +176,7 @@ aws_access_key_id = XXXXXXXXXXXXXXXXXX
 aws_secret_access_key = YYYYYYYYYYYYYYYYYYY
 
 $ cat ~/.aws/config
-[default]
+[profile default]
 region = ap-northeast-1
 output = json
 ----
@@ -279,9 +283,9 @@ Windows を利用している読者は，
 https://docs.microsoft.com/en-us/windows/wsl/[Windows Subsystem for Linux (WSL)]
 を利用することで，仮想の Linux 環境を構築することを推奨する．
 https://www.cygwin.com/[Cygwin]
-などのほかの Linux をエミュレートするツールでも構わないが，本書のプログラムは WSL でのみ動作確認を行っている．
+などの Linux 環境をエミュレートするほかのツールでも構わないが，本書のプログラムは WSL でのみ動作確認を行っている．
 
-WSL とは， Windows の OS 上で Linux の仮想環境を起動するための，マイクロソフト社が公式で提供しているソフトウェアである．
+WSL とは， Windows の OS 上で Linux の仮想環境を起動するための， Microsoft 社が公式で提供しているソフトウェアである．
 Ubuntu など希望の Linux distribution が選択でき，基本的にすべての Linux 向けに作られたプログラム・ソフトウェアを使用することができる．
 
 執筆時点では
@@ -328,7 +332,7 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
 
 ダウンロードしたファイルをダブルクリックして実行する．
-ダイアローグに従ってインストールを完了させる．
+ダイアログに従ってインストールを完了させる．
 
 そうしたら，再び PowerShell を開き次のコマンドを実行する。
 
@@ -380,13 +384,17 @@ Docker のインストールの方法は OS によって異なる．
 Mac ユーザーは， Docker Desktop をインストールする．
 インストールの方法は，
 https://docs.docker.com/docker-for-mac/install/[Docker のウェブサイト]
-から， Mac 版の Docker Desktop をダウンロードし，ダウンロードされたファイルをダブルクリックし， `Applications` のフォルダーにドラッグするだけで良い．
+から， Mac 版の Docker Desktop をダウンロードし，ダウンロードされたファイルをダブルクリックし， `Applications` のフォルダにドラッグするだけで良い．
 詳細は
 https://docs.docker.com/docker-for-mac/install/[公式ドキュメンテーション]
 を参照のこと．
 
-Windows ユーザーは， WSL に Docker をインストールすることを推奨する．
-その場合，インストールの手順は Linux のものと基本的に同一である．
+Windows のユーザーは，Docker Desktop をインストールする．
+その際， WSL 2 が事前にインストールされていなければならない．
+詳細は
+https://docs.docker.com/desktop/windows/install/[公式ドキュメンテーション]
+を参照のこと．
+Docker Desktop をインストールすると， WSL からも `docker` コマンドが使用できるようになる．
 
 Linux ユーザー (特に Ubuntu ユーザー) については，インストールの方法はいくつかのアプローチがある．
 https://docs.docker.com/engine/install/ubuntu/[公式ドキュメンテーション]
@@ -408,7 +416,7 @@ https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non
 を参照)．
 
 まず最初に， `docker` という名前にグループを追加する．
-インストールによっては，既に `docker` グループが作れらている場合もある．
+インストールによっては，既に `docker` グループが作られている場合もある．
 
 [source, bash]
 ----
@@ -501,22 +509,22 @@ venv による仮想環境を保存するディレクトリの名前は任意に
 それらについてはハンズオンの該当箇所に注意書きとして記してある．
 ====
 
-Docker Image は https://hub.docker.com/repository/docker/tomomano/labc[Docker Hub] においてある．
-Docker Image のビルドファイルは GitHub の
-https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile[/docker/Dockerfile]
+Docker イメージは https://hub.docker.com/repository/docker/tomomano/labc[Docker Hub] においてある．
+Docker イメージのビルドファイルは GitHub の
+https://github.com/tomomano/learn-aws-by-coding-source-code/blob/main/docker/Dockerfile[docker/Dockerfile]
 にある．
 
-次のコマンドで container を起動する．
+次のコマンドでコンテナを起動する．
 
 [source, bash]
 ----
 $ docker run -it tomomano/labc:latest
 ----
 
-初回にコマンドを実行したときのみ， image が Docker Hub からダウンロード (pull) される．
-二回目以降はローカルにダウンロードされた image が使用される．
+初回にコマンドを実行したときのみ，イメージが Docker Hub からダウンロード (pull) される．
+二回目以降はローカルにダウンロードされたイメージが使用される．
 
-container が起動すると，次のようなインタラクティブシェルが表示されるはずである (起動時に `-it` のオプションをつけたのがポイントである)．
+コンテナが起動すると，次のようなインタラクティブシェルが表示されるはずである (起動時に `-it` のオプションをつけたのがポイントである)．
 
 [source]
 ----
@@ -538,21 +546,21 @@ $ cd handson
 
 AWS の認証情報を設定することも忘れずに．
 <<aws_cli_install>> で記述したように， `AWS_ACCESS_KEY_ID` などの環境変数を設定するのが簡単な方法である．
-あるいは，**ローカルマシンの** `~/.aws/credentials` に認証情報が書き込まれているなら，このディレクトリを container に**マウント**することで，同じ認証ファイルを container 内部から参照することが可能である．
-この選択肢を取る場合は，次のコマンドで container を起動する．
+あるいは，**ローカルマシンの** `~/.aws/credentials` に認証情報が書き込まれているなら，このディレクトリをコンテナに**マウント**することで，同じ認証ファイルをコンテナ内部から参照することが可能である．
+この選択肢を取る場合は，次のコマンドでコンテナを起動する．
 
 [source, bash]
 ----
 $ docker run -it -v ~/.aws:/root/.aws:ro tomomano/labc:latest
 ----
 
-これにより，ローカルマシンの `~/.aws` を container の `/root/.aws` にマウントすることができる．
+これにより，ローカルマシンの `~/.aws` をコンテナの `/root/.aws` にマウントすることができる．
 最後の `:ro` は read-only を意味する．
 大切な認証ファイルが誤って書き換えられてしまわないように， read-only のフラグをつけることをおすすめする．
 
 [TIP]
 ====
-`/root/` が container 環境におけるホームディレクトリである．
-ここで紹介した認証ファイルをマウントするテクニックは， SSH 鍵を container に渡すときなどにも使える．
+`/root/` がコンテナ環境におけるホームディレクトリである．
+ここで紹介した認証ファイルをマウントするテクニックは， SSH 鍵をコンテナに渡すときなどにも使える．
 ====
 
