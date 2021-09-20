@@ -628,6 +628,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><strong>🇬🇧英語バージョン🇬🇧</strong>
+<a href="https://tomomano.github.io/learn-aws-by-coding/en/">こちら</a>
+のリンクにて鋭意作成中！</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -695,11 +700,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">第三部 (10章-13章)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Serverless Architecture 入門</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">サーバーレスアーキテクチャ入門</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>俳句を投稿するSNS "Bashoutter" を作る</p>
+<p>Lambda, DynamoDB, S3 の演習</p>
+</li>
+<li>
+<p>俳句を投稿する SNS "Bashoutter" を作る</p>
 </li>
 </ul>
 </div></div></td>
@@ -716,14 +724,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 あわせて，
 <a href="https://www.docker.com/">Docker</a>
 とよばれる仮想計算環境の使用方法を紹介する．
-ハンズオンでは， AWS のクラウドで Jupyter Notebook を起動し簡単な機械学習の計算を走らせる課題を実践する．
-さらに，深層学習を用いた自然言語処理により，質問に自動で回答を生成するボットを作成する．
-また，同時に複数の GPU インスタンスを起動し，深層学習のハイパーパラメータサーチを行う方法を紹介する．</p>
+一つ目のハンズオンでは， AWS のクラウドで Jupyter Notebook を起動し簡単な機械学習の計算を走らせる課題を実践する．
+二つ目のハンズオンでは，深層学習を用いた自然言語処理により，質問に自動で回答を生成するボットを作成する．
+最後に，複数台の GPU インスタンスからなるクラスターを起動し，並列に深層学習のハイパーパラメータサーチを行う方法を紹介する．</p>
 </div>
 <div class="paragraph">
-<p>第三部では， Serverless architecture とよばれる最新のクラウドのアーキテクチャを紹介する．
-これは，サーバーの処理能力を負荷に応じてより柔軟に拡大・縮小するための概念であり，それ以前 (Serverfull としばしばよばれる) と質的に異なる設計思想をクラウドに導入するものである．
-これの実践として，ハンズオンでは簡単な SNS をクラウド上に作成する．</p>
+<p>第三部では，サーバーレスアーキテクチャとよばれる最新のクラウドのアーキテクチャを紹介する．
+これは，サーバーの処理能力を負荷に応じてより柔軟に拡大・縮小するための概念であり，それ以前 (Serverful としばしばよばれる) と質的に異なる設計思想をクラウドに導入するものである．
+ハンズオンでは，サーバーレスクラウドの主要なコンポーネントである Lambda, DynamoDB, S3 の演習を提供する．
+さらに，サーバーレスの技術を使用して簡単な SNS をクラウド上に作成する．</p>
+</div>
+<div class="paragraph">
+<p>これらの豊富なハンズオンにより， AWS 上にクラウドシステムを開発するための知識と技術が身につくはずである．
+いずれのハンズオンも，実用性を重視したものになっており，これらをベースにカスタマイズを施すことで様々な応用が可能である．</p>
 </div>
 </div>
 <div class="sect2">
@@ -787,8 +800,8 @@ AWS Educate からは様々な学習教材が提供されているので，ぜ�
 <div class="paragraph">
 <p>本書では， AWS 上にクラウドアプリケーションを展開するハンズオンを実施する．
 そこで紹介するプログラムを実行するためには，以下の計算機環境が必要である．
-それぞれのインストールの方法については，巻末付録 (<a href="#sec:appendix_settingup">Section 15</a>) に記してある．
-必要に応じて参照しながら，環境構築を各自実施していただきたい．</p>
+インストールの方法については，巻末付録 (<a href="#sec:appendix_settingup">Section 15</a>) に記してある．
+必要に応じて参照し，環境構築を各自実施していただきたい．</p>
 </div>
 <div class="ulist">
 <ul>
@@ -798,11 +811,11 @@ AWS Educate からは様々な学習教材が提供されているので，ぜ�
 Mac または Linux のユーザーは， OS に標準搭載のコンソール(ターミナルとも呼ばれる)を使用すればよい．
 Windows のユーザーは，
 <a href="https://docs.microsoft.com/en-us/windows/wsl/about">Windows Subsystem for Linux (WSL)</a>
-を使って Linux の仮想環境をインストールすることを推奨する (<a href="#sec:install_wsl">Section 15.5</a> 参照)．</p>
+を使い， Linux の仮想環境のインストールを推奨する (<a href="#sec:install_wsl">Section 15.5</a> 参照)．</p>
 </li>
 <li>
 <p><strong>Docker</strong>:
-本書では Docker と呼ばれる仮想計算環境の利用方法を解説する．
+本書では Docker とよばれる仮想計算環境の利用方法を解説する．
 インストール手順については <a href="#sec:install_docker">Section 15.6</a> を参照のこと．</p>
 </li>
 <li>
@@ -857,7 +870,9 @@ Docker の使い方を知っている読者は，これを使えば，諸々の�
 <div class="sect2">
 <h3 id="_前提知識">1.5. 前提知識</h3>
 <div class="paragraph">
-<p>本書を読むにあたり，一般教養レベル以上の前提知識はとくに仮定しない．
+<p>本書を読むにあたり，要求する前提知識は大学初等程度の計算機科学の知識 (OS，プログラミングなど)のみである．
+それ以上の前提知識はとくに仮定しない．
+クラウドの利用経験もゼロで問題ない．
 が，以下の事前知識があるとよりスムーズに理解をすることができるだろう．</p>
 </div>
 <div class="ulist">
@@ -9422,9 +9437,12 @@ Content-Type: application/json
 </ul>
 </div>
 <div class="paragraph">
-<p>本書で何度か繰り返し述べているが，
-本書のハンズオンを実行するための
-<a href="https://hub.docker.com/repository/docker/tomomano/labc">Docker image</a>
+<p>使用する OS は Linux/Mac/Windows のどれを用いても構わない．
+Windows のユーザーは， Windows Subsytem for Linux (WSL) を使用することを想定している (<a href="#sec:install_wsl">Section 15.5</a>))．</p>
+</div>
+<div class="paragraph">
+<p>また，本書のハンズオンを実行するための
+<a href="https://hub.docker.com/repository/docker/tomomano/labc">Docker イメージ</a>
 を提供している．
 これを用いると， AWS CLI/CDK や Python の設定などをスキップできるので， Docker の使用方法を知っている読者には便利だろう．</p>
 </div>
@@ -9437,7 +9455,7 @@ Content-Type: application/json
 </div>
 <div class="paragraph">
 <p>まず，ウェブブラウザから <a href="https://aws.amazon.com/console/">AWS コンソール</a> にアクセスし，右上の <code>Create an AWS Account</code> をクリックする
-(<a href="#fig:aws-signup-1">Figure 99</a> でピンクの箱で囲った部分)．</p>
+(<a href="#fig:aws-signup-1">Figure 99</a> で実線で囲った部分)．</p>
 </div>
 <div id="fig:aws-signup-1" class="imageblock text-center">
 <div class="content">
@@ -9510,7 +9528,9 @@ Content-Type: application/json
 <div class="paragraph">
 <p>AWS シークレットキーとは， AWS CLI や AWS CDK から AWS の API を操作するときに，ユーザー認証を行うための鍵のことである．
 AWS CLI/CDK を使うには，最初にシークレットキーを発行する必要がある．
-AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html">公式ドキュメンテーション</a> を参照．</p>
+AWS シークレットキーの詳細は
+<a href="https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html">公式ドキュメンテーション "Understanding and getting your AWS credentials"</a>
+を参照．</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -9524,7 +9544,7 @@ AWS シークレットキーの詳細は <a href="https://docs.aws.amazon.com/ge
 <p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 107</a>)</p>
 </li>
 <li>
-<p>表示された Access key ID, Secret access key を記録しておく (画面を閉じると以降は表示されない)．</p>
+<p>表示された Access key ID, Secret access key を記録しておく (画面を閉じると二度と表示されない)．</p>
 </li>
 <li>
 <p>鍵を忘れてしまった場合などは，同じ手順で再発行が可能である．</p>
@@ -9645,7 +9665,7 @@ output = json</pre>
 最後の <code>Default output format</code> は <code>json</code> としておくとよい．</p>
 </div>
 <div class="paragraph">
-<p>このコマンドを完了すると， <code>~/.aws/credentials</code> と <code>~/.aws/config</code> という名前のファイルが生成されているはずである．
+<p>このコマンドを完了すると， <code>~/.aws/credentials</code> と <code>~/.aws/config</code>　という名前のファイルが生成されているはずである．
 念のため， <code>cat</code> コマンドを使って中身を確認してみるとよい．</p>
 </div>
 <div class="listingblock">
@@ -9656,7 +9676,7 @@ aws_access_key_id <span class="o">=</span> XXXXXXXXXXXXXXXXXX
 aws_secret_access_key <span class="o">=</span> YYYYYYYYYYYYYYYYYYY
 
 <span class="nv">$ </span><span class="nb">cat</span> ~/.aws/config
-<span class="o">[</span>default]
+<span class="o">[</span>profile default]
 region <span class="o">=</span> ap-northeast-1
 output <span class="o">=</span> json</code></pre>
 </div>
@@ -9810,10 +9830,10 @@ Windows を利用している読者は，
 <a href="https://docs.microsoft.com/en-us/windows/wsl/">Windows Subsystem for Linux (WSL)</a>
 を利用することで，仮想の Linux 環境を構築することを推奨する．
 <a href="https://www.cygwin.com/">Cygwin</a>
-などのほかの Linux をエミュレートするツールでも構わないが，本書のプログラムは WSL でのみ動作確認を行っている．</p>
+などの Linux 環境をエミュレートするほかのツールでも構わないが，本書のプログラムは WSL でのみ動作確認を行っている．</p>
 </div>
 <div class="paragraph">
-<p>WSL とは， Windows の OS 上で Linux の仮想環境を起動するための，マイクロソフト社が公式で提供しているソフトウェアである．
+<p>WSL とは， Windows の OS 上で Linux の仮想環境を起動するための， Microsoft 社が公式で提供しているソフトウェアである．
 Ubuntu など希望の Linux distribution が選択でき，基本的にすべての Linux 向けに作られたプログラム・ソフトウェアを使用することができる．</p>
 </div>
 <div class="paragraph">
@@ -9871,7 +9891,7 @@ X64 のシステムでは Version 1903, Build 18362 以上でなければなら�
 </div>
 <div class="paragraph">
 <p>ダウンロードしたファイルをダブルクリックして実行する．
-ダイアローグに従ってインストールを完了させる．</p>
+ダイアログに従ってインストールを完了させる．</p>
 </div>
 <div class="paragraph">
 <p>そうしたら，再び PowerShell を開き次のコマンドを実行する。</p>
@@ -9938,14 +9958,18 @@ Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き
 <p>Mac ユーザーは， Docker Desktop をインストールする．
 インストールの方法は，
 <a href="https://docs.docker.com/docker-for-mac/install/">Docker のウェブサイト</a>
-から， Mac 版の Docker Desktop をダウンロードし，ダウンロードされたファイルをダブルクリックし， <code>Applications</code> のフォルダーにドラッグするだけで良い．
+から， Mac 版の Docker Desktop をダウンロードし，ダウンロードされたファイルをダブルクリックし， <code>Applications</code> のフォルダにドラッグするだけで良い．
 詳細は
 <a href="https://docs.docker.com/docker-for-mac/install/">公式ドキュメンテーション</a>
 を参照のこと．</p>
 </div>
 <div class="paragraph">
-<p>Windows ユーザーは， WSL に Docker をインストールすることを推奨する．
-その場合，インストールの手順は Linux のものと基本的に同一である．</p>
+<p>Windows のユーザーは，Docker Desktop をインストールする．
+その際， WSL 2 が事前にインストールされていなければならない．
+詳細は
+<a href="https://docs.docker.com/desktop/windows/install/">公式ドキュメンテーション</a>
+を参照のこと．
+Docker Desktop をインストールすると， WSL からも <code>docker</code> コマンドが使用できるようになる．</p>
 </div>
 <div class="paragraph">
 <p>Linux ユーザー (特に Ubuntu ユーザー) については，インストールの方法はいくつかのアプローチがある．
@@ -9971,7 +9995,7 @@ Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き
 </div>
 <div class="paragraph">
 <p>まず最初に， <code>docker</code> という名前にグループを追加する．
-インストールによっては，既に <code>docker</code> グループが作れらている場合もある．</p>
+インストールによっては，既に <code>docker</code> グループが作られている場合もある．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10100,13 +10124,13 @@ Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き
 </table>
 </div>
 <div class="paragraph">
-<p>Docker Image は <a href="https://hub.docker.com/repository/docker/tomomano/labc">Docker Hub</a> においてある．
-Docker Image のビルドファイルは GitHub の
-<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/docker/Dockerfile">/docker/Dockerfile</a>
+<p>Docker イメージは <a href="https://hub.docker.com/repository/docker/tomomano/labc">Docker Hub</a> においてある．
+Docker イメージのビルドファイルは GitHub の
+<a href="https://github.com/tomomano/learn-aws-by-coding-source-code/blob/main/docker/Dockerfile">docker/Dockerfile</a>
 にある．</p>
 </div>
 <div class="paragraph">
-<p>次のコマンドで container を起動する．</p>
+<p>次のコマンドでコンテナを起動する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10114,11 +10138,11 @@ Docker Image のビルドファイルは GitHub の
 </div>
 </div>
 <div class="paragraph">
-<p>初回にコマンドを実行したときのみ， image が Docker Hub からダウンロード (pull) される．
-二回目以降はローカルにダウンロードされた image が使用される．</p>
+<p>初回にコマンドを実行したときのみ，イメージが Docker Hub からダウンロード (pull) される．
+二回目以降はローカルにダウンロードされたイメージが使用される．</p>
 </div>
 <div class="paragraph">
-<p>container が起動すると，次のようなインタラクティブシェルが表示されるはずである (起動時に <code>-it</code> のオプションをつけたのがポイントである)．</p>
+<p>コンテナが起動すると，次のようなインタラクティブシェルが表示されるはずである (起動時に <code>-it</code> のオプションをつけたのがポイントである)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10144,8 +10168,8 @@ Docker Image のビルドファイルは GitHub の
 <div class="paragraph">
 <p>AWS の認証情報を設定することも忘れずに．
 <a href="#aws_cli_install">Section 15.3</a> で記述したように， <code>AWS_ACCESS_KEY_ID</code> などの環境変数を設定するのが簡単な方法である．
-あるいは，<strong>ローカルマシンの</strong> <code>~/.aws/credentials</code> に認証情報が書き込まれているなら，このディレクトリを container に<strong>マウント</strong>することで，同じ認証ファイルを container 内部から参照することが可能である．
-この選択肢を取る場合は，次のコマンドで container を起動する．</p>
+あるいは，<strong>ローカルマシンの</strong> <code>~/.aws/credentials</code> に認証情報が書き込まれているなら，このディレクトリをコンテナに<strong>マウント</strong>することで，同じ認証ファイルをコンテナ内部から参照することが可能である．
+この選択肢を取る場合は，次のコマンドでコンテナを起動する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -10153,7 +10177,7 @@ Docker Image のビルドファイルは GitHub の
 </div>
 </div>
 <div class="paragraph">
-<p>これにより，ローカルマシンの <code>~/.aws</code> を container の <code>/root/.aws</code> にマウントすることができる．
+<p>これにより，ローカルマシンの <code>~/.aws</code> をコンテナの <code>/root/.aws</code> にマウントすることができる．
 最後の <code>:ro</code> は read-only を意味する．
 大切な認証ファイルが誤って書き換えられてしまわないように， read-only のフラグをつけることをおすすめする．</p>
 </div>
@@ -10165,8 +10189,8 @@ Docker Image のビルドファイルは GitHub の
 </td>
 <td class="content">
 <div class="paragraph">
-<p><code>/root/</code> が container 環境におけるホームディレクトリである．
-ここで紹介した認証ファイルをマウントするテクニックは， SSH 鍵を container に渡すときなどにも使える．</p>
+<p><code>/root/</code> がコンテナ環境におけるホームディレクトリである．
+ここで紹介した認証ファイルをマウントするテクニックは， SSH 鍵をコンテナに渡すときなどにも使える．</p>
 </div>
 </td>
 </tr>
@@ -10266,7 +10290,7 @@ Docker Image のビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-09-17 13:55:59 UTC
+Last updated 2021-09-20 15:28:27 UTC
 </div>
 </div>
 <style>
