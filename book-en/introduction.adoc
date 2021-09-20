@@ -79,3 +79,113 @@ It may not be an easy ride, but we promise you that if you hang on to this rocke
 .Earth viewed from space (Image from NASA https://www.nasa.gov/image-feature/planet-of-clouds)
 image::imgs/earth_from_earth.jpg[earth, 500, align="center"]
 
+=== AWS account
+
+This document provides hands-on tutorials to run and deploy applications on AWS.
+Readers must have their own AWS account to run the hands-on excercises.
+A brief description of how to create an AWS account is given in the appendix at the end of the document (<<sec:create_aws_account>>), so please refer to it if necessary.
+
+AWS offers free access to some features, and some hands-on excercises can be done for free.
+Other hands-on sessions (especially those dealing with machine learning) will cost a few dollars.
+The approximate cost of each hands-on is described at the begining of the excercise, so please be aware of the potential cost.
+
+In addition, when using AWS in lectures at universities and other educational institutions,
+https://aws.amazon.com/education/awseducate/[AWS Educate]
+program is available.
+This program offers educators various teaching resources, including the AWS credits which students taking the course can use to run applications in the AWS cloud.
+By using AWS Educate, students can experience AWS without any financial cost.
+It is also possible for individuals to participate in AWS Educate without going through lectures.
+AWS Educate provides a variety of learning materials, and I encourage you to take advantage of them.
+
+=== Setting up an environment
+
+In this book, we will provide hands-on sessions to deploy a cloud application on AWS.
+The following computer environment is required to run the programs provided in this book.
+The installation procedure is described in the appendix at the end of the book (<<sec:appendix_settingup>>).
+Refer to the appendix as necessary and set up an environment in your local computer.
+
+* **UNIX console**:
+A UNIX console is required to execute the commands and access the server via SSH.
+Mac or Linux users can use the console (also known as a terminal) that comes standard with the OS.
+For Windows users, we recommend to install 
+https://docs.microsoft.com/en-us/windows/wsl/about[Windows Subsystem for Linux (WSL)]
+and set up a virtual Linux environment
+(see <<sec:install_wsl>> for more details).
+* **https://www.docker.com/[Docker]**:
+This book explains how to use a virtual computing environment called Docker.
+For the installation procedure, see <<sec:install_docker>>.
+* **https://github.com/python[Python]**:
+Version 3.6 or later is required.
+We will also use `venv` module to run programs.
+A quick tutorial on `venv` module is provided in the appendix (<<venv_quick_guide>>).
+* **https://github.com/nodejs/node[Node.js]**:
+Version 12.0 or later is required.
+* **https://github.com/aws/aws-cli[AWS CLI]**:
+WS CLI
+https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html[Version 2]
+is required.
+Refer to <<aws_cli_install>> for installation and setup procedure.
+* **https://github.com/aws/aws-cdk[AWS CDK]**:
+Version 1.00 or later is required.
+The tutorials are not compatible with version 2.
+Refer to <<aws_cdk_install>> for installation and setup procedure.
+* **AWS secret keys**:
+In order to call the AWS API from the command line, an authentication key (secret key) must be set.
+Refer to <<aws_cli_install>> for the setting of the authentication key.
+
+=== Docker image for the hands-on exercise
+
+We provide a Docker image with the required programs installed, such as Python, Node.js, and AWS CDK.
+The source code of the hands-on program has also been included in the image.
+If you already know how to use Docker, then you can use this image to immediately start the hands-on tutorials without having to install anything else.
+
+Start the the container with the followign command.
+
+[source, bash]
+----
+$ docker run -it tomomano/labc
+----
+
+More details on this Docker image is given in the appendix (<<sec_handson_docker>>).
+
+=== Prerequisite knowledge
+
+The only prerequisite knowledge required to read this book is an elementary level understanding of the computer science taught at the universities (OS, programming, etc.).
+No further prerequisite knowledge is assumed.
+There is no need to have any experience using cloud computing.
+However, the following prior knowledge will help you to understand more smoothly.
+
+* **Basic skills in Python**:
+In this book, we will use Python to write programs.
+The libraries we will be using are sufficiently abstract that most of the functions make sense just by looking at their names.
+There is no need to worry if you are not very familiar with Python.
+* **Basic skills in Linux command line**:
+When using the cloud, the servers that are launched on the cloud are usually Linux.
+If you have knowledge of the Linux command line, it will be easier to troubleshoot.
+If you feel unconfident about using command line, I recommend this book:
+http://linuxcommand.org/tlcl.php[The Linux Command Line by William Shotts].
+It is available for free on the web.
+
+=== Source code
+
+The source code of the hands-on tutorials is available at the following GitHub repository.
+
+https://github.com/tomomano/learn-aws-by-coding
+
+=== Notations used in this book
+
+* Code and shell commands are displayed with `monospace letters`
+* The shell commands are prefixed with `$` symbol to make it clear that they are shell command.
+The `$` must be removed when copying and pasting the command.
+On the other hand, note that the output of a command does not have the `$` prefix.
+
+In addition, we provide warnings and tips in the boxes.
+
+NOTE: Additional comments are provided here.
+
+TIP: Advanced discussions and ideas are provided here.
+
+WARNING: Common mistakes will be provided here.
+
+IMPORTANT: Mistakes that should never be made will be provided here.
+
