@@ -1,8 +1,8 @@
 == Introduction
 
-=== Purpose and content of this document
+=== Purpose and content of this book
 
-This document was prepared as a lecture material for "Special Lectures on Information Physics and Computing", which was offered in the S1/S2 term of the 2021 academic year at the Department of Mathematical Engineering and Information Physics, the University of Tokyo.
+This book was prepared as a lecture material for "Special Lectures on Information Physics and Computing", which was offered in the S1/S2 term of the 2021 academic year at the Department of Mathematical Engineering and Information Physics, the University of Tokyo.
 
 The purpose of this book is to explain the basic knowledge and concepts of cloud computing for beginners.
 It provides hands-on tutorials to use real cloud environment provided by Amazon Web Services (AWS).
@@ -10,12 +10,12 @@ It provides hands-on tutorials to use real cloud environment provided by Amazon 
 We assume that the readers would be students majoring science or engineering at college, or software engineers who are starting to develop cloud applications.
 We will introduce pracitcal steps to use the cloud for research and web application development.
 We plan to keep this course as interactive and practical as possible, and for that purpose, less emphasis is placed on the theories and knowledge, and more effort is placed on writing real programs.
-I hope that this document serves as a stepping stone for readers to use cloud computing in their future research and applications.
+I hope that this book serves as a stepping stone for readers to use cloud computing in their future research and applications.
 
-The document is divided into three parts:
+The book is divided into three parts:
 
 [cols="1,2,2", options="header"] 
-.Structure of this document
+.Structure of this book
 |===
 | | Theme | Hands-on
 |1st Part (Section 1 to 4)
@@ -53,9 +53,9 @@ In addition, we will create a simple yet quite useful social network service (SN
 These extensive hands-on sessions will provide you with the knowledge and skills to develop your own cloud system on AWS.
 All of the hands-on programs are designed to be practical, and can be customized for a variety of applications.
 
-=== Philosophy of this document
+=== Philosophy of this book
 
-The philosophy of this document can be summed up in one word:
+The philosophy of this book can be summed up in one word:
 **"Let's fly to space in a rocket and look at the earth once!"**
 
 What does that mean?
@@ -67,12 +67,12 @@ Today, many parts of our society, from scientific research to everyday infrastru
 The word "rocket" here refers to this lecture.
 In this lecture, readers will fly into space on a rocket and look at the entire earth (cloud) with their own eyes.
 In this journey, we do not ask deeply about the detailed machinery of the rocket (i.e. elaborate theories and algorithms).
-Rather, the purpose of this document is to let you actually touch the cutting edge technologies of cloud computing and realize what kind of views (and applications) are possible from there.
+Rather, the purpose of this book is to let you actually touch the cutting edge technologies of cloud computing and realize what kind of views (and applications) are possible from there.
 
-For this reason, this document covers a wide range of topics from the basics to advanced applications of cloud computing.
+For this reason, this book covers a wide range of topics from the basics to advanced applications of cloud computing.
 The first part of the book starts with the basics of cloud computing, and the second part takes it to the next level by explaining how to execute machine learning algorithms in the cloud.
 In the third part, we will explain serverless architecture, a completely new cloud design that has been established in the last few years.
-Each of these topic is worth more than one book, but this document was written with the ambitious intention of combining them into a single volume and providing a integrative and comprehensive overview.
+Each of these topic is worth more than one book, but this book was written with the ambitious intention of combining them into a single volume and providing a integrative and comprehensive overview.
 
 It may not be an easy ride, but we promise you that if you hang on to this rocket, you will get to see some very exciting sights.
 
@@ -81,9 +81,9 @@ image::imgs/earth_from_earth.jpg[earth, 500, align="center"]
 
 === AWS account
 
-This document provides hands-on tutorials to run and deploy applications on AWS.
+This book provides hands-on tutorials to run and deploy applications on AWS.
 Readers must have their own AWS account to run the hands-on excercises.
-A brief description of how to create an AWS account is given in the appendix at the end of the document (<<sec:create_aws_account>>), so please refer to it if necessary.
+A brief description of how to create an AWS account is given in the appendix at the end of the book (<<sec:create_aws_account>>), so please refer to it if necessary.
 
 AWS offers free access to some features, and some hands-on excercises can be done for free.
 Other hands-on sessions (especially those dealing with machine learning) will cost a few dollars.
