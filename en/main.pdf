@@ -452,8 +452,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#_introduction">1. Introduction</a>
 <ul class="sectlevel2">
-<li><a href="#_purpose_and_content_of_this_document">1.1. Purpose and content of this document</a></li>
-<li><a href="#_philosophy_of_this_document">1.2. Philosophy of this document</a></li>
+<li><a href="#_purpose_and_content_of_this_book">1.1. Purpose and content of this book</a></li>
+<li><a href="#_philosophy_of_this_book">1.2. Philosophy of this book</a></li>
 <li><a href="#_aws_account">1.3. AWS account</a></li>
 <li><a href="#_setting_up_an_environment">1.4. Setting up an environment</a></li>
 <li><a href="#_docker_image_for_the_hands_on_exercise">1.5. Docker image for the hands-on exercise</a></li>
@@ -462,16 +462,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_notations_used_in_this_book">1.8. Notations used in this book</a></li>
 </ul>
 </li>
-<li><a href="#sec:appendix_settingup">2. Appendix: Environment setup</a>
+<li><a href="#chap_cloud_basics">2. Cloud Computing Basics</a>
 <ul class="sectlevel2">
-<li><a href="#sec:create_aws_account">2.1. Creating an AWS account</a></li>
-<li><a href="#aws_secrets">2.2. Creating AWS access key</a></li>
-<li><a href="#aws_cli_install">2.3. Installing AWS CLI</a></li>
-<li><a href="#aws_cdk_install">2.4. Installing AWS CDK</a></li>
-<li><a href="#sec:install_wsl">2.5. Installing WSL</a></li>
-<li><a href="#sec:install_docker">2.6. Installing Docker</a></li>
-<li><a href="#venv_quick_guide">2.7. Quick tutorial on Python <code>venv</code></a></li>
-<li><a href="#sec_handson_docker">2.8. Working with Docker image for the hands-on exercise</a></li>
+<li><a href="#_what_is_the_cloud">2.1. What is the cloud?</a></li>
+<li><a href="#_why_use_the_cloud">2.2. Why use the cloud?</a></li>
+</ul>
+</li>
+<li><a href="#sec:appendix_settingup">3. Appendix: Environment setup</a>
+<ul class="sectlevel2">
+<li><a href="#sec:create_aws_account">3.1. Creating an AWS account</a></li>
+<li><a href="#aws_secrets">3.2. Creating AWS access key</a></li>
+<li><a href="#aws_cli_install">3.3. Installing AWS CLI</a></li>
+<li><a href="#aws_cdk_install">3.4. Installing AWS CDK</a></li>
+<li><a href="#sec:install_wsl">3.5. Installing WSL</a></li>
+<li><a href="#sec:install_docker">3.6. Installing Docker</a></li>
+<li><a href="#venv_quick_guide">3.7. Quick tutorial on Python <code>venv</code></a></li>
+<li><a href="#sec_handson_docker">3.8. Working with Docker image for the hands-on exercise</a></li>
 </ul>
 </li>
 </ul>
@@ -482,9 +488,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_introduction">1. Introduction</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_purpose_and_content_of_this_document">1.1. Purpose and content of this document</h3>
+<h3 id="_purpose_and_content_of_this_book">1.1. Purpose and content of this book</h3>
 <div class="paragraph">
-<p>This document was prepared as a lecture material for "Special Lectures on Information Physics and Computing", which was offered in the S1/S2 term of the 2021 academic year at the Department of Mathematical Engineering and Information Physics, the University of Tokyo.</p>
+<p>This book was prepared as a lecture material for "Special Lectures on Information Physics and Computing", which was offered in the S1/S2 term of the 2021 academic year at the Department of Mathematical Engineering and Information Physics, the University of Tokyo.</p>
 </div>
 <div class="paragraph">
 <p>The purpose of this book is to explain the basic knowledge and concepts of cloud computing for beginners.
@@ -494,13 +500,13 @@ It provides hands-on tutorials to use real cloud environment provided by Amazon 
 <p>We assume that the readers would be students majoring science or engineering at college, or software engineers who are starting to develop cloud applications.
 We will introduce pracitcal steps to use the cloud for research and web application development.
 We plan to keep this course as interactive and practical as possible, and for that purpose, less emphasis is placed on the theories and knowledge, and more effort is placed on writing real programs.
-I hope that this document serves as a stepping stone for readers to use cloud computing in their future research and applications.</p>
+I hope that this book serves as a stepping stone for readers to use cloud computing in their future research and applications.</p>
 </div>
 <div class="paragraph">
-<p>The document is divided into three parts:</p>
+<p>The book is divided into three parts:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Structure of this document</caption>
+<caption class="title">Table 1. Structure of this book</caption>
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 40%;">
@@ -582,9 +588,9 @@ All of the hands-on programs are designed to be practical, and can be customized
 </div>
 </div>
 <div class="sect2">
-<h3 id="_philosophy_of_this_document">1.2. Philosophy of this document</h3>
+<h3 id="_philosophy_of_this_book">1.2. Philosophy of this book</h3>
 <div class="paragraph">
-<p>The philosophy of this document can be summed up in one word:
+<p>The philosophy of this book can be summed up in one word:
 <strong>"Let&#8217;s fly to space in a rocket and look at the earth once!"</strong></p>
 </div>
 <div class="paragraph">
@@ -599,13 +605,13 @@ Today, many parts of our society, from scientific research to everyday infrastru
 <p>The word "rocket" here refers to this lecture.
 In this lecture, readers will fly into space on a rocket and look at the entire earth (cloud) with their own eyes.
 In this journey, we do not ask deeply about the detailed machinery of the rocket (i.e. elaborate theories and algorithms).
-Rather, the purpose of this document is to let you actually touch the cutting edge technologies of cloud computing and realize what kind of views (and applications) are possible from there.</p>
+Rather, the purpose of this book is to let you actually touch the cutting edge technologies of cloud computing and realize what kind of views (and applications) are possible from there.</p>
 </div>
 <div class="paragraph">
-<p>For this reason, this document covers a wide range of topics from the basics to advanced applications of cloud computing.
+<p>For this reason, this book covers a wide range of topics from the basics to advanced applications of cloud computing.
 The first part of the book starts with the basics of cloud computing, and the second part takes it to the next level by explaining how to execute machine learning algorithms in the cloud.
 In the third part, we will explain serverless architecture, a completely new cloud design that has been established in the last few years.
-Each of these topic is worth more than one book, but this document was written with the ambitious intention of combining them into a single volume and providing a integrative and comprehensive overview.</p>
+Each of these topic is worth more than one book, but this book was written with the ambitious intention of combining them into a single volume and providing a integrative and comprehensive overview.</p>
 </div>
 <div class="paragraph">
 <p>It may not be an easy ride, but we promise you that if you hang on to this rocket, you will get to see some very exciting sights.</p>
@@ -620,9 +626,9 @@ Each of these topic is worth more than one book, but this document was written w
 <div class="sect2">
 <h3 id="_aws_account">1.3. AWS account</h3>
 <div class="paragraph">
-<p>This document provides hands-on tutorials to run and deploy applications on AWS.
+<p>This book provides hands-on tutorials to run and deploy applications on AWS.
 Readers must have their own AWS account to run the hands-on excercises.
-A brief description of how to create an AWS account is given in the appendix at the end of the document (<a href="#sec:create_aws_account">Section 2.1</a>), so please refer to it if necessary.</p>
+A brief description of how to create an AWS account is given in the appendix at the end of the book (<a href="#sec:create_aws_account">Section 3.1</a>), so please refer to it if necessary.</p>
 </div>
 <div class="paragraph">
 <p>AWS offers free access to some features, and some hands-on excercises can be done for free.
@@ -644,7 +650,7 @@ AWS Educate provides a variety of learning materials, and I encourage you to tak
 <div class="paragraph">
 <p>In this book, we will provide hands-on sessions to deploy a cloud application on AWS.
 The following computer environment is required to run the programs provided in this book.
-The installation procedure is described in the appendix at the end of the book (<a href="#sec:appendix_settingup">Chapter 2</a>).
+The installation procedure is described in the appendix at the end of the book (<a href="#sec:appendix_settingup">Chapter 3</a>).
 Refer to the appendix as necessary and set up an environment in your local computer.</p>
 </div>
 <div class="ulist">
@@ -656,18 +662,18 @@ Mac or Linux users can use the console (also known as a terminal) that comes sta
 For Windows users, we recommend to install
 <a href="https://docs.microsoft.com/en-us/windows/wsl/about">Windows Subsystem for Linux (WSL)</a>
 and set up a virtual Linux environment
-(see <a href="#sec:install_wsl">Section 2.5</a> for more details).</p>
+(see <a href="#sec:install_wsl">Section 3.5</a> for more details).</p>
 </li>
 <li>
 <p><strong><a href="https://www.docker.com/">Docker</a></strong>:
 This book explains how to use a virtual computing environment called Docker.
-For the installation procedure, see <a href="#sec:install_docker">Section 2.6</a>.</p>
+For the installation procedure, see <a href="#sec:install_docker">Section 3.6</a>.</p>
 </li>
 <li>
 <p><strong><a href="https://github.com/python">Python</a></strong>:
 Version 3.6 or later is required.
 We will also use <code>venv</code> module to run programs.
-A quick tutorial on <code>venv</code> module is provided in the appendix (<a href="#venv_quick_guide">Section 2.7</a>).</p>
+A quick tutorial on <code>venv</code> module is provided in the appendix (<a href="#venv_quick_guide">Section 3.7</a>).</p>
 </li>
 <li>
 <p><strong><a href="https://github.com/nodejs/node">Node.js</a></strong>:
@@ -678,18 +684,18 @@ Version 12.0 or later is required.</p>
 WS CLI
 <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html">Version 2</a>
 is required.
-Refer to <a href="#aws_cli_install">Section 2.3</a> for installation and setup procedure.</p>
+Refer to <a href="#aws_cli_install">Section 3.3</a> for installation and setup procedure.</p>
 </li>
 <li>
 <p><strong><a href="https://github.com/aws/aws-cdk">AWS CDK</a></strong>:
 Version 1.00 or later is required.
 The tutorials are not compatible with version 2.
-Refer to <a href="#aws_cdk_install">Section 2.4</a> for installation and setup procedure.</p>
+Refer to <a href="#aws_cdk_install">Section 3.4</a> for installation and setup procedure.</p>
 </li>
 <li>
 <p><strong>AWS secret keys</strong>:
 In order to call the AWS API from the command line, an authentication key (secret key) must be set.
-Refer to <a href="#aws_cli_install">Section 2.3</a> for the setting of the authentication key.</p>
+Refer to <a href="#aws_cli_install">Section 3.3</a> for the setting of the authentication key.</p>
 </li>
 </ul>
 </div>
@@ -710,7 +716,7 @@ If you already know how to use Docker, then you can use this image to immediatel
 </div>
 </div>
 <div class="paragraph">
-<p>More details on this Docker image is given in the appendix (<a href="#sec_handson_docker">Section 2.8</a>).</p>
+<p>More details on this Docker image is given in the appendix (<a href="#sec_handson_docker">Section 3.8</a>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -818,7 +824,285 @@ Mistakes that should never be made will be provided here.
 </div>
 </div>
 <div class="sect1">
-<h2 id="sec:appendix_settingup">2. Appendix: Environment setup</h2>
+<h2 id="chap_cloud_basics">2. Cloud Computing Basics</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_what_is_the_cloud">2.1. What is the cloud?</h3>
+<div class="imageblock text-center">
+<div class="content">
+<img src="imgs/cloud_word_art.png" alt="Cloud" width="400">
+</div>
+</div>
+<div class="paragraph">
+<p>What is the cloud?
+The term "cloud" has a very broad meaning in itself, so it is difficult to give a strict definition.
+In academic context,
+<a href="https://csrc.nist.gov/publications/detail/sp/800-145/final">The NIST Definition of Cloud Computing</a>,
+published by National Institute of Standards and Technology (NIST), is often cited to define cloud computing.
+The definition and model of cloud described here is illustrated in <a href="#fig:nist_cloud_definition">Figure 2</a>.</p>
+</div>
+<div id="fig:nist_cloud_definition" class="imageblock text-center">
+<div class="content">
+<img src="imgs/nist_cloud_definition.png" alt="Cost" width="700">
+</div>
+<div class="title">Figure 2. The NIST Definition of Cloud Computing</div>
+</div>
+<div class="paragraph">
+<p>According to this, a cloud is a collection of hardware and software that meets the following requirements.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>On-demand self-service</strong>:
+Computational resources are automatically allocated according to the user&#8217;s request.</p>
+</li>
+<li>
+<p><strong>Broad network access</strong>:
+Users can access the cloud through the network.</p>
+</li>
+<li>
+<p><strong>Resource pooling</strong>:
+The cloud provider allocates computational resources to multiple users by dividing the owned computational resources.</p>
+</li>
+<li>
+<p><strong>Rapid elasticity</strong>:
+To be able to quickly expand or reduce computational resources according to the user&#8217;s request.</p>
+</li>
+<li>
+<p><strong>Measured service</strong>:
+To be able to measure and monitor the amount of computing resources used.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This may sound too abstract for you to understand.
+Let&#8217;s talk about it in more concrete terms.</p>
+</div>
+<div class="paragraph">
+<p>If you wanted to upgrade the CPU on your personal computer, you would have to physically open the chassis, expose the CPU socket, and replace it with a new CPU.
+Or, if the storage is full, you will need to remove the old disk and insert a new one.
+When the computer is moved to a new location, it will not be able to connect to the network until the LAN cable of the new room is plugged in.</p>
+</div>
+<div class="paragraph">
+<p>In the cloud, these operations can be <strong>performed by commands from a program</strong>.
+If you want 1000 CPUs, you can send a request to the cloud provider.
+Within a few minutes, you will be allocated 1000 CPUs.
+If you want to expand your storage from 1TB to 10TB, you can send such command (you may be familiar with this from services such as Google Drive or Dropbox).
+When you are done using the compute resources, you can tell the provider about it, and the allocation will be deleted immediately.
+The cloud provider accurately monitors the amount of computing resources used, and calculates the usage fee based on that amount.</p>
+</div>
+<div class="paragraph">
+<p>Namely, the essence of the cloud is the virtualization and abstraction of physical hardware, and <strong>users can manage and operate physical hardware through commands as if it were a part of software</strong>.
+Of course, behind the scenes, a huge number of computers in data centers are running, consuming a lot of power.
+The cloud provider achieves this virtualization and abstraction by cleverly managing the computational resources in the data center and providing the user with a software interface.
+From the cloud provider&#8217;s point of view, they are able to maximize their profit margin by renting out computers to a large number of users and keeping the data center utilization rate close to 100% at all times.</p>
+</div>
+<div class="paragraph">
+<p>In the author&#8217;s words, the key characteristics of the cloud can be defined as follows:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+The cloud is an abstraction of computing hardware.
+In other words, it is a technology that makes it possible to manipulate, expand, and connect physical hardware as if it were part of software.
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Coming back to The NIST Definition of Cloud Computing mentioned above, the following three forms of cloud services are defined (<a href="#fig:nist_cloud_definition">Figure 2</a>).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Software as a Service (SaaS)</strong></p>
+<div class="paragraph">
+<p>A form of service that provides users with application running in the cloud.
+Examples include Google Drive and Slack.
+The user does not directly touch the underlying cloud infrastructure (network, servers, etc.), but use the cloud services provided as applications.</p>
+</div>
+</li>
+<li>
+<p><strong>Platform as a Service (PaaS)</strong></p>
+<div class="paragraph">
+<p>A form of service that provides users with an environment for deploying customer-created applications (which in most cases consist of a database and server code for processing API requests).
+In PaaS, the user does not have direct access to the cloud infrastructure, and the scaling of the server is handled by the cloud provider.
+Examples include Google App Engine and Heroku.</p>
+</div>
+</li>
+<li>
+<p><strong>Infrastructure as a Service (IaaS)</strong></p>
+<div class="paragraph">
+<p>A form of service that provides users with actual cloud computing infrastructure on a pay-as-you-go basis.
+The users rent the necessary network, servers, and storage from the provider, and deploy and operate their own applications on it.
+An example of IaaS is AWS EC2.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This book mainly deals with cloud development in IaaS.
+In other words, it is cloud development in which the developer directly manipulates the cloud infrastructure, configures the desired network, server, and storage from scratch, and deploys the application on it.
+In this sense, cloud development can be divided into two steps: <strong>the step of building a program that defines the cloud infrastructure</strong> and <strong>the step of crafting an application that actually runs on the infrastructure</strong>.
+These two steps can be separated to some extent as a programmer&#8217;s skill set, but an understanding of both is essential to build the most efficient and optimized cloud system.
+This book primarily focuses on the former (operating the cloud infrastructure), but also covers the application layer.
+PaaS is a concept where the developer focuses on the application layer development and relies on the cloud provider for the cloud infrastructure.
+PaaS reduces development time by eliminating the need to develop the cloud infrastructure, but has the limitation of not being able to control the detailed behavior of the infrastructure.
+This book does not cover PaaS techniques and concepts.</p>
+</div>
+<div class="paragraph">
+<p>SaaS can be considered a development "product" in the context of this book.
+In other words, the final goal of development is to provide a computational service or database on the available to the general public by deploying the programs on IaaS platform.
+As a practical demonstration, we will provide hands-on exercises such as creating a simple SNS (<a href="#sec_bashoutter">[sec_bashoutter]</a>).</p>
+</div>
+<div class="paragraph">
+<p>Recently, Function as a Service (FaaS) and serverless computing have been recognized as new cloud categories.
+These concepts will be discussed in detail in later chapters (<a href="#sec_intro_serverless">[sec_intro_serverless]</a>).
+As will become clear as you read through this book, cloud technology is constantly and rapidly evolving.
+This book first touches on traditional cloud design concepts from a practical and educational point of view, and then covers the latest technologies such as serverless.</p>
+</div>
+<div class="paragraph">
+<p>Finally, according to The NIST Definition of Cloud Computing, the following four types of cloud deployment model are defined (<a href="#fig:nist_cloud_definition">Figure 2</a>).
+<strong>Private cloud</strong> is a cloud used only within a specific organization, group, or company.
+For example, universities and research institutes often operate large-scale computer servers for their members.
+In a private cloud, any member of the organization can run computations for free or at a very low cost.
+However, the upper limit of available computing resources is often limited, and there may be a lack of flexibility when expanding.</p>
+</div>
+<div class="paragraph">
+<p><strong>Pubclic cloud</strong> is a cloud that is offered as a commercial service to general customers.
+Examples of famous public cloud platforms include
+<a href="https://cloud.google.com/">Google Cloud Platform (GCP)</a> provided by Google,
+<a href="https://azure.microsoft">Azure</a> provided by Microsoft,
+and <a href="https://aws.amazon.com">Amazon Web Services (AWS)</a> provided by Amazon.
+When you use a public cloud, you pay the usage cost set by the provider.
+In return, you get access to the computational resources of the company operating the huge data center, so it is not an exaggeration to say that the computational capacity is inexhaustible.</p>
+</div>
+<div class="paragraph">
+<p>The third type of cloud operation is called <strong>community cloud</strong>.
+This refers to a cloud that is shared and operated by groups and organizations that share the same objectives and roles, such as government agencies.
+Finally, there is the <strong>hybrid cloud</strong>, which is a cloud composed of a combination of private, public, and community clouds.
+An example of hybrid cloud would be a case where some sensitive and privacy-related information is kept in the private cloud, while the rest of the system depends on the public cloud.</p>
+</div>
+<div class="paragraph">
+<p>This book is basically about cloud development using public clouds.
+In particular, we will use Amazon Web Services (AWS) to learn specific techniques and concepts.
+Note, however, that techniques such as server scaling and virtual computing environments are common to all clouds, so you should be able to acquire knowledge that is generally applicable regardless of the cloud platform.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_use_the_cloud">2.2. Why use the cloud?</h3>
+<div class="paragraph">
+<p>As mentioned above, the cloud is a computational environment where computational resources can be flexibly manipulated through programs.
+In this section, we would like to discuss why using the cloud is better than using a real local computing environment.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Scalable server size</strong></p>
+<div class="paragraph">
+<p>When you start a new project, it&#8217;s hard to know in advance how much compute capacity you&#8217;ll ever need.
+Buying a large server is risky.
+On the other hand, a server that is too small can be troublesome to upgrade later on.
+By using the cloud, you can secure the right amount of computing resources you need as you proceed with your project.</p>
+</div>
+</li>
+<li>
+<p><strong>Free from hardware maintainance</strong></p>
+<div class="paragraph">
+<p>Sadly, computers do get old.
+With the rate at which technology is advancing these days, after five years, even the newest computers of the day are no more than fossils.
+Replacing the server every five years would be a considerable hassle.
+It is also necessary to deal with unexpected failures such as power outages and breakdowns of servers.
+With cloud computing, there is no need for the user to worry about such things, as the provider automatically takes care of the infrastructure maintenance.</p>
+</div>
+</li>
+<li>
+<p><strong>Zero initial cost</strong></p>
+<div class="paragraph">
+<p><a href="#cloud_economic_curve">Figure 3</a> shows the economic cost of using your own computing environment versus the cloud.
+The initial cost of using the cloud is basically zero.
+After that, the cost increases according to the amount
+of usage.
+On the other hand, a large initial cost is incurred when using your own computing environment.
+After the initial investment, the increase in cost is limited to electricity and server maintenance costs, so the slope is smaller than in the case of using the cloud.
+Then, after a certain period of time, there may be step-like expenditures for server upgrades.
+The cloud, on the other hand, incur no such discontinuous increase in cost.
+In the areas where cost curve of the cloud is below that of local computing environment, using the cloud will lead to economic cost savings.</p>
+</div>
+</li>
+</ol>
+</div>
+<div id="cloud_economic_curve" class="imageblock text-center">
+<div class="content">
+<img src="imgs/cloud_cost.png" alt="Cost" width="500">
+</div>
+<div class="title">Figure 3. Cost curve for cloud and local server</div>
+</div>
+<div class="paragraph">
+<p>In particular, point 1 is important in research situations.
+In research, there are few cases in which one must keep running computations all the time.
+Rather, the computational load is likely to increase intensively and unexpectedly when a new algorithm is conceived, or when new data arrives.
+In such cases, the ability to flexibly increase computing power is a major advantage of using the cloud.</p>
+</div>
+<div class="paragraph">
+<p>So far, we have discussed the advantages of using the cloud, but there are also some disadvantages.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>The cloud must be used wisely</strong></p>
+<div class="paragraph">
+<p>As shown in the cost curve in <a href="#cloud_economic_curve">Figure 3</a>, depending on your use case, there may be situations where it is more cost effective to use local computing environment.
+When using the cloud, users are required to manage their computing resources wisely, such as deleting intances immediately after use.</p>
+</div>
+</li>
+<li>
+<p><strong>Security</strong></p>
+<div class="paragraph">
+<p>The cloud is accessible from anywhere in the world via the Internet, and can be easily hacked if security management is neglected.
+If the cloud is hacked, not only will information be leaked, but there is also the possibility of financial loss.</p>
+</div>
+</li>
+<li>
+<p><strong>Learning Curve</strong></p>
+<div class="paragraph">
+<p>As described above, there are many points to keep in mind when using the cloud, such as cost and security.
+In order to use the cloud wisely, it is indispensable to have a good understanding of the cloud and to overcome the learning curve.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Column: Origin of the word "Terminal"</div>
+<div class="paragraph">
+<p>The black screen that you use to enter commands on Mac or Linux is called a terminal.
+Do you know the origin of this word?</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="imgs/terminal.png" alt="Terminal" width="400">
+</div>
+</div>
+<div class="paragraph">
+<p>The origin of this word goes back to the early days of computers.
+At that time, a computer was a machine the size of a conference room, with thousands of vacuum tubes connected together.
+Since it was such an expensive and complex piece of equipment, it was natural that it would be shared by many people.
+In order for users to access the computer, there were several cables running from the machine, each with a keyboard and screen attached to it&#8230;&#8203;
+This was called a <strong>Terminal</strong>.
+People took turns sitting in front of the terminal and interacting with the computer.</p>
+</div>
+<div class="paragraph">
+<p>Times change, and with the advent of personal computers such as Windows and Mac, computers have become something that is owned by individuals rather than shared by everyone.</p>
+</div>
+<div class="paragraph">
+<p>The recent rise of cloud computing can be seen as a return to the original usage of computers, where everyone shared a large computer.
+At the same time, edge devices such as smartphones and wearables are becoming more and more popular, and the trend of individuals owning multiple "small" computers is progressing at the same time.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:appendix_settingup">3. Appendix: Environment setup</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>To read through this book, you need to set up an environment on your local machine to run the hands-on programs.
@@ -829,34 +1113,34 @@ If you have already built your environment, you need to read through only the re
 <div class="ulist">
 <ul>
 <li>
-<p>Creating an AWS account (<a href="#sec:create_aws_account">Section 2.1</a>)</p>
+<p>Creating an AWS account (<a href="#sec:create_aws_account">Section 3.1</a>)</p>
 </li>
 <li>
-<p>Creating AWS access key (<a href="#aws_secrets">Section 2.2</a>)</p>
+<p>Creating AWS access key (<a href="#aws_secrets">Section 3.2</a>)</p>
 </li>
 <li>
-<p>Installing AWS CLI (<a href="#aws_cli_install">Section 2.3</a>)</p>
+<p>Installing AWS CLI (<a href="#aws_cli_install">Section 3.3</a>)</p>
 </li>
 <li>
-<p>Installing AWS CDK (<a href="#aws_cdk_install">Section 2.4</a>)</p>
+<p>Installing AWS CDK (<a href="#aws_cdk_install">Section 3.4</a>)</p>
 </li>
 <li>
-<p>Installing WSL (<a href="#sec:install_wsl">Section 2.5</a>)</p>
+<p>Installing WSL (<a href="#sec:install_wsl">Section 3.5</a>)</p>
 </li>
 <li>
-<p>Installing Docker (<a href="#sec:install_docker">Section 2.6</a>)</p>
+<p>Installing Docker (<a href="#sec:install_docker">Section 3.6</a>)</p>
 </li>
 <li>
-<p>Quick tutorial on Python venv (<a href="#venv_quick_guide">Section 2.7</a>)</p>
+<p>Quick tutorial on Python venv (<a href="#venv_quick_guide">Section 3.7</a>)</p>
 </li>
 <li>
-<p>Working with Docker image for the hands-on exercises (<a href="#sec_handson_docker">Section 2.8</a>)</p>
+<p>Working with Docker image for the hands-on exercises (<a href="#sec_handson_docker">Section 3.8</a>)</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>The OS can be Linux, Mac, or Windows.
-Windows users are assumed to use Windows Subsytem for Linux (WSL) (<a href="#sec:install_wsl">Section 2.5</a>).</p>
+Windows users are assumed to use Windows Subsytem for Linux (WSL) (<a href="#sec:install_wsl">Section 3.5</a>).</p>
 </div>
 <div class="paragraph">
 <p>You can also use the
@@ -865,7 +1149,7 @@ to run the hands-on programs in this book.
 This will be useful for readers who know how to use Docker, as it allows them to skip AWS CLI/CDK and Python installation.</p>
 </div>
 <div class="sect2">
-<h3 id="sec:create_aws_account">2.1. Creating an AWS account</h3>
+<h3 id="sec:create_aws_account">3.1. Creating an AWS account</h3>
 <div class="paragraph">
 <p>In order to try the hands-on exercises provided in this book, you need to create your own AWS account.
 Detailed instructions for creating an account can be found at
@@ -875,34 +1159,34 @@ Follow the steps below to create an account.</p>
 </div>
 <div class="paragraph">
 <p>First, access <a href="https://aws.amazon.com/console/">AWS Management Console</a> from your web browser, and click <code>Create an AWS Account</code> in the upper right corner.
-(<a href="#fig:aws-signup-1">Figure 2</a>, boxed with a solid line).</p>
+(<a href="#fig:aws-signup-1">Figure 4</a>, boxed with a solid line).</p>
 </div>
 <div id="fig:aws-signup-1" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-1.png" alt="signup-1" width="500">
 </div>
-<div class="title">Figure 2. Sign up (1) - Accessing AWS Management Console</div>
+<div class="title">Figure 4. Sign up (1) - Accessing AWS Management Console</div>
 </div>
 <div class="paragraph">
-<p>Then, you will be taken to a page where you register your email address and password (<a href="#fig:aws-signup-3">Figure 3</a>).</p>
+<p>Then, you will be taken to a page where you register your email address and password (<a href="#fig:aws-signup-3">Figure 5</a>).</p>
 </div>
 <div id="fig:aws-signup-3" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-3.png" alt="signup-3" width="500">
 </div>
-<div class="title">Figure 3. Sign up (2): Register email and password</div>
+<div class="title">Figure 5. Sign up (2): Register email and password</div>
 </div>
 <div class="paragraph">
-<p>Next, you will be asked to enter your address, phone number, and other information (<a href="#fig:aws-signup-4">Figure 4</a>).</p>
+<p>Next, you will be asked to enter your address, phone number, and other information (<a href="#fig:aws-signup-4">Figure 6</a>).</p>
 </div>
 <div id="fig:aws-signup-4" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-4.png" alt="signup-4" width="500">
 </div>
-<div class="title">Figure 4. Sign up (3): Entering address and phone number</div>
+<div class="title">Figure 6. Sign up (3): Entering address and phone number</div>
 </div>
 <div class="paragraph">
-<p>Next, you will be asked to register your credit card information (<a href="#fig:aws-signup-5">Figure 5</a>).
+<p>Next, you will be asked to register your credit card information (<a href="#fig:aws-signup-5">Figure 7</a>).
 If you are using AWS as an individual, you will be billed for your usage via your credit card.
 Note that you cannot start using AWS without registering your credit card information.</p>
 </div>
@@ -910,41 +1194,41 @@ Note that you cannot start using AWS without registering your credit card inform
 <div class="content">
 <img src="imgs/signup-5.png" alt="signup-5" width="500">
 </div>
-<div class="title">Figure 5. Sign up (4): Registering a credit card</div>
+<div class="title">Figure 7. Sign up (4): Registering a credit card</div>
 </div>
 <div class="paragraph">
-<p>On the next page, you will be asked to verify your identity using SMS or voice message on your cell phone (<a href="#fig:aws-signup-6">Figure 6</a>).
+<p>On the next page, you will be asked to verify your identity using SMS or voice message on your cell phone (<a href="#fig:aws-signup-6">Figure 8</a>).
 Select your preferred authentication method and enter your cell phone number.</p>
 </div>
 <div id="fig:aws-signup-6" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-6.png" alt="signup-6" width="500">
 </div>
-<div class="title">Figure 6. Sign up (5): Identify verification by cell phone</div>
+<div class="title">Figure 8. Sign up (5): Identify verification by cell phone</div>
 </div>
 <div class="paragraph">
-<p>After successfully verifying your identity, you will be asked to select a support plan (<a href="#fig:aws-signup-8">Figure 7</a>).
+<p>After successfully verifying your identity, you will be asked to select a support plan (<a href="#fig:aws-signup-8">Figure 9</a>).
 You can just select the Basic support plan, which is free.</p>
 </div>
 <div id="fig:aws-signup-8" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-8.png" alt="signup-8" width="500">
 </div>
-<div class="title">Figure 7. Sign up (6): Selecting a support plan</div>
+<div class="title">Figure 9. Sign up (6): Selecting a support plan</div>
 </div>
 <div class="paragraph">
-<p>These steps will complete the creation of your account (<a href="#fig:aws-signup-9">Figure 8</a>).
+<p>These steps will complete the creation of your account (<a href="#fig:aws-signup-9">Figure 10</a>).
 Let&#8217;s log in and see if we can access the AWS console.</p>
 </div>
 <div id="fig:aws-signup-9" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-9.png" alt="signup-9" width="500">
 </div>
-<div class="title">Figure 8. Sign up (7): Sign up is complete!</div>
+<div class="title">Figure 10. Sign up (7): Sign up is complete!</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_secrets">2.2. Creating AWS access key</h3>
+<h3 id="aws_secrets">3.2. Creating AWS access key</h3>
 <div class="paragraph">
 <p>AWS access key is a key used for user authentication when operating the AWS API from the AWS CLI or AWS CDK.
 To use the AWS CLI/CDK, you need to issue a secret key first.
@@ -957,10 +1241,10 @@ For more information on AWS secret keys, please refer to
 <p>First, log in to your AWS console</p>
 </li>
 <li>
-<p>Then, click on your account name in the upper right corner of the screen, and select "My Security Credentials" from the pull-down menu (<a href="#fig:aws_secret_key_1">Figure 9</a>)</p>
+<p>Then, click on your account name in the upper right corner of the screen, and select "My Security Credentials" from the pull-down menu (<a href="#fig:aws_secret_key_1">Figure 11</a>)</p>
 </li>
 <li>
-<p>Under "Access keys for CLI, SDK, &amp; API access", find the button that says "Create accesss key" and click it (<a href="#fig:aws_secret_key_2">Figure 10</a>)</p>
+<p>Under "Access keys for CLI, SDK, &amp; API access", find the button that says "Create accesss key" and click it (<a href="#fig:aws_secret_key_2">Figure 12</a>)</p>
 </li>
 <li>
 <p>Record the displayed access key ID and secret access key (if you close the window, they will not be displayed again)</p>
@@ -969,7 +1253,7 @@ For more information on AWS secret keys, please refer to
 <p>If you forget your key, you can reissue it by the same procedure</p>
 </li>
 <li>
-<p>Use the issued secret key by writing it to the file <code>~/.aws/credentials</code> or by setting it to an environment variable (also see <a href="#aws_cli_install">Section 2.3</a>)</p>
+<p>Use the issued secret key by writing it to the file <code>~/.aws/credentials</code> or by setting it to an environment variable (also see <a href="#aws_cli_install">Section 3.3</a>)</p>
 </li>
 </ol>
 </div>
@@ -977,17 +1261,17 @@ For more information on AWS secret keys, please refer to
 <div class="content">
 <img src="imgs/aws_secret_key_1.png" alt="aws_secret_key_1" width="400">
 </div>
-<div class="title">Figure 9. Creating an AWS secret key (1)</div>
+<div class="title">Figure 11. Creating an AWS secret key (1)</div>
 </div>
 <div id="fig:aws_secret_key_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_2.png" alt="aws_secret_key_2" width="700">
 </div>
-<div class="title">Figure 10. Creating an AWS secret key (2)</div>
+<div class="title">Figure 12. Creating an AWS secret key (2)</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_cli_install">2.3. Installing AWS CLI</h3>
+<h3 id="aws_cli_install">3.3. Installing AWS CLI</h3>
 <div class="paragraph">
 <p>This is a brief description of the installation procedure for Linux at the time of writing.
 Please remember to always check
@@ -1022,7 +1306,7 @@ for the latest information, as it may change in future versions.</p>
 </div>
 <div class="paragraph">
 <p>When you execute this command, you will be prompted to enter the <code>AWS Access Key ID</code> and <code>AWS Secret Access Key</code>.
-See <a href="#aws_secrets">Section 2.2</a> for issuing access keys.
+See <a href="#aws_secrets">Section 3.2</a> for issuing access keys.
 The command also asks for the <code>Default region name</code>.
 You can specify your favorite region (e.g. <code>ap-northeast-1</code> = Tokyo) here.
 The last entry, <code>Default output format</code>, should be <code>json</code>.</p>
@@ -1083,7 +1367,7 @@ If you want to use several different profiles, follow the default example and ad
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_cdk_install">2.4. Installing AWS CDK</h3>
+<h3 id="aws_cdk_install">3.4. Installing AWS CDK</h3>
 <div class="paragraph">
 <p>This is a brief description of the installation procedure for Linux at the time of writing.
 Please remember to always check
@@ -1145,7 +1429,7 @@ If errors occur due to API changes, it is recommended to use version 1.100.0.</p
 <div class="paragraph">
 <p>When you run <code>cdk bootstrap</code>, make sure that your AWS credentials and region are set correctly.
 By default, the default profile in <code>~/.aws/config</code> is used.
-If you want to use a profile other than the default, use the technique described in <a href="#aws_cli_install">Section 2.3</a> to switch profiles.</p>
+If you want to use a profile other than the default, use the technique described in <a href="#aws_cli_install">Section 3.3</a> to switch profiles.</p>
 </div>
 </td>
 </tr>
@@ -1160,7 +1444,7 @@ If you want to use a profile other than the default, use the technique described
 <td class="content">
 <div class="paragraph">
 <p>The configuration of AWS credentials for CDK is basically the same as that of AWS CLI.
-See <a href="#aws_cli_install">Section 2.3</a> for details.</p>
+See <a href="#aws_cli_install">Section 3.3</a> for details.</p>
 </div>
 </td>
 </tr>
@@ -1168,7 +1452,7 @@ See <a href="#aws_cli_install">Section 2.3</a> for details.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec:install_wsl">2.5. Installing WSL</h3>
+<h3 id="sec:install_wsl">3.5. Installing WSL</h3>
 <div class="paragraph">
 <p>In this book, the commands are basically written with a UNIX terminal in mind.
 Linux and Mac users can use the terminal that comes standard with their OS.
@@ -1198,7 +1482,7 @@ For X64 systems, it must be Version 1903, Build 18362 or higher.
 If the version does not support WSL, update Windows first.</p>
 </div>
 <div class="paragraph">
-<p>First, start PowerShell with administrator privileges (<a href="#fig:powershell">Figure 11</a>).
+<p>First, start PowerShell with administrator privileges (<a href="#fig:powershell">Figure 13</a>).
 To do this, type <code>powershell</code> in the search bar of the Windows menu in the lower left corner, and you should find the PowerShell program.
 Then, right-click on it, and select <code>Run as administrator</code> to launch.</p>
 </div>
@@ -1206,7 +1490,7 @@ Then, right-click on it, and select <code>Run as administrator</code> to launch.
 <div class="content">
 <img src="imgs/wsl/powershell.png" alt="powershell" width="500">
 </div>
-<div class="title">Figure 11. Starting PowerShell with administrator privileges</div>
+<div class="title">Figure 13. Starting PowerShell with administrator privileges</div>
 </div>
 <div class="paragraph">
 <p>Once the PowerShell is ready, execute the following command:</p>
@@ -1254,14 +1538,14 @@ In this tutorial, let&#8217;s install <strong>Ubuntu 20.04</strong>.</p>
 </div>
 <div class="paragraph">
 <p>Launch the Microsoft Store app and type <code>Ubuntu</code> in the search bar.
-Open Ubuntu 20.04 LTS and click the "Get" button (<a href="#fig:microsoft_store">Figure 12</a>).
+Open Ubuntu 20.04 LTS and click the "Get" button (<a href="#fig:microsoft_store">Figure 14</a>).
 Wait for a while, and the installation of Ubuntu 20.04 will be completed.</p>
 </div>
 <div id="fig:microsoft_store" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/microsoft_store.png" alt="microsoft_store" width="500">
 </div>
-<div class="title">Figure 12. Installing Ubuntu 20.04 from Microsoft Store</div>
+<div class="title">Figure 14. Installing Ubuntu 20.04 from Microsoft Store</div>
 </div>
 <div class="paragraph">
 <p>The first time you start Ubuntu 20.04, the initial setup will start automatically and you will have to wait for a few minutes.
@@ -1270,24 +1554,24 @@ After the initial setup, you will be prompted to enter your user name and passwo
 <div class="paragraph">
 <p>This completes the installation of WSL2.
 Let&#8217;s launch WSL2!
-Type <code>Ubuntu</code> in the search bar of the Windows menu in the lower left corner, and you should find Ubuntu 20.04 (<a href="#fig:ubuntu">Figure 13</a>).
+Type <code>Ubuntu</code> in the search bar of the Windows menu in the lower left corner, and you should find Ubuntu 20.04 (<a href="#fig:ubuntu">Figure 15</a>).
 Click on it to start it.</p>
 </div>
 <div id="fig:ubuntu" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/ubuntu2004.png" alt="ubuntu2004" width="500">
 </div>
-<div class="title">Figure 13. Launching Ubuntu 20.04</div>
+<div class="title">Figure 15. Launching Ubuntu 20.04</div>
 </div>
 <div class="paragraph">
-<p>This should bring up a black terminal screen (<a href="#fig:wsl_window">Figure 14</a>).
+<p>This should bring up a black terminal screen (<a href="#fig:wsl_window">Figure 16</a>).
 Try typing <code>ls</code>, <code>top</code>, etc. to confirm that WSL is working properly.</p>
 </div>
 <div id="fig:wsl_window" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/wsl_window.png" alt="wsl_window" width="500">
 </div>
-<div class="title">Figure 14. WSL terminal</div>
+<div class="title">Figure 16. WSL terminal</div>
 </div>
 <div class="paragraph">
 <p>Optionally, you can install
@@ -1297,7 +1581,7 @@ We recommend that you to install this tool.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec:install_docker">2.6. Installing Docker</h3>
+<h3 id="sec:install_docker">3.6. Installing Docker</h3>
 <div class="paragraph">
 <p>The installation method of Docker varies depending on the OS.</p>
 </div>
@@ -1371,7 +1655,7 @@ The changes to the group will be reflected in your terminal session.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="venv_quick_guide">2.7. Quick tutorial on Python <code>venv</code></h3>
+<h3 id="venv_quick_guide">3.7. Quick tutorial on Python <code>venv</code></h3>
 <div class="paragraph">
 <p>Many of you may have experienced a situation where a program given to you by someone else does not work because of the library version mismatch.
 If you have only one Python environment in your machine, you will have to re-install the correct version every time you switch projects.
@@ -1411,14 +1695,14 @@ Tools like <code>pyenv</code> and <code>conda</code> require separate installati
 </div>
 </div>
 <div class="paragraph">
-<p>Notice that the shell prompt starts with <code>(.env)</code> (<a href="#fig_venv_prompt">Figure 15</a>).
+<p>Notice that the shell prompt starts with <code>(.env)</code> (<a href="#fig_venv_prompt">Figure 17</a>).
 This is a sign that signifies, "You are now in a venv".</p>
 </div>
 <div id="fig_venv_prompt" class="imageblock text-center">
 <div class="content">
 <img src="imgs/venv_shell.png" alt="venv shell" width="500">
 </div>
-<div class="title">Figure 15. Shell prompt after activating venv</div>
+<div class="title">Figure 17. Shell prompt after activating venv</div>
 </div>
 <div class="paragraph">
 <p>When the virtual Python environment is activated, all subsequent <code>pip</code> commands will install libraries under <code>.env/</code> directory.
@@ -1449,7 +1733,7 @@ If a project you are workin on has a <code>requirements.txt</code> file defined,
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec_handson_docker">2.8. Working with Docker image for the hands-on exercise</h3>
+<h3 id="sec_handson_docker">3.8. Working with Docker image for the hands-on exercise</h3>
 <div class="paragraph">
 <p>We prepared a Docker image with Node.js, Python, AWS CDK, etc. installed, which is necessary to run the hands-on exercises.
 Using this image, you can run the hands-on code immediately without having to install anything on your local machine.</p>
@@ -1511,7 +1795,7 @@ Since each hands-on uses different dependent libraries, the design is to create 
 </div>
 <div class="paragraph">
 <p>Don&#8217;t forget to set your AWS credentials.
-An easy way to do this is to set environment variables such as <code>AWS_ACCESS_KEY_ID</code> as described in <a href="#aws_cli_install">Section 2.3</a>.
+An easy way to do this is to set environment variables such as <code>AWS_ACCESS_KEY_ID</code> as described in <a href="#aws_cli_install">Section 3.3</a>.
 Alternatively, if your credentials are stored in local machine&#8217;s <code>~/.aws/credentials</code>, you can <strong>mount</strong> this directory in the container and refer to the same credentials file from inside the container.
 If you take this option, start the container with the following command.</p>
 </div>
@@ -1552,7 +1836,7 @@ The technique of mounting the authentication file described here can also be use
 <div id="footer">
 <div id="footer-text">
 Version 1.0-en<br>
-Last updated 2021-09-20 15:28:27 UTC
+Last updated 2021-09-21 05:47:03 UTC
 </div>
 </div>
 <style>
