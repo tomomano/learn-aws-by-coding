@@ -14,7 +14,7 @@ https://github.com/tomomano/learn-aws-by-coding
 - **Amazon (紙媒体 or Kindle)** => https://www.amazon.co.jp/dp/4839977607/
 - **マイナビブックス (紙媒体 or PDF)** => https://book.mynavi.jp/ec/products/detail/id=124113
 
-**🇬🇧英語バージョン🇬🇧**
+**🌎英語バージョン🌎**
 https://tomomano.github.io/learn-aws-by-coding/en/[こちら]
 のリンクにて鋭意作成中！
 

@@ -10,7 +10,7 @@ v1.0-en, 2021-09-17
 
 include::introduction.adoc[]
 include::cloud.adoc[]
-// include::aws_get_started.adoc[]
+include::aws_get_started.adoc[]
 // include::handson-ec2.adoc[]
 // include::scientific_computing.adoc[]
 // include::handson-jupyter.adoc[]
