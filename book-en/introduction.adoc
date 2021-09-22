@@ -1,3 +1,6 @@
+**🌎Japanese version is available
+https://tomomano.github.io/learn-aws-by-coding/[here]🌎**
+
 == Introduction
 
 === Purpose and content of this book
