@@ -470,10 +470,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_awsとは">3.1. AWSとは？</a></li>
 <li><a href="#_awsの機能サービス">3.2. AWSの機能・サービス</a></li>
-<li><a href="#_awsでクラウドを作るときの基本となる部品">3.3. AWSでクラウドを作るときの基本となる部品</a></li>
-<li><a href="#_region_と_availability_zone">3.4. Region と Availability Zone</a></li>
-<li><a href="#_awsでのクラウド開発">3.5. AWSでのクラウド開発</a></li>
-<li><a href="#sec:intro_cloudformation">3.6. CloudFormation と AWS CDK</a></li>
+<li><a href="#_region_と_availability_zone">3.3. Region と Availability Zone</a></li>
+<li><a href="#_awsでのクラウド開発">3.4. AWSでのクラウド開発</a></li>
+<li><a href="#sec:intro_cloudformation">3.5. CloudFormation と AWS CDK</a></li>
 </ul>
 </li>
 <li><a href="#sec_first_ec2">4. Hands-on #1: 初めてのEC2インスタンスを起動する</a>
@@ -628,7 +627,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </div>
 <div class="paragraph">
-<p><strong>🇬🇧英語バージョン🇬🇧</strong>
+<p><strong>🌎英語バージョン🌎</strong>
 <a href="https://tomomano.github.io/learn-aws-by-coding/en/">こちら</a>
 のリンクにて鋭意作成中！</p>
 </div>
@@ -1245,7 +1244,7 @@ PaaS は，クラウドインフラの開発が不要になることで開発の
 実践にあたって，最低限必要な AWS の知識を本章では解説しよう．</p>
 </div>
 <div class="paragraph">
-<p><a href="https://aws.amazon.com">AWS (Amazon Web Services)</a> はAmazon社が提供する総合的なクラウドプラットフォームである．
+<p><a href="https://aws.amazon.com">AWS (Amazon Web Service)</a> はAmazon社が提供する総合的なクラウドプラットフォームである．
 AWS は Amazon 社が持つ膨大な計算リソースを貸し出すクラウドサービスとして，2006年に誕生した．
 2021年では，クラウドプロバイダーとして最大のマーケットシェア (約32%) を保持している
 (<a href="https://www.canalys.com/newsroom/global-cloud-market-Q121">参照</a>)．
@@ -1253,7 +1252,9 @@ Netflix や Slack をはじめとした多くのウェブ関連のサービス�
 よって，知らないうちに AWS の恩恵にあずかっている人も少なくないはずだ．</p>
 </div>
 <div class="paragraph">
-<p>最大のシェアをもつだけに，とても幅広い機能・サービスが提供されており，科学・エンジニアリングの研究用途としても頻繁に用いられるようになってきている．</p>
+<p>最大のシェアをもつだけに，機能・サービスの幅広さはほかのクラウドプラットフォームと比べ抜きんでている．
+また，利用者数が多いことを反映して，公式あるいはサードパーティによる技術紹介記事が数多くウェブ上に存在しているだけでなく，ライブラリのユーザーコミュニティも大きく問題解決が捗るのも魅力の一つだ．
+初期のころウェブビジネスを行う企業がユーザーの大半を占めていたが，最近は大学などでの科学研究用途としても頻繁に用いられるようになってきている．</p>
 </div>
 </div>
 <div class="sect2">
@@ -1276,21 +1277,20 @@ Netflix や Slack をはじめとした多くのウェブ関連のサービス�
 これらを合計すると全部で170個以上のサービスが提供されているとのことである (<a href="https://dev.classmethod.jp/articles/aws-summary-2020/">参照</a>)．</p>
 </div>
 <div class="paragraph">
-<p>AWS の初心者は，この<strong>大量のサービスの数に圧倒され，どこから手をつけたらよいのかわからなくなる</strong>，という状況に陥りがちである．
-だが実のところ，<strong>基本的な構成要素はそのうちの数個</strong>のみに限られる．
-ほかの機能の多くは，基本の要素を組み合わせ特定のアプリケーションに特化したパッケージとして AWS が用意したものである．
-したがって，基本要素となる機能の使い方を知れば， AWS のおおよそのリソースを使いこなすことが可能になる．</p>
+<p>AWS の初心者が陥りがちなのは，<strong>大量のサービスの数に圧倒され，どこから手をつけたらよいのかわからなくなる</strong>，という状況である．
+たくさんのサービスの中から，どのサービスをどの順番で学んでいったらいいのか，その道筋すら明らかでなく，大きな参入障壁となっていることは間違いない．
+だが実のところ， AWS の<strong>基本的な構成要素はそのうちの数個</strong>のみに限られる．
+基本要素となる機能の使い方を知れば， AWS のおおよそのリソースを使いこなすことが可能になる．
+ほかの機能の多くは，基本の要素を組み合わせて特定のアプリケーションに特化したパッケージとして AWS が用意したものである．
+そのポイントを認知することが， AWS の学習の最初のステップである．</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_awsでクラウドを作るときの基本となる部品">3.3. AWSでクラウドを作るときの基本となる部品</h3>
 <div class="paragraph">
-<p>以下では AWS 上で計算システムを構築するときの基本となる構成要素を列挙する．
+<p>ここでは， AWS 上でクラウドシステムを構築するときの基本となる構成要素を列挙する．
 これらは後のハンズオンで実際にプログラムを書きながら体験する．
 現時点では，名前だけでも頭の片隅に記憶してもらえればよい．</p>
 </div>
 <div class="sect3">
-<h4 id="_計算">3.3.1. 計算</h4>
+<h4 id="_計算">3.2.1. 計算</h4>
 <div class="paragraph">
 <p><span class="image left"><img src="imgs/aws_logos/EC2.png" alt="S3" width="40"></span>
 <strong>EC2 (Elastic Compute Cloud)</strong>
@@ -1302,11 +1302,11 @@ Netflix や Slack をはじめとした多くのウェブ関連のサービス�
 <p><span class="image left"><img src="imgs/aws_logos/Lambda.png" alt="S3" width="40"></span>
 <strong>Lambda</strong>
 Function as a Service (FaaS) とよばれる，小さな計算を<strong>サーバーなし</strong>で実行するためのサービス．
-Serverless architecutre の章 (<a href="#sec_serverless">Section 11</a>) で詳しく解説する．</p>
+サーバーレスアーキテクチャの章 (<a href="#sec_serverless">Section 11</a>) で詳しく解説する．</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_ストレージ">3.3.2. ストレージ</h4>
+<h4 id="_ストレージ">3.2.2. ストレージ</h4>
 <div class="paragraph">
 <p><span class="image left"><img src="imgs/aws_logos/EBS.png" alt="S3" width="40"></span>
 <strong>EBS (Elastic Block Store)</strong>
@@ -1317,30 +1317,36 @@ EC2に付与することのできる仮想データドライブ．
 <p><span class="image left"><img src="imgs/aws_logos/S3.png" alt="S3" width="40"></span>
 <strong>S3 (Simple Storage Service)</strong>
 Object Storage とよばれる，APIを使ってデータの読み書きを行う，いうなれば”クラウド・ネイティブ”なデータの格納システムである．
-Serverless architecutre の章 (<a href="#sec_serverless">Section 11</a>) で詳しく解説する．</p>
+サーバーレスアーキテクチャの章 (<a href="#sec_serverless">Section 11</a>) で詳しく解説する．</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_データベース">3.3.3. データベース</h4>
+<h4 id="_データベース">3.2.3. データベース</h4>
 <div class="paragraph">
 <p><span class="image left"><img src="imgs/aws_logos/DynamoDB.png" alt="S3" width="40"></span>
 <strong>DynamoDB</strong>
 NoSQL 型のデータベースサービス (知っている人は <code>mongoDB</code> などを思い浮かべたらよい)．
-Serverless architecutre の章 (<a href="#sec_serverless">Section 11</a>) で詳しく解説する．</p>
+サーバーレスアーキテクチャの章 (<a href="#sec_serverless">Section 11</a>) で詳しく解説する．</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_ネットワーク">3.3.4. ネットワーク</h4>
+<h4 id="_ネットワーク">3.2.4. ネットワーク</h4>
 <div class="paragraph">
 <p><span class="image left"><img src="imgs/aws_logos/VPC.png" alt="S3" width="40"></span>
 <strong>VPC(Virtual Private Cloud)</strong>
 AWS 上に仮想ネットワーク環境を作成し，仮想サーバー間の接続を定義したり，外部からのアクセスなどを管理する．
 EC2 は VPC の内部に配置されなければならない．</p>
 </div>
+<div class="paragraph">
+<p><strong>API Gateway</strong>
+<span class="image left"><img src="imgs/aws_logos/APIGateway.png" alt="S3" width="40"></span>
+API のエンドポイントとバックエンドのサービス (Lambda など) を接続する際に用いる，リバースプロキシとしての役割を担う．
+<a href="#sec_bashoutter">Section 13</a> で詳しく解説する．</p>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_region_と_availability_zone">3.4. Region と Availability Zone</h3>
+<h3 id="_region_と_availability_zone">3.3. Region と Availability Zone</h3>
 <div class="paragraph">
 <p>AWS を使用する際に知っておかなければならない重要な概念として， <strong>リージョン (Region)</strong> と <strong>Availability Zone (AZ)</strong> がある (<a href="#fig_aws_regions_and_azs">Figure 5</a>)．
 以下ではこの概念について簡単に記述する．</p>
@@ -1379,7 +1385,7 @@ EC2, S3 などのAWSのリソースは，リージョンごとに完全に独立
 <div class="paragraph">
 <p><code>Avaialibity Zone (AZ)</code> とは，リージョン内で地理的に隔離されたデータセンターのことである．
 それぞれのリージョンは2個以上のAZを有しており，もし一つのAZで火災や停電などが起きた場合でも，ほかのAZがその障害をカバーすることができる．
-また， AZ 間は高速な AWS 専用ネットワーク回線で結ばれているため， AZ 間のデータ転送は極めて速い．
+また， AZ 間は高速な AWS 専用ネットワーク回線で結ばれているため， AZ 間のデータ転送は極めて早い．
 AZ は，ビジネスなどでサーバーダウンが許容されない場合などに注意すべき概念であり，個人的な用途で使う限りにおいてはあまり深く考慮する必要はない．言葉の意味だけ知っておけば十分である．</p>
 </div>
 <div class="admonitionblock tip">
@@ -1433,15 +1439,15 @@ AZ は，ビジネスなどでサーバーダウンが許容されない場合�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_awsでのクラウド開発">3.5. AWSでのクラウド開発</h3>
+<h3 id="_awsでのクラウド開発">3.4. AWSでのクラウド開発</h3>
 <div class="paragraph">
 <p>AWS のクラウドの全体像がわかってきたところで，次のトピックとして，どのようにしてAWS上にクラウドの開発を行い，展開していくかについての概略を解説しよう．</p>
 </div>
 <div class="paragraph">
-<p>AWS のリソースに追加・編集・削除などの操作を実行するには，<strong>コンソールを用いる</strong>方法と，<strong> API を用いる方法</strong>の，二つの経路がある．</p>
+<p>AWS のリソースを追加・編集・削除するなどの操作を実行するには，<strong>コンソールを用いる</strong>方法と，<strong> API を用いる方法</strong>の，二つの経路がある．</p>
 </div>
 <div class="sect3">
-<h4 id="_コンソール画面からリソースを操作する">3.5.1. コンソール画面からリソースを操作する</h4>
+<h4 id="_コンソール画面からリソースを操作する">3.4.1. コンソール画面からリソースを操作する</h4>
 <div class="paragraph">
 <p>AWS のアカウントにログインすると，まず最初に表示されるのが<strong> AWS コンソール</strong>である (<a href="#aws_console_window">Figure 8</a>)．</p>
 </div>
@@ -1465,18 +1471,17 @@ AWS のドキュメンテーションには，たくさんの
 </div>
 </div>
 <div class="sect3">
-<h4 id="_apiからリソースを操作する">3.5.2. APIからリソースを操作する</h4>
+<h4 id="_apiからリソースを操作する">3.4.2. APIからリソースを操作する</h4>
 <div class="paragraph">
 <p><strong>API (Application Programming Interface)</strong> を使うことで，コマンドをAWSに送信し，クラウドのリソースの操作をすることができる．
 API とは，端的に言えば AWS が公開しているコマンドの一覧であり，<code>GET</code>, <code>POST</code>, <code>DELETE</code> などの <strong>REST API</strong> から構成されている (REST API については <a href="#sec_rest_api">Section 10.2</a> で簡単に解説する)．
 が，直接REST APIを入力するのは面倒であるので，その手間を解消するための様々なツールが提供されている．</p>
 </div>
 <div class="paragraph">
-<p><a href="https://docs.aws.amazon.com/cli/latest/index.html">AWS CLI</a>
-は， UNIX コンソールから AWS API を実行するための CLI (Command Line Interface) である．</p>
-</div>
-<div class="paragraph">
-<p>CLIに加えて，いろいろなプログラミング言語での SDK (Software Development Kit) が提供されている．以下に一例を挙げる．</p>
+<p>例えば，
+<a href="https://docs.aws.amazon.com/cli/latest/index.html">AWS CLI</a>
+は， UNIX コンソールから AWS API を実行するための CLI (Command Line Interface) である．
+CLIに加えて，いろいろなプログラミング言語での SDK (Software Development Kit) が提供されている．以下に一例を挙げる．</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1579,7 +1584,7 @@ AWS CLI を使った場合は，次のようなコマンドを打てばよい．
 </div>
 </div>
 <div class="sect3">
-<h4 id="_ミニハンズオン_aws_cli_を使ってみよう">3.5.3. ミニ・ハンズオン: AWS CLI を使ってみよう</h4>
+<h4 id="_ミニハンズオン_aws_cli_を使ってみよう">3.4.3. ミニ・ハンズオン: AWS CLI を使ってみよう</h4>
 <div class="paragraph">
 <p>ここでは，ミニ・ハンズオンとして，AWS CLI を実際に使ってみる．
 AWS CLI は先述のとおり， AWS 上の任意のリソースの操作が可能であるが，ここでは一番シンプルな，<strong> S3 を使ったファイルの読み書きを実践する</strong>
@@ -1665,7 +1670,9 @@ AWS CLI は先述のとおり， AWS 上の任意のリソースの操作が可�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>本書のノーテーションとして，コマンドラインに入力するコマンドは，それがコマンドであると明示する目的で先頭に <code>$</code> がつけてある． <code>$</code> はコマンドをコピー&amp;ペーストするときは除かなければならない．逆に，コマンドの出力は <code>$</code> なしで表示されている．</p>
+<p>本書のノーテーションとして，コマンドラインに入力するコマンドは，それがコマンドであると明示する目的で先頭に <code>$</code> がつけてある．
+<code>$</code> はコマンドをコピー&amp;ペーストするときは除かなければならない．
+逆に，コマンドの出力は <code>$</code> なしで表示されている．</p>
 </div>
 </td>
 </tr>
@@ -1713,12 +1720,34 @@ AWS CLI は先述のとおり， AWS 上の任意のリソースの操作が可�
 <p>以上のように，AWS CLI を使って S3 バケットに対しての一連の操作を実行できた．
 EC2 や Lambda,  DynamoDB などについても同様に AWS CLI を使ってあらゆる操作を実行できる．</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Amazon Resource Name (ARN)</strong></p>
+</div>
+<div class="paragraph">
+<p>AWS 上のあらゆるリソースには， Amazon Resource Name (ARN) という固有の ID が付与されている．
+ARN は <code>arn:aws:s3:::my_bucket/</code> のようなフォーマットで記述され，ARN を使用することで，特定の AWS リソース (S3 のバケットや EC2 のインスタンス) を一意的に参照することができる．</p>
+</div>
+<div class="paragraph">
+<p>S3 バケットや EC2 インスタンスなどには ARN に加えて，人間が読みやすい名前を定義することも可能である．
+この場合は，ARN または名前のどちらを用いても同じリソースを参照することが可能である．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec:intro_cloudformation">3.6. CloudFormation と AWS CDK</h3>
+<h3 id="sec:intro_cloudformation">3.5. CloudFormation と AWS CDK</h3>
 <div class="sect3">
-<h4 id="_cloudformation_による_infrastructure_as_code_iac">3.6.1. CloudFormation による Infrastructure as Code (IaC)</h4>
+<h4 id="_cloudformation_による_infrastructure_as_code_iac">3.5.1. CloudFormation による Infrastructure as Code (IaC)</h4>
 <div class="paragraph">
 <p>前節で述べたように，AWS API を使うことでクラウドの<strong>あらゆる</strong>リソースの作成・管理が可能である．
 よって，原理上は， API のコマンドを組み合わせていくことで，自分の作りたいクラウドを設計することができる．</p>
@@ -1829,7 +1858,7 @@ CloudFormation を使って，たとえば，EC2のインスタンスをどれ�
 </div>
 </div>
 <div class="sect3">
-<h4 id="_aws_cdk">3.6.2. AWS CDK</h4>
+<h4 id="_aws_cdk">3.5.2. AWS CDK</h4>
 <div class="paragraph">
 <p>前節で紹介した CloudFormation は，見てわかるとおり大変記述が複雑であり，またそれのどれか一つにでも誤りがあってはいけない．
 また，基本的に"テキスト"を書いていくことになるので，プログラミング言語で使うような変数やクラスといった便利な概念が使えない　(厳密には， CloudFormation にも変数に相当するような機能は存在する)．
@@ -1838,7 +1867,7 @@ CloudFormation を使って，たとえば，EC2のインスタンスをどれ�
 <div class="paragraph">
 <p>そのような悩みを解決してくれるのが， <a href="https://aws.amazon.com/cdk/">AWS Cloud Development Kit (CDK)</a> である．
 <strong>CDKは Python などのプログラミング言語を使って CloudFormation を自動的に生成してくれるツールである．</strong>
-CDK は2019年にリリースされたばかりの比較的新しいツールで，日々改良が進められている (<a href="https://github.com/aws/aws-cdk/releases">GitHub レポジトリ</a> のリリースを見ればその開発のスピードの速さがわかるだろう)．
+CDK は2019年にリリースされたばかりの比較的新しいツールで，日々改良が進められている (<a href="https://github.com/aws/aws-cdk/releases">GitHub リポジトリ</a> のリリースを見ればその開発のスピードの速さがわかるだろう)．
 CDK は TypeScript (JavaScript), Python, Java など複数の言語でサポートされている．</p>
 </div>
 <div class="paragraph">
@@ -1909,10 +1938,8 @@ CDK は TypeScript (JavaScript), Python, Java など複数の言語でサポー�
 </div>
 <div class="paragraph">
 <p>本書の主題は，<strong> CDK を使って，コードを書きながら AWS の概念や開発方法を学んでいくことである</strong>．
-後の章では CDK を使って様々なハンズオンを実施していく．</p>
-</div>
-<div class="paragraph">
-<p>早速，最初のハンズオンでは， CDK を使って EC2 インスタンスを作成する方法を学んでいこう．</p>
+後の章では CDK を使って様々なハンズオンを実施していく．
+早速，最初のハンズオンでは， CDK を使って EC2 インスタンスを作成する方法を学んでいこう．</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -1938,6 +1965,8 @@ CDK は TypeScript (JavaScript), Python, Java など複数の言語でサポー�
 <p>ハンズオンの第一回では， CDK を使って EC2 のインスタンス(仮想サーバー)を作成し，SSHでサーバーにログインする，という演習を行う．
 このハンズオンを終えれば，あなたは自分だけのサーバーを AWS 上に立ち上げ，自由に計算を走らせることができるようになるのである！</p>
 </div>
+<div class="sect2">
+<h3 id="handson_01_prep">4.1. 準備</h3>
 <div class="paragraph">
 <p>ハンズオンのソースコードは GitHub の
 <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/ec2-get-started">handson/ec2-get-started</a>
@@ -1951,14 +1980,14 @@ CDK は TypeScript (JavaScript), Python, Java など複数の言語でサポー�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>ハンズオン1は，基本的に <a href="https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&amp;all-free-tier.sort-order=asc">AWS の無料枠</a> の範囲内で実行することができる．</p>
+<p>このハンズオンは，基本的に
+<a href="https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&amp;all-free-tier.sort-order=asc">AWS の無料枠</a>
+の範囲内で実行することができる．</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="sect2">
-<h3 id="handson_01_prep">4.1. 準備</h3>
 <div class="paragraph">
 <p>まずは，ハンズオンを実行するための環境を整える．
 これらの環境整備は，後のハンズオンでも前提となるものなので確実にミスなく行っていただきたい．</p>
@@ -2023,7 +2052,9 @@ SSH クライアントは Linux/Mac には標準搭載されている．
 Windows の場合は WSL をインストールすることで SSH クライアントを利用することを推奨する (<a href="#environments">Section 1.4</a> を参照)．</p>
 </div>
 <div class="paragraph">
-<p>SSH コマンドの基本的な使い方は</p>
+<p>SSH コマンドの基本的な使い方を次に示す．
+<code>&lt;host name&gt;</code> はアクセスする先のサーバーの IP アドレスや DNS によるホストネームが入る．
+<code>&lt;user name&gt;</code> は接続する先のユーザー名である．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2031,27 +2062,19 @@ Windows の場合は WSL をインストールすることで SSH クライア�
 </div>
 </div>
 <div class="paragraph">
-<p>である．
-<code>&lt;host name&gt;</code> はアクセスする先のサーバーの IP アドレスや DNS によるホストネームが入る．
-<code>&lt;user name&gt;</code> は接続する先のユーザー名である．</p>
-</div>
-<div class="paragraph">
 <p>SSH は平文のパスワードによる認証を行うこともできるが，より強固なセキュリティを施すため，<strong>公開鍵暗号方式(Public Key Cryptography)による認証</strong>を行うことが強く推奨されており， EC2 はこの方法でしかアクセスを許していない．
 公開鍵暗号方式の仕組みについては各自勉強してほしい．
-本ハンズオンにおいて大事なことは，<strong> EC2 インスタンスが公開鍵(Public key)を保持し，クライアントとなるコンピューター(あなた自身のコンピュータ)が秘密鍵(Private key)を保持する</strong>，という点である．
+本ハンズオンにおいて大事なことは，<strong> EC2 インスタンスが公開鍵(Public key)を保持し，クライアントとなるコンピュータ(読者自身のコンピュータ)が秘密鍵(Private key)を保持する</strong>，という点である．
 EC2のインスタンスには秘密鍵を持ったコンピュータのみがアクセスすることができる．逆に言うと，秘密鍵が漏洩すると第三者もサーバーにアクセスできることになるので，<strong>秘密鍵は絶対に漏洩することのないよう注意して管理する</strong>．</p>
 </div>
 <div class="paragraph">
 <p>SSH コマンドでは，ログインのために使用する秘密鍵ファイルを <code>-i</code> もしくは <code>--identity_file</code> のオプションで指定することができる．
-たとえば，</p>
+たとえば，次のように使う．</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>ssh <span class="nt">-i</span> Ec2SecretKey.pem &lt;user name&gt;@&lt;host name&gt;</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>のように使う．</p>
 </div>
 </div>
 <div class="sect2">
@@ -2177,7 +2200,7 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>最後に，上記で作った VP Cと SG が付与された EC2 インスタンスを作成している．
+<td>最後に，上記で作った VPCと SG が付与された EC2 インスタンスを作成している．
 インスタンスタイプは <code>t2.micro</code> を選択し， <a href="https://aws.amazon.com/amazon-linux-ami/">Amazon Linux</a> をOSとして設定している．</td>
 </tr>
 </table>
@@ -2187,13 +2210,12 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 </div>
 <div class="sect3">
 <h4 id="_vpc_virtual_private_cloud">4.3.1. VPC (Virtual Private Cloud)</h4>
-<div class="imageblock">
-<div class="content">
-<img src="imgs/aws_logos/VPC.png" alt="VPC" width="100">
-</div>
+<div id="fig::vpc_logo" class="paragraph">
+<div class="title">VPC のアイコン</div>
+<p><span class="image"><img src="imgs/aws_logos/VPC.png" alt="VPC" width="100"></span></p>
 </div>
 <div class="paragraph">
-<p>VPC は AWS 上にプライベートな仮想ネットワーク環境を構築するツールである．高度な計算システムを構築するには，複数のサーバーを連動させて計算を行う必要があるが，そのような場合に互いのアドレスなどを管理する必要があり，そのような場合にVPCは有用である．</p>
+<p>VPC は AWS 上にプライベートな仮想ネットワーク環境を構築するツールである．高度な計算システムを構築するには，複数のサーバーを連動させて計算を行う必要があるが，そのような場合に互いのアドレスなどを管理する必要があり，そういった目的でVPCは有用である．</p>
 </div>
 <div class="paragraph">
 <p>本ハンズオンでは，サーバーは一つしか起動しないので，VPCの恩恵はよく分からないかもしれない．しかし，EC2インスタンスは必ずVPCの中に配置されなければならない，という制約があるので，このハンズオンでもミニマルなVPCを構成している．</p>
@@ -2244,7 +2266,7 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 このハンズオンでは，特にデータセンターの障害などを気にする必要はないので <code>1</code> にしている．</p>
 </li>
 <li>
-<p><code>cidr="10.10.0.0/23"</code> : このパラメターは，VPC内のIPv4のレンジを指定している．
+<p><code>cidr="10.10.0.0/23"</code> : このパラメータは，VPC内のIPv4のレンジを指定している．
 CIDR記法については， <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">Wikipedia</a>などを参照．
 <code>10.10.0.0/23</code> は <code>10.10.0.0</code> から <code>10.10.1.255</code> までの512個の連続したアドレス範囲を指している．
 つまり，このVPCでは最大で512個のユニークなIPv4アドレスが使えることになる．
@@ -2252,7 +2274,7 @@ CIDR記法については， <a href="https://en.wikipedia.org/wiki/Classless_In
 </li>
 <li>
 <p><code>subnet_configuration=&#8230;&#8203;</code> : このパラメータは，VPCにどのようなサブネットを作るか，を決めている．
-サブネットの種類には <strong>priavte subnet</strong> と <strong>public subnet</strong> の二種類がある．
+サブネットの種類には <strong>private subnet</strong> と <strong>public subnet</strong> の二種類がある．
 private subnet は基本的にインターネットとは遮断されたサブネット環境である．
 インターネットと繋がっていないので，セキュリティは極めて高く， VPC 内のサーバーとのみ通信を行えばよい EC2 インスタンスはここに配置する．
 Public subnet とはインターネットに繋がったサブネットである．
@@ -2260,7 +2282,7 @@ Public subnet とはインターネットに繋がったサブネットである
 より詳細な記述は <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html#vpc-subnet-basics">公式ドキュメンテーション</a> を参照．</p>
 </li>
 <li>
-<p><code>nat_gateways=0</code> : これは少し高度な内容なので省略する
+<p><code>natgateways=0</code> : これは少し高度な内容なので省略する
 (興味のある読者は <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">公式ドキュメンテーション</a>を参照)．
 が，<strong>これを0にしておかないと，NAT Gateway の利用料金が発生してしまうので，注意！</strong></p>
 </li>
@@ -2338,10 +2360,9 @@ Public subnet とはインターネットに繋がったサブネットである
 </div>
 <div class="sect3">
 <h4 id="_ec2_elastic_compute_cloud">4.3.3. EC2 (Elastic Compute Cloud)</h4>
-<div class="imageblock">
-<div class="content">
-<img src="imgs/aws_logos/EC2.png" alt="EC2" width="100">
-</div>
+<div id="fig::ec2_handson_ec2_logo" class="paragraph">
+<div class="title">EC2 のアイコン</div>
+<p><span class="image"><img src="imgs/aws_logos/EC2.png" alt="EC2" width="100"></span></p>
 </div>
 <div class="paragraph">
 <p>EC2 は AWS 上に仮想サーバーを立ち上げるサービスである．
@@ -2351,7 +2372,9 @@ Public subnet とはインターネットに繋がったサブネットである
 <div class="paragraph">
 <p>EC2 では用途に応じて様々なインスタンスタイプが提供されている．
 <a href="#ec2_instance_types">Table 2</a> に，代表的なインスタンスタイプの例を挙げる (執筆時点での情報)．
-EC2 のインスタンスタイプのすべてのリストは <a href="https://aws.amazon.com/ec2/instance-types/">公式ドキュメンテーション</a> で見ることができる．</p>
+EC2 のインスタンスタイプのすべてのリストは
+<a href="https://aws.amazon.com/ec2/instance-types/">公式ドキュメンテーション "Amazon EC2 Instance Types"</a>
+で見ることができる．</p>
 </div>
 <table id="ec2_instance_types" class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. EC2 instance types</caption>
@@ -2417,7 +2440,7 @@ EC2 のインスタンスタイプのすべてのリストは <a href="https://a
 </tbody>
 </table>
 <div class="paragraph">
-<p>このように CPU の数は1コアから96コアまで，メモリーは 1GB から 3000GB 以上まで，ネットワークは最大で100Gbpsまで，幅広く選択することができる．
+<p><a href="#ec2_instance_types">Table 2</a> からわかるように， CPU は1コアから96コアまで，メモリーは 1GB から 2TB 以上まで，ネットワーク帯域は最大で100Gbpsまで，幅広く選択することができる．
 また，時間あたりの料金は，CPU・メモリーの占有数にほぼ比例する形で増加する．
 EC2 はサーバーの起動時間を秒単位で記録しており，<strong>利用料金は使用時間に比例する形で決定される</strong>．
 例えば， <code>t2.medium</code> のインスタンスを10時間起動した場合，0.0464 * 10 = 0.464 ドルの料金が発生する．</p>
@@ -2460,10 +2483,10 @@ EC2 はサーバーの起動時間を秒単位で記録しており，<strong>�
 <td class="content">
 <div class="paragraph">
 <p>上記で t2.micro の $0.0116 / hour という金額は， On-demand インスタンスというタイプを選択した場合の価格である．
-EC2 ではほかに， <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html">Spot instance</a> とよばれるインスタンスも存在する．
+EC2 ではほかに， <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html">Spot instance</a> とよばれるインスタンスも存在しする．
 Spot instance は，AWSのデータセンターの負荷が増えた場合，ユーザーのプログラムが実行中であってもAWSの判断により強制シャットダウンされる，という不便さを抱えているのだが，その分大幅に安い料金設定になっている．
 AWS で一時的に生じた余剰な空きCPUをユーザーに割安で貸し出す，という発想である．
-科学計算で，コストを削減する目的で，この Spot Instance を活用する事例も報告されている (<a href="https://arxiv.org/abs/1904.10489">Wu+, 2019</a>)．</p>
+科学計算やウェブサーバーなどの用途でコストを削減する目的で， Spot Instance を活用する事例も多数報告されている．</p>
 </div>
 </td>
 </tr>
@@ -2578,7 +2601,7 @@ Machine image については， <a href="#sec_jupyter_and_deep_learning">Sectio
 シークレットキーを発行したら， <a href="#aws_cli_install">Section 15.3</a> を参照し，コマンドラインの設定を行う．</p>
 </div>
 <div class="paragraph">
-<p>繰り返しになるがここに簡単に記すと，一つ目の方法は <code>AWS_ACCESS_KEY_ID</code> などの環境変数を設定するやり方である．
+<p>手順をここに短く要約すると，一つ目の方法は <code>AWS_ACCESS_KEY_ID</code> などの環境変数を設定するやり方である．
 もう一つの方法は， <code>~/.aws/credentials</code> に認証情報を保存しておく方式である．
 シークレットキーの設定は AWS CLI/CDK を使用するうえで共通のステップになるので，しっかりと理解しておくように．</p>
 </div>
@@ -2590,7 +2613,7 @@ Machine image については， <a href="#sec_jupyter_and_deep_learning">Sectio
 EC2 インスタンスを作成するのに先行して，今回のハンズオンで専用に使うSSHの公開鍵・秘密鍵のペアを準備する必要がある．</p>
 </div>
 <div class="paragraph">
-<p>次の aws-cli コマンドにより， <code>HirakeGoma</code> という名前のついた鍵を生成する．</p>
+<p>次の AWS CLI コマンドにより， <code>HirakeGoma</code> という名前のついた鍵を生成する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2599,7 +2622,8 @@ EC2 インスタンスを作成するのに先行して，今回のハンズオ�
 </div>
 </div>
 <div class="paragraph">
-<p>このコマンドを実行すると，現在のディレクトリに <code>HirakeGoma.pem</code> というファイルが作成される．これが，サーバーにアクセスするための秘密鍵である． SSH でこの鍵を使うため， <code>~/.ssh/</code> のディレクトリに鍵を移動する．さらに，秘密鍵が書き換えられたり第三者に閲覧されないよう，ファイルのアクセス権限を <code>400</code> に設定する．</p>
+<p>このコマンドを実行すると，現在のディレクトリに <code>HirakeGoma.pem</code> というファイルが作成される．これが，サーバーにアクセスするための秘密鍵である． SSH でこの鍵を使うため， <code>~/.ssh/</code> のディレクトリに鍵を移動する．
+さらに，秘密鍵が書き換えられたり第三者に閲覧されないよう，ファイルのアクセス権限を <code>400</code> に設定する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2611,11 +2635,9 @@ EC2 インスタンスを作成するのに先行して，今回のハンズオ�
 <div class="sect3">
 <h4 id="_デプロイを実行">4.4.4. デプロイを実行</h4>
 <div class="paragraph">
-<p>これまでのステップで準備は整った！</p>
-</div>
-<div class="paragraph">
-<p>早速，次のコマンドによりアプリケーションを AWS にデプロイしよう．
-<code>-c key_name="HirakeGoma"</code> というオプションで，先程生成した <code>HirakeGoma</code> という名前の鍵を使うよう指定している．</p>
+<p>これまでのステップで， EC2 インスタンスをデプロイするための準備が整った！
+早速，次のコマンドによりアプリケーションを AWS にデプロイしよう．
+<code>-c key_name="HirakeGoma"</code> というオプションで，先ほど生成した <code>HirakeGoma</code> という名前の鍵を使うよう指定している．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2626,7 +2648,7 @@ EC2 インスタンスを作成するのに先行して，今回のハンズオ�
 <p>このコマンドを実行すると， VPC， EC2 などがAWS上に展開される．
 そして，コマンドの出力の最後に <a href="#handson_01_cdk_output">Figure 11</a> のような出力が得られるはずである．
 <strong>出力の中で <code>InstancePublicIp</code> に続く数字が，起動したインスタンスのパブリック IP アドレスである．</strong>
-IP アドレスはデプロイのごとにランダムなアドレスが割り当てられる．</p>
+IP アドレスはデプロイごとにランダムなアドレスが割り当てられる．</p>
 </div>
 <div id="handson_01_cdk_output" class="imageblock text-center">
 <div class="content">
@@ -2646,7 +2668,7 @@ IP アドレスはデプロイのごとにランダムなアドレスが割り�
 </div>
 </div>
 <div class="paragraph">
-<p><code>-i</code> オプションで，先程生成した秘密鍵を指定している．
+<p><code>-i</code> オプションで，先ほど生成した秘密鍵を指定している．
 EC2 インスタンスにはデフォルトで <code>ec2-user</code> という名前のユーザーが作られているので，それを使用する．
 最後に， <code>&lt;IP address&gt;</code> の部分は自身が作成したEC2インスタンスのIPアドレスで置き換える (<code>12.345.678.9</code> など）．</p>
 </div>
@@ -2755,13 +2777,12 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 軽くこれを紹介しよう．</p>
 </div>
 <div class="paragraph">
-<p>まず，ウェブブラウザを開いて AWS コンソールにログインする．</p>
-</div>
-<div class="paragraph">
-<p>ログインしたら， <code>Services</code> から <code>EC2</code> を検索(選択)する．
+<p>まず，ウェブブラウザを開いて AWS コンソールにログインする．
+ログインしたら， <code>Services</code> から <code>EC2</code> を検索(選択)する．
 次に，左のサイドバーの <code>Instances</code> とページをたどる.
 すると， <a href="#aws_ec2_console">Figure 13</a> のような画面が得られるはずである．
-この画面で，自分のアカウントの管理下にあるインスタンスを確認できる．</p>
+この画面で，自分のアカウントの管理下にあるインスタンスを確認できる．
+同様に，VPC・SG についてもコンソールから確認できる．</p>
 </div>
 <div id="aws_ec2_console" class="imageblock text-center">
 <div class="content">
@@ -2784,15 +2805,10 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 </table>
 </div>
 <div class="paragraph">
-<p>同様に，VPC・SG についてもコンソールから確認できる．</p>
-</div>
-<div class="paragraph">
 <p>前章で CloudFormation について触れたが，今回デプロイしたアプリケーションも，CloudFormation のスタックとして管理されている．
 <strong>スタック (stack)</strong> とは， AWS リソースの集合のことを指す．
-今回の場合は， VPC/EC2/SG などがスタックの中に含まれている．</p>
-</div>
-<div class="paragraph">
-<p>コンソールで <code>CloudFormation</code> のページに行ってみよう (<a href="#aws_cloudformation_console">Figure 14</a>)．</p>
+今回の場合は， VPC/EC2/SG などがスタックの中に含まれている．
+コンソールで <code>CloudFormation</code> のページに行ってみよう (<a href="#aws_cloudformation_console">Figure 14</a>)．</p>
 </div>
 <div id="aws_cloudformation_console" class="imageblock text-center">
 <div class="content">
@@ -2802,20 +2818,19 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 </div>
 <div class="paragraph">
 <p>"MyFirstEc2" という名前のスタックがあることが確認できる．
-クリックをして中身を見てみると，EC2, VPN などのリソースがこのスタックに紐付いていることがわかる．</p>
+クリックをして中身を見てみると，EC2, VPC などのリソースがこのスタックに紐付いていることがわかる．</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="handson_01_delete_stack">4.4.8. スタックを削除</h4>
 <div class="paragraph">
 <p>これにて，第一回のハンズオンで説明すべき事柄はすべて完了した．
-最後に，使わなくなったスタックを削除しよう．</p>
+最後に，使わなくなったスタックを削除しよう．
+スタックの削除には，二つの方法がある．</p>
 </div>
 <div class="paragraph">
-<p>スタックの削除には，２つの方法がある．</p>
-</div>
-<div class="paragraph">
-<p>１つめの方法は，前節の Cloudformation のコンソール画面で， "Delete" ボタンを押すことである (<a href="#cloudformation_delete">Figure 15</a>)．</p>
+<p>一つ目の方法は，前節の Cloudformation のコンソール画面で， "Delete" ボタンを押すことである (<a href="#cloudformation_delete">Figure 15</a>)．
+すると，スタックの状態が <code>"DELETE_IN_PROGRESS"</code> に変わり，削除が完了すると CloudFormation のスタックの一覧から消える．</p>
 </div>
 <div id="cloudformation_delete" class="imageblock text-center">
 <div class="content">
@@ -2824,10 +2839,9 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <div class="title">Figure 15. CloudFormationコンソール画面から，スタックを削除</div>
 </div>
 <div class="paragraph">
-<p>２つめの方法は，コマンドラインから行う方法である．</p>
-</div>
-<div class="paragraph">
-<p>先ほど，デプロイを行ったコマンドラインに戻ろう．そうしたら，</p>
+<p>二つ目の方法は，コマンドラインから行う方法である．
+先ほど，デプロイを行ったコマンドラインに戻ろう．
+そうしたら，次のコマンドを実行する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2835,13 +2849,9 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 </div>
 </div>
 <div class="paragraph">
-<p>と実行する．すると，スタックの削除が始まる．</p>
-</div>
-<div class="paragraph">
-<p>削除した後は，VPC, EC2 など，すべて跡形もなく消え去っている．</p>
-</div>
-<div class="paragraph">
-<p>このように，自分の使いたいときにだけ，サーバーを立ち上げ，使い終わったらただちに削除する，というのが現代のクラウドの正しい使い方である．</p>
+<p>このコマンドを実行すると，スタックの削除が始まる．
+削除した後は，VPC, EC2 など，すべて跡形もなく消え去っていることを自身で確かめよう．
+CloudFormation を用いることで関連するすべての AWS リソースを一度に管理・削除することができるので，大変便利である．</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -2859,15 +2869,13 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 </table>
 </div>
 <div class="paragraph">
-<p>また，本ハンズオンのために作成した SSH 鍵ペアも不要なので，削除しておく．</p>
+<p>また，本ハンズオンのために作成した SSH 鍵ペアも不要なので，削除しておく．
+まず， EC2 側に登録してある公開鍵を削除する．
+これも，コンソールおよびコマンドラインの二つの方法で実行できる．</p>
 </div>
 <div class="paragraph">
-<p>まず， EC2 側に登録してある公開鍵を削除する．
-これも，コンソールおよびコマンドラインの２つの方法で実行できる．</p>
-</div>
-<div class="paragraph">
-<p>コンソールから実行するには， <code>EC2</code> の画面に行き，左のサイドバーの <code>Key Pairs</code> を選択．
-鍵の一覧が表示されるので， <code>HirakeGoma</code> とある鍵にチェックを入れ，画面右上の <code>Actions</code> から， <code>Delete</code> を実行 (<a href="#delete_ec2_key_pair">Figure 16</a>)．</p>
+<p>コンソールから実行するには， <code>EC2</code> の画面に行き，左のサイドバーの <code>Key Pairs</code> を選択する．
+鍵の一覧が表示されるので， <code>HirakeGoma</code> とある鍵にチェックを入れ，画面右上の <code>Actions</code> から， <code>Delete</code> を実行する (<a href="#delete_ec2_key_pair">Figure 16</a>)．</p>
 </div>
 <div id="delete_ec2_key_pair" class="imageblock text-center">
 <div class="content">
@@ -2876,7 +2884,7 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <div class="title">Figure 16. EC2でSSH鍵ペアを削除</div>
 </div>
 <div class="paragraph">
-<p>コマンドラインから実行するには，以下のコマンドを使う．</p>
+<p>コマンドラインから実行するには，次のコマンドを使う．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2894,11 +2902,11 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 <div class="paragraph">
 <p>これで，クラウドの片付けもすべて終了だ．</p>
 </div>
-<div class="admonitionblock tip">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -2917,13 +2925,15 @@ EC2インスタンスの状態を確認したり，サーバーをシャット�
 盛りだくさんの内容であったが，ついてこれたであろうか？</p>
 </div>
 <div class="paragraph">
-<p><a href="#chap_cloud_basics">Section 2</a> では，クラウドの概要と，なぜクラウドを使うのか，という点を議論した．
-続いて <a href="#sec_aws_general_introduction">Section 3</a> では，クラウドを学ぶ具体的な題材として AWS を取り上げ， AWS の概要説明を行った．
-さらに， <a href="#sec_first_ec2">Section 4</a> のハンズオンでは AWS CLI/CDK を使って，自身のプライベートなサーバーを AWS 上に立ち上げる演習を行った．</p>
+<p><a href="#chap_cloud_basics">Section 2</a> では，クラウドの定義と用語の説明を行ったあと，なぜクラウドを使うのか，という点を議論した．
+続いて <a href="#sec_aws_general_introduction">Section 3</a> では，クラウドを学ぶ具体的なプラットフォームとして AWS を取り上げ， AWS を使用するにあたり最低限必要な知識と用語の説明を行った．
+さらに， <a href="#sec_first_ec2">Section 4</a> のハンズオンでは AWS CLI と AWS CDK を使って，自身のプライベートなサーバーを AWS 上に立ち上げる演習を行った．</p>
 </div>
 <div class="paragraph">
 <p>これらを通じて，いかに簡単に (たった数行のコマンドで！) 仮想サーバーを立ち上げたり，削除したりすることができるか，体験できただろう．
-このように，<strong>ダイナミックに計算リソースを拡大・縮小できることが，クラウドの最も本質的な側面であると，筆者は考えている</strong>．</p>
+筆者は，<a href="#chap_cloud_basics">Section 2</a> でクラウドの最も重要な側面はダイナミックに計算リソースを拡大・縮小できることである，と述べた．
+この言葉の意味が，ハンズオンを通じてより明らかになっただろうか？
+ここで学んだ技術を少し応用するだけで，自分のウェブページをホストする仮想サーバーを作成したり，大量のコアを搭載した EC2 インスタンスを用意して科学計算を実行するなど，いろいろなアプリケーションが実現できる．</p>
 </div>
 <div class="paragraph">
 <p>次章からは，今回学んだクラウドの技術を基に，より現実に即した問題を解くことを体験してもらう．
@@ -10354,7 +10364,7 @@ Docker イメージのビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-09-21 05:47:03 UTC
+Last updated 2021-09-22 02:16:17 UTC
 </div>
 </div>
 <style>
