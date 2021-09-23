@@ -1,3 +1,5 @@
+The source code of the hands-on exercises are available at the following link: https://github.com/tomomano/learn-aws-by-coding
+
 **🌎Japanese version is available
 https://tomomano.github.io/learn-aws-by-coding/[here]🌎**
 
