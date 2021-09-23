@@ -487,20 +487,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#sec_scientific_computing">5. クラウドで行う科学計算・機械学習</a>
 <ul class="sectlevel2">
 <li><a href="#_なぜ機械学習をクラウドで行うのか">5.1. なぜ機械学習をクラウドで行うのか？</a></li>
-<li><a href="#_gpu_による機械学習の高速化">5.2. GPU による機械学習の高速化</a></li>
+<li><a href="#_gpu_による深層学習の高速化">5.2. GPU による深層学習の高速化</a></li>
 </ul>
 </li>
 <li><a href="#sec_jupyter_and_deep_learning">6. Hands-on #2: AWS でディープラーニングを実践</a>
 <ul class="sectlevel2">
-<li><a href="#_準備">6.1. 準備</a></li>
+<li><a href="#sec:jupyter_and_deep_learning_setup">6.1. 準備</a></li>
 <li><a href="#_アプリケーションの説明_2">6.2. アプリケーションの説明</a></li>
 <li><a href="#_スタックのデプロイ">6.3. スタックのデプロイ</a></li>
 <li><a href="#_ログイン">6.4. ログイン</a></li>
 <li><a href="#_jupyter_notebook_の起動">6.5. Jupyter Notebook の起動</a></li>
 <li><a href="#_pytorchはじめの一歩">6.6. PyTorchはじめの一歩</a></li>
-<li><a href="#_cpu_vs_gpu_の簡易ベンチマーク">6.7. CPU vs GPU の簡易ベンチマーク</a></li>
-<li><a href="#sec_mnist_using_jupyter">6.8. 実践ディープラーニング! MNIST手書き数字認識タスク</a></li>
-<li><a href="#_スタックの削除">6.9. スタックの削除</a></li>
+<li><a href="#sec_mnist_using_jupyter">6.7. 実践ディープラーニング! MNIST手書き数字認識タスク</a></li>
+<li><a href="#_スタックの削除">6.8. スタックの削除</a></li>
 </ul>
 </li>
 <li><a href="#sec_docker_introduction">7. Docker 入門</a>
@@ -514,7 +513,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#sec_fargate_qabot">8. Hands-on #3: AWS で自動質問回答ボットを走らせる</a>
 <ul class="sectlevel2">
 <li><a href="#_fargate">8.1. Fargate</a></li>
-<li><a href="#_準備_2">8.2. 準備</a></li>
+<li><a href="#_準備">8.2. 準備</a></li>
 <li><a href="#_transformer_を用いた_question_answering_プログラム">8.3. Transformer を用いた question-answering プログラム</a></li>
 <li><a href="#_アプリケーションの説明_3">8.4. アプリケーションの説明</a></li>
 <li><a href="#_スタックのデプロイ_2">8.5. スタックのデプロイ</a></li>
@@ -527,7 +526,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_auto_scaling_group_asg">9.1. Auto Scaling group (ASG)</a></li>
 <li><a href="#_aws_batch">9.2. AWS Batch</a></li>
-<li><a href="#_準備_3">9.3. 準備</a></li>
+<li><a href="#_準備_2">9.3. 準備</a></li>
 <li><a href="#_mnist_手書き文字認識_再訪">9.4. MNIST 手書き文字認識 (再訪)</a></li>
 <li><a href="#sec_run_mnist_docker_local">9.5. ローカルで Docker を実行</a></li>
 <li><a href="#_アプリケーションの説明_4">9.6. アプリケーションの説明</a></li>
@@ -566,7 +565,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#sec_bashoutter">13. Hands-on #6: Bashoutter</a>
 <ul class="sectlevel2">
-<li><a href="#_準備_4">13.1. 準備</a></li>
+<li><a href="#_準備_3">13.1. 準備</a></li>
 <li><a href="#_アプリケーションの説明_5">13.2. アプリケーションの説明</a></li>
 <li><a href="#_アプリケーションのデプロイ">13.3. アプリケーションのデプロイ</a></li>
 <li><a href="#sec:bashoutter_test_api">13.4. API リクエストを送信する</a></li>
@@ -2959,64 +2958,44 @@ CloudFormation を用いることで関連するすべての AWS リソースを
 <div class="sect2">
 <h3 id="_なぜ機械学習をクラウドで行うのか">5.1. なぜ機械学習をクラウドで行うのか？</h3>
 <div class="paragraph">
-<p>2010年頃に始まった第三次 AI ブームのおかげで，研究だけでなく社会・ビジネスの文脈でも機械学習に高い関心が寄せられている．
-とくに，深層学習 (ディープラーニング) とよばれる多層のレイヤーからなるニューラルネットワークを用いたアルゴリズムは，画像認識や自然言語処理などの分野で圧倒的に高い性能を実現し，革命をもたらしている．</p>
+<p>2010年頃に始まった第三次 AI ブームのおかげで，学術研究だけでなく社会・ビジネスの文脈でも機械学習に高い関心が寄せられている．
+とくに，<strong>深層学習 (ディープラーニング)</strong> とよばれる多層のレイヤーからなるニューラルネットワークを用いたアルゴリズムは，画像認識や自然言語処理などの分野で圧倒的に高い性能を実現し，革命をもたらしている．</p>
 </div>
 <div class="paragraph">
-<p>ディープラーニングの特徴は，なんといってもそのパラメータの多さである．
+<p>深層学習の特徴は，なんといってもそのパラメータの多さである．
 層が深くなるほど，層間のニューロンを結ぶ重みパラメータの数が増大していく．
-たとえば，最新の言語モデルである <a href="https://arxiv.org/abs/2005.14165">GPT-3</a> には<strong>1750億個</strong>ものパラメータが含まれている！
-このような膨大なパラメータを有することで，ディープラーニングは高い表現力と汎化性能を実現しているのである．</p>
-</div>
-<div id="fig:convolution" class="imageblock text-center">
-<div class="content">
-<img src="imgs/cnn.png" alt="cnn" width="400">
-</div>
-<div class="title">Figure 17. ニューラルネットワークにおける畳み込み演算．</div>
+たとえば，最新の言語モデルである <a href="https://arxiv.org/abs/2005.14165">GPT-3</a> には<strong>1750億個</strong>ものパラメータが含まれている．
+このような膨大なパラメータを有することで，深層学習は高い表現力と汎化性能を実現しているのである．</p>
 </div>
 <div class="paragraph">
-<p>GPT-3 に限らず，最近の SOTA (State-of-the-art) の性能を達成するニューラルネットでは，百万から億のオーダーのパラメータを有することは頻繁になってきている．
+<p>GPT-3 に限らず，最近の SOTA (State-of-the-art) の性能を達成するニューラルネットワークでは，百万から億のオーダーのパラメータを内包することは頻繁になってきている．
 そのような巨大なニューラルネットを訓練 (最適化) させるのは，当然のことながら膨大な計算コストがかかる．
-そんな巨大な計算に最適なのが，クラウドである！
-事実，GPT-3の学習も，詳細は明かされていないが，Microsoft 社のクラウドを使って行われたと報告されている．</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>GPT-3 で使われた計算リソースの詳細は論文でも明かされていないのだが， <a href="https://lambdalabs.com/blog/demystifying-gpt-3/">Lambda 社のブログ</a>で興味深い考察が行われている
-(Lambda 社は機械学習に特化したクラウドサービスを提供している)．</p>
-</div>
-<div class="paragraph">
-<p>記事によると，1750億のパラメータを訓練するには，一台の GPU (NVIDIA V100) を用いた場合，342年の月日と460万ドルのクラウド利用料が必要となる，とのことである．
-GPT-3 のチームは，複数の GPU に処理を分散することで現実的な時間のうちに訓練を完了させたのであろうが，このレベルのモデルになってくるとクラウド技術の限界を攻めないと達成できないことは確かである．</p>
-</div>
-</td>
-</tr>
-</table>
+結果として，ひとつの計算機では丸一日以上の時間がかかる場合も珍しくない．
+深層学習の発展の速度は目覚ましく，研究・ビジネス両方の観点からも，いかにスループットよくニューラルネットワークの最適化を行えるかが鍵となってくる．
+そのような問題を解決するのにとても有効な手段が，クラウドである！
+<a href="#sec_first_ec2">Section 4</a> でその片鱗を見たように，クラウドを使用することでゼロから数千に至るまでの数のインスタンスを動的に起動し，並列に計算を実行することができる．
+さらに，深層学習を加速させる目的で，深層学習の演算に専用設計された計算チップ (GPU など) がある．
+クラウドを利用すると，そのような専用計算チップも無尽蔵に利用することができる．
+事実，先述した GPT-3 の学習も，詳細は明かされていないが，Microsoft 社のクラウドを使って行われたと報告されている．</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_gpu_による機械学習の高速化">5.2. GPU による機械学習の高速化</h3>
+<h3 id="_gpu_による深層学習の高速化">5.2. GPU による深層学習の高速化</h3>
 <div class="paragraph">
-<p>ディープラーニングの計算で欠かすことのできない技術として， <strong>GPU (Graphics Processing Unit)</strong> について少し説明する．</p>
+<p>深層学習の計算で欠かすことのできない技術として， <strong>GPU (Graphics Processing Unit)</strong> について少し説明する．</p>
 </div>
 <div class="paragraph">
 <p>GPU は，その名のとおり，元々はコンピュータグラフィックスを出力するための専用計算チップである．
 CPU (Central Processing Unit) に対し，グラフィックスの演算に特化した設計がなされている．
 身近なところでは， XBox や PS5 などのゲームコンソールなどに搭載されているし，ハイエンドなノート型・デスクトップ型計算機にも搭載されていることがある．
-コンピュータグラフィクスでは，スクリーンにアレイ状に並んだ数百万個の画素をビデオレート (30 fps) 以上で処理する必要がある．
-そのため，GPUはコアあたりの演算能力は比較的小さいかわりに，チップあたり数百から数千のコアを搭載しており (<a href="#gpu_architecture">Figure 18</a>)，スクリーンの画素を並列的に処理することで，リアルタイムでの描画を実現している．</p>
+コンピュータグラフィックスでは，スクリーンにアレイ状に並んだ数百万個の画素をビデオレート (30 fps) 以上で処理する必要がある．
+そのため，GPUはコアあたりの演算能力は比較的小さいかわりに，チップあたり数百から数千のコアを搭載しており (<a href="#gpu_architecture">Figure 17</a>)，スクリーンの画素を並列的に処理することで，リアルタイムでの描画を実現している．</p>
 </div>
 <div id="gpu_architecture" class="imageblock text-center">
 <div class="content">
 <img src="imgs/gpu_architecture.jpg" alt="cdk output" width="500">
 </div>
-<div class="title">Figure 18. GPUのアーキテクチャ．GPUには数百から数千の独立した計算コアが搭載されている． (画像出典: <a href="https://devblogs.nvidia.com/nvidia-turing-architecture-in-depth/" class="bare">https://devblogs.nvidia.com/nvidia-turing-architecture-in-depth/</a>)</div>
+<div class="title">Figure 17. GPUのアーキテクチャ．GPUには数百から数千の独立した計算コアが搭載されている． (画像出典: <a href="https://devblogs.nvidia.com/nvidia-turing-architecture-in-depth/" class="bare">https://devblogs.nvidia.com/nvidia-turing-architecture-in-depth/</a>)</div>
 </div>
 <div class="paragraph">
 <p>このように，コンピュータグラフィクスの目的で生まれた GPU だが，2010年前後から，その高い並列計算能力をグラフィックス以外の計算 (科学計算など) に用いるという流れ (<strong>General-purpose computing on GPU; GPGPU</strong>) が生まれた．
@@ -3024,8 +3003,14 @@ GPUのコアは，その設計から，行列の計算など，単純かつ規�
 現在では GPGPU は分子動力学や気象シミュレーション，そして機械学習など多くの分野で使われている．</p>
 </div>
 <div class="paragraph">
-<p>ディープラーニングで最も頻繁に起こる演算が，ニューロンの出力を次の層のニューロンに伝える<strong>畳み込み (Convolution)</strong> 演算である (<a href="#fig:convolution">Figure 17</a>)．
+<p>ディープラーニングで最も頻繁に起こる演算が，ニューロンの出力を次の層のニューロンに伝える<strong>畳み込み (Convolution)</strong> 演算である (<a href="#fig:convolution">Figure 18</a>)．
 畳み込み演算は，まさに GPU が得意とする演算であり， CPU ではなく GPU を用いることで学習を飛躍的に (最大で数百倍程度) 加速させることができる．</p>
+</div>
+<div id="fig:convolution" class="imageblock text-center">
+<div class="content">
+<img src="imgs/cnn.png" alt="cnn" width="400">
+</div>
+<div class="title">Figure 18. ニューラルネットワークにおける畳み込み演算．</div>
 </div>
 <div class="paragraph">
 <p>このように GPU は機械学習の計算で欠かせないものであるが，なかなか高価である．
@@ -3045,10 +3030,8 @@ GPUのコアは，その設計から，行列の計算など，単純かつ規�
 むしろ，研究者などでしばしば行われるのは，コンピュータゲームに使われるグラフィックス用の GPU を買ってきて (NVIDIA GeForce シリーズなど)，開発のときはをそれを用いる，というアプローチである．
 グラフィックス用のいわゆる"コンシューマ GPU"は，市場の需要が大きいおかげで，10万円前後の価格で購入することができる．
 V100 と比べると，コンシューマ GPU はコアの数が少なかったり，メモリーが小さかったりなどで劣る点があるが，
-それらを除いては計算能力にとくに制限があるわけではなく，開発の段階では十分な性能である場合がほとんどである．</p>
-</div>
-<div class="paragraph">
-<p>プログラムができあがって，ビッグデータの解析や，モデルをさらに大きくしたいときなどに，クラウドは有効だろう．</p>
+それらを除いては計算能力にとくに制限があるわけではなく，開発の段階では十分な性能である場合がほとんどである．
+プログラムができあがって，ビッグデータの解析や，モデルをさらに大きくしたいときなどに，クラウドは有効だろう．</p>
 </div>
 </td>
 </tr>
@@ -3128,11 +3111,11 @@ V100 と比べると，コンシューマ GPU はコアの数が少なかった�
 <p>GPU を搭載した一番安いインスタンスタイプは， <code>g4dn.xlarge</code> であり，これには廉価かつ省エネルギー設計の NVIDIA T4 が搭載されている．
 後のハンズオンでは，このインスタンスを使用して，ディープラーニングの計算を行ってみる．</p>
 </div>
-<div class="admonitionblock tip">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -3154,6 +3137,25 @@ V100 と比べると，コンシューマ GPU はコアの数が少なかった�
 <p>V100 を一台搭載した <code>p3.2xlarge</code> の利用料金は一時間あたり $3.06 である．
 V100 が約百万円で売られていることを考えると，約3000時間 (= 124日間)，通算で計算を行った場合に，クラウドを使うよりもV100を自分で買ったほうがお得になる，という計算になる
 (実際には，自前で V100 を用意する場合は， V100 だけでなく， CPU やネットワーク機器，電気使用料も必要なので，百万円よりもさらにコストがかかる)．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>GPT-3 で使われた計算リソースの詳細は論文でも明かされていないのだが， <a href="https://lambdalabs.com/blog/demystifying-gpt-3/">Lambda 社のブログ</a>で興味深い考察が行われている
+(Lambda 社は機械学習に特化したクラウドサービスを提供している)．</p>
+</div>
+<div class="paragraph">
+<p>記事によると，1750億のパラメータを訓練するには，一台の GPU (NVIDIA V100) を用いた場合，342年の月日と460万ドルのクラウド利用料が必要となる，とのことである．
+GPT-3 のチームは，複数の GPU に処理を分散することで現実的な時間のうちに訓練を完了させたのであろうが，このレベルのモデルになってくるとクラウド技術の限界を攻めないと達成できないことは確かである．</p>
 </div>
 </td>
 </tr>
@@ -3196,13 +3198,19 @@ V100 が約百万円で売られていることを考えると，約3000時間 (
 <div class="sect1">
 <h2 id="sec_jupyter_and_deep_learning">6. Hands-on #2: AWS でディープラーニングを実践</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="sec:jupyter_and_deep_learning_setup">6.1. 準備</h3>
 <div class="paragraph">
-<p>ハンズオン第二回では， GPU を搭載したEC2インスタンスを起動し，ディープラーニングの学習と推論を実行する演習を行う．</p>
+<p>ハンズオン第二回では， GPU を搭載したEC2インスタンスを起動し，深層学習モデルの学習と推論を実行する演習を行う．</p>
 </div>
 <div class="paragraph">
 <p>ハンズオンのソースコードは GitHub の
 <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist">handson/mnist</a>
 に置いてある．</p>
+</div>
+<div class="paragraph">
+<p>本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<a href="#handson_01_prep">Section 4.1</a>) が整っていることを前提とする．
+それ以外に必要な準備はない．</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -3212,9 +3220,29 @@ V100 が約百万円で売られていることを考えると，約3000時間 (
 </td>
 <td class="content">
 <div class="paragraph">
-<p>このハンズオンは， AWS の無料枠内では実行できない．
-<code>g4dn.xlarge</code> タイプの EC2 インスタンスを使うので，アメリカ東部 (<code>us-east-1</code>) リージョンでは 0.526 $/hour のコストが発生する．
-東京 (<code>ap-northeast-1</code>) を選択した場合は 0.71 $/hour のコストが発生する．</p>
+<p>初期状態の AWS アカウントでは， GPU 搭載の Gタイプのインスタンスの起動上限が0になっていることがある．
+これを確認するには， AWS コンソールから EC2 の画面を開き，左のメニューから <code>Limits</code> を選択する．
+その中の <code>Running On-Demand All G instances</code> という数字が G インスタンスの起動上限を表している．</p>
+</div>
+<div class="paragraph">
+<p>もし，これが 0 になっていた場合は， AWS の自動申請フォームから上限緩和のリクエストを送る必要がある．
+詳しくは
+<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html">公式ドキュメンテーション "Amazon EC2 service quotas"</a>
+を参照のこと．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>このハンズオンは， <code>g4dn.xlarge</code> タイプの EC2 インスタンスを使うので，東京 (<code>ap-northeast-1</code>) リージョンでは 0.71 $/hour のコストが発生する．</p>
 </div>
 </td>
 </tr>
@@ -3237,11 +3265,6 @@ V100 が約百万円で売られていることを考えると，約3000時間 (
 </tr>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_準備">6.1. 準備</h3>
-<div class="paragraph">
-<p>本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<a href="#handson_01_prep">Section 4.1</a>) が整っていることを前提とする．それ以外に必要な準備はない．</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_アプリケーションの説明_2">6.2. アプリケーションの説明</h3>
@@ -3261,18 +3284,19 @@ V100 が約百万円で売られていることを考えると，約3000時間 (
 <div class="ulist">
 <ul>
 <li>
-<p>GPUを搭載した <code>g4dn.xlarge</code> インスタンスタイプを使用．</p>
+<p>GPUを搭載した <code>g4dn.xlarge</code> インスタンスタイプを使用</p>
 </li>
 <li>
-<p>ディープラーニングに使うプログラムがあらかじめインストールされた DLAMI (後述) を使用．</p>
+<p>ディープラーニングに使うプログラムがあらかじめインストールされた DLAMI (後述) を使用</p>
 </li>
 <li>
-<p>SSHにポートフォワーディングのオプションつけてサーバーに接続し，サーバーで起動しているJupyter Notebook (後述) を使ってプログラムを書いたり実行したりする．</p>
+<p>SSHにポートフォワーディングのオプションつけてサーバーに接続し，サーバーで起動しているJupyter Notebook (後述) を使ってプログラムを書いたり実行したりする</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>ハンズオンで使用するプログラムのコードをみてみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist/app.py">/handson/mnist/app.py</a>)．
+<p>ハンズオンで使用するプログラムのコードをみてみよう
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist/app.py">handson/mnist/app.py</a>)．
 コードは第一回目とほとんど共通である．変更点のみ解説を行う．</p>
 </div>
 <div class="listingblock">
@@ -3365,12 +3389,12 @@ V100 が約百万円で売られていることを考えると，約3000時間 (
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
 <td>ここで， <code>g4dn.xlarge</code> インスタンスタイプを選択している (第一回では， CPU のみの <code>t2.micro</code> だった)．
-<code>g4dn.xlarge</code> のインスタンスタイプについては， <a href="#sec_scientific_computing">Section 5</a> ですでに触れた通り， <code>NVIDIA T4</code> と呼ばれる廉価版モデルの GPU を搭載したインスタンスである．
+<code>g4dn.xlarge</code> のインスタンスタイプは， <a href="#sec_scientific_computing">Section 5</a> ですでに触れた通り， <code>NVIDIA T4</code> と呼ばれる廉価版モデルの GPU を搭載したインスタンスである．
 CPU は 4 core, メインメモリーは 16GB が割り当てあられている．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>ここでは，Deep Learning 用の諸々のソフトウェアがプリンストールされたAMI (<a href="https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html">Deep Learning Amazon Machine Image; DLAMI</a>) を選択している．
+<td>ここでは，Deep Learning 用の諸々のソフトウェアがプリンストールされたAMI (<a href="https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html">Deep Learning Amazon Machine Image; DLAMI</a>) を選択している
 (第一回では，Amazon Linux というAMIを使用していた)．
 使用する AMI のIDは リージョンごとに指定する必要があり，ここでは <code>us-east-1</code> と <code>ap-northeast-1</code> でそれぞれ定義している．</td>
 </tr>
@@ -3405,12 +3429,12 @@ AMI には，たとえば <a href="https://ubuntu.com/">Ubuntu</a> などの Lin
 </div>
 <div class="paragraph">
 <p>しかしながら， AMI を単なる OS と理解するのは過剰な単純化である．
-AMI には，ベースとなる (空っぽの) OS を選択できるが，それに加えて，各種のプログラムがインストール済みの AMI も定義することができる．
+AMI には，ベースとなる (空っぽの) OS を選択することもできるが，それに加えて，各種のプログラムがインストール済みの AMI も定義することができる．
 必要なプログラムがインストールされている AMI を見つけることができれば，自身でインストールを行ったり環境設定したりする手間が大幅に省ける．
 具体例を挙げると，ハンズオン第一回では EC2 インスタンスに Python 3.6 をインストールする例を示したが，そのような操作をインスタンスが起動するたびに行うのは手間である！</p>
 </div>
 <div class="paragraph">
-<p>AMI は， AWS 公式のものに加えて，サードパーティーから提供されているものもある．
+<p>AMI は， AWS 公式のものに加えて，サードパーティから提供されているものもある．
 また，自分自身の AMI を作って登録することも可能である (<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-instance-store.html">参考</a>)．
 AMI は EC2 のコンソールから検索することが可能である．
 あるいは，AWS CLI を使って，次のコマンドでリストを取得することができる (<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html">参考</a>)．</p>
@@ -3460,10 +3484,8 @@ AWS CLI を使って，このAMIの詳細情報を取得してみよう．</p>
 GPU ドライバーなしには OS は GPU とコマンドのやり取りをすることができない．
 次のレイヤーが <a href="https://developer.nvidia.com/about-cuda">CUDA</a> と <a href="https://developer.nvidia.com/cudnn">cuDNN</a> である．
 CUDA は， NVIDIA 社が開発した， GPU 上で汎用コンピューティングを行うための言語であり， C++ 言語を拡張したシンタックスを備える．
-cuDNN は CUDA で書かれたディープラーニングのライブラリであり，n次元の畳み込みなどの演算が実装されている．</p>
-</div>
-<div class="paragraph">
-<p>ここまでが， "Base" とよばれるタイプの DLAMI の中身である．</p>
+cuDNN は CUDA で書かれたディープラーニングのライブラリであり，n次元の畳み込みなどの演算が実装されている．
+ここまでが， "Base" とよばれるタイプの DLAMI の中身である．</p>
 </div>
 <div class="paragraph">
 <p>これに加えて， "Conda" とよばれるタイプには， "Base" のプログラム基盤の上に， <code>TensorFlow</code> や <code>PyTorch</code> などのライブラリがインストールされている．
@@ -3535,10 +3557,8 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 <div class="sect2">
 <h3 id="_ログイン">6.4. ログイン</h3>
 <div class="paragraph">
-<p>早速，デプロイしたインスタンスにSSHでログインしてみよう．</p>
-</div>
-<div class="paragraph">
-<p>ここでは，この後で使う Jupyter Notebook に接続するため，<strong>ポートフォワーディング</strong> のオプション (<code>-L</code>) をつけてログインする．</p>
+<p>早速，デプロイしたインスタンスにSSHでログインしてみよう．
+ここでは，この後で使う Jupyter Notebook に接続するため，<strong>ポートフォワーディング (port forwarding)</strong> のオプション (<code>-L</code>) をつけてログインする．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3547,7 +3567,8 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 </div>
 <div class="paragraph">
 <p>ポートフォワーディングとは，クライアントマシンの特定のアドレスへの接続を， SSH の暗号化された通信を介して，リモートマシンの特定のアドレスへ転送する，という意味である．
-このコマンドの <code>-L localhost:8931:localhost:8888</code> は，自分のローカルマシンの <code>localhost:8931</code> へのアクセスを，リモートサーバーの <code>localhost:8888</code> のアドレスに転送せよ，という意味である (<code>:</code> につづく数字はポート番号を意味している)．
+このコマンドの <code>-L localhost:8931:localhost:8888</code> は，自分のローカルマシンの <code>localhost:8931</code> へのアクセスを，リモートサーバーの <code>localhost:8888</code> のアドレスに転送せよ，という意味である
+(<code>:</code> につづく数字はTCP/IPポートの番号を意味している)．
 リモートサーバーのポート8888には，後述する Jupyter Notebook が起動している．
 したがって，ローカルマシンの <code>localhost:8931</code> にアクセスすることで，リモートサーバーの Jupyter Notebook にアクセスすることができるのである (<a href="#fig:ssh_port_forwarding">Figure 22</a>)．
 このようなSSHによる接続方式を<strong>トンネル接続</strong>とよぶ．</p>
@@ -3627,7 +3648,7 @@ cuDNN は CUDA で書かれたディープラーニングのライブラリで�
 <div class="paragraph">
 <p><a href="#handson_02_nvidia-smi">Figure 23</a> のような出力が得られるはずである．
 出力を見ると， Tesla T4 型のGPUが1台搭載されていることが確認できる．
-その他，GPU Driver や CUDA のバージョンを確認することができる．</p>
+その他，GPU Driver や CUDA のバージョン， GPU の負荷・メモリー使用率などの情報を確認することができる．</p>
 </div>
 <div id="handson_02_nvidia-smi" class="imageblock text-center">
 <div class="content">
@@ -3666,7 +3687,7 @@ SSHでログインした先の EC2 インスタンスで，次のコマンドを
 <div class="paragraph">
 <p>このコマンドを実行すると， <a href="#handson_02_jupyter_launch">Figure 25</a> のような出力が確認できるだろう．
 この出力から，Jupyter のサーバーが EC2 インスタンスの <code>localhost:8888</code> というアドレスに起動していることがわかる．
-また， <code>localhost:8888</code> に続く <code>?token=XXXXXXX</code> は，アクセスに使うための一時的なトークンである．</p>
+また， <code>localhost:8888</code> に続く <code>?token=XXXX</code> は，アクセスに使うための一時的なトークンである．</p>
 </div>
 <div id="handson_02_jupyter_launch" class="imageblock text-center">
 <div class="content">
@@ -3691,18 +3712,16 @@ SSHでログインした先の EC2 インスタンスで，次のコマンドを
 </table>
 </div>
 <div class="paragraph">
-<p>先ほど，ポートフォワーディングのオプションをつけて SSH 接続をしているので， Jupyter の起動している <code>localhost:8888</code> には，ローカルマシンの <code>localhost:8931</code> からアクセスすることができる．</p>
-</div>
-<div class="paragraph">
-<p>したがって，ローカルマシンから Jupyter にアクセスするには，ウェブブラウザ (Chrome, FireFox など)から次のアドレスにアクセスすれば良い．</p>
+<p>先ほど，ポートフォワーディングのオプションをつけて SSH 接続をしているので， Jupyter の起動している <code>localhost:8888</code> には，ローカルマシンの <code>localhost:8931</code> からアクセスすることができる．
+したがって，ローカルマシンから Jupyter にアクセスするには，ウェブブラウザ (Chrome, FireFox など)から次のアドレスにアクセスすれば良い．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code>http://localhost:8931/?token=XXXXXXXXXX</code></pre>
+<pre class="rouge highlight"><code>http://localhost:8931/?token=XXXX</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>?token=XXXXXX</code> の部分は，上で Jupyter を起動したときに発行されたトークンの値に置き換える．</p>
+<p><code>?token=XXXX</code> の部分は，上で Jupyter を起動したときに発行されたトークンの値に置き換える．</p>
 </div>
 <div class="paragraph">
 <p>上のアドレスにアクセスすると， Jupyter のホーム画面が起動するはずである (<a href="#handson_02_jupyter_home">Figure 26</a>)．
@@ -3741,7 +3760,7 @@ SSHでログインした先の EC2 インスタンスで，次のコマンドを
 </ul>
 </div>
 <div class="paragraph">
-<p>ショートカットの一覧などは <a href="https://towardsdatascience.com/jypyter-notebook-shortcuts-bf0101a98330">このブログ</a> が参考になる．</p>
+<p>ショートカットの一覧などは <a href="https://towardsdatascience.com/jypyter-notebook-shortcuts-bf0101a98330">Ventsislav Yordanov 氏によるブログ</a> が参考になる．</p>
 </div>
 </td>
 </tr>
@@ -3751,7 +3770,7 @@ SSHでログインした先の EC2 インスタンスで，次のコマンドを
 <div class="sect2">
 <h3 id="_pytorchはじめの一歩">6.6. PyTorchはじめの一歩</h3>
 <div class="paragraph">
-<p><a href="https://pytorch.org/">PyTorch</a> は Facebook AI Research (FAIR) LAB が中心となって開発を進めている，オープンソースのディープラーニングのライブラリである．
+<p><a href="https://pytorch.org/">PyTorch</a> は Facebook AI Research LAB (FAIR) が中心となって開発を進めている，オープンソースのディープラーニングのライブラリである．
 PyTorch は 有名な例で言えば Tesla 社の自動運転プロジェクトなどで使用されており，執筆時点において最も人気の高いディープラーニングライブラリの一つである．
 本ハンズオンでは， PyTorch を使ってディープラーニングの実践を行う．</p>
 </div>
@@ -3771,7 +3790,8 @@ PyTorch は 有名な例で言えば Tesla 社の自動運転プロジェクト�
 Caffe2 は 2018年に PyTorch プロジェクトに合併された．</p>
 </div>
 <div class="paragraph">
-<p>また，2019年12月，日本の Preferred Networks 社が開発していた <a href="https://chainer.org/">Chainer</a> も開発を終了し，PyTorchの開発チームと協業していくことが発表された (<a href="https://chainer.org/announcement/2019/12/05/released-v7-ja.html">プレスリリース</a>)．
+<p>また，2019年12月，日本の Preferred Networks 社が開発していた <a href="https://chainer.org/">Chainer</a> も開発を終了し，PyTorchの開発チームと協業していくことが発表された
+(詳しくは <a href="https://chainer.org/announcement/2019/12/05/released-v7-ja.html">プレスリリース</a> を参照)．
 PyTorch には，開発統合前から Chainer からインスパイアされた API がいくつもあり， Chainer の DNA は今も PyTorch に引き継がれているのである&#8230;&#8203;!</p>
 </div>
 </td>
@@ -3793,7 +3813,7 @@ Jupyterのホーム画面の右上の "New" を押し，"conda_pytorch_p36" と�
 <div class="title">Figure 27. 新規ノートブックの作成． "conda_pytorch_p36" の環境を選択する．</div>
 </div>
 <div class="paragraph">
-<p>次のようなプログラムを書いてみよう (<a href="#handson_02_jupyeter_pytorch">Figure 28</a>)．</p>
+<p>ここでは，次のようなプログラムを書いて，実行していく． (<a href="#handson_02_jupyeter_pytorch">Figure 28</a>)．</p>
 </div>
 <div id="handson_02_jupyeter_pytorch" class="imageblock text-center">
 <div class="content">
@@ -3912,7 +3932,7 @@ CPU と GPU で明示的にデータを交換するのが肝である．
 </td>
 <td class="content">
 <div class="paragraph">
-<p>完成した Jupyter notebook は
+<p>完成した Jupyter Notebook は
 <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/mnist/pytorch/pytorch_get_started.ipynb">/handson/mnist/pytorch/pytorch_get_started.ipynb</a>
 にある．
 Jupyter の画面右上の "Upload" からこのファイルをアップロードして，コードを走らせることが可能である．</p>
@@ -3924,11 +3944,8 @@ Jupyter の画面右上の "Upload" からこのファイルをアップロー�
 </tr>
 </table>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_cpu_vs_gpu_の簡易ベンチマーク">6.7. CPU vs GPU の簡易ベンチマーク</h3>
 <div class="paragraph">
-<p>実際にベンチマークを取ることでGPUとCPUの速度を比較してみよう．
+<p>実際にベンチマークを取ることでGPUとCPUの速度を比較をしてみよう．
 実行時間を計測するツールとして， Jupyter の提供する <a href="https://ipython.readthedocs.io/en/stable/interactive/magics.html">%time</a> マジックコマンドを利用する．</p>
 </div>
 <div class="paragraph">
@@ -4033,13 +4050,13 @@ Wall time: 553 ms</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec_mnist_using_jupyter">6.8. 実践ディープラーニング! MNIST手書き数字認識タスク</h3>
+<h3 id="sec_mnist_using_jupyter">6.7. 実践ディープラーニング! MNIST手書き数字認識タスク</h3>
 <div class="paragraph">
 <p>ここまで，AWS上でディープラーニングの計算をするための概念や前提知識をながながと説明してきたが，ついにここからディープラーニングの計算を実際に走らせてみる．</p>
 </div>
 <div class="paragraph">
 <p>ここでは，機械学習のタスクで最も初歩的かつ有名な <strong>MNIST データセットを使った数字認識</strong>を扱う (<a href="#handson_02_mnist_examples">Figure 29</a>)．
-0から9までの手書きの数字の画像が与えられ，その数字が何の数字なのかを当てる，というシンプルなタスクである．</p>
+これは，0から9までの手書きの数字の画像が与えられ，その数字が何の数字なのかを当てる，というシンプルなタスクである．</p>
 </div>
 <div id="handson_02_mnist_examples" class="imageblock text-center">
 <div class="content">
@@ -4049,7 +4066,9 @@ Wall time: 553 ms</code></pre>
 </div>
 <div class="paragraph">
 <p>今回は， MNIST 文字認識タスクを，<strong>畳み込みニューラルネットワーク (Convolutional Neural Network; CNN)</strong> を使って解く．
-ソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist/pytorch">/handson/minist/pytorch/</a> にある <code>mnist.ipynb</code> と <code>simple_mnist.py</code> である．
+ソースコードは
+<a href="https://github.com/tomomano/learn-aws-by-coding-source-code/tree/main/handson/mnist/pytorch">/handson/minist/pytorch/</a>
+にある <code>mnist.ipynb</code> と <code>simple_mnist.py</code> である．
 なお，このプログラムは， <a href="https://github.com/pytorch/examples/tree/master/mnist">PyTorch の公式 Example Project 集</a> を参考に，多少の改変を行ったものである．</p>
 </div>
 <div class="paragraph">
@@ -4190,7 +4209,7 @@ Wall time: 553 ms</code></pre>
 </div>
 <div class="paragraph">
 <p>続いて， CNN のパラメータを更新する最適化アルゴリズムを定義する．
-ここでは， <strong>Stochastic Gradient Descent (SGD)</strong> を使用している．</p>
+ここでは， <strong>確率的勾配降下法 (Stochastic Gradient Descent; SGD)</strong> を使用している．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4240,15 +4259,15 @@ GPU を使えば，これくらいの計算であれば1分程度で完了する
 <p>出力として， <a href="#handson_02_train_loss">Figure 33</a> のようなプロットが得られるはずである．
 イテレーションを重ねるにつれて，損失関数 (Loss function) の値が減少している (=精度が向上している) ことがわかる．</p>
 </div>
-<div class="paragraph">
-<p>出力には各エポック終了後のテストデータに対する精度も表示されている．
-最終的には 98% 以上の極めて高い精度を実現できていることが確認できるだろう (<a href="#handson_02_mnist_final_score">Figure 34</a>)．</p>
-</div>
 <div id="handson_02_train_loss" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-jupyter/train_loss.png" alt="train_loss" width="500">
 </div>
 <div class="title">Figure 33. 学習の進行に対する Train loss の変化</div>
+</div>
+<div class="paragraph">
+<p>出力にはテキスト形式で各エポック終了後のテストデータに対する精度も表示されている．
+最終的には 98% 以上の極めて高い精度を実現できていることが確認できるだろう (<a href="#handson_02_mnist_final_score">Figure 34</a>)．</p>
 </div>
 <div id="handson_02_mnist_final_score" class="imageblock text-center">
 <div class="content">
@@ -4257,9 +4276,9 @@ GPU を使えば，これくらいの計算であれば1分程度で完了する
 <div class="title">Figure 34. 学習したCNNのテストデータに対するスコア (5エポック後)</div>
 </div>
 <div class="paragraph">
-<p>最後に，学習した CNN の推論結果を可視化してみよう．
+<p>学習した CNN の推論結果を可視化してみよう．
 次のコードを実行することで， <a href="#handson_02_mnist_mnist_prediction">Figure 35</a> のような出力が得られるだろう．
-この図で，下段右下などは，"1"に近い見た目をしているが，きちんと"9"と推論できている．
+この図で，下段右から二番目は，"1"に近い見た目をしているが，きちんと"9"と推論できている．
 なかなか賢い CNN を作り出すことができたようだ！</p>
 </div>
 <div class="listingblock">
@@ -4302,13 +4321,24 @@ GPU を使えば，これくらいの計算であれば1分程度で完了する
 <div class="title">Figure 35. 学習した CNN による，MNIST画像の推論結果</div>
 </div>
 <div class="paragraph">
+<p>最後に，学習したニューラルネットワークのパラメータを <code>mnist_cnn.pt</code> というファイル名で保存しておこう．
+これで，将来いつでも今回学習したモデルを再現し，別の実験に使用することができる．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s">"mnist_cnn.pt"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>以上が， AWS クラウドの仮想サーバーを立ち上げ，最初のディープラーニングの計算を行う一連の流れである．
 MNIST 文字認識のタスクを行うニューラルネットを，クラウド上の GPU を使って高速に学習させ，現実的な問題を一つ解くことができたのである．
 興味のある読者は，今回のハンズオンを雛形に，自分の所望の計算を走らせてみるとよいだろう．</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_スタックの削除">6.9. スタックの削除</h3>
+<h3 id="_スタックの削除">6.8. スタックの削除</h3>
 <div class="paragraph">
 <p>これにて，ハンズオン第二回の内容はすべて説明した．
 クラウドの利用料金を最小化するため，使い終わったEC2インスタンスはすぐさま削除しよう．</p>
@@ -4329,11 +4359,30 @@ MNIST 文字認識のタスクを行うニューラルネットを，クラウ�
 </td>
 <td class="content">
 <div class="paragraph">
-<p><strong>スタックの削除は各自で必ず行うこと！</strong> 行わなかった場合，EC2インスタンスの料金が発生し続けることになる！ <code>g4dn.xlarge</code> は $0.526 / hour の料金設定なので，一日起動しつづけると約$12の請求が発生することになる！</p>
+<p><strong>スタックの削除は各自で必ず行うこと！</strong>
+行わなかった場合，EC2インスタンスの料金が発生し続けることになる！
+<code>g4dn.xlarge</code> は $0.71 / hour の料金設定なので，一日起動しつづけると約$17の請求が発生することになる！</p>
 </div>
 </td>
 </tr>
 </table>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><strong>AWS のバジェットアラート</strong></p>
+</div>
+<div class="paragraph">
+<p>AWS の初心者が (あるいは経験者も) しばしば陥る失敗が，インスタンスの停止忘れなどで無駄なリソースがクラウドで放置されてしまい，巨大な額の請求が届く，というミスだ．
+特に，開発を行っている間はこのような事態は起こりうるものだと思って，備えておかなければならない．
+このような事態を未然に防ぐため， AWS Budgets という機能が無料で提供されている．
+AWS Budgets を利用することで，月の利用金額がある閾値を超えた場合にユーザーにメールが送信される，などのアラートを設定することができる．
+詳細な手順は
+<a href="https://aws.amazon.com/blogs/aws-cost-management/getting-started-with-aws-budgets/">AWS の公式ブログ "Getting Started with AWS Budgets"</a>
+を参照のこと．
+本書の読者も，ぜひこのタイミングでアラートを設定しておくことを推奨する．</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -4869,7 +4918,7 @@ Fargate も，データセンターのどこかの CPU 上で起動するので�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_準備_2">8.2. 準備</h3>
+<h3 id="_準備">8.2. 準備</h3>
 <div class="paragraph">
 <p>本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<a href="#handson_01_prep">Section 4.1</a>) が整っていることを前提とする．
 それ以外に必要な準備はない．</p>
@@ -5619,7 +5668,7 @@ Job queues は Compute environment の空き状況を監視しており， そ�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_準備_3">9.3. 準備</h3>
+<h3 id="_準備_2">9.3. 準備</h3>
 <div class="paragraph">
 <p>本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<a href="#handson_01_prep">Section 4.1</a>) が整っていることを前提とする．
 それ以外に必要な準備はない．</p>
@@ -5629,8 +5678,8 @@ Job queues は Compute environment の空き状況を監視しており， そ�
 <h3 id="_mnist_手書き文字認識_再訪">9.4. MNIST 手書き文字認識 (再訪)</h3>
 <div class="paragraph">
 <p>今回のハンズオンでは，機械学習のハイパーパラメータ調整を取り上げると冒頭で述べた．
-その最もシンプルな例題として， <a href="#sec_mnist_using_jupyter">Section 6.8</a> で扱った MNIST 手書き文字認識の問題を再度取り上げよう．
-<a href="#sec_mnist_using_jupyter">Section 6.8</a> では，適当にチョイスしたハイパーパラメータを用いてモデルの訓練を行った．
+その最もシンプルな例題として， <a href="#sec_mnist_using_jupyter">Section 6.7</a> で扱った MNIST 手書き文字認識の問題を再度取り上げよう．
+<a href="#sec_mnist_using_jupyter">Section 6.7</a> では，適当にチョイスしたハイパーパラメータを用いてモデルの訓練を行った．
 ここで使用したプログラムのハイパーパラメータとしては，確率的勾配降下法 (SGD) における学習率やモメンタムが含まれる．
 コードでいうと，次の行が該当する．</p>
 </div>
@@ -5687,7 +5736,7 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 </div>
 <div class="paragraph">
 <p>Docker image のソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/aws-batch/docker">handson/aws-batch/docker</a> にある．
-基本的に <a href="#sec_mnist_using_jupyter">Section 6.8</a> のハンズオンを元にし，本ハンズオン専用の軽微な変更が施してある．
+基本的に <a href="#sec_mnist_using_jupyter">Section 6.7</a> のハンズオンを元にし，本ハンズオン専用の軽微な変更が施してある．
 興味のある読者はソースコードも含めて読んでいただきたい．</p>
 </div>
 <div class="paragraph">
@@ -8342,7 +8391,7 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 <div class="title">Figure 92. ハンズオン#5で作製する SNS アプリケーション "Bashoutter"</div>
 </div>
 <div class="sect2">
-<h3 id="_準備_4">13.1. 準備</h3>
+<h3 id="_準備_3">13.1. 準備</h3>
 <div class="paragraph">
 <p>本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<a href="#handson_01_prep">Section 4.1</a>) が整っていることを前提とする．それ以外に必要な準備はない．</p>
 </div>
@@ -10364,7 +10413,7 @@ Docker イメージのビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-09-22 02:16:17 UTC
+Last updated 2021-09-23 09:40:36 UTC
 </div>
 </div>
 <style>
