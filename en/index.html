@@ -2866,21 +2866,21 @@ Stay tuned!</p>
 <div class="paragraph">
 <p>In the modern age of computing, computational simulation and big data analysis are the major driving force of scientific and engineering research.
 The cloud is the best place to perform these large-scale computations.
-In Part II, which starts with this chapter, you will experience how to run scientific computation on the cloud through several hands-on experiences.
+In Part II, which starts with this section, you will experience how to run scientific computation on the cloud through several hands-on experiences.
 As a specific subject of scientific computing, here we will focus on machine learning (deep learning).</p>
 </div>
 <div class="paragraph">
 <p>In this book, we will use the
 <a href="https://pytorch.org/">PyTorch</a>
 library to implement deep learning algorithms, but no knowledge of deep learning or PyTorch is required.
-The lecture focuses on why and how to run deep learning in the cloud, so we will not go into the details of the programs we will run.
+The lecture focuses on <strong>why and how to run deep learning in the cloud</strong>, so we will not go into the details of the deep learning algorithm itself.
 Interested readers are refered to other books for the theory and implementation of deep neural network (column below).</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="title">Deep learning textbooks</div>
 <div class="paragraph">
-<p>For those who want to study deep learning in detail, we would like to recommend the following textbooks.
+<p>For those who want to study deep learning theory and implementation, we would like to recommend the following textbooks.
 Although the basic concepts and theories of deep learning are universal, this field is constantly evolving, so be sure to keep up to date with the latest information.</p>
 </div>
 <div class="ulist">
@@ -2890,12 +2890,11 @@ Although the basic concepts and theories of deep learning are universal, this fi
 <div class="paragraph">
 <p>This is a good introductory book if you want to learn the theoretical aspects of deep learning (although, it was published several years ago and does not cover the latest topics).
 You can read it for free on the web.
-It is also published in Japanese.
 This is a book for theoreticians, as it hardly discusses implementation.</p>
 </div>
 </li>
 <li>
-<p><a href="https://www.oreilly.co.jp/books/9784873117584/">Deep Learning from Scratch (Yasutake Saito)</a></p>
+<p><a href="https://www.oreilly.co.jp/books/9784873117584/">Deep Learning from Scratch (Koki Saito)</a></p>
 <div class="paragraph">
 <p>A series of three books in total, published in Japanese and several other languages.
 This is the definitive introductory book on deep learning, with a good balance of theory and implementation.</p>
@@ -2925,7 +2924,7 @@ As the layers become deeper, the number of weight parameters connecting the neur
 For example, the latest language model,
 <a href="https://arxiv.org/abs/2005.14165">GPT-3</a>,
 contains as many as <strong>175 billion</strong> parameters.
-With such a large number of parameters, deep learning can achieve high expressive power and generalization performance.</p>
+With such a vast number of parameters, deep learning can achieve high expressive power and generalization performance.</p>
 </div>
 <div class="paragraph">
 <p>Not only GPT-3, but also recent neural networks that achieve SOTA (State-of-the-Art) performance frequently contain parameters in the order of millions or billions.
@@ -2947,7 +2946,7 @@ In fact, it was reported that the training of GPT-3 was performed using Microsof
 <td class="content">
 <div class="paragraph">
 <p>The details of the computational resources used in GPT-3 project are not disclosed in the paper, but there is an interesting discussion at
-<a href="https://lambdalabs.com/blog/demystifying-gpt-3/" class="bare">https://lambdalabs.com/blog/demystifying-gpt-3/</a> [Lambda&#8217;s blog]
+<a href="https://lambdalabs.com/blog/demystifying-gpt-3/">Lambda&#8217;s blog</a>
 (Lambda is a cloud service specializing in machine learning).</p>
 </div>
 <div class="paragraph">
@@ -2969,7 +2968,7 @@ The GPT-3 team was able to complete the training in a realistic amount of time b
 In contrast to a <strong>CPU (Central Processing Unit)</strong> which is capable of general computation, a GPU is designed specifically for graphics operations.
 It can be found in familiar game consoles such as XBox and PS5, as well as in high-end notebook and desktop computers.
 In computer graphics, millions of pixels arranged on a screen need to be updated at video rates (30 fps) or higher.
-To handle this task, a single GPU chip contain hundreds to thousands of cores, each with relatively small computing power (<a href="#gpu_architecture">Figure 17</a>), and process the pixels on the screen in parallel to achieve real-time rendering.</p>
+To handle this task, a single GPU chip contain hundreds to thousands of cores, each with relatively small computing power (<a href="#gpu_architecture">Figure 17</a>), and processes the pixels on the screen in parallel to achieve real-time rendering.</p>
 </div>
 <div id="gpu_architecture" class="imageblock text-center">
 <div class="content">
@@ -2978,13 +2977,13 @@ To handle this task, a single GPU chip contain hundreds to thousands of cores, e
 <div class="title">Figure 17. GPU architecture (Image source: <a href="https://devblogs.nvidia.com/nvidia-turing-architecture-in-depth/" class="bare">https://devblogs.nvidia.com/nvidia-turing-architecture-in-depth/</a>)</div>
 </div>
 <div class="paragraph">
-<p>Although GPUs were originally developed for the purpose of computer graphics, since around 2010, some advanced programmers and engineers started to use GPU&#8217;s high parallel computing power for calculations other than graphics, such as scientific calculations.
+<p>Although GPUs were originally developed for the purpose of computer graphics, since around 2010, some advanced programmers and engineers started to use GPU&#8217;s high parallel computing power for calculations other than graphics, such as scientific computations.
 This idea is called <strong>General-purpose computing on GPU</strong> or <strong>GPGPU</strong>.
 Due to its chip design, GPGPU is suitable for simple and regular operations such as matrix operations, and can achieve much higher speed than CPUs.
 Currently, GPGPU is employed in many fields such as molecular dynamics, weather simulation, and machine learning.</p>
 </div>
 <div class="paragraph">
-<p>The operation that occurs most frequently in deep learning is the <strong>convolution</strong> operation, which transfers the output of a neuron to the neuron in the next layer (<a href="#fig:convolution">Figure 18</a>).
+<p>The operation that occurs most frequently in deep learning is the <strong>convolution</strong> operation, which transfers the output of neurons to the neurons in the next layer (<a href="#fig:convolution">Figure 18</a>).
 Convolution is exactly the kind of operations that GPUs are good at, and by using GPUs instead of CPUs, learning can be dramatically accelerated, up to several hundred times.</p>
 </div>
 <div id="fig:convolution" class="imageblock text-center">
@@ -2998,10 +2997,10 @@ Convolution is exactly the kind of operations that GPUs are good at, and by usin
 However, they are quite expensive.
 For example, NVIDIA&#8217;s Tesla V100 chip, designed specifically for scientific computing and machine learning, is priced at about one million yen (ten thousand dollars).
 One million yen is quite a large investment just to start a machine learning project.
-The good news is, if you use the cloud, you can use a GPU with zero initial cost!</p>
+The good news is, if you use the cloud, you can use GPUs with zero initial cost!</p>
 </div>
 <div class="paragraph">
-<p>To use GPUs in the cloud, you need to select an EC2 instance type equipped with GPUs, such as <code>P2</code>, <code>P3</code>, <code>G3</code>, and <code>G4</code> instance type.
+<p>To use GPUs in AWS, you need to select an EC2 instance type equipped with GPUs, such as <code>P2</code>, <code>P3</code>, <code>G3</code>, and <code>G4</code> instance family.
 <a href="#table_gpu_instances">Table 3</a> lists representative GPU-equipped instance types as of this writing.</p>
 </div>
 <table id="table_gpu_instances" class="tableblock frame-all grid-all stretch">
@@ -3425,13 +3424,13 @@ You should not forget to set the access key (<a href="#aws_cli_install">Section 
 <span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
 
 <span class="c"># Generate SSH key</span>
-<span class="nv">$ </span><span class="nb">export </span><span class="nv">KEY_NAME</span><span class="o">=</span><span class="s2">"HirakeGoma"</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">KEY_NAME</span><span class="o">=</span><span class="s2">"OpenSesame"</span>
 <span class="nv">$ </span>aws ec2 create-key-pair <span class="nt">--key-name</span> <span class="k">${</span><span class="nv">KEY_NAME</span><span class="k">}</span> <span class="nt">--query</span> <span class="s1">'KeyMaterial'</span> <span class="nt">--output</span> text <span class="o">&gt;</span> <span class="k">${</span><span class="nv">KEY_NAME</span><span class="k">}</span>.pem
-<span class="nv">$ </span><span class="nb">mv </span>HirakeGoma.pem ~/.ssh/
-<span class="nv">$ </span><span class="nb">chmod </span>400 ~/.ssh/HirakeGoma.pem
+<span class="nv">$ </span><span class="nb">mv </span>OpenSesame.pem ~/.ssh/
+<span class="nv">$ </span><span class="nb">chmod </span>400 ~/.ssh/OpenSesame.pem
 
 <span class="c"># Deploy!</span>
-<span class="nv">$ </span>cdk deploy <span class="nt">-c</span> <span class="nv">key_name</span><span class="o">=</span><span class="s2">"HirakeGoma"</span></code></pre>
+<span class="nv">$ </span>cdk deploy <span class="nt">-c</span> <span class="nv">key_name</span><span class="o">=</span><span class="s2">"OpenSesame"</span></code></pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -3468,7 +3467,7 @@ To connect to Jupyter Notebook, which we will be using later, we must log in wit
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>ssh <span class="nt">-i</span> ~/.ssh/HirakeGoma.pem <span class="nt">-L</span> localhost:8931:localhost:8888 ec2-user@&lt;IP address&gt;</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>ssh <span class="nt">-i</span> ~/.ssh/OpenSesame.pem <span class="nt">-L</span> localhost:8931:localhost:8888 ec2-user@&lt;IP address&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6234,7 +6233,7 @@ The technique of mounting the authentication file described here can also be use
 <div id="footer">
 <div id="footer-text">
 Version 1.0-en<br>
-Last updated 2021-09-24 03:36:39 UTC
+Last updated 2021-09-24 05:38:28 UTC
 </div>
 </div>
 <style>
