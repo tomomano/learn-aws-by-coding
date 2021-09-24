@@ -3,28 +3,27 @@
 
 In the modern age of computing, computational simulation and big data analysis are the major driving force of scientific and engineering research.
 The cloud is the best place to perform these large-scale computations.
-In Part II, which starts with this chapter, you will experience how to run scientific computation on the cloud through several hands-on experiences.
+In Part II, which starts with this section, you will experience how to run scientific computation on the cloud through several hands-on experiences.
 As a specific subject of scientific computing, here we will focus on machine learning (deep learning).
 
 In this book, we will use the
 https://pytorch.org/[PyTorch]
 library to implement deep learning algorithms, but no knowledge of deep learning or PyTorch is required.
-The lecture focuses on why and how to run deep learning in the cloud, so we will not go into the details of the programs we will run.
+The lecture focuses on **why and how to run deep learning in the cloud**, so we will not go into the details of the deep learning algorithm itself.
 Interested readers are refered to other books for the theory and implementation of deep neural network (column below).
 
 .Deep learning textbooks
 ****
-For those who want to study deep learning in detail, we would like to recommend the following textbooks.
+For those who want to study deep learning theory and implementation, we would like to recommend the following textbooks.
 Although the basic concepts and theories of deep learning are universal, this field is constantly evolving, so be sure to keep up to date with the latest information.
 
 * https://www.deeplearningbook.org/[Deep Learning (Ian Goodfellow, Yoshua Bengio and Aaron Courville)]
 +
 This is a good introductory book if you want to learn the theoretical aspects of deep learning (although, it was published several years ago and does not cover the latest topics).
 You can read it for free on the web.
-It is also published in Japanese.
 This is a book for theoreticians, as it hardly discusses implementation.
 
-* https://www.oreilly.co.jp/books/9784873117584/[Deep Learning from Scratch (Yasutake Saito)]
+* https://www.oreilly.co.jp/books/9784873117584/[Deep Learning from Scratch (Koki Saito)]
 +
 A series of three books in total, published in Japanese and several other languages.
 This is the definitive introductory book on deep learning, with a good balance of theory and implementation.
@@ -46,7 +45,7 @@ As the layers become deeper, the number of weight parameters connecting the neur
 For example, the latest language model,
 https://arxiv.org/abs/2005.14165[GPT-3],
 contains as many as **175 billion** parameters.
-With such a large number of parameters, deep learning can achieve high expressive power and generalization performance.
+With such a vast number of parameters, deep learning can achieve high expressive power and generalization performance.
 
 Not only GPT-3, but also recent neural networks that achieve SOTA (State-of-the-Art) performance frequently contain parameters in the order of millions or billions.
 Naturally, training such a huge neural network is computationally expensive.
@@ -61,7 +60,7 @@ In fact, it was reported that the training of GPT-3 was performed using Microsof
 [TIP]
 ====
 The details of the computational resources used in GPT-3 project are not disclosed in the paper, but there is an interesting discussion at
-https://lambdalabs.com/blog/demystifying-gpt-3/ [Lambda's blog]
+https://lambdalabs.com/blog/demystifying-gpt-3/[Lambda's blog]
 (Lambda is a cloud service specializing in machine learning).
 
 According to the article, it would take 342 years and $4.6 million in cloud fees to train 175 billion parameters if a single GPU (NVIDIA V100) was used.
@@ -76,18 +75,18 @@ As the name suggests, a GPU is originally a dedicated computing chip for produci
 In contrast to a **CPU (Central Processing Unit)** which is capable of general computation, a GPU is designed specifically for graphics operations.
 It can be found in familiar game consoles such as XBox and PS5, as well as in high-end notebook and desktop computers.
 In computer graphics, millions of pixels arranged on a screen need to be updated at video rates (30 fps) or higher.
-To handle this task, a single GPU chip contain hundreds to thousands of cores, each with relatively small computing power (<<gpu_architecture>>), and process the pixels on the screen in parallel to achieve real-time rendering.
+To handle this task, a single GPU chip contain hundreds to thousands of cores, each with relatively small computing power (<<gpu_architecture>>), and processes the pixels on the screen in parallel to achieve real-time rendering.
 
 [[gpu_architecture]]
 .GPU architecture (Image source: https://devblogs.nvidia.com/nvidia-turing-architecture-in-depth/)
 image::imgs/gpu_architecture.jpg[cdk output, 500, align="center"]
 
-Although GPUs were originally developed for the purpose of computer graphics, since around 2010, some advanced programmers and engineers started to use GPU's high parallel computing power for calculations other than graphics, such as scientific calculations.
+Although GPUs were originally developed for the purpose of computer graphics, since around 2010, some advanced programmers and engineers started to use GPU's high parallel computing power for calculations other than graphics, such as scientific computations.
 This idea is called **General-purpose computing on GPU** or **GPGPU**.
 Due to its chip design, GPGPU is suitable for simple and regular operations such as matrix operations, and can achieve much higher speed than CPUs.
 Currently, GPGPU is employed in many fields such as molecular dynamics, weather simulation, and machine learning.
 
-The operation that occurs most frequently in deep learning is the **convolution** operation, which transfers the output of a neuron to the neuron in the next layer (<<fig:convolution>>).
+The operation that occurs most frequently in deep learning is the **convolution** operation, which transfers the output of neurons to the neurons in the next layer (<<fig:convolution>>).
 Convolution is exactly the kind of operations that GPUs are good at, and by using GPUs instead of CPUs, learning can be dramatically accelerated, up to several hundred times.
 
 [[fig:convolution]]
@@ -98,9 +97,9 @@ Thus, GPUs are indispensable for machine learning calculations.
 However, they are quite expensive.
 For example, NVIDIA's Tesla V100 chip, designed specifically for scientific computing and machine learning, is priced at about one million yen (ten thousand dollars).
 One million yen is quite a large investment just to start a machine learning project.
-The good news is, if you use the cloud, you can use a GPU with zero initial cost!
+The good news is, if you use the cloud, you can use GPUs with zero initial cost!
 
-To use GPUs in the cloud, you need to select an EC2 instance type equipped with GPUs, such as `P2`, `P3`, `G3`, and `G4` instance type.
+To use GPUs in AWS, you need to select an EC2 instance type equipped with GPUs, such as `P2`, `P3`, `G3`, and `G4` instance family.
 <<table_gpu_instances>> lists representative GPU-equipped instance types as of this writing.
 
 [[table_gpu_instances]]

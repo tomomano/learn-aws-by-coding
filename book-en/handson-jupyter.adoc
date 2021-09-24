@@ -199,13 +199,13 @@ $ source .env/bin/activate
 $ pip install -r requirements.txt
 
 # Generate SSH key
-$ export KEY_NAME="HirakeGoma"
+$ export KEY_NAME="OpenSesame"
 $ aws ec2 create-key-pair --key-name ${KEY_NAME} --query 'KeyMaterial' --output text > ${KEY_NAME}.pem
-$ mv HirakeGoma.pem ~/.ssh/
-$ chmod 400 ~/.ssh/HirakeGoma.pem
+$ mv OpenSesame.pem ~/.ssh/
+$ chmod 400 ~/.ssh/OpenSesame.pem
 
 # Deploy!
-$ cdk deploy -c key_name="HirakeGoma"
+$ cdk deploy -c key_name="OpenSesame"
 ----
 
 [WARNING]
@@ -228,7 +228,7 @@ To connect to Jupyter Notebook, which we will be using later, we must log in wit
 
 [source, bash]
 ----
-$ ssh -i ~/.ssh/HirakeGoma.pem -L localhost:8931:localhost:8888 ec2-user@<IP address>
+$ ssh -i ~/.ssh/OpenSesame.pem -L localhost:8931:localhost:8888 ec2-user@<IP address>
 ----
 
 Port forwarding means that the connection to a specific address on the client machine is forwarded to a specific address on the remote machine via SSH encrypted communication.
