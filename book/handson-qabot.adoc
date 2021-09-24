@@ -1,49 +1,42 @@
 [[sec_fargate_qabot]]
 == Hands-on #3: AWS で自動質問回答ボットを走らせる
 
-ハンズオン第三回では，前章で学んだ Docker と ECS を使うことで，大規模化可能な機械学習システムの最もシンプルなものを実装する．
-
-具体的には， Transformer とよばれる深層学習のモデルを使った自然言語処理を利用することで，
-英語で与えられた質問への回答を自動で生成するボットを作成してみる．
-とくに，何百何千もの質問に同時に対応できるように，単一のサーバーに展開するのではなく，リクエストに応じて複数のサーバーを自動的に起動し，並列でジョブを実行させるシステムを設計する．
-まさに，初歩的ながら， Siri・Alexa・Google assistant のようなシステムを作り上げるのである！
-
-ハンズオンのソースコードは GitHub の
-https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot[/handson/qa-bot]
-にある．
+ハンズオン第三回では， Docker と ECS を駆使した機械学習アプリケーションを実装しよう．
+具体的には，深層学習による自然言語処理を行うことで，クライアントから与えられた文章題に対して回答を生成する，自動 Question & Answering ボットを作成しよう．
+ECS を利用することで，ジョブの数によって動的にインスタンスの数を制御し，並列にタスクを実行するようなシステムを構築しよう．
 
 [NOTE]
 ====
 通常の機械学習のワークフローでは，モデルの訓練 => 推論 (データへの適用) が基本的な流れである．
-しかしながら， GPU を使ったモデルの訓練はやや難易度が高いため，次章 (<<sec_aws_batch>>) で取り扱う．
-本章は，クラウド上でのクラスターの構築・タスクの管理などの概念に慣れるため，よりシンプルな実装で実現できる推論計算の並列化を紹介する．
-====
-
-[WARNING]
-====
-このハンズオンでは 1CPU/4GB RAM の Fargate インスタンスを使用する．
-計算の実行には 0.025 $/hour のコストが発生することに注意．
+しかしながら， GPU 搭載型の EC2 クラスターを使ったモデルの訓練はやや難易度が高いため，次章 (<<sec_aws_batch>>) で取り扱う．
+本章は，クラウド上でのクラスターの構築・タスクの管理などの概念に慣れるため，よりシンプルな実装で実現できるFargate クラスターを用いた推論計算の並列化を紹介する．
 ====
 
 === Fargate
 
-.Fargate のロゴ
-image::imgs/aws_logos/Fargate.png[Fargate, 100]
+ハンズオンに入っていく前に， **Fargate** という AWS の機能を知っておく必要がある (<<fig:fargate_logo>>)．
 
-ハンズオンに入っていく前に， **Fargate** という AWS の機能を知っておく必要がある．
+[[fig:fargate_logo]]
+.Fargate のアイコン
+image::imgs/aws_logos/Fargate.png[Fargate, 100]
 
 ECS の概要を示した <<ecs_overview>> をもう一度見てみよう．
 この図で， ECS の管理下にあるクラスターが示されているが，このクラスターの中で計算を行う実体としては二つの選択肢がある．
 **EC2 あるいは Fargate** のいずれかである．
 EC2 を用いた場合は，先の章 (<<sec_first_ec2>>, <<sec_jupyter_and_deep_learning>>) で説明したような流れでインスタンスが起動し，計算が実行される．
-しかし， EC2 クラスターの作成・管理は技術的な難易度がやや高いので，次章 (<<sec_aws_batch>>) で説明することにする．
+しかし， EC2 を用いた計算機クラスターの作成・管理は技術的な難易度がやや高いので，次章 (<<sec_aws_batch>>) で説明することにする．
 
 Fargate とは， **ECS での利用に特化**して設計された，**コンテナを使用した計算タスク**を走らせるための仕組みである．
 計算を走らせるという点では EC2 と役割は似ているが， Fargate は EC2 インスタンスのような物理的実体はもたない．
-ECS の利用に専用設計がなされているがために， ECS のクラスターとして Fargate を選択すると，とても簡単な設定・プログラムで，非常にパワフルかつスケーラブルな計算システムを構築できる．
+物理的実体をもたないというのは，たとえば SSH でログインすることは基本的に想定されていないし，なにかのソフトウェアをインストールしたりなどの概念も存在しない．
+Fargate ではすべての計算は Docker コンテナを介して行われる．
+すなわち， Fargate を利用するには，ユーザーは最初に所望の Docker イメージを指定しておき， Fargate は `docker run` のコマンドを使用することで計算タスクを実行する．
+Fargate を用いる利点は， Fargate を ECS のクラスターに指定すると，スケーリングなどの操作が簡単な設定・プログラムで構築できる点である．
 
 Fargate では， EC2 と同様に CPU とメモリーのサイズを必要な分だけ指定できる．
-執筆時点では， CPU は 0.25 - 4 コア， RAM は 0.5 - 30 GB の間で選択することができる (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html[公式ドキュメンテーション参照])．
+執筆時点では， CPU は 0.25 - 4 コア， RAM は 0.5 - 30 GB の間で選択することができる (詳しくは
+https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html[公式ドキュメンテーション "Amazon ECS on AWS Fargate"]
+参照)．
 クラスターのスケーリングが容易な分， Fargate では EC2 ほど大きな CPU コア・ RAM 容量を単一インスタンスに付与することができず，また GPU を利用することもできない．
 
 以上が Fargate の概要であったが，くどくど言葉で説明してもなかなかピンとこないだろう．
@@ -54,20 +47,20 @@ Fargate では， EC2 と同様に CPU とメモリーのサイズを必要な�
 厳密には， ECS に付与するクラスターには EC2 と Fargate のハイブリッドを使用することも可能である．
 ====
 
-[TIP]
-====
-"Fargate は EC2 インスタンスのような物理的実体はもたない"，と前述したが，少し語弊があるかもしれない．
-Fargate も，データセンターのどこかの CPU 上で起動するので，物理的な実体はどこかには必ず存在する．
-しかし，EC2 インスタンスと違って，たとえば SSH でログインすることは基本的に想定されていないし，なにかのソフトウェアをインストールしたりなどの概念も存在しない
-(基本的に Docker のコンテナを介してすべてのプログラムが実行される)．
-その意味で "物理的実体をもたない" と表現したのである．
-実は， Fargate は <<sec_serverless>> で紹介する， serverless architecture の重要な構成要素の一つである．
-====
-
 === 準備
 
+ハンズオンのソースコードは GitHub の
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot[handson/qa-bot]
+にある．
+
 本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<<handson_01_prep>>) が整っていることを前提とする．
-それ以外に必要な準備はない．
+また， Docker が自身のローカルマシンにインストール済みであることも必要である．
+
+[WARNING]
+====
+このハンズオンでは 1CPU/4GB RAM の Fargate インスタンスを使用する．
+計算の実行には 0.025 $/hour のコストが発生することに注意．
+====
 
 === Transformer を用いた question-answering プログラム
 
@@ -93,16 +86,21 @@ answer: 1921
 今回は， https://github.com/huggingface/transformers[huggingface/transformers] で公開されている学習済みの言語モデルを利用することで，上で定義した問題を解く Q&A ボットを作る．
 この Q&A ボットは https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)[Transformer]
 とよばれるモデルを使った自然言語処理に支えられえている (<<transformer_architecture>>)．
-このプログラムを， Docker にパッケージしたものが https://hub.docker.com/repository/docker/tomomano/qabot に用意してある．
+このプログラムを， Docker にパッケージしたものが
+https://hub.docker.com/repository/docker/tomomano/qabot[著者の Docker Hub リポジトリ]
+に用意してある．
 クラウドの設計に入る前に，まずはこのプログラムを単体で動かしてみよう．
-
-なお，今回は学習済みのモデルを用いているので，私達が行うのは与えられた入力をモデルに投入して予測を行う (推論) のみである．
-推論の演算は， CPU だけでも十分高速に行うことができるので，コストの削減と，よりシンプルにシステムを設計する目的で，このハンズオンでは GPU は利用しない．
-一般的に， ニューラルネットは学習のほうが圧倒的に計算コストが大きく，そのような場合に GPU はより威力を発揮する．
 
 [[transformer_architecture]]
 .Transformer モデルアーキテクチャ (画像出典: https://arxiv.org/abs/1706.03762[Vaswani+ 2017])
 image::imgs/transformer.png[transformer, 400, align="center"]
+
+[NOTE]
+====
+なお，今回は学習済みのモデルを用いているので，私達が行うのは与えられた入力をモデルに投入して予測を行う (推論) のみである．
+推論の演算は， CPU だけでも十分高速に行うことができるので，コストの削減と，実装をシンプルにする目的で，このハンズオンでは GPU は利用しない．
+一般的に， ニューラルネットは学習のほうが圧倒的に計算コストが大きく，そのような場合に GPU はより威力を発揮する．
+====
 
 次のコマンドで，今回使う Docker image を ローカルにダウンロード (pull) してこよう．
 
@@ -112,11 +110,18 @@ $ docker pull tomomano/qabot:latest
 ----
 
 pull できたら，早速この Docker に質問を投げかけてみよう．
+まずは context とquestion をコマンドラインの変数として定義する．
 
 [source, bash]
 ----
 $ context="Albert Einstein (14 March 1879 – 18 April 1955) was a German-born theoretical physicist who developed the theory of relativity, one of the two pillars of modern physics (alongside quantum mechanics). His work is also known for its influence on the philosophy of science. He is best known to the general public for his mass–energy equivalence formula E = mc2, which has been dubbed the world's most famous equation. He received the 1921 Nobel Prize in Physics for his services to theoretical physics, and especially for his discovery of the law of the photoelectric effect, a pivotal step in the development of quantum theory."
 $ question="In what year did Einstein win the Nobel prize ?"
+----
+
+そうしたら，次のコマンドによってコンテナを実行する．
+
+[source, bash]
+----
 $ docker run tomomano/qabot "${context}" "${question}" foo --no_save
 ----
 
@@ -131,7 +136,6 @@ $ docker run tomomano/qabot "${context}" "${question}" foo --no_save
 
 "score" は正解の自信度を表す数字で， [0,1] の範囲で与えられる．
 "start", "end" は， context 中の何文字目が正解に相当するかを示しており， "answer" が正解と予測された文字列である．
-
 1921 年という，正しい答えが返ってきていることに注目してほしい．
 
 もう少し難しい質問を投げかけてみよう．
@@ -177,14 +181,15 @@ image::imgs/handson-03/handson-03-architecture.png[hands-on 03 architecture, 600
 
 * クライアントは，質問を AWS 上のアプリケーションに送信する．
 * 質問のタスクは ECS によって処理される．
-* ECS は， Docker Hub から， Docker image をダウンロードする．
-* 次に，ECS はクラスター内に新たな Fargate インスタンスを立ち上げ，ダウンロードされた Docker image をこの新規インスタンスに配置する．
+* ECS は， Docker Hub から，イメージをダウンロードする．
+* 次に，ECS はクラスター内に新たな Fargate インスタンスを立ち上げ，ダウンロードされた Docker イメージをこの新規インスタンスに配置する．
 ** このとき，一つの質問に対し一つの Fargate インスタンスを立ち上げることで，複数の質問を並列的に処理できるようにする．
 * ジョブが実行される．
 * ジョブの実行結果 (質問への回答) は， データベース (DynamoDB) に書き込まれる．
 * 最後に，クライアントは DynamoDB から質問への回答を読み取る．
 
-それでは，プログラムのソースコードを見てみよう (https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/qa-bot/app.py[/handson/qa-bot/app.py])．
+それでは，プログラムのソースコードを見てみよう
+(https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/app.py[handson/qa-bot/app.py])．
 
 [source, python, linenums]
 ----
@@ -241,16 +246,17 @@ class EcsClusterQaBot(core.Stack):
             ),
         )
 ----
-<1> ここでは，回答の結果を書き込むためのデータベースを用意している． DynamoDB については， Serverless architecture の章で扱うので，今は気にしなくてよい．
+<1> ここでは，回答の結果を書き込むためのデータベースを用意している．
+DynamoDB については，サーバーレスアーキテクチャの章で扱うので，今は気にしなくてよい．
 <2> ここでは，ハンズオン #1, #2 で行ったのと同様に， VPC を定義している．
 <3> ここで， ECS のクラスター (cluster) を定義している．
 クラスターとは，仮想サーバーのプールのことであり，クラスターの中に複数の仮想インスタンスを配置する．
 <4> ここで，実行するタスクを定義している (task definition)．
-<5> ここで， タスクの実行で使用する Docker image を定義している．
+<5> ここで， タスクの実行で使用する Docker イメージを定義している．
 
 ==== ECS と Fargate
 
-ECS と Fargate の部分について，コードをくわしく見てみてみよう．
+ECS と Fargate の部分について，コードをくわしく見てみよう．
 
 [source, python, linenums]
 ----
@@ -347,22 +353,33 @@ $ cdk deploy
 .CDKデプロイ実行後の出力
 image::imgs/handson-03/cdk_output.png[cdk output, 700, align="center"]
 
-AWS コンソールにログインして，デプロイされたスタックを確認してみよう．
+AWS コンソールにログインして，デプロイされたスタックの中身を確認してみよう．
 コンソールから，ECS のページに行くと <<handson_03_ecs_console>> のような画面が表示されるはずである．
+`EcsClusterQaBot-XXXX` という名前ついたクラスターを見つけよう．
 
 Cluster というのが，先ほど説明したとおり，複数の仮想インスタンスを束ねる一つの単位である．
-この時点では一つもタスクが走っていないので，タスクの数字はすべて0になっている．
-この画面にはまたすぐ戻ってくるので，開いたままにしておこう．
+<<handson_03_ecs_console>> で， FARGATE という文字の下に `0 Running tasks`, `0 Pending tasks` と表示されていることを確認しよう．
+この時点では一つもタスクが走っていないので，数字はすべて0になっている．
 
 [[handson_03_ecs_console]]
 .ECS コンソール画面
 image::imgs/handson-03/ecs_console.png[ecs_console, 700, align="center"]
 
+続いて，この画面の左のメニューバーから `Task Definitions` という項目を見つけ，クリックしよう．
+移動した先のページで `EcsClusterQaBotEcsClusterQaBotTaskDefXXXX` という項目が見つかるので，開く．
+開いた先のページをスクロールすると <<handson_03_ecs_task_definition>> に示したような情報が見つかるだろう．
+使用する CPU ・メモリーの量や， Docker container の実行に関する設定などが，この Task Definition の画面から確認することができる．
+
+[[handson_03_ecs_task_definition]]
+.Task definition の確認
+image::imgs/handson-03/ecs_task_definition.png[task_definition, 700, align="center"]
+
 === タスクの実行
 
-それでは，早速，質問を実行してみよう．
+それでは，質問をデプロイしたクラウドに提出してみよう．
 
-ECS にタスクを投入するのはやや複雑なので，タスクの投入を簡単にするプログラム (`run_task.py`) を用意した (https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/run_task.py[/handson/qa-bot/run_task.py])．
+ECS にタスクを投入するのはやや複雑なので，タスクの投入を簡単にするプログラム (`run_task.py`) を用意した
+(https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/run_task.py[handson/qa-bot/run_task.py])．
 
 次のようなコマンドで，ECSクラスターに新しい質問を投入することができる．
 
@@ -376,10 +393,10 @@ $ python run_task.py ask "A giant peach was flowing in the river. She picked it 
 `run_task.py` を実行するには， コマンドラインで AWS の認証情報が設定されていることが前提である．
 ====
 
-"ask" の引数に続き，文脈 (context) と質問を引数として渡している．
+"ask" の引数に続き，文脈 (context) と質問 (question) を引数として渡している．
 
 このコマンドを実行すると， "Waiting for the task to finish..." と出力が表示され，回答を得るまでしばらく待たされる．
-この間， AWS では ECS がタスクを受理し，新しい Fargate のインスタンスを起動し， Docker image をそのインスタンスに配置する，という一連の処理がなされている．
+この間， AWS では ECS がタスクを受理し，新しい Fargate のインスタンスを起動し， Docker イメージをそのインスタンスに配置する，という一連の処理がなされている．
 AWS コンソールから，この一連の様子をモニタリングしてみよう．
 
 先ほどの ECS コンソール画面にもどり，クラスターの名前をクリックすることで，クラスターの詳細画面を開く．
@@ -398,7 +415,7 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 
 <<ecs_task_monitoring>> の画面から， "Task" の列にあるタスクIDクリックすることで，タスクの詳細画面を開いてみよう (<<ecs_task_detail>>)．
 "Last status", "Platform version" など，タスクの情報が表示されている．
-また， "Logs" のタブを開くことで， container の吐き出した実行ログを閲覧することができる．
+また， "Logs" のタブを開くことで，コンテナの吐き出した実行ログを閲覧することができる．
 
 [[ecs_task_detail]]
 .質問タスクの実行結果
@@ -415,9 +432,9 @@ image::imgs/handson-03/ask_question_output.png[ask_question_output, 700, align="
 
 さて，先ほどはたった一つの質問を投入したわけだが，今回設計したアプリケーションは， ECS と Fargate を使うことで同時にたくさんの質問を処理することができる．
 実際に，たくさんの質問を一度に投入してみよう．
-
 `run_task.py` に `ask_many` というオプションを付けることで，複数の質問を一度に送信できる．
-質問の内容は https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/problems.json[/handson/qa-bot/problems.json] に定義されている．
+質問の内容は
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/qa-bot/problems.json[handson/qa-bot/problems.json] に定義されている．
 
 次のようなコマンドを実行しよう．
 
@@ -450,7 +467,8 @@ image::imgs/handson-03/ask_many_output.png[ask_many_output, 700, align="center"]
 
 おめでとう！
 ここまでついてこれた読者はとても初歩的ながらも，深層学習による言語モデルを使って自動で質問への回答を生成するシステムを創り上げることができた！
-それも，数百の質問にも同時に対応できるような，とても高いスケーラビリティをもったシステムである！
+それも，数百の質問にも同時に対応できるような，とても高いスケーラビリティーをもったシステムである！
+今回は GUI (Graphical User Interface) を用意することはしなかったが，このシステムに簡単な GUI を追加すればなかなか立派なウェブサービスとして運用できるだろう．
 
 [NOTE]
 ====
@@ -461,7 +479,6 @@ image::imgs/handson-03/ask_many_output.png[ask_many_output, 700, align="center"]
 ----
 $ python run_task.py clear
 ----
-
 ====
 
 === スタックの削除
@@ -469,7 +486,8 @@ $ python run_task.py clear
 これにて，今回のハンズオンは終了である．
 最後にスタックを削除しよう．
 
-スタックを削除するには，次のコマンドを実行すればよい．
+スタックを削除するには，前回までと同様に， AWS コンソールにログインし CloudFormation の画面から DELETE ボタンをクリックするか，コマンドラインからコマンドを実行する．
+コマンドラインから行う場合は，次のコマンドを使用する．
 
 [source, bash]
 ----
