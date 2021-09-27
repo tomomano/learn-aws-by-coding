@@ -4,44 +4,51 @@
 ハンズオン第三回では， ECS と Fargate を使って自動質問回答システムを構築した．
 シンプルながらも，複数の質問が送られた場合には並列にジョブが実行され，ユーザーに答えが返されるシステムを作ることができた．
 ここでは，すでに学習済みの言語モデルを用いてアプリケーションを構築した．
-しかし，機械学習のワークフローでは，自分で作ったモデルを訓練することが最初のステップにあるはずである．
+しかし，一般的に言って，機械学習のワークフローでは自分で作ったモデルを訓練することが最初のステップにあるはずである．
 そこで，ハンズオン第四回では，クラウドを用いて機械学習の訓練を並列化・高速化することを考える．
 
-具体的には，本ハンズオンでは深層学習におけるハイパーパラメータ最適化を取り上げる．
+本ハンズオンでは深層学習におけるハイパーパラメータ最適化を取り上げる．
 ハイパーパラメータとは，勾配降下法によって最適化されるニューラルネットのパラメータの外にあるパラメータのことであり，具体的にはモデルの層の幅・深さなどネットワークのアーキテクチャに関わるもの，学習率やモメンタムなどパラメータの更新則に関わるものなどが含まる．
 深層学習においてハイパーパラメータの調整はとても重要なタスクである．
 しかしながら，ハイパーパラメータを調整するには，少しずつ条件を変えながら何度もニューラルネットを学習させる必要があり，多くの計算時間がかかる．
-本ハンズオンでは，クラウドの強力な計算リソースを利用して並列的にニューラルネットの訓練を実行することで，この問題を高速に解く方法を学んでいこう．
+研究・開発においては，スループットよくたくさんのモデルの可能性を探索することが生産性を決める重要なファクターであり，ハイパーパラメータ探索を高速に解くという問題は極めて関心が高い．
+本ハンズオンでは，クラウドの強力な計算リソースを利用して並列的にニューラルネットの訓練を実行することで，この問題を解く方法を学んでいこう．
 
-このハンズオンは，本書で扱うハンズオンの中でも最も難易度が高いものだ (もう少し正確に言うなら，最もステップ数が多い)．
-内容が少し難しく感じる読者もいるかもしれないが，頑張ってついてきてほしい．
+=== Auto scaling groups (ASG)
 
-=== Auto Scaling group (ASG)
-
-ハンズオンに入っていく前に， **Auto Scaling group (ASG)** とよばれる EC2 の概念を知っておく必要がある．
+ハンズオンに入っていく前に， **Auto scaling groups (ASG)** とよばれる EC2 の概念を知っておく必要がある．
 
 ECS の概要を示した <<ecs_overview>> を振り返って見てほしい．
 前章 (<<sec_fargate_qabot>>) でも説明したが， ECS のクラスターで計算を担う実体としては EC2 と Fargate を指定することができる．
 Fargate については前章で記述した．
 Fargate を用いると，自在にスケールする計算環境をとても簡単な設定で構築することができた．
 しかし， GPU を利用することができないなど，いくつかの制約があった．
-EC2 を使用した計算環境を指定することで，設定の複雑度は増すが， GPU やその他のより高度かつ複雑な設定を伴ったクラスターを構築することができる．
-クラスターで EC2 を用いる場合について，以下に簡単な説明を行う．
+EC2 を使用した計算環境を指定することで，プログラミングの複雑度は増すが， GPU やその他のより高度かつ複雑な設定を伴ったクラスターを構築することができる．
 
 EC2 クラスターには **ASG** と呼ばれるサービスが配置される．
-ASG はクラスターのスケーリングを担っており，ASG によって新しいインスタンスの起動や，不要になったインスタンスの停止が実行される．
-どのような基準でインスタンスの起動・停止を行うかのルールのことを，**スケーリングポリシー**とよぶ．
-ASG にはユーザーの指定したスケーリングポリシーを定義することが可能である．
-たとえば，クラスター全体の稼働率 (負荷) を 80% に維持する，かつ，起動インスタンスの上限は100台とする，などのポリシーを設定できる．
-あるいはユーザーの作成したカスタムのプログラムでスケーリングを制御することも可能である．
-ECS と ASG が協調することで，フレキシブルかつ効率的なタスクの配置とクラスターのスケーリングが可能になるのである．
+ASG は複数の EC2 インスタンスをロジカルな単位でグループ化することでクラスターを構成する．
+ASG はクラスター内に新しいインスタンスを起動する，あるいは不要になったインスタンスを停止するなどのスケーリングを担う．
+ASG で重要な概念として， **desired capacity**, **minimum capacity**, **maximum capacity** というパラメータがある．
+minimum capacity， maximum capacity は，それぞれクラスター内に配置できるインスタンスの数の最小値・最大値を指定するパラメータである．
+前者は，クラスターに負荷がかかっていない場合でもアイドリング状態にあるインスタンスを維持することで，急に負荷が増大した時などのバッファーとして作用することができる．
+後者は，負荷が急に増えたときに，過剰な数のインスタンスが起動する事態を防ぎ，経済的なコストの上限を定める役割を果たす．
+
+desired capacity が，その時々でシステムが要求するインスタンスの数を指定する．
+desired capacity は，例えば24時間のリズムに合わせてインスタンスの数を増減させる (昼は多く夜は少なくなど) などの決まったスケジュールに基づいた設定を適用することができる．
+あるいはクラスター全体にかかっている負荷に応じて， desired capacity を動的に制御することも可能である．
+どのような基準でクラスターのスケーリングを行うかを定めるルールのことを，**スケーリングポリシー**とよぶ．
+たとえば，クラスター全体の稼働率 (負荷) を常に 80% に維持する，などのスケーリングポリシーが想定できる．
+この場合，クラスター全体の負荷が80%を下回ったときにはクラスターからインスタンスが削除され，80%を超える (あるいは超えると予測される) 場合はインスタンスを追加する，という操作が ASG によって自動的に行われる．
+
+上記のようなパラメータを検討し，ユーザーは ASG を作成する．
+ASG を作成したのち， ECS との連携をプログラムしてあげることで， ECS を介して ASG による EC2 クラスターにタスクを投入することが可能になる．
 
 === AWS Batch
 
-.AWS Batch のロゴ
+.AWS Batch のアイコン
 image::imgs/aws_logos/Batch.png[Batch, 100]
 
-上記で説明したように， ECS と ASG を組み合わせることで，所望の計算クラスターを構築することが可能である．
+先に説明したように， ECS と ASG を組み合わせることで，所望の計算クラスターを構築することが可能である．
 しかしながら， ECS と ASG にはかなり込み入った設定が必要であり，初心者にとっても経験者にとってもなかなか面倒なプログラミングが要求される．
 そこで， ECS と ASG によるクラスターの設計を自動化してくれるサービスが提供されている．
 それが **AWS Batch** である．
@@ -54,16 +61,16 @@ AWS Batch を用いることの利点は，クラスターのスケーリング�
 が，知識として背後では ECS/ASG/EC2 の三つ巴が協調して動作しているという点は知っておいてほしい．
 
 AWS Batch では，ジョブの投入・管理をスムーズに行うため，次のような概念が定義されている (<<fig_batch_concept>>)．
-まず， **Job** というのが，AWS Batch によって実行される一つの計算の単位である．
-**Job definitions** とは Job の内容を定義するものであり，これには実行されるべき Docker のイメージのアドレスや，割り当てる CPU・RAM の容量，環境変数などの設定が含まれる．
-Job definition に基づいて個々の Job が実行される．
-Job が実行されると， Job は **Job queues** に入る．
+まず， **ジョブ (Job)** というのが，AWS Batch によって実行される一つの計算の単位である．
+**Job definitions** とはジョブの内容を定義するものであり，これには実行されるべき Docker のイメージのアドレスや，割り当てる CPU・RAM の容量，環境変数などの設定が含まれる．
+Job definition に基づいて個々のジョブが実行される．
+ジョブが実行されると，ジョブは **Job queues** に入る．
 Job queues とは，実行待ち状態にあるジョブの列のことであり，時間的に最も先頭に投入されたジョブが最初に実行される．
-また，複数の queue を配置し， queue ごとに priority (優先度) を設定することが可能であり， priority の高い queue に溜まった Job が優先的に実行される
+また，複数の queue を配置し， queue ごとに priority (優先度) を設定することが可能であり， priority の高い queue に溜まったジョブが優先的に実行される
 (筆者はこれをディズニーランドの"ファストパス"を連想して捉えている)．
 **Compute environment** とは，先述したクラスターとほぼ同義の概念であり，計算が実行される場所 (EC2 や Fargate からなるクラスター) を指す．
 Compute environment には，使用する EC2 のインスタンスタイプや同時に起動するインスタンス数の上限などの簡易なスケーリングポリシーが指定されている．
-Job queues は Compute environment の空き状況を監視しており， それに応じて Job を Compute environment に投下する．
+Job queues は Compute environment の空き状況を監視しており， それに応じてジョブを Compute environment に投下する．
 
 以上が AWS Batch を使用するうえで理解しておかなければならない概念であるが，くどくど言葉で説明してもなかなかピンとこないだろう．
 ここからは，実際に自分で手を動かしながら学んでいこう．
@@ -72,10 +79,78 @@ Job queues は Compute environment の空き状況を監視しており， そ�
 .AWS Batch の主要な概念
 image::imgs/aws_batch/batch_concepts.png[batch concepts, 700, align="center"]
 
+[TIP]
+====
+**EC2 or Fargate?**
+
+ECS でクラスターを構成する際，計算を実行する場として EC2 と Fargate の二つの選択肢があることを説明した．
+それぞれ長所と短所を抱えているのだが，どのような場合にどちらを使うべきだろうか？
+それを検討するため，まずは <<tab:ec2_vs_fargate>> を見てみよう．
+これはEC2 と Fargate の特徴をまとめたものである．
+説明の都合上，大幅な粗視化が行われている点は留意していただきたい．
+
+[[tab:ec2_vs_fargate]]
+[cols="1,1,1", options="header"]
+.EC2 vs Fargate
+|===
+|
+|EC2
+|Fargate
+
+|Compute capacity
+|Medium to large
+|Small to medium
+
+|GPU
+|Yes
+|No
+
+|Launch speed
+|Slow
+|Fast
+
+|Task placement flexibility
+|Low
+|High
+
+|Programming complexity
+|High
+|Low
+|===
+
+これまでに見てきたように， EC2 は最大の CPU 数・メモリーサイズが大きかったり， GPU を利用できたりするなど，単一のインスタンスでの計算能力は高い．
+対して， Fargate は単一インスタンスの最大 CPU 数は4コアが上限である．
+その一方で，インスタンスの起動に要する時間は Fargate のほうが圧倒的に早く，より俊敏にクラスターのスケーリングを行うことができる．
+また，タスクをクラスターに投入する際のフレキシビリティも Fargate のほうが高い．
+フレキシビリティというのは，例えば一つのインスタンスで2つ以上のコンテナを走らせる，などの状況である．
+単位 CPU あたりで処理されるタスクの数を最大化する際には，このような設計がしばしば採用される．
+プログラミングの複雑さという観点からは， Fargate のほうが一般的にシンプルな実装になる．
+
+このように， EC2 と Fargate は互いに相補的な特性を有しており，アプリケーションによって最適な計算環境は検討される必要がある．
+また，EC2 と Fargate を両方用いたハイブリッドクラスターというのも定義可能であり，そのような選択肢もしばしば用いられる．
+====
+
 === 準備
 
+ハンズオンのソースコードは GitHub の
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/aws-batch[handson/aws-batch]
+にある．
+
 本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<<handson_01_prep>>) が整っていることを前提とする．
-それ以外に必要な準備はない．
+また， Docker が自身のローカルマシンにインストール済みであることも必要である．
+
+[WARNING]
+====
+このハンズオンは， `g4dn.xlarge` タイプの EC2 インスタンスを使うので，アメリカ東部 (`us-east-1`) リージョンでは 0.526 $/hour のコストが発生する．
+東京 (`ap-northeast-1`) を選択した場合は 0.71 $/hour のコストが発生する．
+====
+
+[WARNING]
+====
+<<sec:jupyter_and_deep_learning_setup>> でも注意したが，このハンズオンを始める前に G タイプインスタンスの起動上限を AWS コンソールの EC2 管理画面から確認しよう．
+もし上限が0になっていた場合は，上限緩和の申請を行う必要がある．
+<<sec:aws_batch_code>> にも関連した情報を記載しているので，併せて参照されたい．
+====
 
 === MNIST 手書き文字認識 (再訪)
 
@@ -90,7 +165,7 @@ image::imgs/aws_batch/batch_concepts.png[batch concepts, 700, align="center"]
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 ----
 
-ここで使用された 学習率 (`lr=0.01`) や モメンタム (`momentum=0.5`) は恣意的に選択された値であり，これがベストな数値であるのかはわからない．
+ここで使用された 学習率 (`lr=0.01`) やモメンタム (`momentum=0.5`) は恣意的に選択された値であり，これがベストな数値であるのかはわからない．
 たまたまこのチョイスが最適であるかもしれないし，もっと高い精度を出すハイパーパラメータの組が存在するかもしれない．
 この問題に答えるため，ハイパーパラメータサーチを行おう．
 今回は，最もシンプルなアプローチとして，**グリッドサーチ**によるハイパーパラメータサーチを行おう．
@@ -115,22 +190,21 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 この章ではこのようなタイプの並列計算を取り上げる．
 
 一方，ベイズ最適化による方法は，過去の結果をもとに次の探索が決定されるので，並列化はそれほど単純ではない．
-最近では https://optuna.org/[Optuna] などのハイパーパラメータ探索のためのライブラリが発達しており，ベイズ最適化の数理的な処理を自動で実行してくれるので便利である．
+最近では https://optuna.org/[optuna] などのハイパーパラメータ探索のためのライブラリが発達しており，ベイズ最適化の数理的な処理を自動で実行してくれるので便利である．
 これらのライブラリを使うと，もし一台のコンピュータ (ノード) の中に複数の GPU が存在する場合は，並列に計算を実行することができる．
 しかしながら，一台のノードにとどまらず，複数のノードをまたいだ並列化は，高度なプログラミングテクニックが必要とされるだけでなく，ノード間の接続様式などクラウドのアーキテクチャにも深く依存するものである．
 本書ではここまで高度なクラウドの使用方法には立ち入らない．
 ****
 
-[[sec_run_mnist_docker_local]]
-=== ローカルで Docker を実行
+まずは，本ハンズオンで使用する Docker イメージをローカルで実行してみよう．
 
-まずは，本ハンズオンで使用する Docker image をローカルで実行してみよう．
-
-Docker image のソースコードは https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/aws-batch/docker[handson/aws-batch/docker] にある．
+Docker イメージのソースコードは
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/docker[handson/aws-batch/docker]
+にある．
 基本的に <<sec_mnist_using_jupyter>> のハンズオンを元にし，本ハンズオン専用の軽微な変更が施してある．
 興味のある読者はソースコードも含めて読んでいただきたい．
 
-練習として，この Docker image を手元でビルドするところからはじめてみよう．
+練習として，この Docker イメージを手元でビルドするところからはじめてみよう．
 `Dockerfile` が保存されているディレクトリに移動し， `mymnist` という名前 (Tag) をつけてビルドを実行する．
 
 [source, bash]
@@ -138,6 +212,15 @@ Docker image のソースコードは https://github.com/tomomano/learn-aws-by-c
 $ cd handson/aws-batch/docker
 $ docker build -t mymnist .
 ----
+
+[WARNING]
+====
+`docker build` でエラーが出たときは次の可能性を疑ってほしい．
+ビルドの中で， MNIST の画像データセットを http://yann.lecun.com/exdb/mnist/ からダウンロードするのだが，ダウンロード先のサーバーがしばしばダウンしている．
+世界中の機械学習ユーザーがアクセスするので，これはしばしば発生するようである．
+サーバーがダウンしているとビルドも失敗してしまう．
+エラーメッセージにそれらしい文言が含まれていたら，この可能性を疑おう．
+====
 
 [NOTE]
 ====
@@ -150,14 +233,14 @@ $ docker pull tomomano/mymnist:latest
 ----
 ====
 
-Image の準備ができたら，次のコマンドでコンテナを起動し，実行する．
+イメージの準備ができたら，次のコマンドでコンテナを起動し， MNIST の学習を実行する．．
 
 [source, bash]
 ----
-$ docker run -it mymnist --lr 0.1 --momentum 0.5 --epochs 100
+$ docker run mymnist --lr 0.1 --momentum 0.5 --epochs 10
 ----
 
-このコマンドを実行すると，指定したハイパーパラメータ (学習率とモメンタム) を使ってニューラルネットの最適化が始まる．
+このコマンドを実行すると，指定したハイパーパラメータ (`--lr` で与えられる学習率と `--momentum` で与えられるモメンタム) を使ってニューラルネットの最適化が始まる．
 学習を行う最大のエポック数は `--epochs` パラメータで指定する．
 <<sec_jupyter_and_deep_learning>> のハンズオンで見たような， Loss の低下がコマンドライン上に出力されるだろう (<<fig_mnist_log_output>>)．
 
@@ -171,7 +254,7 @@ image::imgs/aws_batch/mnist_log_output.png[mnist log, 600, align="center"]
 
 [source, bash]
 ----
-$ docker run -it --gpus all mymnist --lr 0.1 --momentum 0.5 --epochs 100
+$ docker run --gpus all mymnist --lr 0.1 --momentum 0.5 --epochs 10
 ----
 
 このコマンドでは，`--gpus all` というパラメータが加わった．
@@ -196,6 +279,7 @@ MNIST 手書き文字データセットでは，訓練データとして 60,000 
 詳しくはソースコードを参照のこと．
 ====
 
+[[sec:aws_batch_code]]
 === アプリケーションの説明
 
 このハンズオンで作成するアプリケーションの概要を <<fig_batch_architecture>> に示す．
@@ -209,12 +293,13 @@ image::imgs/aws_batch/architecture.png[architecture, 600, align="center"]
 * クライアントは，あるハイパーパラメータの組を指定して Batch にジョブを提出する
 * Batch はジョブを受け取ると， EC2 からなるクラスターで計算を実行する
 * クラスター内では `g4dn.xlarge` インスタンスが起動する
-* Docker image は， AWS 内に用意された ECR (Elastic Container Registry) から取得される
-* 複数のジョブが投下された場合は，その数だけのインスタンスが起動し並列に実行される．
+* Docker イメージは， AWS 内に用意された ECR (Elastic Container Registry) から取得される
+* 複数のジョブが投下された場合は，その数だけのインスタンスが起動し並列に実行される
 * 各ジョブによる計算の結果は S3 に保存される
 * 最後にクライアントは S3 から結果をダウンロードし，最適なハイパーパラメータの組を決定する
 
-それでは，プログラムのソースコードを見てみよう (https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/app.py[handson/aws-batch/app.py])．
+それでは，プログラムのソースコードを見てみよう
+(https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/app.py[handson/aws-batch/app.py])．
 
 [source, python, linenums]
 ----
@@ -302,8 +387,11 @@ class SimpleBatch(core.Stack):
 <1> で，計算結果を保存するための S3 バケットを用意している
 <2> で， Compute environment を定義している．
 ここでは `g4dn.xlarge` のインスタンスタイプを使用するとし，最大の vCPU 使用数は 64 と指定している．
+また，最小の vCPU は 0 である．
+今回は，負荷がかかっていないときにアイドリング状態にあるインスタンスを用意する利点は全くないので，ここは0にするのが望ましい．
 <3> で， <2> で作成した Compute environment と紐付いた Job queue を定義している．
 <4> で， Job が計算結果を S3 に書き込むことができるよう， IAM ロールを定義している．
+(IAM とはリソースがもつ権限を管理する仕組みである．詳しくは <<sec:bashoutter_iam>> を参照)
 <5> では， Docker image を配置するための ECR を定義している．
 <6> で Job definition を作成している．
 ここでは，4 vCPU， 12000 MB (=12GB) の RAM を使用するように指定している．
@@ -312,7 +400,10 @@ class SimpleBatch(core.Stack):
 
 [TIP]
 ====
-`g4dn.xlarge` は 1台あたり 4 vCPU が割り当てられているので，このプログラムで最大の vCPU 使用数が 64 だとすると，最大で 16 台のインスタンスが同時に起動することになる．
+`g4dn.xlarge` は 1台あたり 4 vCPU が割り当てられている．
+このプログラムでは Compute environment の maximum vCPUs を 64 と指定しているので，最大で 16 台のインスタンスが同時に起動することになる．
+ここで maxium vCPUs を64に限定しているのは，なんらかのミスで意図せぬジョブを大量にクラスターに投入してしまった事態で，高額の AWS 利用料金が発生するのを防ぐためである．
+もし，自分のアプリケーションで必要と判断したならば自己責任において64よりも大きな数を設定して構わない．
 
 ここで注意が一点ある．
 AWS では各アカウントごとに EC2 で起動できるインスタンスの上限が設定されている．
@@ -320,7 +411,7 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 `g4dn.xlarge` (EC2 の区分でいうと G ファミリーに属する) の制限を確認するには， `Running On-Demand All G instances` という名前の項目を見る．
 ここにある数字が， AWS によって課されたアカウントの上限であり，この上限を超えたインスタンスを起動することはできない．
 もし，自分の用途に対して上限が低すぎる場合は，上限の緩和申請を行うことができる．
-詳しくは https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html[公式ドキュメンテーション] を参照のこと．
+詳しくは https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html[公式ドキュメンテーション "Amazon EC2 service quotas"] を参照のこと．
 
 [[fig_ec2_limits]]
 .EC2コンソールから各種の上限を確認する
@@ -353,24 +444,42 @@ $ cdk deploy
 コンソールの検索バーで `batch` と入力し， AWS Batch の管理画面を開く (<<fig_batch_console>>)．
 
 [[fig_batch_console]]
-.AWS Batch のコンソール画面 (ダッシュボード)
+.AWSBatch のコンソール画面 (ダッシュボード)
 image::imgs/aws_batch/batch_console.png[batch console, 700, align="center"]
 
 まず目を向けてほしいのが，画面の一番下にある Compute environment overview の中の `SimpleBatchcompute-env` という名前の項目だ．
 Compute environment とは，先ほど述べたとおり，計算が実行される環境 (クラスターと読み替えてもよい) である．
 プログラムで指定したとおり， `g4dn.xlarge` が実際に使用されるインスタンスタイプとして表示されている．
-また，この時点では一つもジョブが走っていないので， `desired vCPUs` は 0 になっている．
+また， `Minimum vCPUs` が0，`Maximum vCPUs` が 64 と設定されていることも見て取れる．
+加えて，この時点では一つもジョブが走っていないので， `Desired vCPUs` は0になっている．
+より詳細な Compute environment の情報を閲覧したい場合は，名前をクリックすることで詳細画面が開く．
 
 次に，Job queue overview にある `SimpleBatch-queue` という項目に注目してほしい．
 ここでは実行待ちのジョブ・実行中のジョブ・実行が完了したジョブを一覧で確認することができる．
+`PENDING`, `RUNNING`, `SUCCEEDED`, `FAILED` などのカラムがあることが確認できる．ジョブが進行するにつれて，ジョブの状態がこのカラムにしたがって遷移していく．
+後でジョブを実際にサブミットしたときに戻ってこよう．
 
+最後に，今回作成した Job definition を確認しよう．
+左側のメニューから　`Job definitions` を選択し，次の画面で `SimpleBatchjob-definition` という項目を見つけて開く．
+ここから Job definition の詳細を閲覧することができる (Figure 8-8)．
+中でも重要な情報としては，　`cVPUs`, `Memory`, `CPU` がそれぞれ Docker に割り当てられる vCPU・メモリー・ GPU の量を規定している．
+また， `Image` と書いてあるところに，ジョブで使用される Docker イメージが指定されている．
+ここでは， ECR のレポジトリを参照している．
+現時点ではこの ECR は空である．
+次のステップとして，この ECR にイメージを配置する作業を行おう．
+
+[[fig:batch_job_definition]]
+.AWS Batch から Job definition を確認
+image::imgs/aws_batch/batch_job_definition.png[batch_job_definition, 700, align="center"]
+
+[[sec:aws_batch_deploy_docker_on_ecr]]
 === Docker image を ECR に配置する
 
-さて， Batch がジョブを実行するには，どこか指定された場所から Docker image をダウンロード (pull) してくる必要がある．
-前回のハンズオン (<<sec_fargate_qabot>>) では，公開設定にしてある Docker Hub から image を pull してきた．
-今回のハンズオンでは， AWS から提供されているコンテナ置き場である **ECR (Elastic Container Registry)** に image を配置するという設計を採用する．
-ECR を利用する利点は，自分だけがアクセスすることのできるプライベートな image の置き場所を用意できる点である．
-Batch は ECR から image を pull してくることで，タスクを実行する (<<fig_batch_architecture>>)．
+さて， Batch がジョブを実行するには，どこか指定された場所から Docker イメージをダウンロード (pull) してくる必要がある．
+前回のハンズオン (<<sec_fargate_qabot>>) では，公開設定にしてある Docker Hub からイメージを pull してきた．
+今回のハンズオンでは， AWS から提供されているレジストリである **ECR (Elastic Container Registry)** に image を配置するという設計を採用する．
+ECR を利用する利点は，自分だけがアクセスすることのできるプライベートなイメージの置き場所を用意できる点である．
+Batch は ECR からイメージを pull してくることで，タスクを実行する (<<fig_batch_architecture>>)．
 
 スタックのソースコードでいうと，次の箇所が ECR を定義している．
 
@@ -392,11 +501,11 @@ job_def = batch.JobDefinition(
 )
 ----
 <1> で，新規の ECR を作成している．
-<2> で Job definition を定義する中で， image を <1> で作った ECR から取得するように指定している．
+<2> で Job definition を定義する中で，イメージを <1> で作った ECR から取得するように指定している．
 これと同時に， Job definition には ECR へのアクセス権限が IAM を通じて自動的に付与される．
 
 さて，スタックをデプロイした時点では， ECR は空っぽである．
-ここに自分のアプリケーションで使う Docker image を push してあげる必要がある．
+ここに自分のアプリケーションで使う Docker イメージを push してあげる必要がある．
 
 そのために，まずは AWS コンソールから ECR の画面を開こう (検索バーに `Elastic Container Registry` と入力すると出てくる)．
 `Private` というタブを選択すると， `simplebatch-repositoryXXXXXX` という名前のレポジトリが見つかるだろう (<<fig_ecr_console1>>)．
@@ -413,7 +522,7 @@ image::imgs/aws_batch/ecr_console1.png[ecr console, 700, align="center"]
 .ECR への push コマンド
 image::imgs/aws_batch/ecr_push_command.png[ecr push command, 700, align="center"]
 
-このポップアップ画面で表示されている４つのコマンドを順番に実行していくことで，手元の Docker image を ECR に push することができる．
+このポップアップ画面で表示されている四つのコマンドを順番に実行していくことで，手元の Docker イメージを ECR に push することができる．
 **push を実行する前に， AWS の認証情報が設定されている**ことを確認しよう．
 そのうえで，ハンズオンのソースコードの中にある **`docker/` という名前のディレクトリに移動**する．
 そうしたら，ポップアップ画面で表示されたコマンドを上から順に実行していく．
@@ -421,13 +530,12 @@ image::imgs/aws_batch/ecr_push_command.png[ecr push command, 700, align="center"
 [NOTE]
 ====
 ポップアップで表示されるコマンドの2つめを見てみると `docker build -t XXXXX .` となっている．
-最後の `.` が重要で，これは __現在のディレクトリにある Dockerfile を使って image をビルドせよ__ という意味である．
+最後の `.` が重要で，これは __現在のディレクトリにある Dockerfile を使ってイメージをビルドせよ__ という意味である．
 このような理由で， `Dockerfile` が置いてあるディレクトリに移動する必要がある．
 ====
 
-4つめのコマンドには少し時間がかかるかもしれないが，これが完了するとめでたく image が ECR に配置されたことになる．
-もう一度 ECR のコンソールを見てみると，確かに image が配置されていることが確認できる (<<fig_ecr_console2>>)．
-
+四つ目のコマンドは，数GBあるイメージを ECR にアップロードするので少し時間がかかるかもしれないが，これが完了するとめでたくイメージが ECR に配置されたことになる．
+もう一度 ECR のコンソールを見てみると，確かにイメージが配置されていることが確認できる (<<fig_ecr_console2>>)．
 これで，AWS Batch を使ってジョブを実行させるための最後の準備が完了した．
 
 [[fig_ecr_console2]]
@@ -436,19 +544,21 @@ image::imgs/aws_batch/ecr_console2.png[ecr console 2, 700, align="center"]
 
 [TIP]
 ====
-今回のハンズオンで紹介するアプリケーションは， Docker image を置き換えることで，ユーザー自身の計算ジョブを実行することが可能である．
-興味のある読者は，自分自身の Docker image を ECR に配置し，ジョブを実行してみると良い．
+今回のハンズオンで紹介するアプリケーションは， Docker イメージを置き換えることで，ユーザー自身の計算ジョブを実行することが可能である．
+<<sec:batch_development_and_debug>> のコラムに手順を紹介しているので，興味のある読者は参照していただきたい．
 ====
 
-=== Job を実行する (まずは一つだけ)
+=== 単一のジョブを実行する
 
 さて，ここからは実際に AWS Batch にジョブを投入する方法を見ていこう．
 
-ハンズオンのディレクトリの `notebook/` というディレクトリの中に， `run_single.ipynb` というファイルが見つかるはずである (`.ipynb` は Jupyter notebook のファイル形式)．
-これを Jupyter Notebook から開こう．
+ハンズオンのディレクトリの `notebook/` というディレクトリの中に，
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/notebook/run_single.ipynb[run_single.ipynb]
+というファイルが見つかるはずである (`.ipynb` は Jupyter notebook のファイル形式)．
+これを Jupyter notebook から開こう．
 
-今回のハンズオンでは， `venv` による仮想環境の中に Jupyter Notebook もインストール済みである．
-なので，以下のコマンドで Jupyter Notebook を立ち上げる．
+今回のハンズオンでは， `venv` による仮想環境の中に Jupyter notebook もインストール済みである．
+なので，ローカルマシンから以下のコマンドで Jupyter notebook を立ち上げる．
 
 [source, bash]
 ----
@@ -457,9 +567,9 @@ image::imgs/aws_batch/ecr_console2.png[ecr console 2, 700, align="center"]
 (.env) $ jupyter notebook
 ----
 
-Jupyter Notebook が起動したら， `run_single.ipynb` を開く．
+Jupyter notebook が起動したら， `run_single.ipynb` を開く．
 
-最初の [1], [2]. [3] 番のセルは，ジョブをサブミットするための関数 (`submit_job()`) を定義している．
+最初の [1], [2], [3] 番のセルは，ジョブをサブミットするための関数 (`submit_job()`) を定義している．
 
 [source, python, linenums]
 ----
@@ -499,13 +609,12 @@ def submit_job(lr:float, momentum:float, epochs:int, profile_name="default"):
 
 [source, bash]
 ----
-$ docker run -it mymnist --lr 0.1 --momentum 0.5 --epochs 100
+$ docker run -it mymnist --lr 0.1 --momentum 0.5 --epochs 10
 ----
 
-ここで， `--lr 0.1 --momentum 0.5 --epochs 100` の部分が， Docker に渡されるコマンドである．
+ここで， `--lr 0.1 --momentum 0.5 --epochs 10` の部分が，コンテナに渡されるコマンドである．
 
-AWS Batch でジョブを実行する際も，同じようなコマンドを Docker に渡せばよい．
-`submit_job()` 関数は，このコマンドの文字列を生成し，ジョブに渡している．
+AWS Batch でジョブを実行する際も，`ContainerOverrides` の `command` というパラメータを使用することで，コンテナに渡されるコマンドを指定することができる．
 コードでは以下の部分が該当する．
 
 [source, python, linenums]
@@ -519,7 +628,7 @@ containerOverrides={
 ----
 
 続いて， [4] 番のセルに移ろう．
-ここでは，上記の `submit_job()` 関数を用いて， 学習率 = 0.01, モメンタム = 0.1 を指定したジョブを投入する．
+ここでは，上記の `submit_job()` 関数を用いて， 学習率 = 0.01, モメンタム=0.1, エポック数=100 を指定したジョブを投入する．
 
 [source, python]
 ----
@@ -556,7 +665,7 @@ image::imgs/aws_batch/batch_running_job.png[batch running job, 700, align="cente
 
 次に，ジョブのステータスが `RUNNING` のときの Compute environment の `Desired vCPU` を見てみよう (<<fig_batch_running_job>> で紫で囲った箇所)．
 ここで 4 と表示されているのは， `g4dn.xlarge` インスタンス一つ分の vCPU の数である．
-ジョブの投入に応じて，それを実行するのに最低限必要な EC2 インスタンスが起動されたことが確認できる．
+ジョブの投入に応じて，それを実行するのに最低限必要な EC2 インスタンスが起動されたことが確認できる
 (興味のある人は， EC2 コンソールも同時に覗いてみるとよい)．
 
 しばらく経つと，ジョブの状態は `RUNNING` から `SUCCEEDED` (あるいは何らかの理由でエラーが発生したときには `FAILED`) に遷移する．
@@ -566,7 +675,7 @@ image::imgs/aws_batch/batch_running_job.png[batch running job, 700, align="cente
 ジョブが完了すると，学習の結果 (エポックごとの Loss と Accuracy を記録した CSV ファイル) は S3 に保存される．
 AWS コンソールからこれを確認しよう．
 
-S3 のコンソールに行くと `simplebatch-bucketXXXXXXX` (XXXX の部分はユーザーによって異なる) という名前のバケットが見つかるはずである．
+S3 のコンソールに行くと `simplebatch-bucketXXXX` (XXXX の部分はユーザーによって異なる) という名前のバケットが見つかるはずである．
 これをクリックして中身を見てみると， `metrics_lr0.0100_m0.1000.csv` という名前の CSV があることが確認できるだろう (<<fig_s3_saved_file>>)．
 これが， 学習率 = 0.01, モメンタム = 0.1 として学習を行ったときの結果である．
 
@@ -606,6 +715,8 @@ df = read_table_from_s3(
 )
 ----
 
+
+[6] で S3 から CSV データをダウンロードし， pandas の `DataFrame` オブジェクトとしてロードする関数を定義している (<<sec_boto3_dojo>> でこのあたりのデータ操作は詳しく触れる)．
 [7] を実行する際， `bucket_name` という変数の値を，**自分自身のバケットの名前に置き換える**ことに注意しよう
 (先ほど S3 コンソールから確認した `simplebatch-bucketXXXX` のことである)．
 
@@ -627,14 +738,19 @@ ax1.legend()
 
 ax2.set_xlabel("Epochs")
 ax2.set_ylabel("Accuracy")
-----
 
+print("Best loss:", df["val_loss"].min())
+print("Best loss epoch:", df["val_loss"].argmin())
+print("Best accuracy:", df["val_accuracy"].max())
+print("Best accuracy epoch:", df["val_accuracy"].argmax())
+----
 
 [[fig_loss_epoch_profile2]]
 .AWS Batch で行った MNIST モデルの学習の結果
 image::imgs/aws_batch/loss_epoch_profile2.png[loss_epoch_profile2, 600, align="center"]
 
-=== 並列にたくさんの Job を実行する
+[[sec:batch_parallel_jobs]]
+=== 並列に複数の Job を実行する
 
 さて，ここからが最後の仕上げである．
 ここまでのハンズオンで構築した AWS Batch のシステムを使って，ハイパーパラメータサーチを実際に行おう．
@@ -658,6 +774,7 @@ def submit_job(lr:float, momentum:float, epochs:int, profile_name=None):
 ----
 
 セル [4] の for ループを使って，グリッド状にハイパーパラメータの組み合わせを用意し， batch にジョブを投入している．
+ここでは 3x3=9個のジョブを作成した．
 
 [source, python, linenums]
 ----
@@ -677,8 +794,8 @@ for lr in [0.1, 0.01, 0.001]:
 image::imgs/aws_batch/batch_many_parallel_jobs.png[batch many parallel jobs, 700, align="center"]
 
 次に，Batch のコンソールの左側のメニューから `Jobs` をクリックしてみよう．
-ここでは，実行中の Job の一覧を確認することができる (<<fig_batch_parallel_job_list>>)．
-Job のステータスでフィルタリングをすることも可能である．
+ここでは，実行中のジョブの一覧が確認することができる (<<fig_batch_parallel_job_list>>)．
+ジョブのステータスでフィルタリングをすることも可能である．
 9個のジョブがどれも `RUNNING` 状態にあることが確認できるだろう．
 
 [[fig_batch_parallel_job_list]]
@@ -704,7 +821,6 @@ image::imgs/aws_batch/ec2_instances_list.png[ec2 instances list, 700, align="cen
 AWS Batch を使ってこれらの計算を並列に実行することで，ジョブ一個分の計算時間 (=10分) ですべての計算を終えることができた！
 
 さて，再び `run_sweep.ipynb` に戻ってこよう．
-
 [5] 以降のセルでは，グリッドサーチの結果を可視化している．
 
 [source, python, linenums]
@@ -771,19 +887,19 @@ image::imgs/aws_batch/grid_search_result.png[grid_search_result, 400, align="cen
 ====
 
 以上のようにして， CNN を用いた MNIST 分類モデルのハイパーパラメータの最適化の一連の流れを体験した．
-今回紹介したアプリケーションは， ECR に置く Docker image を入れ替えることで，任意のプログラムを実行することができる．
-興味のある読者は，ぜひ自分自身のカスタムの Docker image を作成して実行してみよう．
+AWS Batch を利用することで，比較的少ないプログラミングで，動的に EC2 クラスターを制御し，並列にジョブを処理するシステムが構築できた．
+ここまで EC2 を使いこなすことができれば，多くの問題を自力で解くことが可能になるだろう！
 
+[[sec:batch_destroy_app]]
 === スタックの削除
 
 これにて，本ハンズオンは終了である．最後にスタックを削除しよう．
-
 今回のスタックを削除するにあたり，ECR に配置された Docker のイメージは手動で削除されなければならない
 (これをしないと， `cdk destroy` を実行したときにエラーになってしまう．
 これは CloudFormation の仕様なので従うしかない)．
 
 ECR の Docker image を削除するには， ECR のコンソールに行き，イメージが配置されたレポジトリを開く．
-そして，画面右上の `Delete` ボタンを押して削除する (<<fig_delete_ecr>>)．
+そして，画面右上の `DELETE` ボタンを押して削除する (<<fig_delete_ecr>>)．
 
 [[fig_delete_ecr]]
 .ECR から Docker image を削除する
@@ -803,24 +919,25 @@ image の削除が完了したうえで，次のコマンドでスタックを�
 $ cdk destroy
 ----
 
+<<sec:batch_development_and_debug>>
 === クラウドを用いた機械学習アプリケーションの開発とデバッグ
 
 本章で紹介したハンズオンでは， AWS Batch を使用することでニューラルネットの学習を複数並列に実行し，高速化を実現した．
 本章の最後の話題として，クラウドを用いた機械学習アプリケーションの開発とデバッグの方法について述べよう．
 
 ローカルに GPU を搭載した強力なマシンがなく，クラウドを利用する予算が確保されているのであれば， <<fig:cloud_development>> のような開発のスキームが理想的であると考える．
-最初の段階では， <<sec_jupyter_and_deep_learning>> で見たような方法で， GPU 搭載型の EC2 インスタンスを作成し， Jupyter Notebook などのインタラクティブな環境で様々なモデルを試し実験を行う．
+最初の段階では， <<sec_jupyter_and_deep_learning>> で見たような方法で， GPU 搭載型の EC2 インスタンスを作成し， Jupyter notebook などのインタラクティブな環境で様々なモデルを試し実験を行う．
 Jupyter である程度アプリケーションが完成してきたタイミングで，作成したアプリケーションを Docker イメージにパッケージングする．
-そして， EC2 上で `docker run` を行い，作成した Image がバグなく動作するか確認を行う．
+そして， EC2 上で `docker run` を行い，作成したイメージがバグなく動作するか確認を行う．
 その次に，ハイパーパラメータの最適化などのチューニングを， <<sec_aws_batch>> のハンズオンで学んだ AWS Batch などの計算システムを利用して行う．
-ローカルに十分なスペックを有した GPU があるのならば，最初の実験はローカルマシンで行うのが経済的だろう．
+よい深層学習モデルが完成したら，仕上げに大規模データへの推論処理を行うシステムを <<sec_fargate_qabot>> を参考に構築する．
 
 実際，本書ではこの流れに沿って演習を進めてきた．
-MNIST タスクを解くモデルを，最初 Jupyter Notebook を使用して実験し，そのコードをほとんどそのまま Docker にパッケージし， AWS Batch を用いてハイパーパラメータサーチを行った．
+MNIST タスクを解くモデルを，最初 Jupyter notebook を使用して実験し，そのコードをほとんどそのまま Docker にパッケージし， AWS Batch を用いてハイパーパラメータサーチを行った．
 このサイクルを繰り返すことで，クラウドを最大限に活用した機械学習アプリケーションの開発を進めることができる．
 
 本章のハンズオンで提供しているプログラムは， ECR に配置するイメージを入れ替えることで，任意のアプリケーションを AWS Batch を通じて実行することができる．
-興味のある読者は，本書のプログラムを雛形として，自身の機械学習アプリケーションの開発に挑戦していただきたい．
+興味のある読者は，コラムを参考に自身の機械学習アプリケーションの開発に挑戦していただきたい．
 
 [[fig:cloud_development]]
 .クラウドを活用した機械学習アプリケーションの開発フロー
@@ -831,8 +948,8 @@ image::imgs/aws_batch/cloud_development.png[cloud_development, 700, align="cente
 ここまでが，本書第二部の内容である．
 第一部に引き続き盛りだくさんの内容であったが，ついてこれたであろうか？
 
-第二部ではまず最初に，深層学習の計算をクラウドで実行するため， GPU 搭載型の EC2 インスタンスの起動について解説した (<<sec_scientific_computing>>)．
-さらに，ハンズオンでは，クラウドに起動した仮想サーバーを使って MNIST 文字認識タスクを解くニューラルネットを学習させた (<<sec_jupyter_and_deep_learning>>)．
+第二部ではまず最初に，深層学習の計算をクラウドで実行するため， GPU 搭載型の EC2 インスタンスの起動について解説した．
+さらに，ハンズオンでは，クラウドに起動した仮想サーバーを使って MNIST 文字認識タスクを解くニューラルネットを訓練した (<<sec_jupyter_and_deep_learning>>)．
 
 また，より大規模な機械学習アプリケーションを作るための手段として， Docker と ECS によるクラスターの初歩を説明した (<<sec_docker_introduction>>)．
 その応用として，英語で与えられた文章問題への回答を自動で生成するボットをクラウドに展開した (<<sec_fargate_qabot>>)．
@@ -842,7 +959,7 @@ image::imgs/aws_batch/cloud_development.png[cloud_development, 700, align="cente
 ここで紹介した方法は，ミニマムであるが，計算機システムを大規模化していくためのエッセンスが網羅されている．
 これらのハンズオン体験から，クラウド技術を応用してどのように現実世界の問題を解いていくのか，なんとなくイメージが伝わっただろうか？
 
-本書の第三部では，さらにレベルアップし， Serverless architecture という最新のクラウドの設計手法について解説する．
+本書の第三部では，さらにレベルアップし，サーバーレスアーキテクチャという最新のクラウドの設計手法について解説する．
 その応用として，ハンズオンでは簡単な SNS サービスをゼロから実装する．
 引き続きクラウドの最先端の世界を楽しんでいこう！
 

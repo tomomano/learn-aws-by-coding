@@ -1,0 +1,153 @@
+[[sec_aws_batch]]
+== Hands-on #4: Using AWS Batch to Parallelize Hyperparameter Search for Machine Learning
+
+In the third hands-on session, we built an automatic question answering system using ECS and Fargate.
+Despite its simplicity, we were able to build a system where jobs are executed in parallel when multiple questions are sent.
+There, we built the application using a pre-tained language model.
+Generally speaking, however, the first step in a machine learning workflow should be to train your own models.
+Therefore, in the fourth hands-on session, we will consider parallelizing and accelerating the training of machine learning models using the cloud.
+
+In particular, we will focus on hyperparameter optimization in deep learning.
+Hyperparameters are parameters outside the weights of the neural network that are optimized by gradient descent, including those related to the architecture of the network such as the width and depth of the layers of the model, and those related to the parameter optimization method such as the learning rate and momentum.
+Tuning the hyperparameters is a very important task in deep learning.
+However, it requires a lot of computation time because the neural network needs to be trained many times while changing the conditions little by little.
+In research and development, exploring a large number of possible models is an important factor in determining productivity, and the problem of solving hyperparameter search quickly is of great interest.
+In this hands-on, you will learn how to solve this problem by training neural networks in parallel using the powerful computing resources of the cloud.
+
+=== Auto scaling groups (ASG)
+
+Before we get into the hands-on, you need to be familiar with the technique of EC2, called **Auto scaling groups (ASG)**.
+
+Please take a look back at <<ecs_overview>>, which gives an overview of ECS.
+As explained in the previous chapter (<<sec_fargate_qabot>>), EC2 and Fargate can be selected as the computational resource in ECS clusters.
+Fargate was described in the previous chapter.
+Using Fargate, we were able to build a highly scalable computing environment with a very simple setup.
+However, there were some limitations, such as not being able to use GPUs.
+By defining a computing environment that is based on EC2, although the programming complexity increases, we can build clusters with GPUs and other more advanced and complex configurations.
+
+A service called **ASG** is deployed in an EC2 cluster.
+An ASG constitutes a cluster by grouping multiple EC2 instances into logical units.
+ASGs are responsible for scaling, such as launching new instances in the cluster or stopping instances that are no longer needed.
+An important concept in ASG is the parameters callled **desired capacity**, **minimum capacity**, and **maximum capacity**.
+The **minimum capacity** and **maximum capacity** are parameters that specify the minimum and maximum number of instances that can be placed in a cluster, respectively.
+The former keeps the instances idle even when the cluster is not under load, so it can act as a buffer when the load suddenly increases.
+The latter prevents an excessive number of instances from being launched when the load increases unexpectedly, and serves to set an upper limit on the economic cost.
+
+The desired capacity specifies the number of instances required by the system at a given time.
+The desired capacity can be set based on a fixed schedule, such as increasing or decreasing the number of instances according to a 24-hour rhythm (e.g., more during the day and less at night).
+Alternatively, the desired capacity can be dynamically controlled according to the load on the entire cluster.
+The rules that define the criteria for scaling the cluster are called **scaling policies**.
+For example, we can assume a scaling policy such as maintaining the utilization (load) of the entire cluster at 80% at all times.
+In this case, the ASG automatically removes instances from the cluster when the load of the entire cluster falls below 80%, and adds instances when the load exceeds 80%s.
+
+After considering the above parameters, the user creates an ASG.
+Once ASG is created, one needs to write a program to link ASG with the ECS, which defines EC2-based ECS cluster.
+
+=== AWS Batch
+
+.AWS Batch icon
+image::imgs/aws_logos/Batch.png[Batch, 100]
+
+As explained earlier, it is possible to construct a desired computation cluster by combining ECS and ASG.
+However, ECS and ASG require complicated settings, which makes programming quite tedious for both beginners and experienced users.
+To solve this problem, there is a service that automates the design of clusters using ECS and ASG.
+That service is **AWS Batch**.
+
+AWS Batch, as the name implies, is designed for batch jobs (i.e., independent operations with different input data that are executed repeatedly).
+Many scientific calculations and machine learning can be applied to batch calculations.
+For example, you can run multiple simulations with different initial parameters.
+The advantage of using AWS Batch is that the scaling of the cluster and the allocation of jobs are all done automatically, giving the user a system that can submit a large number of jobs without having to worry about the implementation details of the cloud.
+However, it is important to know that the ECS/ASG/EC2 triad is working in concert behind the scenes.
+
+In AWS Batch, the following concept is defined to facilitate job submission and management (<<fig_batch_concept>>).
+First, a **Job** is a unit of computation executed by AWS Batch.
+**Job definitions** define the specification of a job, including the address of the Docker image to be executed, the amount of CPU and RAM to be allocated, and environment variables.
+Each job is executed based on the job definition.
+When a job is executed, it is placed in **Job queues**.
+Job queues are a queue of jobs waiting to be executed, and the first job in the queue is executed first.
+In addition, multiple queues can be arranged, and each queue can be assigned a priority value, so that jobs in the queue with the highest priority are executed first.
+**Compute environment** is a concept that is almost synonymous with the cluster, and refers to the location where computations are executed (i.e. group of EC2 or Fargate instances).
+In the compute environment, one needs to specify the EC2 instance types to use, and a simple scaling policy, such as the upper and lower limit on the number of instances.
+Job queues monitor the availability of the compute environment and place jobs to the compute environment according to the availability.
+
+These are the concepts that you need to understand when using AWS Batch.
+To make a better sense of these concepts, let us actually construct an application using AWS Batch.
+
+[[fig_batch_concept]]
+.AWS Batch concepts
+image::imgs/aws_batch/batch_concepts.png[batch concepts, 700, align="center"]
+
+[TIP]
+====
+**EC2 or Fargate?**
+
+When configuring a cluster in ECS, we explained that there are two options for performing calculations: EC2 and Fargate.
+Each has its own advantages and disadvantages, but which one should be used in which case?
+To examine this, let's first look at <<tab:ec2_vs_fargate>>.
+This is a summary of the characteristics of EC2 and Fargate.
+Please note that it is heavily coarse-grained for the sake of explanation.
+
+[[tab:ec2_vs_fargate]]
+[cols="1,1,1", options="header"]
+.EC2 vs Fargate
+|===
+|
+|EC2
+|Fargate
+
+|Compute capacity
+|Medium to large
+|Small to medium
+
+|GPU
+|Yes
+|No
+
+|Launch speed
+|Slow
+|Fast
+
+|Task placement flexibility
+|Low
+|High
+
+|Programming complexity
+|High
+|Low
+|===
+
+As we have seen so far, EC2 has high computing power in a single instance, with a large maximum number of CPUs and memory size, and the ability to use a GPU.
+In contrast, the maximum number of CPUs for a single instance of Fargate is capped at four cores.
+On the other hand, the time required to launch an instance is much faster in Fargate, which allows for more agile scaling of the cluster.
+Fargate also has higher flexibility when submitting tasks to the cluster.
+Flexibility refers to the situation where, for example, two or more containers can be run on a single instance.
+Such a design is often used to maximize the number of tasks per unit CPU.
+In terms of programming complexity, Fargate is generally simpler to implement.
+
+As described above, EC2 and Fargate have complementary characteristics, and the optimal computing environment must be considered carefully depending on the use cases.
+It is also possible to define a hybrid cluster that uses both EC2 and Fargate, and such an option is often used.
+====
+
+=== Preparations
+
+The hands-on source code is available on GitHub at
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/aws-batch[handson/aws-batch].
+
+To run this hands-on, it is assumed that the preparations described in the first hands-on (<<handson_01_prep>>) have been completed.
+It is also assumed that Docker is already installed on your local machine.
+
+[WARNING]
+====
+Since this hands-on uses `g4dn.xlarge` EC2 instance, it will cost 0.526 $/hour in Virginia (`us-east-1`) region.
+If you choose Tokyo (`ap-northeast-1`), the cost will be 0.71 $/hour.
+====
+
+[WARNING]
+====
+As noted in <<sec:jupyter_and_deep_learning_setup>>, before starting this hands-on, check the launch limit of G-type instances from the EC2 dashboard of the AWS console.
+If the limit is 0, you need to apply for increase of the limit.
+Also refer to <<sec:aws_batch_code>> for related information.
+====
+
+=== Revisiting MNIST handwritten digit recognition task
+
