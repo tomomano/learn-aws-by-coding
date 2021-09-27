@@ -390,7 +390,7 @@ class SimpleBatch(core.Stack):
 また，最小の vCPU は 0 である．
 今回は，負荷がかかっていないときにアイドリング状態にあるインスタンスを用意する利点は全くないので，ここは0にするのが望ましい．
 <3> で， <2> で作成した Compute environment と紐付いた Job queue を定義している．
-<4> で， Job が計算結果を S3 に書き込むことができるよう， IAM ロールを定義している．
+<4> で，ジョブが計算結果を S3 に書き込むことができるよう， IAM ロールを定義している．
 (IAM とはリソースがもつ権限を管理する仕組みである．詳しくは <<sec:bashoutter_iam>> を参照)
 <5> では， Docker image を配置するための ECR を定義している．
 <6> で Job definition を作成している．
@@ -444,7 +444,7 @@ $ cdk deploy
 コンソールの検索バーで `batch` と入力し， AWS Batch の管理画面を開く (<<fig_batch_console>>)．
 
 [[fig_batch_console]]
-.AWSBatch のコンソール画面 (ダッシュボード)
+.AWS Batch のコンソール画面 (ダッシュボード)
 image::imgs/aws_batch/batch_console.png[batch console, 700, align="center"]
 
 まず目を向けてほしいのが，画面の一番下にある Compute environment overview の中の `SimpleBatchcompute-env` という名前の項目だ．
@@ -461,8 +461,8 @@ Compute environment とは，先ほど述べたとおり，計算が実行され
 
 最後に，今回作成した Job definition を確認しよう．
 左側のメニューから　`Job definitions` を選択し，次の画面で `SimpleBatchjob-definition` という項目を見つけて開く．
-ここから Job definition の詳細を閲覧することができる (Figure 8-8)．
-中でも重要な情報としては，　`cVPUs`, `Memory`, `CPU` がそれぞれ Docker に割り当てられる vCPU・メモリー・ GPU の量を規定している．
+ここから Job definition の詳細を閲覧することができる (<<fig:batch_job_definition>>)．
+中でも重要な情報としては，　`vCPUs`, `Memory`, `GPU` がそれぞれ Docker に割り当てられる vCPU・メモリー・ GPU の量を規定している．
 また， `Image` と書いてあるところに，ジョブで使用される Docker イメージが指定されている．
 ここでは， ECR のレポジトリを参照している．
 現時点ではこの ECR は空である．
@@ -541,12 +541,6 @@ image::imgs/aws_batch/ecr_push_command.png[ecr push command, 700, align="center"
 [[fig_ecr_console2]]
 .ECR へ image の配置が完了した
 image::imgs/aws_batch/ecr_console2.png[ecr console 2, 700, align="center"]
-
-[TIP]
-====
-今回のハンズオンで紹介するアプリケーションは， Docker イメージを置き換えることで，ユーザー自身の計算ジョブを実行することが可能である．
-<<sec:batch_development_and_debug>> のコラムに手順を紹介しているので，興味のある読者は参照していただきたい．
-====
 
 === 単一のジョブを実行する
 
@@ -638,16 +632,15 @@ submit_job(0.01, 0.1, 100)
 
 [WARNING]
 ====
-AWS の認証情報は， Jupyter notebook の内部から再度定義する必要がある．
-これを手助けするため， notebook の [2] 番のセル (デフォルトではすべてコメントアウトされている) を用意した．
+AWS の認証情報は， Jupyter Notebook の内部から再度定義する必要がある．
+これを手助けするため， Notebook の [2] 番のセル (デフォルトではすべてコメントアウトされている) を用意した．
 これを使うにはコメントアウトを解除すればよい．
 このセルを実行すると， AWS の認証情報を入力する対話的なプロンプトが表示される．
 プロンプトに従って aws secret key などを入力することで， (Jupyter のセッションに固有な) 環境変数に AWS の認証情報が記録される．
 
-もう一つの認証方法として， `sumit_job()` 関数に `profile_name` というパラメータを用意した．
+もう一つの認証方法として， `submit_job()` 関数に `profile_name` というパラメータを用意した．
 もし `~/.aws/credentials` に認証情報が書き込まれているのならば (詳しくは <<aws_cli_install>>)， `profile_name` に使用したいプロファイルの名前を渡すだけで，
 認証を行うことができる．
-
 慣れている読者は後者のほうが便利であると感じるだろう．
 ====
 
@@ -716,7 +709,7 @@ df = read_table_from_s3(
 ----
 
 
-[6] で S3 から CSV データをダウンロードし， pandas の `DataFrame` オブジェクトとしてロードする関数を定義している (<<sec_boto3_dojo>> でこのあたりのデータ操作は詳しく触れる)．
+[6] で S3 から CSV データをダウンロードし， pandas の `DataFrame` オブジェクトとしてロードする関数を定義している．
 [7] を実行する際， `bucket_name` という変数の値を，**自分自身のバケットの名前に置き換える**ことに注意しよう
 (先ほど S3 コンソールから確認した `simplebatch-bucketXXXX` のことである)．
 
