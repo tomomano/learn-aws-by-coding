@@ -1,0 +1,323 @@
+[[sec_serverless]]
+== Serverless architecture
+
+Serverless architecture or serverless computing is a way of designing cloud systems based on a completely different approach.
+Historically, https://aws.amazon.com/lambda/[Lamba], released by AWS in 2014, is considered as a pioneer of serverless architecture.
+Since then, other cloud platforms such as Google and Microsoft have started to provide similar features.
+The advantage of serverless architecture is that it enables the creation of scalable cloud systems inexpensively and easily, and it is rapidly being adopted by many cloud systems in recent years.
+
+Serverless literally means computing without servers, but what does it actually mean?
+In order to explain serverless, we must first explain the traditional "serverful" system.
+
+[[chap_serverful_cloud]]
+=== Serverful cloud (conventional cloud)
+
+A sketch of a traditional cloud system is shown in <<serverful>>.
+The request sent from the client is first sent to the API server.
+In the API server, tasks are executed according to the content of the request.
+Some tasks can be completed by the API server alone, but in most cases, reading and writing of the database is required.
+In general, an independent server machine dedicated to the database is used.
+Large sized data, such as images and videos, are often stored on a separate storage server.
+These API servers, database servers, and storage servers are all independent server machines.
+In AWS terms, you can think of them as virtual instances of EC2.
+
+Many web services are designed to have multiple server machines running in the cloud to handle requests from a large number of clients.
+The operation of distributing requests from clients to servers with enough computing capacity is called **load balancing**, and the machine in charge of such operation is called **load balancer**. 
+
+Launching a large number of instances for the purpose of distributing the computational load is fine, but it is a waste of cost and power if the computational load is too small and the most of the cluster is kept idling.
+Therefore, we need a mechanism that dynamically increases or decreases the number of virtual servers in a cluster according to the computational load so that all servers always maintain the certain load.
+Such a mechanism is called **cluster scaling**, and the operation of adding a new virtual instance to the cluster in response to an increase in load is called **scale-out**, and the operation of shutting down an instance in response to a decrease in load is called **scale-in**.
+Scaling of clusters is necessary not only for API servers, but also for database servers and storage servers.
+In the storage server, for example, frequently accessed data is stored in the cache area, and multiple copies of the data are made across instances.
+In the same way, database servers require distributed processing to prevent frequent data accesses from disrupting the system.
+It is necessary to adjust the load so that it is evenly distributed throughout the cloud system, and developers must spend a lot of time tuning the system.
+In addition, the scaling settings need to be constantly reviewed according to the number of users of the service, and continuous development is required.
+
+What makes the matters worse,  the tasks processed by the API server are non-uniform.
+Being non-uniform, means that, for example, task A consumes 3000 milliseconds of execution time and 512MB of memory, while another task B consumes 1000 milliseconds of execution time and 128MB of memory.
+Scaling a cluster becomes complex when a single server machine handles multiple tasks with different computational loads.
+In order to simplify this situation, it is possible to design the cluster so that only one type of task is executed by a single server, but there are many negative effects of adopting such design.
+
+[[serverful]]
+.Serverful cloud system
+image::imgs/serverful.png[serverful, 700, align="center"]
+
+=== To the serverless cloud
+
+As we discussed in <<chap_serverful_cloud>>, scaling of clusters is an essential task to maximize the economic efficiency and system stability of cloud systems.
+Reflecting this, a lot of developer's time and efforts have been invested in it.
+
+Scaling a cluster is a task that all developers have done over and over again, and if some aspects could be templated and made common, it would greatly reduce the cost of development.
+In order to achieve this, one needs to rethink the design of cloud systems from a fundamental level.
+**Is there a cloud system design that is simpler and more efficient by considering scaling as a first and built-in priority**?
+Such was the motivation behind the birth of serverless architecture.
+
+The biggest problem with conventional serverful systems is that users **occupy the entire server**.
+Namely, when an EC2 instance is launched, it is available only to the user who launched it, and the computation resources (CPU and RAM) are allocated exclusively to that user.
+Since a fixed allocation of computing resources has been made, the same cost will be incurred in proportion to the launch time, regardless of whether the instance's computing load is 0% or 100%.
+
+The starting point of serverless architecture is the complete elimination of such **exclusively allocated computational resources**.
+In a serverless architecture, all computation resources are managed by the cloud provider.
+Rather than renting an entire virtual instance, clients submit a program or commands to the cloud every time they need to perform a computational task.
+The cloud provider tries to find free space from its own huge computational resources, executes the submitted program, and returns the execution result back to the client.
+In other words, the cloud provider takes care of the scaling and allocation of computational resources, and the user focuses on submitting jobs.
+This can be illustrated as <<serverless>>.
+
+[[serverless]]
+.Comparison of serverful cloud and serverless cloud
+image::imgs/serverless.png[serverless, 700, align="center"]
+
+In a serverless cloud, scalability is guaranteed because all scaling is taken care of by the cloud provider.
+Even if a client sends a large number of tasks at the same time, the cloud provider's sophisticated system ensures that all tasks are executed without delay.
+Also, by using a serverless cloud, **the cost of the cloud is determined by the total amount of computation**.
+This is a big difference compared to conventional systems where the cost is determined by the launch time of the instance regardless of the total amount of computation performed.
+
+Since serverless cloud is a fundamentally different approach from traditional cloud, the way to design the system and write code is very different.
+To develop and operate a serverless cloud, it is necessary to be familiar with concepts and terminology specific to serverless technology.
+
+[NOTE]
+====
+Traditional cloud systems running many virtual instances may be analogous to renting a room.
+When you rent a room, the monthly rent is constant, regardless of how much time you spend in the room.
+Similarly, a virtual server incurs a fixed fee per hour, regardless of how much computation it is doing.
+
+On the other hand, serverless clouds are similar to **electricity, water, and gas bills**.
+In this case, the fee is determined in proportion to the amount actually used.
+The serverless cloud is also a system where the fee is determined by the total amount of time the calculation is actually performed.
+====
+
+=== Components that make up a serverless cloud
+
+Now that we have an overview of serverless architecture, let us introduce you to the components that make up a serverless cloud in AWS.
+In particular, we will focus on **Lambda**, **S3**, and **DynamoDB** (<<fig:serverless_logos>>).
+In a serverless cloud, a system is created by integrating these components.
+In what follows, we will go through all the knowledge that must be kept in mind when using Lambda, S3, and DynamoDB, so it may be difficult to get a concrete image.
+However, in the next section (<<sec_intro_serverless>>), we will provide hands-on exercises for each of them, so you can deepen your understanding.
+
+[[fig:serverless_logos]]
+.Icons for Lambda, S3, and DynamoDB
+image::imgs/serverless_logos.png[Lambda, 500]
+
+==== Lambda
+
+The core of serverless computing in AWS is
+https://aws.amazon.com/lambda/[Lambda].
+The summary of Lambda is illustrated in <<lambda_workflow>>.
+The workflow with Lambda is simple.
+First, users register the code of the program they want to execute.
+Programs are supported in major languages such as Python, Node.js, and Ruby.
+Each program registered with Lambda is referred to as a function.
+When a function is to be executed, an invoke command is sent to Lambda.
+As soon as Lambda receives the invoke request, it starts executing the program, within a few milliseconds to a few hundred milliseconds latency.
+It then returns the execution results to the client or other programs.
+
+[[lambda_workflow]]
+.AWS Lambda
+image::imgs/lambda_workflow.png[lambda_workflow, 500, align="center"]
+
+As you can see, in Lambda, there is no occupied virtual instance, only a program waiting to be executed.
+In response to an invoke request, the program is placed somewhere in the huge AWS compute pool and executed.
+Even if multiple requests come in at the same time, AWS allocates computing resources to execute them, and processes them in parallel.
+In principle, Lambda is able to execute thousands or tens of thousands of requests at the same time.
+This kind of service that dynamically executes functions without the existence of an occupied virtual server is collectively called **FaaS (Function as a Service)**.
+
+Lambda can use 128MB to 10240MB of memory for each function (specifications at the time of writing).
+The effective CPU power is allocated in proportion to the amount of memory.
+In other words, the more memory allocated to a task, the more CPU resources will be allocated to it.
+(However, AWS does not provide a specific conversion table for RAM and CPU power.)
+The execution time is recorded in units of 100 milliseconds, and the price is proportional to the execution time.
+<<lambda_pricing>> is the Lambda pricing table (when `ap-north-east1` region is selected at the time of writing).
+
+[[lambda_pricing]]
+[cols="1,1", options="header"] 
+.Lambda pricing
+|===
+|Memory (MB)
+|Price per 100ms
+
+|128
+|$0.0000002083
+
+|512
+|$0.0000008333
+
+|1024
+|$0.0000016667
+
+|3008
+|$0.0000048958
+|===
+
+In addition to the fee proportional to the execution time, there is a fee for each request sent.
+This is $0.2 per million requests.
+For example, if a function that uses 128MB of memory is executed 200 milliseconds each, for a total of 1 million times, then the total cost would be 0.0000002083 * 2 * 10^6 + 0.2 = $0.6.
+Since many functions can be executed in about 200 milliseconds for simple calculations such as updating the database, the cost is only $0.6 even if the database is updated one million times.
+In addition, if the code is in a waiting state without being executed, the cost is zero.
+In this way, cost will be chaged for only the time when meaningful processing is performed.
+
+Lambda is most suitable for executing highly repetitive tasks that can be completed in a relatively short time.
+Reading and writing databases is a typical example, but other possible uses include cropping the size of an image or performing periodic server-side maintenance.
+It is also possible to connect multiple Lambdas in a relay fashion, and complex logic can be expressed by combining simple processes.
+
+[NOTE]
+====
+It should be noted that the Lambda fee calculation described above omits some factors that contribute to the cost for the sake of explanation.
+For example, it does not take into account the cost of reading and writing DynamoDB or the cost of network communication.
+====
+
+==== Serverless storage: S3
+
+The concept of serverless has been extended to storage as well.
+
+Conventional storage (file system) requires the presence of a host machine and an OS.
+Therefore, a certain amount of CPU resources must be allocated, even if it does not require much power.
+In addition, with conventional file systems, the size of the storage space must be determined when the disk is first initialized, and it is often difficult to increase the capacity later.
+(Using a file system such as ZFS, it is possible to change the size of the file system freely to some extent.)
+Therefore, in traditional cloud computing, you have to specify the size of the disk in advance when you rent a storage space, and you will be charged the same fee whether the disk is empty or full (<<fig:s3_vs_filesystem>>).
+
+https://aws.amazon.com/s3/[Simple Storage Service (S3)]
+provides a serverless storage system (<<fig:s3_vs_filesystem>>).
+Unlike conventional storage systems, S3 does not have the concept of being "mounted" on the OS.
+Basically, data read/write operations are performed through APIs.
+In addition, operations that normally require the intervention of the OS and CPU, such as data redundancy, encryption, and backup creation, can also be performed through the API.
+With S3, there is no predetermined disk space size, and the total storage space increases as more data is stored in S3.
+In principle, it is possible to store petabyte-scale data.
+The price of storage is determined by the total amount of the data stored.
+
+[[fig:s3_vs_filesystem]]
+.Comparison between S3 and conventional file systems
+image::imgs/s3_vs_filesystem.png[s3_vs_filesystem, 700, align="center"]
+
+<<tab:s3_pricing>> summarizes the main factors related to pricing when using S3.
+(This is for the `us-east-1` region.
+Only the major points are taken out for the sake of explanation.
+For details, see
+https://aws.amazon.com/s3/pricing/?nc=sn&loc=4[Official Documentation "Amazon S3 pricing"]]).
+
+[[tab:s3_pricing]]
+[cols="1,1", options="header"]
+.S3 pricing
+|===
+|Item
+|Price
+
+|Data storage (First 50TB)
+|$0.023 per GB per month
+
+|PUT, COPY, POST, LIST requests (per 1,000 requests)
+|$0.005
+
+|GET, SELECT, and all other requests (per 1,000 requests)
+|$0.0004
+
+|Data Transfer IN To Amazon S3 From Internet
+|$0
+
+|Data Transfer OUT From Amazon S3 To Internet
+|$0.09 per GB
+|===
+
+First, data storage costs $0.025 per GB per month.
+Therefore, if you store 1000GB of data in S3 for a month, you will be charged $25.
+In addition, requests such as `PUT`, `COPY`, and `POST` (i.e., operations to write data) incur a cost of $0.005 per 1000 requests, regardless of the amount of data.
+Requests such as `GET` and `SELECT` (= operations to read data) incur a cost of $0.0004 per 1000 requests.
+S3 also incurs a cost for communication when retrieving data out of S3.
+At the time of writing, transferring data from S3 to the outside via the Internet (data-out) incurs a cost of $0.09 per GB.
+Sending data into S3 via the Internet (data-in) is free of charge.
+Transferring data to services in the same AWS region (Lambda, EC2, etc.) is also free.
+There is a cost for transferring data across AWS regions.
+In any case, in keeping with the serverless concept, all fees are determined on a pay-as-you-go basis.
+
+==== Serverless database: DynamoDB
+
+The concept of serverless can also be applied to databases.
+A database here refers to a fast storage area for web services to record data such as user and product information.
+Some of the popular databases include
+https://www.mysql.com/[MySQL],
+https://www.postgresql.org/[PostgreSQL],
+https://www.mongodb.com/[MongoDB].
+
+The difference between a database and ordinary storage is in the data retrieval function.
+In ordinary storage, data is simply written to disk.
+In a database, data is arranged in a way that makes searching more efficient, and
+frequently accessed data is cached in memory.
+This makes it possible to retrieve the elements of interest from a huge amount of data rapidly.
+
+Naturally, the involvement of a CPU is essential to realize such a search function.
+Therefore, when constructing a conventional database, a machine with a large number of CPU cores is often used in addition to the large storage space.
+Often, a distributed system consisted of multiple machines is designed to host a massive database.
+In the case of a distributed system, it is necessary to scale appropriately according to the access load to the database, as discussed in <<chap_serverful_cloud>>.
+
+https://aws.amazon.com/dynamodb/[DynamoDB]
+is a serverless and distributed database provided by AWS.
+Because it is serverless, there is no occupied virtual instance for the database, and operations such as writing, reading, and searching data are performed through APIs.
+As with S3, there is no upper limit to the data storage space, and the storage space increases as more data is stored.
+In addition, DynamoDB automatically handles scaling when the load on the database increases or decreases, eliminating complicated programming to control the database scaling.
+
+The calculation of DynamoDB pricing is rather complicated, but <<tab:dynamodb_pricing>> summarizes the main factors involved in pricing when using the "On-demand Capacity" mode.
+(The table is for the `us-east-1` region.
+For details, see
+https://aws.amazon.com/dynamodb/pricing/on-demand/[Official Documentation "Pricing for On-Demand Capacity"]).
+
+[[tab:dynamodb_pricing]]
+[cols="1,1", options="header"]
+.DynamoDB pricing
+|===
+|Item
+|Price
+
+|Write request units
+|$1.25 per million write request units
+
+|Read request units
+|$0.25 per million read request units
+
+|Data storage
+|$0.25 per GB-month
+|===
+
+In DynamoDB, the unit for data write operations is called a write request unit, and the unit for data read operations is called a read request unit.
+Basically, writing data of 1kB or less once consumes 1 write request unit, and reading data of 4kB or less once consumes 1 read request unit.
+(For details, see
+https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html[Official Documentation "Read/Write Capacity Mode"]).
+The cost of write request units is set at $1.25 per million requests, and the cost of read request units is set at $0.25 per million requests.
+There is also a monthly cost of $0.25 per GB chaged for stored data.
+Since DynamoDB is a database with a high-speed search function, the storage cost per GB is about 10 times higher than S3.
+The cost of DynamoDB data transfer is zero for both data-in and data-out within the same region.
+A separate cost is incurred for communication across regions.
+
+==== Other serverless components in AWS
+
+Lambda, S3, and DynamoDB described above are the most frequently used services in serverless cloud.
+Other components of serverless cloud are listed below.
+Some of them will be explained during the hands-on sessions in the later sections.
+
+* https://aws.amazon.com/api-gateway/[API Gateway]:
+This is responsible for routing when building the REST API.
+It will be covered in <<sec_bashoutter>>.
+* https://aws.amazon.com/fargate/[Fargate]:
+Fargate, which we used in <<sec_fargate_qabot>>, is another element of the serverless cloud.
+The difference between Fargate and Lambda is that Fargate can perform calculations that require a larger amount of memory and CPU than Lambda.
+* https://aws.amazon.com/sns/[Simple Notification Service (SNS)]:
+A service for exchanging events between serverless services.
+* https://aws.amazon.com/step-functions/[Step Functions]:
+Orchestration between serverless services.
+
+[TIP]
+====
+**Is serverless architecture a solution for everything?**
+
+We think the answer to this question is no.
+
+However, as it is still a new technology, it has several disadvantages or limitations compared to serverful system.
+
+One major disadvantage is that serverless systems are specific to each cloud platform, so they can only be operated on a particular platform.
+Migrating a serverless system created in AWS to Google's cloud, for example, would require a rather large rewrite of the program.
+On the other hand, for serverful systems, migration between platforms is relatively easy.
+Cloud providers may want to increase the dependency on their own systems in order to keep their customers...
+
+Other limitations and future challenges of serverless computing are discussed in detail in the following paper.
+
+* https://arxiv.org/abs/1812.03651[Hellerstein et al., "Serverless Computing: One Step Forward, Two Steps Back" arXiv (2018)]
+====
+
