@@ -912,3 +912,41 @@ $ cdk destroy
 <<sec:batch_development_and_debug>>
 === Development and debugging of machine learning applications using the cloud
 
+In the hands-on session described in this chapter, we used AWS Batch to run parallel neural network trainings to accelerate the model development.
+As the last topic in this chapter, we will discuss how to develop and debug machine learning applications using the cloud.
+
+If you don't have a powerful local machine with GPUs, and you have the budget to use the cloud, then a development scheme like <<fig:cloud_development>> would be ideal.
+In the first stage, create an EC2 instance with GPUa using the method described in <<sec_jupyter_and_deep_learning>>, and experiment with various models in an interactive environment such as Jupyter Notebook.
+When the application is completed to some extent with Jupyter, package the application into a Docker image.
+Then, run `docker run` on EC2 to check if the created image works without errors.
+Next, we will perform tuning, such as hyperparameter optimization, using a computational system such as AWS Batch, which we learned in the <<sec_aws_batch>>.
+Once we have a good deep learning model, we will build a system to perform inference on large-scale data, using <<sec_fargate_qabot>> as a reference.
+
+In fact, the exercises in this book have been carried out along this workflow.
+We first experimented with a model for solving the MNIST task using Jupyter Notebook, then packaged the code into Docker, and used AWS Batch to perform a hyperparameter search.
+By repeating this cycle, we can proceed with the development of machine learning applications that take full advantage of the cloud.
+
+[[fig:cloud_development]]
+.Development workflow of cloud-based machine learning applications
+image::imgs/aws_batch/cloud_development.png[cloud_development, 700, align="center"]
+
+=== Short summary
+
+This concludes Part II of this book.
+We hope you enjoyed the journey exploring the cloud technology.
+
+In Part II, we first explained how to launch an EC2 instance with GPUs in order to run deep learning calculations in the cloud.
+In the hands-on session, we trained a neural network to solve the MNIST digit recognition task using a virtual server launched in the cloud (<<sec_jupyter_and_deep_learning>>).
+
+We also explained the steps to create a cluster using Docker and ECS as a means to build large scale machine learning applications (<<sec_docker_introduction>>).
+As an exercise, we deployed a bot in the cloud that automatically generates answers to text questions given in English (<<sec_fargate_qabot>>).
+You should have been able to get some experience how computational resources are created and deleted dynamically in response to the submission of tasks.
+
+Furthermore, in <<sec_aws_batch>>, we introduced a method to train neural networks in parallel using AWS Batch.
+Although the methods introduced here are minimal, they cover the essence of how to scale up a computer system.
+We hope that these hands-on experiences have given you some idea of how to apply cloud technology to solve real-world problems.
+
+In the third part of this book, we take it a step further and explain the latest cloud design method called serverless architecture.
+In the hands-on session, we will implement a simple SNS service from scratch.
+Let's continue our journey to enjoy the cutting-edge frontiers of cloud computing!
+
