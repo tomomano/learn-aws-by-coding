@@ -1,0 +1,186 @@
+== How to create web services
+
+This is the third part of the book.
+In the previous sections, we have explained how to start a virtual server in the cloud and run computations on it.
+Using EC2, ECS, Fargate, and Batch, we have configured dynamically scaling clusters and implemented cloud systems that execute tasks in parallel.
+In retrospect, you may notice that the techniques we have introduced so far have been focused on embracing the cloud to solve your own scientific or engineering problem.
+On the other hand, another important role of the cloud is to provide computing services and databases **that can be used by the general public**.
+
+In Part III, which begins with this section, we would like to take a slightly different direction from the previous lectures and discuss how to deploy applications on the cloud and make them widely available to the general public.
+Through this lecture, we will learn how web services in the real world are created, and how to build such applications from scratch.
+In the process, we will explain the latest cloud design method called serverless architecture.
+
+As a prelude, this chapter provides an overview of the technology behind the web services and introduces some concepts and terminology.
+Theyse are essential knowledge for the hands-on exercises that follow, so please take your time to understand them well.
+
+=== How Web Services Work -- Using Twitter as an Example
+
+When you access Twitter, Facebook, YouTube, and other web services from your computer or smartphone, what is actually happening to render the contents in the page?
+
+Many readers may already be familiar with the communication between servers and clients via HTTP, and since it would take up too much space to thoroughly explain everything, we will only cover the essentials here.
+In the following, we will use
+https://twitter.com[Twitter]
+as a concrete example to outline the communication between the server and the client.
+As a sketch, <<fig:web_server>> depicts the communication between the client and the server.
+
+[[fig:web_server]]
+.Sketch of communication between client and web server
+image::imgs/web_server.png[web_server, 700, align="center"]
+
+As a premise, the client-server communication is done using **HTTP (Hypertext Transfer Protocol)**.
+Recently, it has become a standard to use **HTTPS (Hypertext Transfer Protocol Secure)**, which is an encrypted HTTP.
+In the first step, the client obtains static content from the server through HTTP(S) communication.
+Static content includes the main body of a web page document written in **HTML (Hypertext Markup Language)**, page design and layout files written in **CSS (Cascading Style Sheets)**, and programs that define the dynamic behavior of the page written in **JavaScript (JS)**.
+In the design of modern web applications, including Twitter, these static files only define the "frame" of the page, and the content (e.g., the list of tweets) must be retrieved using **API (Application Programming Interface)**.
+Therefore, the client sends the API request to the server according to the program defined in the JavaScript, and obtains the tweet list.
+**JSON (JavaScript Object Notation)** is often used to exchange text data.
+Media content such as images and videos are also retrieved by the API in the same way.
+The text and images retrieved in this way are embedded in the HTML document to create the final page presented to the user.
+Also, when posting a new tweet, the client uses the API to write the data to the server's database.
+
+[[sec_rest_api]]
+=== REST API
+
+API (Application Programming Interface) is a term that has been frequently used in this book, but we will give a more formal definition here.
+An API is a general term for an interface through which an application can exchange commands and data with external software.
+Especially in the context of web services, it refers to the list of commands that a server exposes to the outside world.
+The client obtains the desired data or sends data to the server by choosing the appropriate API commands.
+
+Especially in the context of the web, APIs based on a design philosophy called **REST (Representational State Transfer)** are most commonly used.
+An API that follows the REST design guidelines is called a **REST API** or **RESTful API**.
+
+A REST API consists of a pair of **Method** and **URI (Universal Resource Identifier)**, as shown in <<rest_api>>.
+
+[[rest_api]]
+.REST API
+image::imgs/rest_api.png[rest_api, 700, align="center"]
+
+A method can be thought of as a "verb" that abstractly expresses the kind of desired operation.
+Methods can use any of the nine verbs defined in the HTTP standard.
+Among them, the five most frequently used ones are `GET`, `POST`, `PUT`, `PATCH`, and `DELETE` (<<tab:rest_api_methods>>).
+The operations using these five methods are collectively called **CRUD** (create, read, update, and delete).
+
+[[tab:rest_api_methods]]
+[cols="1,3", options="header"]
+.REST API Methods
+|===
+|Method
+|Intended behaviour
+
+|GET
+|Obtaining items
+
+|POST
+|Creating a new item
+
+|PUT
+|Replacing an existing item with a new one
+
+|PATCH
+|Updating a part of an existing item
+
+|DELETE
+|Deleting an item
+|===
+
+On the other hand, a URI represents the target of an operation, i.e., the "object".
+In the context of the web, the target of an operation is often referred to as a **resource**.
+The URI often begins with the address of the web server, starting with http or https, and the path to the desired resource is specified after the / (slash).
+In the example of <<rest_api>>, it means to retrieve (GET) the resource `/1.1/status/home_timeline` with the address `https://api.twitter.com`.
+(Note that the number `1.1` here indicates the API version.)
+This API request retrieves the list of tweets in the user's home timeline.
+
+[TIP]
+====
+In addition to the methods listed in <<tab:rest_api_methods>>, other methods defined in the HTTP protocol (OPTIONS, TRACE, etc.) can be used for the REST API methods, but they are not so common.
+
+In some cases, these methods alone are not enough to express a verb, but the meaning may be made clearer by using explicit path in URI.
+For example, the Twitter API for deleting tweets is defined as `POST statuses/destroy/:id`.
+In the end, you need to read the API documentation carefully to find out what each API does.
+====
+
+[TIP]
+====
+The concept of REST was established in the early 2000s and has become the standard for API design today.
+As web technology advances, on the other hand, the demand for new API design is growing.
+One approach that has become particularly popular in recent years is
+https://graphql.org/[GraphQL].s
+GraphQL was first created by Facebook, and is currently maintained and updated by the GraghQL Foundation.
+GraphQL has several advantages over REST, including the ability for clients to query data with greater flexibility.
+====
+
+=== Twitter API
+
+In order to have a more realistic feeling on the web APIs, let's take a look at Twitter's API.
+A list of APIs provided by Twitter can be found at
+https://developer.twitter.com/en/docs/api-reference-index[Twitter's Developer Documentation].
+Some representative API endpoints are listed in <<tab_twitter_api>>.
+
+[[tab_twitter_api]]
+[cols="1,1", options="header"]
+.Twitter API
+|===
+|Endpoint
+|Expected behaviour
+
+|`GET statuses/home_timeline`
+|Get the list of tweets in the home timeline.
+
+|`GET statuses/show/:id`
+|Get the details of the tweet specified by `:id`.
+
+|`GET search`
+|Search for tweets
+
+|`POST statuses/update`
+|Post a new tweet
+
+|`POST media/upload`
+|Upload images
+
+|`POST statuses/destroy/:id`
+|Delete a tweet specified by `:id`.
+
+|`POST statuses/retweet/:id`
+|Retweet a tweet specified by `:id`.
+
+|`POST statuses/unretweet/:id`
+|Undo retweet of a tweet specified by `:id`.
+
+|`POST favorites/create`
+|Like the selected tweet.
+
+|`POST favorites/destroy`
+|Undo like of the selected tweet.
+|=== 
+
+Based on this list of APIs, let's simulate the client-server communication that happens when you open a Twitter app or website.
+
+When a user opens Twitter, the first API request sent to the server is `GET statuses/home_timeline`, which retrieves a list of tweets in the user's home timeline.
+Each tweet is in JSON format and contains attributes such as `id`, `text`, `user`, `coordinates`, and `entities`.
+The `id` represents the unique ID of the tweet, and the `text` contains the body of the tweet.
+The `user` is a JSON data containing the information of the user who posted the tweet, including the name and URL of the profile image.
+The `coordinates` contains the geographic coordinates of where the tweet was posted.
+`entities` contains the links to media files (images, etc.) related to the tweet.
+From `GET statuses/home_timeline`, a list of the most recent tweets is retrieved (or a part of the list if the list is too long).
+If you know the ID of the tweet, you can call `GET statuses/show/:id` to retrieve the specific tweet specified by the `:id` parameter.
+
+The `GET search` API is used to search tweets.
+The `GET search` API can be used to search for tweets by passing various query conditions, such as words in the tweet, hashtags, and the date, time, and location of the tweet.
+The API will return the tweet data in JSON format, similar to `GET statuses/home_timeline`.
+
+When a user posts a new tweet, the `POST statuses/update` endpoint is used.
+The `POST statuses/update` endpoint receives the text of the tweet, and in the case of a reply, the ID of the tweet to which the user is replying.
+If you want to attach images to the tweet, use `POST media/upload` as well.
+To delete a tweet, `POST statuses/destroy/:id` is used.
+
+Other frequently used operations are `POST statuses/retweet/:id` and `POST statuses/unretweet/:id`.
+These APIs are used to retweet or unretweet the tweet specified by `:id`, respectively.
+In addition, `POST favorites/create` and `POST favorites/destroy` can be used to add or remove a "like" to a selected tweet.
+
+This is the sequence of operations that takes place behind Twitter applications.
+If you want to create your own bot, you can do so by writing a custom program that combines these APIs.
+
+As you can see, APIs are the most fundamental element in the construction of any web service.
+In the following sections, the terms introduced in this section will appear many times, so please keep them in mind before reading on.
+
