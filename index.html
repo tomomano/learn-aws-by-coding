@@ -524,19 +524,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#sec_aws_batch">9. Hands-on #4: AWS Batch を使って機械学習のハイパーパラメータサーチを並列化する</a>
 <ul class="sectlevel2">
-<li><a href="#_auto_scaling_group_asg">9.1. Auto Scaling group (ASG)</a></li>
+<li><a href="#_auto_scaling_groups_asg">9.1. Auto scaling groups (ASG)</a></li>
 <li><a href="#_aws_batch">9.2. AWS Batch</a></li>
 <li><a href="#_準備_2">9.3. 準備</a></li>
 <li><a href="#_mnist_手書き文字認識_再訪">9.4. MNIST 手書き文字認識 (再訪)</a></li>
-<li><a href="#sec_run_mnist_docker_local">9.5. ローカルで Docker を実行</a></li>
-<li><a href="#_アプリケーションの説明_4">9.6. アプリケーションの説明</a></li>
-<li><a href="#_スタックのデプロイ_3">9.7. スタックのデプロイ</a></li>
-<li><a href="#_docker_image_を_ecr_に配置する">9.8. Docker image を ECR に配置する</a></li>
-<li><a href="#_job_を実行する_まずは一つだけ">9.9. Job を実行する (まずは一つだけ)</a></li>
-<li><a href="#_並列にたくさんの_job_を実行する">9.10. 並列にたくさんの Job を実行する</a></li>
-<li><a href="#_スタックの削除_3">9.11. スタックの削除</a></li>
-<li><a href="#_クラウドを用いた機械学習アプリケーションの開発とデバッグ">9.12. クラウドを用いた機械学習アプリケーションの開発とデバッグ</a></li>
-<li><a href="#_小括_2">9.13. 小括</a></li>
+<li><a href="#sec:aws_batch_code">9.5. アプリケーションの説明</a></li>
+<li><a href="#_スタックのデプロイ_3">9.6. スタックのデプロイ</a></li>
+<li><a href="#sec:aws_batch_deploy_docker_on_ecr">9.7. Docker image を ECR に配置する</a></li>
+<li><a href="#_単一のジョブを実行する">9.8. 単一のジョブを実行する</a></li>
+<li><a href="#sec:batch_parallel_jobs">9.9. 並列に複数の Job を実行する</a></li>
+<li><a href="#sec:batch_destroy_app">9.10. スタックの削除</a></li>
+<li><a href="#_小括_2">9.11. 小括</a></li>
 </ul>
 </li>
 <li><a href="#_web_サービスの作り方">10. Web サービスの作り方</a>
@@ -550,10 +548,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#chap_serverful_cloud">11.1. Serverful クラウド (従来型)</a></li>
 <li><a href="#_serverless_クラウドへ">11.2. Serverless クラウドへ</a></li>
-<li><a href="#_lambda">11.3. Lambda</a></li>
-<li><a href="#_サーバーレスストレージ_s3">11.4. サーバーレスストレージ: S3</a></li>
-<li><a href="#_サーバーレスデータベース_dynamodb">11.5. サーバーレスデータベース: DynamoDB</a></li>
-<li><a href="#_その他のサーバーレスクラウドの構成要素">11.6. その他のサーバーレスクラウドの構成要素</a></li>
+<li><a href="#_サーバーレスクラウドを構成するコンポーネント">11.3. サーバーレスクラウドを構成するコンポーネント</a></li>
 </ul>
 </li>
 <li><a href="#sec_intro_serverless">12. Hands-on #5: サーバーレス入門</a>
@@ -566,7 +561,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#sec_bashoutter">13. Hands-on #6: Bashoutter</a>
 <ul class="sectlevel2">
 <li><a href="#_準備_3">13.1. 準備</a></li>
-<li><a href="#_アプリケーションの説明_5">13.2. アプリケーションの説明</a></li>
+<li><a href="#_アプリケーションの説明_4">13.2. アプリケーションの説明</a></li>
 <li><a href="#_アプリケーションのデプロイ">13.3. アプリケーションのデプロイ</a></li>
 <li><a href="#sec:bashoutter_test_api">13.4. API リクエストを送信する</a></li>
 <li><a href="#_大量の_api_リクエストをシミュレートする">13.5. 大量の API リクエストをシミュレートする</a></li>
@@ -5608,24 +5603,21 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 <p>ハンズオン第三回では， ECS と Fargate を使って自動質問回答システムを構築した．
 シンプルながらも，複数の質問が送られた場合には並列にジョブが実行され，ユーザーに答えが返されるシステムを作ることができた．
 ここでは，すでに学習済みの言語モデルを用いてアプリケーションを構築した．
-しかし，機械学習のワークフローでは，自分で作ったモデルを訓練することが最初のステップにあるはずである．
+しかし，一般的に言って，機械学習のワークフローでは自分で作ったモデルを訓練することが最初のステップにあるはずである．
 そこで，ハンズオン第四回では，クラウドを用いて機械学習の訓練を並列化・高速化することを考える．</p>
 </div>
 <div class="paragraph">
-<p>具体的には，本ハンズオンでは深層学習におけるハイパーパラメータ最適化を取り上げる．
+<p>本ハンズオンでは深層学習におけるハイパーパラメータ最適化を取り上げる．
 ハイパーパラメータとは，勾配降下法によって最適化されるニューラルネットのパラメータの外にあるパラメータのことであり，具体的にはモデルの層の幅・深さなどネットワークのアーキテクチャに関わるもの，学習率やモメンタムなどパラメータの更新則に関わるものなどが含まる．
 深層学習においてハイパーパラメータの調整はとても重要なタスクである．
 しかしながら，ハイパーパラメータを調整するには，少しずつ条件を変えながら何度もニューラルネットを学習させる必要があり，多くの計算時間がかかる．
-本ハンズオンでは，クラウドの強力な計算リソースを利用して並列的にニューラルネットの訓練を実行することで，この問題を高速に解く方法を学んでいこう．</p>
-</div>
-<div class="paragraph">
-<p>このハンズオンは，本書で扱うハンズオンの中でも最も難易度が高いものだ (もう少し正確に言うなら，最もステップ数が多い)．
-内容が少し難しく感じる読者もいるかもしれないが，頑張ってついてきてほしい．</p>
+研究・開発においては，スループットよくたくさんのモデルの可能性を探索することが生産性を決める重要なファクターであり，ハイパーパラメータ探索を高速に解くという問題は極めて関心が高い．
+本ハンズオンでは，クラウドの強力な計算リソースを利用して並列的にニューラルネットの訓練を実行することで，この問題を解く方法を学んでいこう．</p>
 </div>
 <div class="sect2">
-<h3 id="_auto_scaling_group_asg">9.1. Auto Scaling group (ASG)</h3>
+<h3 id="_auto_scaling_groups_asg">9.1. Auto scaling groups (ASG)</h3>
 <div class="paragraph">
-<p>ハンズオンに入っていく前に， <strong>Auto Scaling group (ASG)</strong> とよばれる EC2 の概念を知っておく必要がある．</p>
+<p>ハンズオンに入っていく前に， <strong>Auto scaling groups (ASG)</strong> とよばれる EC2 の概念を知っておく必要がある．</p>
 </div>
 <div class="paragraph">
 <p>ECS の概要を示した <a href="#ecs_overview">Figure 43</a> を振り返って見てほしい．
@@ -5633,17 +5625,28 @@ Fargate のインスタンスを起動し， Docker image を配置するまで�
 Fargate については前章で記述した．
 Fargate を用いると，自在にスケールする計算環境をとても簡単な設定で構築することができた．
 しかし， GPU を利用することができないなど，いくつかの制約があった．
-EC2 を使用した計算環境を指定することで，設定の複雑度は増すが， GPU やその他のより高度かつ複雑な設定を伴ったクラスターを構築することができる．
-クラスターで EC2 を用いる場合について，以下に簡単な説明を行う．</p>
+EC2 を使用した計算環境を指定することで，プログラミングの複雑度は増すが， GPU やその他のより高度かつ複雑な設定を伴ったクラスターを構築することができる．</p>
 </div>
 <div class="paragraph">
 <p>EC2 クラスターには <strong>ASG</strong> と呼ばれるサービスが配置される．
-ASG はクラスターのスケーリングを担っており，ASG によって新しいインスタンスの起動や，不要になったインスタンスの停止が実行される．
-どのような基準でインスタンスの起動・停止を行うかのルールのことを，<strong>スケーリングポリシー</strong>とよぶ．
-ASG にはユーザーの指定したスケーリングポリシーを定義することが可能である．
-たとえば，クラスター全体の稼働率 (負荷) を 80% に維持する，かつ，起動インスタンスの上限は100台とする，などのポリシーを設定できる．
-あるいはユーザーの作成したカスタムのプログラムでスケーリングを制御することも可能である．
-ECS と ASG が協調することで，フレキシブルかつ効率的なタスクの配置とクラスターのスケーリングが可能になるのである．</p>
+ASG は複数の EC2 インスタンスをロジカルな単位でグループ化することでクラスターを構成する．
+ASG はクラスター内に新しいインスタンスを起動する，あるいは不要になったインスタンスを停止するなどのスケーリングを担う．
+ASG で重要な概念として， <strong>desired capacity</strong>, <strong>minimum capacity</strong>, <strong>maximum capacity</strong> というパラメータがある．
+minimum capacity， maximum capacity は，それぞれクラスター内に配置できるインスタンスの数の最小値・最大値を指定するパラメータである．
+前者は，クラスターに負荷がかかっていない場合でもアイドリング状態にあるインスタンスを維持することで，急に負荷が増大した時などのバッファーとして作用することができる．
+後者は，負荷が急に増えたときに，過剰な数のインスタンスが起動する事態を防ぎ，経済的なコストの上限を定める役割を果たす．</p>
+</div>
+<div class="paragraph">
+<p>desired capacity が，その時々でシステムが要求するインスタンスの数を指定する．
+desired capacity は，例えば24時間のリズムに合わせてインスタンスの数を増減させる (昼は多く夜は少なくなど) などの決まったスケジュールに基づいた設定を適用することができる．
+あるいはクラスター全体にかかっている負荷に応じて， desired capacity を動的に制御することも可能である．
+どのような基準でクラスターのスケーリングを行うかを定めるルールのことを，<strong>スケーリングポリシー</strong>とよぶ．
+たとえば，クラスター全体の稼働率 (負荷) を常に 80% に維持する，などのスケーリングポリシーが想定できる．
+この場合，クラスター全体の負荷が80%を下回ったときにはクラスターからインスタンスが削除され，80%を超える (あるいは超えると予測される) 場合はインスタンスを追加する，という操作が ASG によって自動的に行われる．</p>
+</div>
+<div class="paragraph">
+<p>上記のようなパラメータを検討し，ユーザーは ASG を作成する．
+ASG を作成したのち， ECS との連携をプログラムしてあげることで， ECS を介して ASG による EC2 クラスターにタスクを投入することが可能になる．</p>
 </div>
 </div>
 <div class="sect2">
@@ -5652,10 +5655,10 @@ ECS と ASG が協調することで，フレキシブルかつ効率的なタ�
 <div class="content">
 <img src="imgs/aws_logos/Batch.png" alt="Batch" width="100">
 </div>
-<div class="title">Figure 55. AWS Batch のロゴ</div>
+<div class="title">Figure 55. AWS Batch のアイコン</div>
 </div>
 <div class="paragraph">
-<p>上記で説明したように， ECS と ASG を組み合わせることで，所望の計算クラスターを構築することが可能である．
+<p>先に説明したように， ECS と ASG を組み合わせることで，所望の計算クラスターを構築することが可能である．
 しかしながら， ECS と ASG にはかなり込み入った設定が必要であり，初心者にとっても経験者にとってもなかなか面倒なプログラミングが要求される．
 そこで， ECS と ASG によるクラスターの設計を自動化してくれるサービスが提供されている．
 それが <strong>AWS Batch</strong> である．</p>
@@ -5670,16 +5673,16 @@ AWS Batch を用いることの利点は，クラスターのスケーリング�
 </div>
 <div class="paragraph">
 <p>AWS Batch では，ジョブの投入・管理をスムーズに行うため，次のような概念が定義されている (<a href="#fig_batch_concept">Figure 56</a>)．
-まず， <strong>Job</strong> というのが，AWS Batch によって実行される一つの計算の単位である．
-<strong>Job definitions</strong> とは Job の内容を定義するものであり，これには実行されるべき Docker のイメージのアドレスや，割り当てる CPU・RAM の容量，環境変数などの設定が含まれる．
-Job definition に基づいて個々の Job が実行される．
-Job が実行されると， Job は <strong>Job queues</strong> に入る．
+まず， <strong>ジョブ (Job)</strong> というのが，AWS Batch によって実行される一つの計算の単位である．
+<strong>Job definitions</strong> とはジョブの内容を定義するものであり，これには実行されるべき Docker のイメージのアドレスや，割り当てる CPU・RAM の容量，環境変数などの設定が含まれる．
+Job definition に基づいて個々のジョブが実行される．
+ジョブが実行されると，ジョブは <strong>Job queues</strong> に入る．
 Job queues とは，実行待ち状態にあるジョブの列のことであり，時間的に最も先頭に投入されたジョブが最初に実行される．
-また，複数の queue を配置し， queue ごとに priority (優先度) を設定することが可能であり， priority の高い queue に溜まった Job が優先的に実行される
+また，複数の queue を配置し， queue ごとに priority (優先度) を設定することが可能であり， priority の高い queue に溜まったジョブが優先的に実行される
 (筆者はこれをディズニーランドの"ファストパス"を連想して捉えている)．
 <strong>Compute environment</strong> とは，先述したクラスターとほぼ同義の概念であり，計算が実行される場所 (EC2 や Fargate からなるクラスター) を指す．
 Compute environment には，使用する EC2 のインスタンスタイプや同時に起動するインスタンス数の上限などの簡易なスケーリングポリシーが指定されている．
-Job queues は Compute environment の空き状況を監視しており， それに応じて Job を Compute environment に投下する．</p>
+Job queues は Compute environment の空き状況を監視しており， それに応じてジョブを Compute environment に投下する．</p>
 </div>
 <div class="paragraph">
 <p>以上が AWS Batch を使用するうえで理解しておかなければならない概念であるが，くどくど言葉で説明してもなかなかピンとこないだろう．
@@ -5691,12 +5694,124 @@ Job queues は Compute environment の空き状況を監視しており， そ�
 </div>
 <div class="title">Figure 56. AWS Batch の主要な概念</div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>EC2 or Fargate?</strong></p>
+</div>
+<div class="paragraph">
+<p>ECS でクラスターを構成する際，計算を実行する場として EC2 と Fargate の二つの選択肢があることを説明した．
+それぞれ長所と短所を抱えているのだが，どのような場合にどちらを使うべきだろうか？
+それを検討するため，まずは <a href="#tab:ec2_vs_fargate">Table 5</a> を見てみよう．
+これはEC2 と Fargate の特徴をまとめたものである．
+説明の都合上，大幅な粗視化が行われている点は留意していただきたい．</p>
+</div>
+<table id="tab:ec2_vs_fargate" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. EC2 vs Fargate</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">EC2</th>
+<th class="tableblock halign-left valign-top">Fargate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compute capacity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium to large</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Small to medium</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPU</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Launch speed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Slow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fast</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Task placement flexibility</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Programming complexity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>これまでに見てきたように， EC2 は最大の CPU 数・メモリーサイズが大きかったり， GPU を利用できたりするなど，単一のインスタンスでの計算能力は高い．
+対して， Fargate は単一インスタンスの最大 CPU 数は4コアが上限である．
+その一方で，インスタンスの起動に要する時間は Fargate のほうが圧倒的に早く，より俊敏にクラスターのスケーリングを行うことができる．
+また，タスクをクラスターに投入する際のフレキシビリティも Fargate のほうが高い．
+フレキシビリティというのは，例えば一つのインスタンスで2つ以上のコンテナを走らせる，などの状況である．
+単位 CPU あたりで処理されるタスクの数を最大化する際には，このような設計がしばしば採用される．
+プログラミングの複雑さという観点からは， Fargate のほうが一般的にシンプルな実装になる．</p>
+</div>
+<div class="paragraph">
+<p>このように， EC2 と Fargate は互いに相補的な特性を有しており，アプリケーションによって最適な計算環境は検討される必要がある．
+また，EC2 と Fargate を両方用いたハイブリッドクラスターというのも定義可能であり，そのような選択肢もしばしば用いられる．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_準備_2">9.3. 準備</h3>
 <div class="paragraph">
+<p>ハンズオンのソースコードは GitHub の
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/aws-batch">handson/aws-batch</a>
+にある．</p>
+</div>
+<div class="paragraph">
 <p>本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<a href="#handson_01_prep">Section 4.1</a>) が整っていることを前提とする．
-それ以外に必要な準備はない．</p>
+また， Docker が自身のローカルマシンにインストール済みであることも必要である．</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>このハンズオンは， <code>g4dn.xlarge</code> タイプの EC2 インスタンスを使うので，アメリカ東部 (<code>us-east-1</code>) リージョンでは 0.526 $/hour のコストが発生する．
+東京 (<code>ap-northeast-1</code>) を選択した場合は 0.71 $/hour のコストが発生する．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><a href="#sec:jupyter_and_deep_learning_setup">Section 6.1</a> でも注意したが，このハンズオンを始める前に G タイプインスタンスの起動上限を AWS コンソールの EC2 管理画面から確認しよう．
+もし上限が0になっていた場合は，上限緩和の申請を行う必要がある．
+<a href="#sec:aws_batch_code">Section 9.5</a> にも関連した情報を記載しているので，併せて参照されたい．</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -5714,7 +5829,7 @@ Job queues は Compute environment の空き状況を監視しており， そ�
 </div>
 </div>
 <div class="paragraph">
-<p>ここで使用された 学習率 (<code>lr=0.01</code>) や モメンタム (<code>momentum=0.5</code>) は恣意的に選択された値であり，これがベストな数値であるのかはわからない．
+<p>ここで使用された 学習率 (<code>lr=0.01</code>) やモメンタム (<code>momentum=0.5</code>) は恣意的に選択された値であり，これがベストな数値であるのかはわからない．
 たまたまこのチョイスが最適であるかもしれないし，もっと高い精度を出すハイパーパラメータの組が存在するかもしれない．
 この問題に答えるため，ハイパーパラメータサーチを行おう．
 今回は，最もシンプルなアプローチとして，<strong>グリッドサーチ</strong>によるハイパーパラメータサーチを行おう．</p>
@@ -5746,26 +5861,25 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 </div>
 <div class="paragraph">
 <p>一方，ベイズ最適化による方法は，過去の結果をもとに次の探索が決定されるので，並列化はそれほど単純ではない．
-最近では <a href="https://optuna.org/">Optuna</a> などのハイパーパラメータ探索のためのライブラリが発達しており，ベイズ最適化の数理的な処理を自動で実行してくれるので便利である．
+最近では <a href="https://optuna.org/">optuna</a> などのハイパーパラメータ探索のためのライブラリが発達しており，ベイズ最適化の数理的な処理を自動で実行してくれるので便利である．
 これらのライブラリを使うと，もし一台のコンピュータ (ノード) の中に複数の GPU が存在する場合は，並列に計算を実行することができる．
 しかしながら，一台のノードにとどまらず，複数のノードをまたいだ並列化は，高度なプログラミングテクニックが必要とされるだけでなく，ノード間の接続様式などクラウドのアーキテクチャにも深く依存するものである．
 本書ではここまで高度なクラウドの使用方法には立ち入らない．</p>
 </div>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="sec_run_mnist_docker_local">9.5. ローカルで Docker を実行</h3>
 <div class="paragraph">
-<p>まずは，本ハンズオンで使用する Docker image をローカルで実行してみよう．</p>
+<p>まずは，本ハンズオンで使用する Docker イメージをローカルで実行してみよう．</p>
 </div>
 <div class="paragraph">
-<p>Docker image のソースコードは <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/aws-batch/docker">handson/aws-batch/docker</a> にある．
+<p>Docker イメージのソースコードは
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/docker">handson/aws-batch/docker</a>
+にある．
 基本的に <a href="#sec_mnist_using_jupyter">Section 6.7</a> のハンズオンを元にし，本ハンズオン専用の軽微な変更が施してある．
 興味のある読者はソースコードも含めて読んでいただきたい．</p>
 </div>
 <div class="paragraph">
-<p>練習として，この Docker image を手元でビルドするところからはじめてみよう．
+<p>練習として，この Docker イメージを手元でビルドするところからはじめてみよう．
 <code>Dockerfile</code> が保存されているディレクトリに移動し， <code>mymnist</code> という名前 (Tag) をつけてビルドを実行する．</p>
 </div>
 <div class="listingblock">
@@ -5773,6 +5887,24 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 <pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">cd </span>handson/aws-batch/docker
 <span class="nv">$ </span>docker build <span class="nt">-t</span> mymnist .</code></pre>
 </div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>docker build</code> でエラーが出たときは次の可能性を疑ってほしい．
+ビルドの中で， MNIST の画像データセットを <a href="http://yann.lecun.com/exdb/mnist/" class="bare">http://yann.lecun.com/exdb/mnist/</a> からダウンロードするのだが，ダウンロード先のサーバーがしばしばダウンしている．
+世界中の機械学習ユーザーがアクセスするので，これはしばしば発生するようである．
+サーバーがダウンしているとビルドも失敗してしまう．
+エラーメッセージにそれらしい文言が含まれていたら，この可能性を疑おう．</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -5795,15 +5927,15 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 </table>
 </div>
 <div class="paragraph">
-<p>Image の準備ができたら，次のコマンドでコンテナを起動し，実行する．</p>
+<p>イメージの準備ができたら，次のコマンドでコンテナを起動し， MNIST の学習を実行する．．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 100</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 10</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>このコマンドを実行すると，指定したハイパーパラメータ (学習率とモメンタム) を使ってニューラルネットの最適化が始まる．
+<p>このコマンドを実行すると，指定したハイパーパラメータ (<code>--lr</code> で与えられる学習率と <code>--momentum</code> で与えられるモメンタム) を使ってニューラルネットの最適化が始まる．
 学習を行う最大のエポック数は <code>--epochs</code> パラメータで指定する．
 <a href="#sec_jupyter_and_deep_learning">Section 6</a> のハンズオンで見たような， Loss の低下がコマンドライン上に出力されるだろう (<a href="#fig_mnist_log_output">Figure 57</a>)．</p>
 </div>
@@ -5820,7 +5952,7 @@ Embarrassingly parallel な問題はクラウドの強力な計算リソース�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> <span class="nt">--gpus</span> all mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 100</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">--gpus</span> all mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 10</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5861,7 +5993,7 @@ Early stopping とは，検証データの Loss を追跡し，それが減少�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_アプリケーションの説明_4">9.6. アプリケーションの説明</h3>
+<h3 id="sec:aws_batch_code">9.5. アプリケーションの説明</h3>
 <div class="paragraph">
 <p>このハンズオンで作成するアプリケーションの概要を <a href="#fig_batch_architecture">Figure 59</a> に示す．</p>
 </div>
@@ -5886,10 +6018,10 @@ Early stopping とは，検証データの Loss を追跡し，それが減少�
 <p>クラスター内では <code>g4dn.xlarge</code> インスタンスが起動する</p>
 </li>
 <li>
-<p>Docker image は， AWS 内に用意された ECR (Elastic Container Registry) から取得される</p>
+<p>Docker イメージは， AWS 内に用意された ECR (Elastic Container Registry) から取得される</p>
 </li>
 <li>
-<p>複数のジョブが投下された場合は，その数だけのインスタンスが起動し並列に実行される．</p>
+<p>複数のジョブが投下された場合は，その数だけのインスタンスが起動し並列に実行される</p>
 </li>
 <li>
 <p>各ジョブによる計算の結果は S3 に保存される</p>
@@ -5900,7 +6032,8 @@ Early stopping とは，検証データの Loss を追跡し，それが減少�
 </ul>
 </div>
 <div class="paragraph">
-<p>それでは，プログラムのソースコードを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/app.py">handson/aws-batch/app.py</a>)．</p>
+<p>それでは，プログラムのソースコードを見てみよう
+(<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/app.py">handson/aws-batch/app.py</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6074,7 +6207,9 @@ Early stopping とは，検証データの Loss を追跡し，それが減少�
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>で， Compute environment を定義している．
-ここでは <code>g4dn.xlarge</code> のインスタンスタイプを使用するとし，最大の vCPU 使用数は 64 と指定している．</td>
+ここでは <code>g4dn.xlarge</code> のインスタンスタイプを使用するとし，最大の vCPU 使用数は 64 と指定している．
+また，最小の vCPU は 0 である．
+今回は，負荷がかかっていないときにアイドリング状態にあるインスタンスを用意する利点は全くないので，ここは0にするのが望ましい．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -6082,7 +6217,8 @@ Early stopping とは，検証データの Loss を追跡し，それが減少�
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>で， Job が計算結果を S3 に書き込むことができるよう， IAM ロールを定義している．</td>
+<td>で，ジョブが計算結果を S3 に書き込むことができるよう， IAM ロールを定義している．
+(IAM とはリソースがもつ権限を管理する仕組みである．詳しくは <a href="#sec:bashoutter_iam">[sec:bashoutter_iam]</a> を参照)</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -6105,7 +6241,10 @@ Early stopping とは，検証データの Loss を追跡し，それが減少�
 </td>
 <td class="content">
 <div class="paragraph">
-<p><code>g4dn.xlarge</code> は 1台あたり 4 vCPU が割り当てられているので，このプログラムで最大の vCPU 使用数が 64 だとすると，最大で 16 台のインスタンスが同時に起動することになる．</p>
+<p><code>g4dn.xlarge</code> は 1台あたり 4 vCPU が割り当てられている．
+このプログラムでは Compute environment の maximum vCPUs を 64 と指定しているので，最大で 16 台のインスタンスが同時に起動することになる．
+ここで maxium vCPUs を64に限定しているのは，なんらかのミスで意図せぬジョブを大量にクラスターに投入してしまった事態で，高額の AWS 利用料金が発生するのを防ぐためである．
+もし，自分のアプリケーションで必要と判断したならば自己責任において64よりも大きな数を設定して構わない．</p>
 </div>
 <div class="paragraph">
 <p>ここで注意が一点ある．
@@ -6114,7 +6253,7 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 <code>g4dn.xlarge</code> (EC2 の区分でいうと G ファミリーに属する) の制限を確認するには， <code>Running On-Demand All G instances</code> という名前の項目を見る．
 ここにある数字が， AWS によって課されたアカウントの上限であり，この上限を超えたインスタンスを起動することはできない．
 もし，自分の用途に対して上限が低すぎる場合は，上限の緩和申請を行うことができる．
-詳しくは <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html">公式ドキュメンテーション</a> を参照のこと．</p>
+詳しくは <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html">公式ドキュメンテーション "Amazon EC2 service quotas"</a> を参照のこと．</p>
 </div>
 <div id="fig_ec2_limits" class="imageblock text-center">
 <div class="content">
@@ -6128,7 +6267,7 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_スタックのデプロイ_3">9.7. スタックのデプロイ</h3>
+<h3 id="_スタックのデプロイ_3">9.6. スタックのデプロイ</h3>
 <div class="paragraph">
 <p>スタックの中身が理解できたところで，早速スタックをデプロイしてみよう．</p>
 </div>
@@ -6165,21 +6304,41 @@ AWS では各アカウントごとに EC2 で起動できるインスタンス�
 <p>まず目を向けてほしいのが，画面の一番下にある Compute environment overview の中の <code>SimpleBatchcompute-env</code> という名前の項目だ．
 Compute environment とは，先ほど述べたとおり，計算が実行される環境 (クラスターと読み替えてもよい) である．
 プログラムで指定したとおり， <code>g4dn.xlarge</code> が実際に使用されるインスタンスタイプとして表示されている．
-また，この時点では一つもジョブが走っていないので， <code>desired vCPUs</code> は 0 になっている．</p>
+また， <code>Minimum vCPUs</code> が0，<code>Maximum vCPUs</code> が 64 と設定されていることも見て取れる．
+加えて，この時点では一つもジョブが走っていないので， <code>Desired vCPUs</code> は0になっている．
+より詳細な Compute environment の情報を閲覧したい場合は，名前をクリックすることで詳細画面が開く．</p>
 </div>
 <div class="paragraph">
 <p>次に，Job queue overview にある <code>SimpleBatch-queue</code> という項目に注目してほしい．
-ここでは実行待ちのジョブ・実行中のジョブ・実行が完了したジョブを一覧で確認することができる．</p>
+ここでは実行待ちのジョブ・実行中のジョブ・実行が完了したジョブを一覧で確認することができる．
+<code>PENDING</code>, <code>RUNNING</code>, <code>SUCCEEDED</code>, <code>FAILED</code> などのカラムがあることが確認できる．ジョブが進行するにつれて，ジョブの状態がこのカラムにしたがって遷移していく．
+後でジョブを実際にサブミットしたときに戻ってこよう．</p>
+</div>
+<div class="paragraph">
+<p>最後に，今回作成した Job definition を確認しよう．
+左側のメニューから　<code>Job definitions</code> を選択し，次の画面で <code>SimpleBatchjob-definition</code> という項目を見つけて開く．
+ここから Job definition の詳細を閲覧することができる (<a href="#fig:batch_job_definition">Figure 62</a>)．
+中でも重要な情報としては，　<code>vCPUs</code>, <code>Memory</code>, <code>GPU</code> がそれぞれ Docker に割り当てられる vCPU・メモリー・ GPU の量を規定している．
+また， <code>Image</code> と書いてあるところに，ジョブで使用される Docker イメージが指定されている．
+ここでは， ECR のレポジトリを参照している．
+現時点ではこの ECR は空である．
+次のステップとして，この ECR にイメージを配置する作業を行おう．</p>
+</div>
+<div id="fig:batch_job_definition" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/batch_job_definition.png" alt="batch_job_definition" width="700">
+</div>
+<div class="title">Figure 62. AWS Batch から Job definition を確認</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_docker_image_を_ecr_に配置する">9.8. Docker image を ECR に配置する</h3>
+<h3 id="sec:aws_batch_deploy_docker_on_ecr">9.7. Docker image を ECR に配置する</h3>
 <div class="paragraph">
-<p>さて， Batch がジョブを実行するには，どこか指定された場所から Docker image をダウンロード (pull) してくる必要がある．
-前回のハンズオン (<a href="#sec_fargate_qabot">Section 8</a>) では，公開設定にしてある Docker Hub から image を pull してきた．
-今回のハンズオンでは， AWS から提供されているコンテナ置き場である <strong>ECR (Elastic Container Registry)</strong> に image を配置するという設計を採用する．
-ECR を利用する利点は，自分だけがアクセスすることのできるプライベートな image の置き場所を用意できる点である．
-Batch は ECR から image を pull してくることで，タスクを実行する (<a href="#fig_batch_architecture">Figure 59</a>)．</p>
+<p>さて， Batch がジョブを実行するには，どこか指定された場所から Docker イメージをダウンロード (pull) してくる必要がある．
+前回のハンズオン (<a href="#sec_fargate_qabot">Section 8</a>) では，公開設定にしてある Docker Hub からイメージを pull してきた．
+今回のハンズオンでは， AWS から提供されているレジストリである <strong>ECR (Elastic Container Registry)</strong> に image を配置するという設計を採用する．
+ECR を利用する利点は，自分だけがアクセスすることのできるプライベートなイメージの置き場所を用意できる点である．
+Batch は ECR からイメージを pull してくることで，タスクを実行する (<a href="#fig_batch_architecture">Figure 59</a>)．</p>
 </div>
 <div class="paragraph">
 <p>スタックのソースコードでいうと，次の箇所が ECR を定義している．</p>
@@ -6210,38 +6369,38 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>で Job definition を定義する中で， image を &lt;1&gt; で作った ECR から取得するように指定している．
+<td>で Job definition を定義する中で，イメージを &lt;1&gt; で作った ECR から取得するように指定している．
 これと同時に， Job definition には ECR へのアクセス権限が IAM を通じて自動的に付与される．</td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
 <p>さて，スタックをデプロイした時点では， ECR は空っぽである．
-ここに自分のアプリケーションで使う Docker image を push してあげる必要がある．</p>
+ここに自分のアプリケーションで使う Docker イメージを push してあげる必要がある．</p>
 </div>
 <div class="paragraph">
 <p>そのために，まずは AWS コンソールから ECR の画面を開こう (検索バーに <code>Elastic Container Registry</code> と入力すると出てくる)．
-<code>Private</code> というタブを選択すると， <code>simplebatch-repositoryXXXXXX</code> という名前のレポジトリが見つかるだろう (<a href="#fig_ecr_console1">Figure 62</a>)．</p>
+<code>Private</code> というタブを選択すると， <code>simplebatch-repositoryXXXXXX</code> という名前のレポジトリが見つかるだろう (<a href="#fig_ecr_console1">Figure 63</a>)．</p>
 </div>
 <div id="fig_ecr_console1" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_batch/ecr_console1.png" alt="ecr console" width="700">
 </div>
-<div class="title">Figure 62. ECR のコンソール画面</div>
+<div class="title">Figure 63. ECR のコンソール画面</div>
 </div>
 <div class="paragraph">
 <p>次に，このレポジトリの名前をクリックするとレポジトリの詳細画面に遷移する．
 そうしたら，画面右上にある <code>View push commands</code> というボタンをクリックする．
-すると <a href="#fig_ecr_push_command">Figure 63</a> のようなポップアップ画面が立ち上がる．</p>
+すると <a href="#fig_ecr_push_command">Figure 64</a> のようなポップアップ画面が立ち上がる．</p>
 </div>
 <div id="fig_ecr_push_command" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_batch/ecr_push_command.png" alt="ecr push command" width="700">
 </div>
-<div class="title">Figure 63. ECR への push コマンド</div>
+<div class="title">Figure 64. ECR への push コマンド</div>
 </div>
 <div class="paragraph">
-<p>このポップアップ画面で表示されている４つのコマンドを順番に実行していくことで，手元の Docker image を ECR に push することができる．
+<p>このポップアップ画面で表示されている四つのコマンドを順番に実行していくことで，手元の Docker イメージを ECR に push することができる．
 <strong>push を実行する前に， AWS の認証情報が設定されている</strong>ことを確認しよう．
 そのうえで，ハンズオンのソースコードの中にある <strong><code>docker/</code> という名前のディレクトリに移動</strong>する．
 そうしたら，ポップアップ画面で表示されたコマンドを上から順に実行していく．</p>
@@ -6255,7 +6414,7 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 <td class="content">
 <div class="paragraph">
 <p>ポップアップで表示されるコマンドの2つめを見てみると <code>docker build -t XXXXX .</code> となっている．
-最後の <code>.</code> が重要で，これは <em>現在のディレクトリにある Dockerfile を使って image をビルドせよ</em> という意味である．
+最後の <code>.</code> が重要で，これは <em>現在のディレクトリにある Dockerfile を使ってイメージをビルドせよ</em> という意味である．
 このような理由で， <code>Dockerfile</code> が置いてあるディレクトリに移動する必要がある．</p>
 </div>
 </td>
@@ -6263,46 +6422,31 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </table>
 </div>
 <div class="paragraph">
-<p>4つめのコマンドには少し時間がかかるかもしれないが，これが完了するとめでたく image が ECR に配置されたことになる．
-もう一度 ECR のコンソールを見てみると，確かに image が配置されていることが確認できる (<a href="#fig_ecr_console2">Figure 64</a>)．</p>
-</div>
-<div class="paragraph">
-<p>これで，AWS Batch を使ってジョブを実行させるための最後の準備が完了した．</p>
+<p>四つ目のコマンドは，数GBあるイメージを ECR にアップロードするので少し時間がかかるかもしれないが，これが完了するとめでたくイメージが ECR に配置されたことになる．
+もう一度 ECR のコンソールを見てみると，確かにイメージが配置されていることが確認できる (<a href="#fig_ecr_console2">Figure 65</a>)．
+これで，AWS Batch を使ってジョブを実行させるための最後の準備が完了した．</p>
 </div>
 <div id="fig_ecr_console2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_batch/ecr_console2.png" alt="ecr console 2" width="700">
 </div>
-<div class="title">Figure 64. ECR へ image の配置が完了した</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>今回のハンズオンで紹介するアプリケーションは， Docker image を置き換えることで，ユーザー自身の計算ジョブを実行することが可能である．
-興味のある読者は，自分自身の Docker image を ECR に配置し，ジョブを実行してみると良い．</p>
-</div>
-</td>
-</tr>
-</table>
+<div class="title">Figure 65. ECR へ image の配置が完了した</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_job_を実行する_まずは一つだけ">9.9. Job を実行する (まずは一つだけ)</h3>
+<h3 id="_単一のジョブを実行する">9.8. 単一のジョブを実行する</h3>
 <div class="paragraph">
 <p>さて，ここからは実際に AWS Batch にジョブを投入する方法を見ていこう．</p>
 </div>
 <div class="paragraph">
-<p>ハンズオンのディレクトリの <code>notebook/</code> というディレクトリの中に， <code>run_single.ipynb</code> というファイルが見つかるはずである (<code>.ipynb</code> は Jupyter notebook のファイル形式)．
-これを Jupyter Notebook から開こう．</p>
+<p>ハンズオンのディレクトリの <code>notebook/</code> というディレクトリの中に，
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/notebook/run_single.ipynb">run_single.ipynb</a>
+というファイルが見つかるはずである (<code>.ipynb</code> は Jupyter notebook のファイル形式)．
+これを Jupyter notebook から開こう．</p>
 </div>
 <div class="paragraph">
-<p>今回のハンズオンでは， <code>venv</code> による仮想環境の中に Jupyter Notebook もインストール済みである．
-なので，以下のコマンドで Jupyter Notebook を立ち上げる．</p>
+<p>今回のハンズオンでは， <code>venv</code> による仮想環境の中に Jupyter notebook もインストール済みである．
+なので，ローカルマシンから以下のコマンドで Jupyter notebook を立ち上げる．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6312,10 +6456,10 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </div>
 </div>
 <div class="paragraph">
-<p>Jupyter Notebook が起動したら， <code>run_single.ipynb</code> を開く．</p>
+<p>Jupyter notebook が起動したら， <code>run_single.ipynb</code> を開く．</p>
 </div>
 <div class="paragraph">
-<p>最初の [1], [2]. [3] 番のセルは，ジョブをサブミットするための関数 (<code>submit_job()</code>) を定義している．</p>
+<p>最初の [1], [2], [3] 番のセルは，ジョブをサブミットするための関数 (<code>submit_job()</code>) を定義している．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6382,19 +6526,18 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </div>
 <div class="paragraph">
 <p><code>submit_job()</code> 関数について簡単に説明しよう．
-<a href="#sec_run_mnist_docker_local">Section 9.5</a> で， MNIST の Docker をローカルで実行したとき，次のようなコマンドを使用した．</p>
+<a href="#sec_run_mnist_docker_local">[sec_run_mnist_docker_local]</a> で， MNIST の Docker をローカルで実行したとき，次のようなコマンドを使用した．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 100</code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 10</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>ここで， <code>--lr 0.1 --momentum 0.5 --epochs 100</code> の部分が， Docker に渡されるコマンドである．</p>
+<p>ここで， <code>--lr 0.1 --momentum 0.5 --epochs 10</code> の部分が，コンテナに渡されるコマンドである．</p>
 </div>
 <div class="paragraph">
-<p>AWS Batch でジョブを実行する際も，同じようなコマンドを Docker に渡せばよい．
-<code>submit_job()</code> 関数は，このコマンドの文字列を生成し，ジョブに渡している．
+<p>AWS Batch でジョブを実行する際も，<code>ContainerOverrides</code> の <code>command</code> というパラメータを使用することで，コンテナに渡されるコマンドを指定することができる．
 コードでは以下の部分が該当する．</p>
 </div>
 <div class="listingblock">
@@ -6416,7 +6559,7 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </div>
 <div class="paragraph">
 <p>続いて， [4] 番のセルに移ろう．
-ここでは，上記の <code>submit_job()</code> 関数を用いて， 学習率 = 0.01, モメンタム = 0.1 を指定したジョブを投入する．</p>
+ここでは，上記の <code>submit_job()</code> 関数を用いて， 学習率 = 0.01, モメンタム=0.1, エポック数=100 を指定したジョブを投入する．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6432,19 +6575,17 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </td>
 <td class="content">
 <div class="paragraph">
-<p>AWS の認証情報は， Jupyter notebook の内部から再度定義する必要がある．
-これを手助けするため， notebook の [2] 番のセル (デフォルトではすべてコメントアウトされている) を用意した．
+<p>AWS の認証情報は， Jupyter Notebook の内部から再度定義する必要がある．
+これを手助けするため， Notebook の [2] 番のセル (デフォルトではすべてコメントアウトされている) を用意した．
 これを使うにはコメントアウトを解除すればよい．
 このセルを実行すると， AWS の認証情報を入力する対話的なプロンプトが表示される．
 プロンプトに従って aws secret key などを入力することで， (Jupyter のセッションに固有な) 環境変数に AWS の認証情報が記録される．</p>
 </div>
 <div class="paragraph">
-<p>もう一つの認証方法として， <code>sumit_job()</code> 関数に <code>profile_name</code> というパラメータを用意した．
+<p>もう一つの認証方法として， <code>submit_job()</code> 関数に <code>profile_name</code> というパラメータを用意した．
 もし <code>~/.aws/credentials</code> に認証情報が書き込まれているのならば (詳しくは <a href="#aws_cli_install">Section 15.3</a>)， <code>profile_name</code> に使用したいプロファイルの名前を渡すだけで，
-認証を行うことができる．</p>
-</div>
-<div class="paragraph">
-<p>慣れている読者は後者のほうが便利であると感じるだろう．</p>
+認証を行うことができる．
+慣れている読者は後者のほうが便利であると感じるだろう．</p>
 </div>
 </td>
 </tr>
@@ -6452,24 +6593,24 @@ Batch は ECR から image を pull してくることで，タスクを実行�
 </div>
 <div class="paragraph">
 <p>[4] 番のセルを実行したら，ジョブが実際に投入されたかどうかを AWS コンソールから確認してみよう．
-AWS Batch の管理コンソールを開くと， <a href="#fig_batch_running_job">Figure 65</a> のような画面が表示されるだろう．</p>
+AWS Batch の管理コンソールを開くと， <a href="#fig_batch_running_job">Figure 66</a> のような画面が表示されるだろう．</p>
 </div>
 <div id="fig_batch_running_job" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_batch/batch_running_job.png" alt="batch running job" width="700">
 </div>
-<div class="title">Figure 65. AWS Batch でジョブが実行されている様子</div>
+<div class="title">Figure 66. AWS Batch でジョブが実行されている様子</div>
 </div>
 <div class="paragraph">
-<p><a href="#fig_batch_running_job">Figure 65</a> で赤で囲った箇所に注目してほしい．
+<p><a href="#fig_batch_running_job">Figure 66</a> で赤で囲った箇所に注目してほしい．
 一つのジョブが投入されると，それは <code>SUBMITTED</code> という状態を経て <code>RUNNABLE</code> という状態に遷移する．
 <code>RUNNABLE</code> とは， ジョブを実行するためのインスタンスが Compute environment に不足しているため，新たなインスタンスが起動されるのを待っている状態に相当する．
 インスタンスの準備が整うと，ジョブの状態は <code>STARTING</code> を経て <code>RUNNING</code> に至る．</p>
 </div>
 <div class="paragraph">
-<p>次に，ジョブのステータスが <code>RUNNING</code> のときの Compute environment の <code>Desired vCPU</code> を見てみよう (<a href="#fig_batch_running_job">Figure 65</a> で紫で囲った箇所)．
+<p>次に，ジョブのステータスが <code>RUNNING</code> のときの Compute environment の <code>Desired vCPU</code> を見てみよう (<a href="#fig_batch_running_job">Figure 66</a> で紫で囲った箇所)．
 ここで 4 と表示されているのは， <code>g4dn.xlarge</code> インスタンス一つ分の vCPU の数である．
-ジョブの投入に応じて，それを実行するのに最低限必要な EC2 インスタンスが起動されたことが確認できる．
+ジョブの投入に応じて，それを実行するのに最低限必要な EC2 インスタンスが起動されたことが確認できる
 (興味のある人は， EC2 コンソールも同時に覗いてみるとよい)．</p>
 </div>
 <div class="paragraph">
@@ -6482,15 +6623,15 @@ AWS Batch の管理コンソールを開くと， <a href="#fig_batch_running_jo
 AWS コンソールからこれを確認しよう．</p>
 </div>
 <div class="paragraph">
-<p>S3 のコンソールに行くと <code>simplebatch-bucketXXXXXXX</code> (XXXX の部分はユーザーによって異なる) という名前のバケットが見つかるはずである．
-これをクリックして中身を見てみると， <code>metrics_lr0.0100_m0.1000.csv</code> という名前の CSV があることが確認できるだろう (<a href="#fig_s3_saved_file">Figure 66</a>)．
+<p>S3 のコンソールに行くと <code>simplebatch-bucketXXXX</code> (XXXX の部分はユーザーによって異なる) という名前のバケットが見つかるはずである．
+これをクリックして中身を見てみると， <code>metrics_lr0.0100_m0.1000.csv</code> という名前の CSV があることが確認できるだろう (<a href="#fig_s3_saved_file">Figure 67</a>)．
 これが， 学習率 = 0.01, モメンタム = 0.1 として学習を行ったときの結果である．</p>
 </div>
 <div id="fig_s3_saved_file" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_batch/s3_saved_file.png" alt="s3 saved file" width="700">
 </div>
-<div class="title">Figure 66. ジョブの実行結果は S3 に保存される</div>
+<div class="title">Figure 67. ジョブの実行結果は S3 に保存される</div>
 </div>
 <div class="paragraph">
 <p>さて，ここで <code>run_single.ipynb</code> に戻ってこよう．
@@ -6552,11 +6693,12 @@ AWS コンソールからこれを確認しよう．</p>
 </div>
 </div>
 <div class="paragraph">
-<p>[7] を実行する際， <code>bucket_name</code> という変数の値を，<strong>自分自身のバケットの名前に置き換える</strong>ことに注意しよう
+<p>[6] で S3 から CSV データをダウンロードし， pandas の <code>DataFrame</code> オブジェクトとしてロードする関数を定義している．
+[7] を実行する際， <code>bucket_name</code> という変数の値を，<strong>自分自身のバケットの名前に置き換える</strong>ことに注意しよう
 (先ほど S3 コンソールから確認した <code>simplebatch-bucketXXXX</code> のことである)．</p>
 </div>
 <div class="paragraph">
-<p>続いて， [9] 番のセルで， CSV のデータをプロットしている (<a href="#fig_loss_epoch_profile2">Figure 67</a>)．
+<p>続いて， [9] 番のセルで， CSV のデータをプロットしている (<a href="#fig_loss_epoch_profile2">Figure 68</a>)．
 ローカルで実行したときと同じように， AWS Batch を用いて MNIST モデルを訓練することに成功した！</p>
 </div>
 <div class="listingblock">
@@ -6574,6 +6716,11 @@ AWS コンソールからこれを確認しよう．</p>
 11
 12
 13
+14
+15
+16
+17
+18
 </pre></td><td class="code"><pre><span class="c1"># [9]
 </span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
 <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
@@ -6587,6 +6734,11 @@ AWS コンソールからこれを確認しよう．</p>
 
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"Epochs"</span><span class="p">)</span>
 <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"Accuracy"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Best loss:"</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_loss"</span><span class="p">]</span><span class="o">.</span><span class="nb">min</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Best loss epoch:"</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_loss"</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Best accuracy:"</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_accuracy"</span><span class="p">]</span><span class="o">.</span><span class="nb">max</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Best accuracy epoch:"</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_accuracy"</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">())</span>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
@@ -6594,11 +6746,11 @@ AWS コンソールからこれを確認しよう．</p>
 <div class="content">
 <img src="imgs/aws_batch/loss_epoch_profile2.png" alt="loss_epoch_profile2" width="600">
 </div>
-<div class="title">Figure 67. AWS Batch で行った MNIST モデルの学習の結果</div>
+<div class="title">Figure 68. AWS Batch で行った MNIST モデルの学習の結果</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_並列にたくさんの_job_を実行する">9.10. 並列にたくさんの Job を実行する</h3>
+<h3 id="sec:batch_parallel_jobs">9.9. 並列に複数の Job を実行する</h3>
 <div class="paragraph">
 <p>さて，ここからが最後の仕上げである．
 ここまでのハンズオンで構築した AWS Batch のシステムを使って，ハイパーパラメータサーチを実際に行おう．</p>
@@ -6635,7 +6787,8 @@ AWS コンソールからこれを確認しよう．</p>
 </div>
 </div>
 <div class="paragraph">
-<p>セル [4] の for ループを使って，グリッド状にハイパーパラメータの組み合わせを用意し， batch にジョブを投入している．</p>
+<p>セル [4] の for ループを使って，グリッド状にハイパーパラメータの組み合わせを用意し， batch にジョブを投入している．
+ここでは 3x3=9個のジョブを作成した．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6653,30 +6806,30 @@ AWS コンソールからこれを確認しよう．</p>
 <div class="paragraph">
 <p>セル [4] を実行したら， Batch のコンソールを開こう．
 先ほどと同様に，ジョブのステータスは <code>SUBMITTED</code> &gt; <code>RUNNABLE</code> &gt; <code>STARTING</code> &gt; <code>RUNNING</code> と移り変わっていくことがわかるだろう．
-最終的に 9 個のジョブがすべて <code>RUNNING</code> の状態になることを確認しよう (<a href="#fig_batch_many_parallel_jobs">Figure 68</a>)．
-また，このとき Compute environment の <code>Desired vCPUs</code> は 4x9=36 となっていることを確認しよう (<a href="#fig_batch_many_parallel_jobs">Figure 68</a>)．</p>
+最終的に 9 個のジョブがすべて <code>RUNNING</code> の状態になることを確認しよう (<a href="#fig_batch_many_parallel_jobs">Figure 69</a>)．
+また，このとき Compute environment の <code>Desired vCPUs</code> は 4x9=36 となっていることを確認しよう (<a href="#fig_batch_many_parallel_jobs">Figure 69</a>)．</p>
 </div>
 <div id="fig_batch_many_parallel_jobs" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_batch/batch_many_parallel_jobs.png" alt="batch many parallel jobs" width="700">
 </div>
-<div class="title">Figure 68. 複数のジョブを同時投入したときの Batch コンソール</div>
+<div class="title">Figure 69. 複数のジョブを同時投入したときの Batch コンソール</div>
 </div>
 <div class="paragraph">
 <p>次に，Batch のコンソールの左側のメニューから <code>Jobs</code> をクリックしてみよう．
-ここでは，実行中の Job の一覧を確認することができる (<a href="#fig_batch_parallel_job_list">Figure 69</a>)．
-Job のステータスでフィルタリングをすることも可能である．
+ここでは，実行中のジョブの一覧が確認することができる (<a href="#fig_batch_parallel_job_list">Figure 70</a>)．
+ジョブのステータスでフィルタリングをすることも可能である．
 9個のジョブがどれも <code>RUNNING</code> 状態にあることが確認できるだろう．</p>
 </div>
 <div id="fig_batch_parallel_job_list" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_batch/batch_parallel_job_list.png" alt="batch many parallel jobs" width="700">
 </div>
-<div class="title">Figure 69. 複数のジョブを同時投入したときの Job 一覧</div>
+<div class="title">Figure 70. 複数のジョブを同時投入したときの Job 一覧</div>
 </div>
 <div class="paragraph">
 <p>今度は EC2 コンソールを見てみよう．
-左のメニューから <code>Instances</code> を選択すると， <a href="#fig_ec2_instances_list">Figure 70</a> に示すような起動中のインスタンスの一覧が表示される．
+左のメニューから <code>Instances</code> を選択すると， <a href="#fig_ec2_instances_list">Figure 71</a> に示すような起動中のインスタンスの一覧が表示される．
 <code>g4dn.xlarge</code> が 9 台稼働しているのが確認できる．
 Batch がジョブの投下に合わせて必要な数のインスタンスを起動してくれたのだ！</p>
 </div>
@@ -6684,7 +6837,7 @@ Batch がジョブの投下に合わせて必要な数のインスタンスを�
 <div class="content">
 <img src="imgs/aws_batch/ec2_instances_list.png" alt="ec2 instances list" width="700">
 </div>
-<div class="title">Figure 70. 複数のジョブを同時投入したときの EC2 インスタンスの一覧</div>
+<div class="title">Figure 71. 複数のジョブを同時投入したときの EC2 インスタンスの一覧</div>
 </div>
 <div class="paragraph">
 <p>ここまで確認できたら，それぞれの Job が終了するまでしばらく待とう (だいたい 10-15 分くらいで終わる)．
@@ -6698,10 +6851,8 @@ Batch がジョブの投下に合わせて必要な数のインスタンスを�
 AWS Batch を使ってこれらの計算を並列に実行することで，ジョブ一個分の計算時間 (=10分) ですべての計算を終えることができた！</p>
 </div>
 <div class="paragraph">
-<p>さて，再び <code>run_sweep.ipynb</code> に戻ってこよう．</p>
-</div>
-<div class="paragraph">
-<p>[5] 以降のセルでは，グリッドサーチの結果を可視化している．</p>
+<p>さて，再び <code>run_sweep.ipynb</code> に戻ってこよう．
+[5] 以降のセルでは，グリッドサーチの結果を可視化している．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6785,13 +6936,13 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 </div>
 </div>
 <div class="paragraph">
-<p>最終的に出力されるプロットが <a href="#fig_grid_search_result">Figure 71</a> である．</p>
+<p>最終的に出力されるプロットが <a href="#fig_grid_search_result">Figure 72</a> である．</p>
 </div>
 <div id="fig_grid_search_result" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_batch/grid_search_result.png" alt="grid_search_result" width="400">
 </div>
-<div class="title">Figure 71. ハイパーパラメータのグリッドサーチの結果</div>
+<div class="title">Figure 72. ハイパーパラメータのグリッドサーチの結果</div>
 </div>
 <div class="paragraph">
 <p>このプロットから，差は僅かであるが，学習率が 0.1 のときに精度は最大となることがわかる．
@@ -6822,29 +6973,27 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 </div>
 <div class="paragraph">
 <p>以上のようにして， CNN を用いた MNIST 分類モデルのハイパーパラメータの最適化の一連の流れを体験した．
-今回紹介したアプリケーションは， ECR に置く Docker image を入れ替えることで，任意のプログラムを実行することができる．
-興味のある読者は，ぜひ自分自身のカスタムの Docker image を作成して実行してみよう．</p>
+AWS Batch を利用することで，比較的少ないプログラミングで，動的に EC2 クラスターを制御し，並列にジョブを処理するシステムが構築できた．
+ここまで EC2 を使いこなすことができれば，多くの問題を自力で解くことが可能になるだろう！</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_スタックの削除_3">9.11. スタックの削除</h3>
+<h3 id="sec:batch_destroy_app">9.10. スタックの削除</h3>
 <div class="paragraph">
-<p>これにて，本ハンズオンは終了である．最後にスタックを削除しよう．</p>
-</div>
-<div class="paragraph">
-<p>今回のスタックを削除するにあたり，ECR に配置された Docker のイメージは手動で削除されなければならない
+<p>これにて，本ハンズオンは終了である．最後にスタックを削除しよう．
+今回のスタックを削除するにあたり，ECR に配置された Docker のイメージは手動で削除されなければならない
 (これをしないと， <code>cdk destroy</code> を実行したときにエラーになってしまう．
 これは CloudFormation の仕様なので従うしかない)．</p>
 </div>
 <div class="paragraph">
 <p>ECR の Docker image を削除するには， ECR のコンソールに行き，イメージが配置されたレポジトリを開く．
-そして，画面右上の <code>Delete</code> ボタンを押して削除する (<a href="#fig_delete_ecr">Figure 72</a>)．</p>
+そして，画面右上の <code>DELETE</code> ボタンを押して削除する (<a href="#fig_delete_ecr">Figure 73</a>)．</p>
 </div>
 <div id="fig_delete_ecr" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_batch/delete_ecr.png" alt="delete_ecr" width="700">
 </div>
-<div class="title">Figure 72. ECR から Docker image を削除する</div>
+<div class="title">Figure 73. ECR から Docker image を削除する</div>
 </div>
 <div class="paragraph">
 <p>あるいは， AWS CLI から同様の操作を行うには，以下のコマンドを用いる (<code>XXXX</code> は自分の ECR レポジトリ名に置き換える)．</p>
@@ -6862,46 +7011,43 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 <pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>cdk destroy</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><a href="#sec:batch_development_and_debug">[sec:batch_development_and_debug]</a>
+=== クラウドを用いた機械学習アプリケーションの開発とデバッグ</p>
 </div>
-<div class="sect2">
-<h3 id="_クラウドを用いた機械学習アプリケーションの開発とデバッグ">9.12. クラウドを用いた機械学習アプリケーションの開発とデバッグ</h3>
 <div class="paragraph">
 <p>本章で紹介したハンズオンでは， AWS Batch を使用することでニューラルネットの学習を複数並列に実行し，高速化を実現した．
 本章の最後の話題として，クラウドを用いた機械学習アプリケーションの開発とデバッグの方法について述べよう．</p>
 </div>
 <div class="paragraph">
-<p>ローカルに GPU を搭載した強力なマシンがなく，クラウドを利用する予算が確保されているのであれば， <a href="#fig:cloud_development">Figure 73</a> のような開発のスキームが理想的であると考える．
+<p>ローカルに GPU を搭載した強力なマシンがなく，クラウドを利用する予算が確保されているのであれば， <a href="#fig:cloud_development">Figure 74</a> のような開発のスキームが理想的であると考える．
 最初の段階では， <a href="#sec_jupyter_and_deep_learning">Section 6</a> で見たような方法で， GPU 搭載型の EC2 インスタンスを作成し， Jupyter Notebook などのインタラクティブな環境で様々なモデルを試し実験を行う．
 Jupyter である程度アプリケーションが完成してきたタイミングで，作成したアプリケーションを Docker イメージにパッケージングする．
-そして， EC2 上で <code>docker run</code> を行い，作成した Image がバグなく動作するか確認を行う．
+そして， EC2 上で <code>docker run</code> を行い，作成したイメージがバグなく動作するか確認を行う．
 その次に，ハイパーパラメータの最適化などのチューニングを， <a href="#sec_aws_batch">Section 9</a> のハンズオンで学んだ AWS Batch などの計算システムを利用して行う．
-ローカルに十分なスペックを有した GPU があるのならば，最初の実験はローカルマシンで行うのが経済的だろう．</p>
+よい深層学習モデルが完成したら，仕上げに大規模データへの推論処理を行うシステムを <a href="#sec_fargate_qabot">Section 8</a> を参考に構築する．</p>
 </div>
 <div class="paragraph">
 <p>実際，本書ではこの流れに沿って演習を進めてきた．
 MNIST タスクを解くモデルを，最初 Jupyter Notebook を使用して実験し，そのコードをほとんどそのまま Docker にパッケージし， AWS Batch を用いてハイパーパラメータサーチを行った．
 このサイクルを繰り返すことで，クラウドを最大限に活用した機械学習アプリケーションの開発を進めることができる．</p>
 </div>
-<div class="paragraph">
-<p>本章のハンズオンで提供しているプログラムは， ECR に配置するイメージを入れ替えることで，任意のアプリケーションを AWS Batch を通じて実行することができる．
-興味のある読者は，本書のプログラムを雛形として，自身の機械学習アプリケーションの開発に挑戦していただきたい．</p>
-</div>
 <div id="fig:cloud_development" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_batch/cloud_development.png" alt="cloud_development" width="700">
 </div>
-<div class="title">Figure 73. クラウドを活用した機械学習アプリケーションの開発フロー</div>
+<div class="title">Figure 74. クラウドを活用した機械学習アプリケーションの開発フロー</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_小括_2">9.13. 小括</h3>
+<h3 id="_小括_2">9.11. 小括</h3>
 <div class="paragraph">
 <p>ここまでが，本書第二部の内容である．
 第一部に引き続き盛りだくさんの内容であったが，ついてこれたであろうか？</p>
 </div>
 <div class="paragraph">
-<p>第二部ではまず最初に，深層学習の計算をクラウドで実行するため， GPU 搭載型の EC2 インスタンスの起動について解説した (<a href="#sec_scientific_computing">Section 5</a>)．
-さらに，ハンズオンでは，クラウドに起動した仮想サーバーを使って MNIST 文字認識タスクを解くニューラルネットを学習させた (<a href="#sec_jupyter_and_deep_learning">Section 6</a>)．</p>
+<p>第二部ではまず最初に，深層学習の計算をクラウドで実行するため， GPU 搭載型の EC2 インスタンスの起動について解説した．
+さらに，ハンズオンでは，クラウドに起動した仮想サーバーを使って MNIST 文字認識タスクを解くニューラルネットを訓練した (<a href="#sec_jupyter_and_deep_learning">Section 6</a>)．</p>
 </div>
 <div class="paragraph">
 <p>また，より大規模な機械学習アプリケーションを作るための手段として， Docker と ECS によるクラスターの初歩を説明した (<a href="#sec_docker_introduction">Section 7</a>)．
@@ -6914,7 +7060,7 @@ MNIST タスクを解くモデルを，最初 Jupyter Notebook を使用して�
 これらのハンズオン体験から，クラウド技術を応用してどのように現実世界の問題を解いていくのか，なんとなくイメージが伝わっただろうか？</p>
 </div>
 <div class="paragraph">
-<p>本書の第三部では，さらにレベルアップし， Serverless architecture という最新のクラウドの設計手法について解説する．
+<p>本書の第三部では，さらにレベルアップし，サーバーレスアーキテクチャという最新のクラウドの設計手法について解説する．
 その応用として，ハンズオンでは簡単な SNS サービスをゼロから実装する．
 引き続きクラウドの最先端の世界を楽しんでいこう！</p>
 </div>
@@ -6925,42 +7071,42 @@ MNIST タスクを解くモデルを，最初 Jupyter Notebook を使用して�
 <h2 id="_web_サービスの作り方">10. Web サービスの作り方</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ここからが，本書第三部の内容になる．</p>
+<p>ここからが，本書第三部の内容になる．
+これまでのセクションでは，仮想サーバーをクラウド上に起動し，そこで計算を走らせる方法について解説をしてきた．
+EC2, ECS, Fargate, Batch などを利用して，動的にスケールするクラスターを構成し，並列にタスクを実行するクラウドシステムを実装してきた．
+振り返ると，これまで紹介してきた内容は，<strong>自分自身が行いたい計算をクラウドを駆使することで実現する</strong>，という用途にフォーカスしていたことに気がつくだろう．
+一方で，<strong>広く一般の人々に使ってもらえるような計算サービス・データベース</strong>を提供する，というのもクラウドの重要な役割として挙げられる．</p>
 </div>
 <div class="paragraph">
-<p>これまでのセクションでは，仮想サーバーをクラウド上に起動し，そこで計算を走らせる方法について解説をしてきた．
-最初に， EC2 上に個人で使用するためのサーバーを立ち上げ，機械学習の計算を実践した．
-また，大規模な計算システムを構築するための初歩として， ECS と Docker を使ったクラスターを作成する方法を解説した．
-これまで紹介したクラウドの利用は，個人としての用途にフォーカスしていた．
-一方で，広く一般に使ってもらえるような計算サービス・データベースを提供する，というのもクラウドの重要な役割として挙げられる．</p>
-</div>
-<div class="paragraph">
-<p>第三部では，前回までとは少し方向性を変え，どのようにしてクラウド上にアプリケーションを展開し，広く一般の人に使ってもらうか，という点を講義したいと思う．
+<p>本章から始まる第三部では，前回までとは少し方向性を変え，どのようにしてクラウド上にアプリケーションを展開し，広く一般の人に使ってもらうか，という点を講義したいと思う．
 これを通じて，どのようにして世の中のウェブサービスができ上がっているのかを知り，さらにどうやって自分でそのようなアプリケーションをゼロから構築するのか，という点を学んでもらう．
-その過程で， Serverless アーキテクチャという最新のクラウド設計手法を解説する．</p>
+その過程で，サーバーレスアーキテクチャという最新のクラウド設計手法を解説する．</p>
+</div>
+<div class="paragraph">
+<p>その前準備として，本章ではどのようにしてウェブサービスが出来上がっているのか，その背後にある技術の概要を解説する．
+用語の解説が中心となるが，後のハンズオンを実装するために必須の知識であるので，理解して前に進むよう心がけよう．</p>
 </div>
 <div class="sect2">
 <h3 id="_ウェブサービスの仕組みtwitter_を例に">10.1. ウェブサービスの仕組み&#8201;&#8212;&#8201;Twitter を例に</h3>
 <div class="paragraph">
-<p>あなたがパソコンやスマートフォンから Twitter, Facebook, YouTube などのウェブサービスにアクセスしたとき，
-実際にどのようなことが行われ，コンテンツが提示されているのだろうか？</p>
+<p>あなたがパソコンやスマートフォンから Twitter, Facebook, YouTube などのウェブサービスにアクセスしたとき，実際にどのようなことが行われ，コンテンツが提示されているのだろうか？</p>
 </div>
 <div class="paragraph">
 <p>HTTP を通じたサーバーとクライアントのデータのやり取りは，すでに知っている読者も多いだろうし，逆にすべて解説しようとすると紙面が足りないので，ここではエッセンスの説明のみにとどめる．
 以降では <a href="https://twitter.com">Twitter</a> を具体例として，背後にあるサーバーとクライアントの間の通信を概説しよう．
-概念図としては <a href="#fig:web_server">Figure 74</a> のような通信がクライアントとサーバーの間で行われていることになる．</p>
+概念図としては <a href="#fig:web_server">Figure 75</a> のような通信がクライアントとサーバーの間で行われていることになる．</p>
 </div>
 <div id="fig:web_server" class="imageblock text-center">
 <div class="content">
 <img src="imgs/web_server.png" alt="web_server" width="700">
 </div>
-<div class="title">Figure 74. クライアントと Web サーバーの通信の概念図</div>
+<div class="title">Figure 75. クライアントと Web サーバーの通信の概念図</div>
 </div>
 <div class="paragraph">
 <p>前提として，クライアントとサーバーの通信は <strong>HTTP (Hypertext Transfer Protocol)</strong> を使って行われる．
-また，最近では，暗号化された HTTP である <strong>HTTPS</strong> を用いることがスタンダードになってきている．
+また，最近では，暗号化された HTTP である <strong>HTTPS (HTTPS (Hypertext Transfer Protocol Secure))</strong> を用いることがスタンダードになってきている．
 第一のステップとして，クライアントは HTTP(S) 通信によってサーバーから静的なコンテンツを取得する．
-静的なコンテンツとは， <strong>HTML (HyperText Markup Language)</strong> で記述されたウェブページの文書本体， <strong>CSS (Cascading Style Sheets)</strong> で記述されたページのデザインやレイアウトファイル，そして <strong>JavaScript (JS)</strong> で記述されたページの動的な挙動を定義したプログラム，が含まれる．
+静的なコンテンツとは， <strong>HTML (Hyptertext Markup Language)</strong> で記述されたウェブページの文書本体， <strong>CSS (Cascading Style Sheets)</strong> で記述されたページのデザインやレイアウトファイル，そして <strong>JavaScript (JS)</strong> で記述されたページの動的な挙動を定義したプログラム，が含まれる．
 Twitter を含む現代的なウェブアプリケーションの設計では，この静的なファイル群はページの”枠”を定義するだけで，中身となるコンテンツ (例: ツイートの一覧) は別途 <strong>API (Application Programming Interface)</strong> によって取得されなければならない．
 そこで，クライアントは先のステップで取得された JavaScript で定義されたプログラムに従って，サーバーに API を送信し，ツイートや画像データを取得する．
 この際，テキストデータのやり取りには <strong>JSON (JavaScript Object Notation)</strong> というフォーマットが用いられることが多い．
@@ -6982,22 +7128,22 @@ API とはあるソフトウェア・アプリケーションが，外部のソ�
 REST の設計指針に従った API のことを <strong>REST API</strong> あるいは <strong>RESTful API</strong> とよんだりする．</p>
 </div>
 <div class="paragraph">
-<p>REST API は， <a href="#rest_api">Figure 75</a> に示したような <strong>Method</strong> と <strong>URI (Universal Resource Identifier)</strong> の組からなる．</p>
+<p>REST API は， <a href="#rest_api">Figure 76</a> に示したような <strong>Method</strong> と <strong>URI (Universal Resource Identifier)</strong> の組からなる．</p>
 </div>
 <div id="rest_api" class="imageblock text-center">
 <div class="content">
 <img src="imgs/rest_api.png" alt="rest_api" width="700">
 </div>
-<div class="title">Figure 75. REST API</div>
+<div class="title">Figure 76. REST API</div>
 </div>
 <div class="paragraph">
 <p>Method (メソッド) とは，どのような操作を行いたいかを抽象的に表す，<strong>"動詞"</strong> として捉えることができる．
 メソッドには HTTP 規格で定義された9個の動詞 (verb) を使用することができる．
-この中でも， <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code> の5個が最も頻繁に使用される (<a href="#tab:rest_api_methods">Table 5</a>)．
+この中でも， <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code> の5個が最も頻繁に使用される (<a href="#tab:rest_api_methods">Table 6</a>)．
 この5つのメソッドによる操作を総称して <strong>CRUD</strong> (create, read, update, and delete) とよぶ．</p>
 </div>
 <table id="tab:rest_api_methods" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. REST API Methods</caption>
+<caption class="title">Table 6. REST API Methods</caption>
 <colgroup>
 <col style="width: 25%;">
 <col style="width: 75%;">
@@ -7035,7 +7181,7 @@ REST の設計指針に従った API のことを <strong>REST API</strong> あ�
 <p>一方， URI は操作が行われる対象，すなわち <strong>"目的語"</strong> を表す．
 ウェブの文脈では操作が行われる対象のことをしばしば <strong>リソース</strong> とよぶ．
 URI は多くの場合 http または https から始まるウェブサーバーのアドレスから始まり， / (スラッシュ) 以降に所望のリソースのパスが指定される．
-<a href="#rest_api">Figure 75</a> の例で言えば， <code><a href="https://api.twitter.com" class="bare">https://api.twitter.com</a></code> というアドレスの <code>/1.1/status/home_timeline</code> というリソースを取得 (GET) せよ，という意味になる
+<a href="#rest_api">Figure 76</a> の例で言えば， <code><a href="https://api.twitter.com" class="bare">https://api.twitter.com</a></code> というアドレスの <code>/1.1/status/home_timeline</code> というリソースを取得 (GET) せよ，という意味になる
 (なお，ここで <code>1.1</code> という数字は API のバージョンを示している)．
 この API リクエストによって，ユーザーのホームのタイムラインのツイートの一覧が取得される．</p>
 </div>
@@ -7047,7 +7193,7 @@ URI は多くの場合 http または https から始まるウェブサーバー
 </td>
 <td class="content">
 <div class="paragraph">
-<p>REST API のメソッドには， <a href="#tab:rest_api_methods">Table 5</a> で挙げたもの以外に， HTTP プロトコルで定義されているｊｐぁのメソッド (OPTIONS, TRACE など) を用いることもできるが，あまり一般的ではない．</p>
+<p>REST API のメソッドには， <a href="#tab:rest_api_methods">Table 6</a> で挙げたもの以外に， HTTP プロトコルで定義されているほかのメソッド (OPTIONS, TRACE など) を用いることもできるが，あまり一般的ではない．</p>
 </div>
 <div class="paragraph">
 <p>また，これらのメソッドだけでは動詞として表現しきれないこともあるが， URI の名前でより意味を明確にすることもある．
@@ -7058,54 +7204,124 @@ URI は多くの場合 http または https から始まるウェブサーバー
 </tr>
 </table>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>REST の概念は2000年代初頭に確立され，今日の API 設計のスタンダードとなった．
+一方で，ウェブのテクノロジーが進歩するにつれて，新たな API の設計アプローチの需要も高まっている．
+近年とくに人気を集めているのが，
+<a href="https://graphql.org/">GraphQL</a>
+と呼ばれる API の設計方法である．
+GraphQL は Facebook 社によって最初に作られ，現在は GraghQL Foundation によって維持と更新がされている．
+GraphQL を使用すると，クライアントは REST と比較してより柔軟性の高いデータのクエリを行うことができるなど，いくつかの利点がある．
+キーワードだけでも知っておくと，今後役に立つだろう．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_twitter_api">10.3. Twitter API</h3>
 <div class="paragraph">
-<p>もう少し具体的にウェブサービスのAPIを体験する目的で，ここでは Twitter のAPIを見てみよう．</p>
-</div>
-<div class="paragraph">
-<p>Twitter が提供している API の一覧は
+<p>もう少し具体的にウェブサービスのAPIを体験する目的で，ここでは Twitter のAPIを見てみよう．
+Twitter が提供している API の一覧は
 <a href="https://developer.twitter.com/en/docs/api-reference-index">Twitter の Developer Documentation</a>
 で見ることができる．
-いくつかの代表的な API を <a href="#tab_twitter_api">Table 6</a> にまとめた．</p>
+いくつかの代表的な API を <a href="#tab_twitter_api">Table 7</a> にまとめた．</p>
 </div>
 <table id="tab_twitter_api" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Twitter API</caption>
+<caption class="title">Table 7. Twitter API</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
 </colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">エンドポイント</th>
+<th class="tableblock halign-left valign-top">動作</th>
+</tr>
+</thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /statuses/home_timeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET statuses/home_timeline</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ホームのタイムラインのツイートの一覧を取得する．</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /statuses/show/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET statuses/show/:id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:id</code> で指定されたツイートの詳細情報を取得する．</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /statuses/update</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET search</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ツイートの検索を実行する．</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/update</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">新しいツイートを投稿する．</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /statuses/retweet/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST media/upload</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">画像をアップロードする</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/destroy/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:id</code> で指定されたツイートを削除する．</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/retweet/:id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:id</code> で指定されたツイートをリツイートする．</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /favorites/create/:id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:id</code> で指定されたツイートを"いいね"する．</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/unretweet/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:id</code> で指定されたツイートのリツイートを取り消す．</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /statuses/destroy/:id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:id</code> で指定されたツイートを削除する．</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST favorites/create</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">選択したツイートを"いいね"する．</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST favorites/destroy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">選択したツイートを"いいね"を取り消す．</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Twitter のアプリまたはウェブサイトを開くと，背後では上記のような API が使用され，その結果ウェブページがレンダリングされている．
-また， Twitter 上でボット (bot) を作るときは，これらの API リクエストを自動で実行するプログラムを記述することででき上がっている．</p>
+<p>この API リストをもとに， Twitter のアプリまたはウェブサイトを開いたときに起こるクライアントとサーバーの通信をシミュレートしてみよう．</p>
+</div>
+<div class="paragraph">
+<p>ユーザーが Twitter を開くと，まず最初に  <code>GET statuses/home_timeline</code> の API リクエストによって，ユーザーのホームのタイムラインのツイートのリストが取得される．
+個々のツイートは JSON 形式のデータになっており， <code>id</code>, <code>text</code>, <code>user</code>, <code>coordinates</code>, <code>entities</code> などの属性を含む．
+<code>id</code> はツイートに固有な ID を表し， <code>text</code> はツイートの本文を含んでいる．
+<code>user</code> はツイートを投稿したユーザーの名前やプロフィール画像の URL などを含んだ JSON データになっている．
+<code>coordinates</code> にはツイートが発信された地理的な座標が記録されている．
+また， <code>entities</code> にはツイートに関連するメディアファイル (画像など) のリンクなどの情報が埋め込まれている．
+<code>GET statuses/home_timeline</code> からは直近のツイートのリスト (リストが長すぎる場合は途中で切られたもの) が取得される．
+もしツイートの ID を知っている場合は <code>GET statuses/show/:id</code> を呼ぶことによって， <code>:id</code> パラメータで指定された特定のツイートを取得することができる．</p>
+</div>
+<div class="paragraph">
+<p>ツイートの検索を行うためには <code>GET search</code> API を使用する．
+この API には，ツイートに含まれる単語や，ハッシュタグ，ツイートの発信された日時や場所など，様々なクエリの条件を渡すことができる．
+API からは， <code>GET statuses/home_timeline</code> などと同様， JSON 形式のツイートのデータが返される．</p>
+</div>
+<div class="paragraph">
+<p>ユーザーが新しいツイートを投稿するには <code>POST statuses/update</code> のエンドポイントを利用する．
+<code>POST statuses/update</code> には，ツイートの文章や，リプライの場合はリプライ先のツイートの ID などのデータを送信する．
+また，ツイートに画像データを添付したい場合は， <code>POST media/upload</code> を併せて使用する．
+ツイートの削除を行うには， <code>POST statuses/destroy/:id</code> を用いる．</p>
+</div>
+<div class="paragraph">
+<p>そのほか，頻繁に行われる操作としては， <code>POST statuses/retweet/:id</code> と <code>POST statuses/unretweet/:id</code> がある．
+これらは， <code>:id</code> で指定されるツイートに対して，それぞれリツイートを実行あるいは取り消すための API である．
+また， <code>POST favorites/create</code>，<code>POST favorites/destroy</code> を使用することによって，選択されたツイートに"いいね"を追加したり，取り消したりする操作を行う．</p>
+</div>
+<div class="paragraph">
+<p>このような一連の操作が， Twitter のアプリの背後では行われている．
+また，自分自身でボットを作成したい場合は，これらの API を適切に組み合わせ，カスタムのプログラムを書くことで実現される．</p>
 </div>
 <div class="paragraph">
 <p>このように， API はあらゆるウェブサービスを作るうえで一番基礎となる要素である．
@@ -7118,7 +7334,7 @@ URI は多くの場合 http または https から始まるウェブサーバー
 <h2 id="sec_serverless">11. Serverless architecture</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Serverless Architecture あるいは Serverless Computing とは， 従来とは全くアプローチの異なるクラウドシステムの設計方法である．
+<p>サーバーレスアーキテクチャ (Serverless architecture) あるいは サーバーレスコンピューティング (Serverless computing) とは，従来とは全く異なるアプローチに基づくクラウドシステムの設計方法である．
 歴史的には， AWS が2014年に発表した <a href="https://aws.amazon.com/lambda/">Lamba</a> がサーバーレスアーキテクチャの先駆けとされている．
 その後， Google や Microsoft などのクラウドプラットフォームも同様の機能の提供を開始している．
 サーバーレスアーキテクチャの利点は，スケーラブルなクラウドシステムを安価かつ簡易に作成できる点であり，近年いたるところで導入が進んでいる．</p>
@@ -7130,7 +7346,7 @@ URI は多くの場合 http または https から始まるウェブサーバー
 <div class="sect2">
 <h3 id="chap_serverful_cloud">11.1. Serverful クラウド (従来型)</h3>
 <div class="paragraph">
-<p>従来的なクラウドシステムのスケッチを <a href="#serverful">Figure 76</a> に示す．
+<p>従来的なクラウドシステムのスケッチを <a href="#serverful">Figure 77</a> に示す．
 クライアントから送信されたリクエストは，最初に API サーバーに送られる．
 API サーバーでは，リクエストの内容に応じてタスクが実行される．
 タスクには，APIサーバーだけで完結できるものもあるが，多くの場合，データベースの読み書きが必要である．
@@ -7146,32 +7362,37 @@ API サーバーでは，リクエストの内容に応じてタスクが実行�
 <p>計算負荷を分散する目的で多数のインスタンスを起動するのはよいのだが，計算負荷が小さすぎてアイドリング状態にあるようではコストと電力の無駄遣いである．
 したがって，すべてのサーバーが常に目標とする計算負荷を維持するよう，計算の負荷に応じてクラスター内の仮想サーバーの数を動的に増減させるような仕組みが必要である．
 そのような仕組みを<strong>クラスターのスケーリング</strong>とよび，負荷の増大に応答して新しい仮想インスタンスをクラスターに追加する操作を <strong>scale-out</strong>，負荷の減少に応答してインスタンスをシャットダウンする操作を <strong>scale-in</strong> とよぶ．
-クラスターのスケーリングは，各インスタンスを監視・統括するような一つ階層が上のサーバーを配置することで自動的に実行されるような設計がなされる．
 クラスターのスケーリングは， API サーバーではもちろんのこと，データベースサーバー・ストレージサーバーでも必要になる．
-<strong>クラウドシステム内すべての箇所で，負荷が均一になるような調整が必要なのである．</strong></p>
+ストレージサーバーでは，例えば頻繁にアクセスされるデータはキャッシュ領域に保存したり，データのコピーを複数作るなどのスケーリングが行われる．
+データベースサーバーも同様に，頻繁にアクセスされるデータのアクセスがパンクしてしまわないよう，分散的な処理が必要となる．
+このように，<strong>クラウドシステム内すべての箇所で，負荷が均一になるような調整が必要であり，開発者は多くの時間をそのチューニングに費やさなければならない．</strong>
+また，サービスの利用者の数などに応じてスケーリングの設定は常に見直される必要があり，継続的な開発が要求される．</p>
+</div>
+<div class="paragraph">
+<p>さらに問題を複雑にするのは，APIサーバーで処理されるべきタスクが，非一様な点である．
+非一様であるとは，たとえばタスクAは3000ミリ秒の実行時間と 512MB のメモリーを消費し，別のタスクBは1000ミリ秒の実行時間と 128MB のメモリーを消費する，というような状況を指している．
+一つのサーバーマシンが計算負荷が異なる複数のタスクを処理する場合，クラスターのスケーリングはより複雑になる．
+この状況をシンプルにするために，１サーバーで実行するタスクは１種類に限る，という設計も可能であるが，そうするとで生まれる弊害も多い
+(ほとんど使われないタスクに対してもサーバー一台をまるまる割り当てなければならない = ほとんどアイドリング状態になってしまう，など)．</p>
 </div>
 <div id="serverful" class="imageblock text-center">
 <div class="content">
 <img src="imgs/serverful.png" alt="serverful" width="700">
 </div>
-<div class="title">Figure 76. Serverful なクラウドシステム</div>
+<div class="title">Figure 77. Serverful なクラウドシステム</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_serverless_クラウドへ">11.2. Serverless クラウドへ</h3>
 <div class="paragraph">
-<p>上述したように，従来のクラウドシステムの設計で非常に重要なのが，クラスターのスケーリングである．
-コストパフォーマンスを最大化するには，各サーバーの稼働率を100%に近づけるようなスケーリングのパラメータの調整が必要である．
-しかしながら，クラスターのスケーリングの最適化はかなり手間のかかる作業である．</p>
+<p><a href="#chap_serverful_cloud">Section 11.1</a> で議論したように，クラスターのスケーリングはクラウドシステムの経済的効率とシステムの安定性を最大化するために必須の作業である．
+それを反映して，多くの開発者の時間が投資されてきた．</p>
 </div>
 <div class="paragraph">
-<p>さらに問題を複雑にするのは，APIサーバーで処理されるべきタスクが，非一様な点である．
-非一様であるとは，たとえばタスクAは3000ミリ秒の実行時間と 512MB のメモリーを消費し，別のタスクBは1000ミリ秒の実行時間と 128MB のメモリーを消費する，というような状況を差している．
-一つのサーバーマシンが計算負荷が異なる複数のタスクを処理する場合，クラスターのスケーリングはより複雑になる．
-この状況をシンプルにするために，１サーバーで実行するタスクは１種類に限る，という設計も可能であるが，そうすることで生まれる弊害も多い (ほとんど使われないタスクに対してもサーバー一台をまるまる割り当てなければならない = ほとんどアイドリング状態になってしまう，など)．</p>
-</div>
-<div class="paragraph">
-<p>もっとシンプルで見通しのよいクラウドシステムのスケーリングの仕組みはないだろうか？</p>
+<p>クラスターのスケーリングはすべての開発者が何度も繰り返し行ってきた作業であり，いくつかの側面をテンプレート化し，共通化することができたならば開発のコストを大幅に削減できるだろう．
+それを実現するには，根本的なレベルからクラウドシステムの設計を考え直す必要がある．
+<strong>スケーリングを前提</strong>として考えることで，もっと<strong>シンプルで見通しがよいクラウドシステムの設計の仕組みはないだろうか</strong>？
+そのような動機が，サーバーレスアーキテクチャが誕生する背後にあった．</p>
 </div>
 <div class="paragraph">
 <p>従来の serverful なシステムでの最大の問題点は，<strong>サーバーをまるまる占有してしまう</strong>という点にある．
@@ -7179,22 +7400,28 @@ API サーバーでは，リクエストの内容に応じてタスクが実行�
 固定した計算資源の割り当てがされてしまっているので，<strong>インスタンスの計算負荷が0%であろうが100%であろうが，均一の使用料金が起動時間に比例</strong>して発生する．</p>
 </div>
 <div class="paragraph">
-<p>サーバーレスアーキテクチャは，このような <strong>独占的に割り当てられた計算リソースというものを完全に廃止する．</strong>
+<p>サーバーレスアーキテクチャは，このような <strong>独占的に割り当てられた計算リソースというものを完全に廃止する</strong>ことを出発点とする．
 サーバーレスアーキテクチャでは，計算のリソースは，クラウドプロバイダーがすべて管理する．
-クライアントは，仮想インスタンスを一台まるごと借りるのではなく，<strong>実行したいプログラムをクラウドに提出する</strong>．
+クライアントは，仮想インスタンスを一台まるごと借りるのではなく，計算のタスクの需要が生まれる毎に，<strong>実行したいプログラム・コマンドをクラウドに提出する</strong>．
 クラウドプロバイダーは，自身のもつ巨大な計算リソースから空きを探し，提出されたプログラムを実行し，実行結果をクライアントに返す．
-以上を図示すると， <a href="#serverless">Figure 77</a> のようになる．</p>
+言い換えると，計算リソースのスケーリングやアロケーションなどはクラウドプロバイダーが一手に引き受け，ユーザーはジョブをサブミットすることに注力する，という枠組みである．
+これを図示すると， <a href="#serverless">Figure 78</a> のようになる．</p>
 </div>
 <div id="serverless" class="imageblock text-center">
 <div class="content">
 <img src="imgs/serverless.png" alt="serverless" width="700">
 </div>
-<div class="title">Figure 77. 従来のクラウドと Serverless クラウドの比較</div>
+<div class="title">Figure 78. 従来のクラウドと Serverless クラウドの比較</div>
 </div>
 <div class="paragraph">
-<p>サーバーレスクラウドを利用することで，<strong>クラウドのコストは実際に使用した計算の総量 (稼働時間) で決定される</strong>ことになる．
-これは，計算の実行総量に関わらずインスタンスの起動時間で料金が決定されていた従来のシステムと比べて大きな違いである．
-一方で，クライアントが同時に大量のタスクを送信した場合でも，クラウドプロバイダー側はその需要に応えることのできるような計算リソースを瞬時に割り当てることができるので，非常に高いスケーラビリティを実現できる．
+<p>サーバーレスクラウドでは，スケーリングはすべてクラウドプロバイダーが引き受けるので，スケーラビリティーが保証されている．
+クライアントが同時に大量のタスクを送信した場合でも，クラウドプロバイダー側の独自の仕組みによってすべてのタスクが遅延なく実行される．
+また，サーバーレスクラウドを利用することで，<strong>クラウドのコストは実際に使用した計算の総量 (稼働時間) で決定される</strong>ことになる．
+これは，計算の実行総量に関わらずインスタンスの起動時間で料金が決定されていた従来のシステムと比べて大きな違いである．</p>
+</div>
+<div class="paragraph">
+<p>サーバーレスクラウドは，従来のクラウドとは根本から異なったアプローチなので，コードの書き方やシステムの設計が大きく異なる．
+サーバーレスクラウドを開発・運用するには，サーバーレス固有の概念や用語に精通している必要がある．
 以降では，実際にクラウドを動かしながら，サーバーレスをより具体的に体験していこう．</p>
 </div>
 <div class="admonitionblock note">
@@ -7220,18 +7447,29 @@ API サーバーでは，リクエストの内容に応じてタスクが実行�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_lambda">11.3. Lambda</h3>
+<h3 id="_サーバーレスクラウドを構成するコンポーネント">11.3. サーバーレスクラウドを構成するコンポーネント</h3>
 <div class="paragraph">
-<p><span class="image"><img src="imgs/aws_logos/Lambda.png" alt="Lambda" width="100"></span></p>
+<p>サーバーレスアーキテクチャの概要がわかってきたところで，ここでは AWS においてサーバーレスクラウドを構成する様々なコンポーネントを紹介していこう．
+特に， <strong>Lambda</strong>, <strong>S3</strong>, <strong>DynamoDB</strong> を取り上げ，解説する (<a href="#fig:serverless_logos">Figure 79</a>)．
+サーバーレスクラウドは，これらのコンポーネントを統合することで一つのシステムが出来上がる．
+ここでは， Lambda，S3，DynamoDB を利用する際に押さえておかなければならない知識を一通り説明しきる都合上，具体的なイメージがわきにくいかもしれない．
+が，続く <a href="#sec_intro_serverless">Section 12</a> でそれぞれについてハンズオン形式で演習を行うので，そこでさらに理解を深めれば大丈夫である．</p>
 </div>
-<div class="paragraph">
-<p>AWS でサーバーレスコンピューティングの中心を担うのが， <a href="https://aws.amazon.com/lambda/">Lambda</a> である．</p>
+<div id="fig:serverless_logos" class="imageblock">
+<div class="content">
+<img src="imgs/serverless_logos.png" alt="Lambda" width="500">
 </div>
+<div class="title">Figure 79. Lambda, S3, DynamoDB のアイコン</div>
+</div>
+<div class="sect3">
+<h4 id="_lambda">11.3.1. Lambda</h4>
 <div class="paragraph">
-<p>Lambda の使い方を <a href="#lambda_workflow">Figure 78</a> に図示している．
+<p>AWS でサーバーレスコンピューティングの中心を担うのが， <a href="https://aws.amazon.com/lambda/">Lambda</a> である．
+Lambda の使い方を <a href="#lambda_workflow">Figure 80</a> に図示している．
 Lambda の仕組みはシンプルで，まずユーザーは実行したいプログラムのコードを事前に登録しておく．
 プログラムは， Python, Node.js, Ruby などの主要な言語がサポートされている．
-そして，プログラムを実行したいときに，そのプログラムを実行 (invoke) するコマンドを Lambda に送信する．
+Lambda に登録されたひとつひとつのプログラムを関数 (Function) とよぶ．
+そして，関数を実行したいときに，invoke コマンドを Lambda に送信する．
 Lambda では， invoke のリクエストを受け取るとただちに (数ミリセカンドから数百ミリセカンド程度の時間で) プログラムの実行を開始する．
 そして，実行結果をクライアントやその他の計算機に返す．</p>
 </div>
@@ -7239,24 +7477,25 @@ Lambda では， invoke のリクエストを受け取るとただちに (数ミ
 <div class="content">
 <img src="imgs/lambda_workflow.png" alt="lambda_workflow" width="500">
 </div>
-<div class="title">Figure 78. AWS Lambda</div>
+<div class="title">Figure 80. AWS Lambda</div>
 </div>
 <div class="paragraph">
 <p>このように，Lambda では占有された仮想インスタンスは存在せず，実行を待っているプログラムだけがある状態である．
 invoke のリクエストに応じて，プログラムが AWS の巨大な計算機プールのどこかに配置され，実行される．
 同時に複数のリクエストが来た場合でも， AWS はそれらを実行するための計算リソースを割り当て，並列的に処理を行ってくれる．
 原理上は，<strong>数千から数万のリクエストが同時に来たとしても， Lambda はそれらを同時に実行することができる</strong>．
-このような，占有された仮想サーバーの存在なしに，動的に関数を実行するサービスのことを総称して <strong>FaaS (Function as a Service)</strong> とよばれることがある．</p>
+このような，占有された仮想サーバーの存在なしに，動的に関数を実行するサービスのことを総称して <strong>FaaS (Function as a Service)</strong> とよぶ．</p>
 </div>
 <div class="paragraph">
-<p>Lambda では 128MB から 10240MB のメモリーを使用することができる (執筆時点)．
-また，実効的な CPU の容量はメモリーの量に比例する形で割り当てられる
-(しかし， RAM と CPU 容量の具体的な換算表は AWS からは公開されていない)．
+<p>Lambda ではそれぞれの関数につき， 128MB から 10240MB のメモリーを使用することができる (執筆時点の仕様)．
+また，実効的な CPU のパワーはメモリーの量に比例する形で割り当てられる．
+すなわち，タスクに割り当てたメモリーの量が多ければ多いほど，より多くの CPU リソースが割り当てられることになる
+(しかし， RAM と CPU パワーの具体的な換算表は AWS からは公開されていない)．
 実行時間は100ミリ秒の単位で記録され，実行時間に比例して料金が決定される．
-<a href="#lambda_pricing">Table 7</a> は Lambda の利用料金表である．</p>
+<a href="#lambda_pricing">Table 8</a> は Lambda の利用料金表である (執筆時点で <code>ap-north-east1</code> リージョンを選択した場合)．</p>
 </div>
 <table id="lambda_pricing" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Lambda の料金表</caption>
+<caption class="title">Table 8. Lambda の料金表</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -7287,16 +7526,37 @@ invoke のリクエストに応じて，プログラムが AWS の巨大な計�
 </tbody>
 </table>
 <div class="paragraph">
-<p>たとえば， 128MB のメモリーを使用する関数を，それぞれ200ミリ秒，合計で100万回実行した場合，
-0.0000002083 * 2 * 10^6 ≒ <strong>$0.4</strong> の料金となる．
-ウェブサーバーのデータベースの更新など簡単な計算であれば，200ミリ秒程度で実行できる関数も多いことから，100万回データベースの更新を行ったとしても，たった $0.4 しかコストが発生しないことになる．</p>
+<p>実行時間に比例する料金に追加して，リクエストを送信するごとに発生する料金が設定されている．
+これは，百万回のリクエストにつき $0.2 である．
+たとえば， 128MB のメモリーを使用する関数を，それぞれ200ミリ秒，合計で100万回実行した場合，
+0.0000002083 * 2 * 10^6 + 0.2 = $0.6 の料金となる．
+ウェブサーバーのデータベースの更新など簡単な計算であれば，200ミリ秒程度で実行できる関数も多いことから，100万回データベースの更新を行ったとしても，たった $0.6 しかコストが発生しないことになる．
+また，コードが実行されず待機状態になっている場合は，発生する料金は0である．
+このように，実際に意味のある処理が行われた時間にのみ，料金が発生する仕組みになっている．</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_サーバーレスストレージ_s3">11.4. サーバーレスストレージ: S3</h3>
 <div class="paragraph">
-<p><span class="image"><img src="imgs/aws_logos/S3.png" alt="S3" width="100"></span></p>
+<p>Lambda は比較的短時間で完了する，反復性の高いタスクの実行に向いている．
+データベースの読み書きはその典型的な例であるが，そのほかにも，画像のサイズをトリミングしたり，サーバーサイドで定期的に実行されるメンテナンス処理などの利用が考えられる．
+また，複数の Lambda をリレー式に繋げることも可能で，シンプルな処理を組み合わせることで複雑なロジックを表現することができる．</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>上述の Lambda の料金計算は，説明のためコストに寄与する要素をいくつか省いている点は承知いただきたい．
+例えば， DynamoDB の読み書きに関する料金や，ネットワークの通信にかかわるコストが考慮されていない．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_サーバーレスストレージ_s3">11.3.2. サーバーレスストレージ: S3</h4>
 <div class="paragraph">
 <p>サーバーレスの概念は，ストレージにも拡張されている．</p>
 </div>
@@ -7305,13 +7565,13 @@ invoke のリクエストに応じて，プログラムが AWS の巨大な計�
 したがって，それほどパワーは必要ないまでも，ある程度の CPU リソースを割かなければならない．
 また，従来的なファイルシステムでは，データ領域のサイズは最初にディスクを初期化するときに決めなければならず，後から容量を増加させることはしばしば困難である
 (ZFS などのファイルシステムを使えばある程度は自由にファイルシステムのサイズを変更することは可能である)．
-よって，従来的なクラウドでは，ストレージを借りる際にはあらかじめディスクのサイズを指定せねばならず，ディスクの中身が空であろうと満杯であろうと，同じ利用料金が発生することになる (<a href="#fig:s3_vs_filesystem">Figure 79</a>)．</p>
+よって，従来的なクラウドでは，ストレージを借りる際にはあらかじめディスクのサイズを指定せねばならず，ディスクの中身が空であろうと満杯であろうと，同じ利用料金が発生することになる (<a href="#fig:s3_vs_filesystem">Figure 81</a>)．</p>
 </div>
 <div class="paragraph">
-<p><a href="https://aws.amazon.com/s3/">Simple Storage Service (S3)</a> は，サーバーレスなストレージシステムを提供する (<a href="#fig:s3_vs_filesystem">Figure 79</a>)．
+<p><a href="https://aws.amazon.com/s3/">Simple Storage Service (S3)</a> は，サーバーレスなストレージシステムを提供する (<a href="#fig:s3_vs_filesystem">Figure 81</a>)．
 S3 は従来的なストレージシステムと異なり， OS に"マウントする”という概念はない．
 基本的に API を通じてデータの読み書きの操作が行われる．
-また，データの冗長化やバックアップなど，通常ならば OS と CPU が介在しなければならない操作も， API を通じて行うことができる．
+また，データの冗長化や暗号化，バックアップの作成など，通常ならば OS と CPU が介在しなければならない操作も， API を通じて行うことができる．
 S3 では事前に決められたディスク領域のサイズはなく，データを入れれば入れた分だけ，保存領域は拡大していく
 (仕様上はペタバイトスケールのデータを保存することが可能である)．
 ストレージにかかる料金は，保存してあるデータの総容量で決定される．</p>
@@ -7320,24 +7580,66 @@ S3 では事前に決められたディスク領域のサイズはなく，デ�
 <div class="content">
 <img src="imgs/s3_vs_filesystem.png" alt="s3_vs_filesystem" width="700">
 </div>
-<div class="title">Figure 79. S3 と従来的なファイルシステムの比較</div>
+<div class="title">Figure 81. S3 と従来的なファイルシステムの比較</div>
 </div>
 <div class="paragraph">
-<p>S3 の料金は，保存してあるデータの総容量と，外部へのデータ転送の総量で決定される (<a href="https://aws.amazon.com/s3/pricing/?nc=sn&amp;loc=4">参考</a>)．
-執筆時点では，データの保存には $0.025 per GB per month のコストが発生する．
+<p>S3 を利用する際に，料金に関わってくる主要な事項をまとめたのが <a href="#tab:s3_pricing">Table 9</a> である
+(<code>us-east-1</code> リージョンのもの．
+説明のため主要な事項のみ取り出している．
+詳細は
+<a href="https://aws.amazon.com/s3/pricing/?nc=sn&amp;loc=4">公式ドキュメンテーション "Amazon S3 pricing"</a>
+を参照)．</p>
+</div>
+<table id="tab:s3_pricing" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. S3 の利用料金</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">項目</th>
+<th class="tableblock halign-left valign-top">料金</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data storage (First 50TB)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.023 per GB per month</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT, COPY, POST, LIST requests (per 1,000 requests)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.005</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET, SELECT, and all other requests (per 1,000 requests)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.0004</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data Transfer IN To Amazon S3 From Internet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data Transfer OUT From Amazon S3 To Internet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.09 per GB</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>第一に，データの保存には $0.025 per GB のコストが月ごとに発生する．
 したがって，1000GB のデータを S3 に一ヵ月保存した場合， $25 の料金が発生することになる．
-また， S3 はデータを外に取り出す際の通信にもコストが発生する．
-執筆時点では，S3 からインターネットを通じて外部にデータを転送すると $0.114 per GB のコストが発生する．
-データを S3 に入れる (data-in) 通信は無料で行える．
-また， AWS の 同じ Region 内のサービス (Lambda など) にデータを転送するのは無料である．
-AWS の Region をまたいだデータの転送には， $0.09 per GB のコストが発生する．</p>
+また，<code>PUT</code>, <code>COPY</code>, <code>POST</code> などのリクエスト (=データを書き込む操作) に対しては，データ容量に関係なく，1000回ごとに $0.005 のコストが発生する．
+<code>GET</code>, <code>SELECT</code> などのリクエスト (=データを読み込む操作) に対しては，1000回ごとに $0.0004 のコストが発生する．
+また， S3 はデータを外に取り出す際の通信にもコストが生じる．
+執筆時点では，S3 からインターネットを通じて外部にデータを転送 (data-out) すると $0.09 per GB のコストが発生する．
+データをインターネットを通じて S3 に入れる (data-in) 通信は無料で行える．
+また， AWS の 同じ Region 内のサービス (Lambda や EC2 など) にデータを転送するのは無料である．
+AWS のリージョンをまたいだデータの転送にはコストが発生する．
+いずれにせよ，サーバーレスの概念に則り，すべての料金が従量課金制で決定される設定になっている．</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_サーバーレスデータベース_dynamodb">11.5. サーバーレスデータベース: DynamoDB</h3>
-<div class="paragraph">
-<p><span class="image"><img src="imgs/aws_logos/DynamoDB.png" alt="S3" width="100"></span></p>
-</div>
+<div class="sect3">
+<h4 id="_サーバーレスデータベース_dynamodb">11.3.3. サーバーレスデータベース: DynamoDB</h4>
 <div class="paragraph">
 <p>サーバーレスの概念は，データベースにも適用することができる．</p>
 </div>
@@ -7367,22 +7669,64 @@ S3 と同様に，データ保存領域の上限は定められておらず，�
 また，データベースへの負荷が増減したときのスケーリングは， DynamoDB が自動で行うので，ユーザーは心配する必要はない．</p>
 </div>
 <div class="paragraph">
-<p>DynamoDB での利用料金の計算はやや複雑なのだが， "On-demand Capacity" というモードで使用した場合，
-100万回の write request units (データの書き込み操作) で $1.25, 100万回の read request units (データの読み込み操作) で $0.25 の料金がかかる．
-また，保存されたデータ容量に対して $0.25 per GB per month のコストが発生する．</p>
+<p>DynamoDB での利用料金の計算はやや複雑なのだが， "On-demand Capacity" というモードで使用した場合の料金に関わってくる主要な事項をまとめたのが <a href="#tab:dynamodb_pricing">Table 10</a> である
+(<code>us-east-1</code> リージョンのもの．
+詳細は
+<a href="https://aws.amazon.com/dynamodb/pricing/on-demand/">公式ドキュメンテーション "Pricing for On-Demand Capacity"</a>
+を参照)．</p>
+</div>
+<table id="tab:dynamodb_pricing" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. DynamoDB の利用料金</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">項目</th>
+<th class="tableblock halign-left valign-top">料金</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Write request units</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$1.25 per million write request units</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read request units</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.25 per million read request units</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data storage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.25 per GB-month</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>DynamoDB ではデータの書き込み操作の単位を write request unit とよび，データの読み込み操作の単位を read request unit とよぶ．
+基本的に， 1kB 以下のデータを一度書き込むと 1 write request unit を消費し，4kB 以下のデータを一度読み込むと 1 read request unit を消費する
+(詳しくは
+<a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html">公式ドキュメンテーション "Read/Write Capacity Mode"</a>
+を参照のこと)．
+write request units は100万回ごとに $1.25, read request units は100万回ごとに $0.25 のコストが設定されている．
+また，保存されたデータ容量に対して $0.25 per GB のコストが月ごとに発生する．
+DynamoDB は高速な検索機能などを備えたデータベースであるので， GB あたりのストレージコストは S3 に比べ10倍程度高い．
+DynamoDB のデータの転送に関わるコストは，同じリージョン内ならば data-in，data-out ともに $0 である．
+リージョンをまたいだ通信には別途コストが発生する．</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_その他のサーバーレスクラウドの構成要素">11.6. その他のサーバーレスクラウドの構成要素</h3>
+<div class="sect3">
+<h4 id="_その他のサーバーレスクラウドの構成要素">11.3.4. その他のサーバーレスクラウドの構成要素</h4>
 <div class="paragraph">
 <p>以上で紹介した Lambda, S3, DynamoDB がサーバーレスクラウドの中で最も使用する頻度が高いサービスになる．
-その他のサーバーレスクラウドの構成要素を以下に列挙する．</p>
+その他のサーバーレスクラウドの構成要素を以下に列挙する．
+いくつかについては，今後のハンズオンを行う中で改めて解説を行う．</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p><a href="https://aws.amazon.com/api-gateway/">API Gateway</a>: API を構築する際のルーティングを担う．
-<a href="#sec_bashoutter">Section 13</a> で簡単に取り上げる．</p>
+<a href="#sec_bashoutter">Section 13</a> で取り上げる．</p>
 </li>
 <li>
 <p><a href="https://aws.amazon.com/fargate/">Fargate</a>: <a href="#sec_fargate_qabot">Section 8</a> で触れた Fargate も，サーバーレスクラウドの要素の一部である．
@@ -7407,7 +7751,7 @@ Lambda との違いは，Lambda よりも大容量のメモリーや CPU を要�
 <p><strong>サーバーレスアーキテクチャは万能か？</strong></p>
 </div>
 <div class="paragraph">
-<p>この問への答えは，筆者は NO であると考える．</p>
+<p>この問いへの答えは，筆者は NO であると考える．</p>
 </div>
 <div class="paragraph">
 <p>ここまで，サーバーレスの利点を強調して説明をしてきたが，まだまだ新しい技術なだけに，欠点，あるいはサーバーフルなシステムに劣る点は数多くある．</p>
@@ -7432,6 +7776,7 @@ AWS で作成したサーバーレスのシステムを， Google のクラウ�
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 </div>
@@ -7469,7 +7814,7 @@ AWS で作成したサーバーレスのシステムを， Google のクラウ�
 に置いてある．</p>
 </div>
 <div class="paragraph">
-<p>このハンズオンで使用するアプリケーションのスケッチを <a href="#fig:lambda_deploy">Figure 80</a> に示す．
+<p>このハンズオンで使用するアプリケーションのスケッチを <a href="#fig:lambda_deploy">Figure 82</a> に示す．
 STEP 1 では，AWS CDK を使用して Python で書かれたコードを Lambda に登録する．
 続いて STEP 2 では， Invoke API を使用して，同時にいくつもの Lambda を起動し，並列な計算を行う．
 Lambda のワークフローを体験する目的で最小限の設定である．</p>
@@ -7478,7 +7823,7 @@ Lambda のワークフローを体験する目的で最小限の設定である�
 <div class="content">
 <img src="imgs/handson-serverless/lambda_deploy.png" alt="lambda_deploy" width="700">
 </div>
-<div class="title">Figure 80. Lambda チュートリアルの概要</div>
+<div class="title">Figure 82. Lambda チュートリアルの概要</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -7631,29 +7976,29 @@ Python3.7 のほかに， Node.js, Java, Ruby, Go などの言語を指定する
 </div>
 </div>
 <div class="paragraph">
-<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_04_lambda_cdk_output">Figure 81</a> のような出力が得られるはずである．
+<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_04_lambda_cdk_output">Figure 83</a> のような出力が得られるはずである．
 ここで表示されている <code>SimpleLambda.FunctionName = XXXX</code> の XXXX の文字列は後で使うのでメモしておこう．</p>
 </div>
 <div id="handson_04_lambda_cdk_output" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-serverless/handson_04_lambda_cdk_output.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 81. CDKデプロイ実行後の出力</div>
+<div class="title">Figure 83. CDKデプロイ実行後の出力</div>
 </div>
 <div class="paragraph">
 <p>AWS コンソールにログインして，デプロイされたスタックを確認してみよう．
-コンソールから，Lambda のページに行くと <a href="#handson_04_lambda_console_func_list">Figure 82</a> のような画面から Lambda の関数の一覧が確認できる．</p>
+コンソールから，Lambda のページに行くと <a href="#handson_04_lambda_console_func_list">Figure 84</a> のような画面から Lambda の関数の一覧が確認できる．</p>
 </div>
 <div id="handson_04_lambda_console_func_list" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-serverless/lambda_console_func_list.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 82. Lambda コンソール - 関数の一覧</div>
+<div class="title">Figure 84. Lambda コンソール - 関数の一覧</div>
 </div>
 <div class="paragraph">
 <p>今回のアプリケーションで作成したのが <code>SimpleLambda</code> で始まるランダムな名前のついた関数だ．
 関数の名前をクリックして，詳細を見てみる．
-すると <a href="#handson_04_lambda_console_func_detail">Figure 83</a> のような画面が表示されるはずだ．
+すると <a href="#handson_04_lambda_console_func_detail">Figure 85</a> のような画面が表示されるはずだ．
 先ほどプログラムの中で定義したPythonの関数がエディターから確認できる．
 さらに下の方にスクロールすると，関数の各種設定も確認できる．</p>
 </div>
@@ -7661,7 +8006,7 @@ Python3.7 のほかに， Node.js, Java, Ruby, Go などの言語を指定する
 <div class="content">
 <img src="imgs/handson-serverless/lambda_console_func_detail.png" alt="lambda_console_func_detail" width="700">
 </div>
-<div class="title">Figure 83. Lambda コンソール - 関数の詳細</div>
+<div class="title">Figure 85. Lambda コンソール - 関数の詳細</div>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -7671,7 +8016,7 @@ Python3.7 のほかに， Node.js, Java, Ruby, Go などの言語を指定する
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Lambda で実行されるコードは， Lambda のコンソール画面 (<a href="#handson_04_lambda_console_func_detail">Figure 83</a>) のエディターで編集することもできる．
+<p>Lambda で実行されるコードは， Lambda のコンソール画面 (<a href="#handson_04_lambda_console_func_detail">Figure 85</a>) のエディターで編集することもできる．
 デバッグをするときなどは，こちらを直接いじる方が早い場合もある．
 その場合は， CDK のコードに行った編集を反映させなおすことを忘れずに．</p>
 </div>
@@ -7727,14 +8072,14 @@ Submitted 100 tasks to Lambda!</code></pre>
 </div>
 <div class="paragraph">
 <p>実際に，100 個のタスクが同時に実行されていることを確認しよう．
-<a href="#handson_04_lambda_console_func_detail">Figure 83</a> の画面に戻り， "Monitoring" というタブがあるので，それをクリックする．
-すると， <a href="#handson_04_lambda_console_monitoring">Figure 84</a> のようなグラフが表示されるだろう．</p>
+<a href="#handson_04_lambda_console_func_detail">Figure 85</a> の画面に戻り， "Monitoring" というタブがあるので，それをクリックする．
+すると， <a href="#handson_04_lambda_console_monitoring">Figure 86</a> のようなグラフが表示されるだろう．</p>
 </div>
 <div id="handson_04_lambda_console_monitoring" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-serverless/lambda_console_monitoring.png" alt="lambda_console_monitoring" width="700">
 </div>
-<div class="title">Figure 84. Lambda コンソール - 関数の実行のモニタリング</div>
+<div class="title">Figure 86. Lambda コンソール - 関数の実行のモニタリング</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -7744,14 +8089,14 @@ Submitted 100 tasks to Lambda!</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p><a href="#handson_04_lambda_console_monitoring">Figure 84</a> のグラフの更新には数分かかることがあるので，なにも表示されない場合は少し待つ．</p>
+<p><a href="#handson_04_lambda_console_monitoring">Figure 86</a> のグラフの更新には数分かかることがあるので，なにも表示されない場合は少し待つ．</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p><a href="#handson_04_lambda_console_monitoring">Figure 84</a> で "Invocations" が関数が何度実行されたかを意味している．
+<p><a href="#handson_04_lambda_console_monitoring">Figure 86</a> で "Invocations" が関数が何度実行されたかを意味している．
 たしかに100回実行されていることがわかる．
 さらに， "Concurrent executions" は何個のタスクが同時に行われたかを示している．
 ここでは 96 となっていることから，96個のタスクが並列的に実行されたことを意味している
@@ -7781,7 +8126,7 @@ Lambda はそのような大量のリクエストにも対応できることが�
 </div>
 </div>
 <div class="sect3">
-<h4 id="_スタックの削除_4">12.1.3. スタックの削除</h4>
+<h4 id="_スタックの削除_3">12.1.3. スタックの削除</h4>
 <div class="paragraph">
 <p>最後にスタックを削除しよう．</p>
 </div>
@@ -7804,7 +8149,7 @@ Lambda はそのような大量のリクエストにも対応できることが�
 に置いてある．</p>
 </div>
 <div class="paragraph">
-<p>このハンズオンで使用するアプリケーションのスケッチを <a href="#fig:dynamodb_deploy">Figure 85</a> に示す．
+<p>このハンズオンで使用するアプリケーションのスケッチを <a href="#fig:dynamodb_deploy">Figure 87</a> に示す．
 STEP 1 では，AWS CDK を使用して DynamoDB のテーブルを初期化し，デプロイする．
 続いて STEP 2 では， API を使用してデータベースのデータの書き込み・読み出し・削除などの操作を練習する．</p>
 </div>
@@ -7812,7 +8157,7 @@ STEP 1 では，AWS CDK を使用して DynamoDB のテーブルを初期化し�
 <div class="content">
 <img src="imgs/handson-serverless/dynamodb_deploy.png" alt="dynamodb_deploy" width="700">
 </div>
-<div class="title">Figure 85. DynamoDB チュートリアルの概要</div>
+<div class="title">Figure 87. DynamoDB チュートリアルの概要</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -7915,30 +8260,30 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 </div>
 </div>
 <div class="paragraph">
-<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_04_dynamodb_cdk_output">Figure 86</a> のような出力が得られるはずである．
+<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_04_dynamodb_cdk_output">Figure 88</a> のような出力が得られるはずである．
 ここで表示されている <code>SimpleDynamoDb.TableName = XXXX</code> の XXXX の文字列は後で使うのでメモしておこう．</p>
 </div>
 <div id="handson_04_dynamodb_cdk_output" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-serverless/handson_04_dynamodb_cdk_output.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 86. CDKデプロイ実行後の出力</div>
+<div class="title">Figure 88. CDKデプロイ実行後の出力</div>
 </div>
 <div class="paragraph">
 <p>AWS コンソールにログインして，デプロイされたスタックを確認してみよう．
 コンソールから， DynamoDB のページに行き，左のメニューバーから "Tables" を選択する．
-すると， <a href="#handson_04_dynamodb_table_list">Figure 87</a> のような画面からテーブルの一覧が確認できる．</p>
+すると， <a href="#handson_04_dynamodb_table_list">Figure 89</a> のような画面からテーブルの一覧が確認できる．</p>
 </div>
 <div id="handson_04_dynamodb_table_list" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-serverless/dynamodb_table_list.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 87. DynamoDB のコンソール (テーブルの一覧)</div>
+<div class="title">Figure 89. DynamoDB のコンソール (テーブルの一覧)</div>
 </div>
 <div class="paragraph">
 <p>今回のアプリケーションで作成したのが <code>SimpleDynamoDb</code> ではじまるランダムな名前のついたテーブルだ．
 テーブルの名前をクリックして，詳細を見てみる．
-すると <a href="#handson_04_dynamodb_table_detail">Figure 88</a> のような画面が表示されるはずだ．
+すると <a href="#handson_04_dynamodb_table_detail">Figure 90</a> のような画面が表示されるはずだ．
 "Items" のタブをクリックすると，テーブルの中のレコードを確認できる．
 現時点ではなにもデータを書き込んでいないので，空である．</p>
 </div>
@@ -7946,7 +8291,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 <div class="content">
 <img src="imgs/handson-serverless/dynamodb_table_detail.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 88. DynamoDB のコンソール (テーブルの詳細画面)</div>
+<div class="title">Figure 90. DynamoDB のコンソール (テーブルの詳細画面)</div>
 </div>
 </div>
 <div class="sect3">
@@ -8013,14 +8358,14 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 </div>
 <div class="paragraph">
 <p>新しい要素が正しく書き込めたか， AWS コンソールから確認してみよう．
-<a href="#handson_04_dynamodb_table_detail">Figure 88</a> と同じ手順で，テーブルの中身の要素の一覧を表示する．
-すると <a href="#fig:dynamodb_table_new_item">Figure 89</a> のように，期待通り新しい要素が見つかるだろう．</p>
+<a href="#handson_04_dynamodb_table_detail">Figure 90</a> と同じ手順で，テーブルの中身の要素の一覧を表示する．
+すると <a href="#fig:dynamodb_table_new_item">Figure 91</a> のように，期待通り新しい要素が見つかるだろう．</p>
 </div>
 <div id="fig:dynamodb_table_new_item" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-serverless/dynamodb_table_new_item.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 89. DynamoDB に新しい要素が追加されたことを確認</div>
+<div class="title">Figure 91. DynamoDB に新しい要素が追加されたことを確認</div>
 </div>
 <div class="paragraph">
 <p>boto3 を使ってテーブルから要素を読みだすことも可能である．
@@ -8097,7 +8442,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 </div>
 </div>
 <div class="sect3">
-<h4 id="_スタックの削除_5">12.2.4. スタックの削除</h4>
+<h4 id="_スタックの削除_4">12.2.4. スタックの削除</h4>
 <div class="paragraph">
 <p>DynamoDB で十分に遊ぶことができたら，忘れずにスタックを削除しよう．</p>
 </div>
@@ -8120,7 +8465,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 に置いてある．</p>
 </div>
 <div class="paragraph">
-<p><a href="#fig:s3_deploy">Figure 90</a> が今回提供する S3 チュートリアルの概要である．
+<p><a href="#fig:s3_deploy">Figure 92</a> が今回提供する S3 チュートリアルの概要である．
 STEP 1 として， AWS CDK を用いて S3 に新しい空のバケット (Bucket) を作成する．
 続いて STEP 2 では，データのアップロード・ダウンロードの方法を解説する．</p>
 </div>
@@ -8128,7 +8473,7 @@ STEP 1 として， AWS CDK を用いて S3 に新しい空のバケット (Buck
 <div class="content">
 <img src="imgs/handson-serverless/s3_deploy.png" alt="s3_deploy" width="700">
 </div>
-<div class="title">Figure 90. S3 チュートリアルの概要</div>
+<div class="title">Figure 92. S3 チュートリアルの概要</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -8219,7 +8564,7 @@ STEP 1 として， AWS CDK を用いて S3 に新しい空のバケット (Buck
 </div>
 </div>
 <div class="paragraph">
-<p>デプロイを実行すると， <a href="#fig:s3_deploy_output">Figure 91</a> のような出力が得られるはずである．
+<p>デプロイを実行すると， <a href="#fig:s3_deploy_output">Figure 93</a> のような出力が得られるはずである．
 ここで表示されている <code>SimpleS3.BucketName = XXXX</code> が，新しく作られたバケットの名前である
 (今回提供しているコードを使うとランダムな名前がバケットに割り当てられる）．
 これはあとで使うのでメモしておこう．</p>
@@ -8228,7 +8573,7 @@ STEP 1 として， AWS CDK を用いて S3 に新しい空のバケット (Buck
 <div class="content">
 <img src="imgs/handson-serverless/s3_deploy_output.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 91. デプロイ実行後の出力</div>
+<div class="title">Figure 93. デプロイ実行後の出力</div>
 </div>
 </div>
 <div class="sect3">
@@ -8299,13 +8644,13 @@ Key という呼び方は， S3 が <a href="https://en.wikipedia.org/wiki/Objec
 <p>ここまでコマンドを実行し終えたところで，一度 AWS コンソールに行き S3 の中身を確認してみよう．
 S3 のコンソールに行くと，バケットの一覧が見つかるはずである．
 その中から， <code>simples3-bucket</code> から始まるランダムな名前のついたバケットを探し，クリックする．
-するとバケットの中に含まれるファイルの一覧が表示される (<a href="#fig:s3_bucket_filelist">Figure 92</a>)．</p>
+するとバケットの中に含まれるファイルの一覧が表示される (<a href="#fig:s3_bucket_filelist">Figure 94</a>)．</p>
 </div>
 <div id="fig:s3_bucket_filelist" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-serverless/s3_bucket_filelist.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 92. S3 バケットの中のファイル一覧</div>
+<div class="title">Figure 94. S3 バケットの中のファイル一覧</div>
 </div>
 <div class="paragraph">
 <p>上で実行した2つのコマンドによって， <code>tmp.txt</code> というファイルと， <code>a/b/tmp.txt</code> というファイルが見つかることに注目しよう．
@@ -8364,7 +8709,7 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 </div>
 </div>
 <div class="sect3">
-<h4 id="_スタックの削除_6">12.3.3. スタックの削除</h4>
+<h4 id="_スタックの削除_5">12.3.3. スタックの削除</h4>
 <div class="paragraph">
 <p>以上のハンズオンで， S3 の一番基本的な使い方を紹介した．
 ここまでのハンズオンが理解できたら，忘れずにスタックを削除しよう．</p>
@@ -8388,7 +8733,7 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 <p>さて，最後のハンズオンとなる第六回では，これまで学んできたサーバーレスクラウドの技術を使って，簡単なウェブサービスを作ってみよう．
 具体的には，人々が自分の作った俳句を投稿するSNSサービス (<strong>Bashoutter</strong> と名付ける) を作成してみよう．
 これまでの講義の集大成として，コードの長さとしては最も長くなっているが，頑張ってついてきてもらいたい．
-最終的には， <a href="#handson_05_bashoutter">Figure 93</a> のような，ミニマルではあるがとても現代風な SNS サイトが完成する！</p>
+最終的には， <a href="#handson_05_bashoutter">Figure 95</a> のような，ミニマルではあるがとても現代風な SNS サイトが完成する！</p>
 </div>
 <div class="paragraph">
 <p>ハンズオンのソースコードは GitHub の
@@ -8413,7 +8758,7 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 <div class="content">
 <img src="imgs/handson-bashoutter/bashoutter.png" alt="bashoutter" width="700">
 </div>
-<div class="title">Figure 93. ハンズオン#5で作製する SNS アプリケーション "Bashoutter"</div>
+<div class="title">Figure 95. ハンズオン#5で作製する SNS アプリケーション "Bashoutter"</div>
 </div>
 <div class="sect2">
 <h3 id="_準備_3">13.1. 準備</h3>
@@ -8422,15 +8767,15 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_アプリケーションの説明_5">13.2. アプリケーションの説明</h3>
+<h3 id="_アプリケーションの説明_4">13.2. アプリケーションの説明</h3>
 <div class="sect3">
 <h4 id="_api">13.2.1. API</h4>
 <div class="paragraph">
 <p>今回のアプリケーションでは，人々からの俳句の投稿を受け付けたり，投稿された俳句の一覧を取得する，といった機能を実装したい．
-この機能を実現するための最小限の設計として， <a href="#tab_handson_05_api">Table 8</a> に示すような四つの REST API を今回は実装する．</p>
+この機能を実現するための最小限の設計として， <a href="#tab_handson_05_api">Table 11</a> に示すような四つの REST API を今回は実装する．</p>
 </div>
 <table id="tab_handson_05_api" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Hands-on #5 で実装するAPI</caption>
+<caption class="title">Table 11. Hands-on #5 で実装するAPI</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -8480,13 +8825,13 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 <div class="sect3">
 <h4 id="sec:bashoutter_application">13.2.2. アプリケーションアーキテクチャ</h4>
 <div class="paragraph">
-<p>このハンズオンで作成するアプリケーションの概要を <a href="#handson_05_architecture">Figure 94</a> に示す．</p>
+<p>このハンズオンで作成するアプリケーションの概要を <a href="#handson_05_architecture">Figure 96</a> に示す．</p>
 </div>
 <div id="handson_05_architecture" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/handson-05-architecture.png" alt="hands-on 05 architecture" width="600">
 </div>
-<div class="title">Figure 94. ハンズオン#5で作製するアプリケーションのアーキテクチャ</div>
+<div class="title">Figure 96. ハンズオン#5で作製するアプリケーションのアーキテクチャ</div>
 </div>
 <div class="paragraph">
 <p>簡単にまとめると，次のような設計である．</p>
@@ -9032,11 +9377,11 @@ Lambdaは，デフォルトの状態ではほかのリソースにアクセス�
 </div>
 <div class="paragraph">
 <p>API Gateway を配置することで，大量 (1秒間に数千から数万件) の API リクエストに対応することのできるシステムを容易に構築することができる．
-API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> のように設定されている．
+API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 12</a> のように設定されている．
 また，無料利用枠により，月ごとに100万件までのリクエストは0円で利用できる．</p>
 </div>
 <table id="tab_handson_05_apigateway_price" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. API Gateway の利用料金設定 (<a href="https://aws.amazon.com/api-gateway/pricing/">参照</a>)</caption>
+<caption class="title">Table 12. API Gateway の利用料金設定 (<a href="https://aws.amazon.com/api-gateway/pricing/">参照</a>)</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -9207,65 +9552,65 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 9</a> 
 </div>
 </div>
 <div class="paragraph">
-<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_05_cdk_output">Figure 95</a> のような出力が得られるはずである．
+<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_05_cdk_output">Figure 97</a> のような出力が得られるはずである．
 ここで表示されている <code>Bashoutter.BashoutterApiEndpoint = XXXX</code>, <code>Bashoutter.BucketUrl = YYYY</code> の二つ文字列は次に使うのでメモしておこう．</p>
 </div>
 <div id="handson_05_cdk_output" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/cdk_output.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 95. CDKデプロイ実行後の出力</div>
+<div class="title">Figure 97. CDKデプロイ実行後の出力</div>
 </div>
 <div class="paragraph">
 <p>AWS コンソールにログインして，デプロイされたスタックを確認してみよう．</p>
 </div>
 <div class="paragraph">
 <p>まずは，コンソールから API Gateway のページに行く．
-すると， <a href="#handson_05_apigw_console_list">Figure 96</a> のような画面が表示され，デプロイ済みの API エンドポイントの一覧が確認できる．</p>
+すると， <a href="#handson_05_apigw_console_list">Figure 98</a> のような画面が表示され，デプロイ済みの API エンドポイントの一覧が確認できる．</p>
 </div>
 <div id="handson_05_apigw_console_list" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/apigw_console_list.png" alt="apigw_console_list" width="700">
 </div>
-<div class="title">Figure 96. API Gateway コンソール画面 (1)</div>
+<div class="title">Figure 98. API Gateway コンソール画面 (1)</div>
 </div>
 <div class="paragraph">
-<p>今回デプロイした "BashoutterApi" という名前の API をクリックすることで <a href="#handson_05_apigw_console_detail">Figure 97</a> のような画面に遷移し，詳細情報を閲覧できる．
+<p>今回デプロイした "BashoutterApi" という名前の API をクリックすることで <a href="#handson_05_apigw_console_detail">Figure 99</a> のような画面に遷移し，詳細情報を閲覧できる．
 <code>GET /haiku</code>, <code>POST /haiku</code> などが定義されていることが確認できる．</p>
 </div>
 <div class="paragraph">
 <p>それぞれのメソッドをクリックすると，そのメソッドの詳細情報を確認できる．
 API Gateway は，前述したルーティングの機能だけでなく，認証機能などを追加することも可能である．
 このハンズオンではとくにこれらの機能は使用しないが， "Method Request" と書いてある項目などがそれに相当する．
-次に， <a href="#handson_05_apigw_console_detail">Figure 97</a> で画面右端の赤色で囲った部分に，この API で呼ばれる Lambda 関数が指定されていることに注目しよう．
+次に， <a href="#handson_05_apigw_console_detail">Figure 99</a> で画面右端の赤色で囲った部分に，この API で呼ばれる Lambda 関数が指定されていることに注目しよう．
 関数名をクリックと，該当する Lambda のコンソールに遷移し，関数の中身を閲覧することが可能である．</p>
 </div>
 <div id="handson_05_apigw_console_detail" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/apigw_console_detail.png" alt="apigw_console_detail" width="700">
 </div>
-<div class="title">Figure 97. API Gateway コンソール画面 (2)</div>
+<div class="title">Figure 99. API Gateway コンソール画面 (2)</div>
 </div>
 <div class="paragraph">
 <p>次に， S3 のコンソール画面に移ってみよう．
-<code>bashouter-</code> で始まるランダムな名前のバケットが見つかるはずである (<a href="#handson_05_s3_console">Figure 98</a>)．</p>
+<code>bashouter-</code> で始まるランダムな名前のバケットが見つかるはずである (<a href="#handson_05_s3_console">Figure 100</a>)．</p>
 </div>
 <div id="handson_05_s3_console" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/s3_console.png" alt="s3_console" width="700">
 </div>
-<div class="title">Figure 98. S3 コンソール画面</div>
+<div class="title">Figure 100. S3 コンソール画面</div>
 </div>
 <div class="paragraph">
 <p>バケットの名前をクリックすることで，バケットの中身を確認してみよう．
-<code>index.html</code> のほか， <code>css/</code>, <code>js/</code> などのディレクトリがあるのが確認できるだろう (<a href="#handson_05_s3_contents">Figure 99</a>)．
+<code>index.html</code> のほか， <code>css/</code>, <code>js/</code> などのディレクトリがあるのが確認できるだろう (<a href="#handson_05_s3_contents">Figure 101</a>)．
 これらが，ウェブページの"枠"を定義している静的コンテンツである．</p>
 </div>
 <div id="handson_05_s3_contents" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/s3_contents.png" alt="s3_contents" width="700">
 </div>
-<div class="title">Figure 99. S3 バケットの中身</div>
+<div class="title">Figure 101. S3 バケットの中身</div>
 </div>
 </div>
 <div class="sect2">
@@ -9451,22 +9796,22 @@ Content-Type: application/json
 <h3 id="_bashoutter_gui_を動かしてみる">13.6. Bashoutter GUI を動かしてみる</h3>
 <div class="paragraph">
 <p>前節ではコマンドラインから API を送信する演習を行った．
-ウェブアプリケーションでは，これらの API はウェブブラウザ上のウェブページから送信され，コンテンツが表示されている (<a href="#fig:web_server">Figure 74</a> 参照)．
+ウェブアプリケーションでは，これらの API はウェブブラウザ上のウェブページから送信され，コンテンツが表示されている (<a href="#fig:web_server">Figure 75</a> 参照)．
 最後に， API が GUI と統合されるとどうなるのか，見てみよう．</p>
 </div>
 <div class="paragraph">
-<p>デプロイを実行したときにコマンドラインで出力された， <code>Bashoutter.BucketUrl=</code> で与えられた URL を確認しよう (<a href="#handson_05_cdk_output">Figure 95</a>)．
+<p>デプロイを実行したときにコマンドラインで出力された， <code>Bashoutter.BucketUrl=</code> で与えられた URL を確認しよう (<a href="#handson_05_cdk_output">Figure 97</a>)．
 これは，先述したとおり， Public access mode の S3 バケットの URL である．</p>
 </div>
 <div class="paragraph">
 <p>ウェブブラウザを開き，アドレスバーに S3 の URL を入力しへアクセスしてみよう．
-すると， <a href="#handson_05_bashoutter_2">Figure 100</a> のようなページが表示されるはずである．</p>
+すると， <a href="#handson_05_bashoutter_2">Figure 102</a> のようなページが表示されるはずである．</p>
 </div>
 <div id="handson_05_bashoutter_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/bashoutter_2.png" alt="bashoutter" width="700">
 </div>
-<div class="title">Figure 100. "Bashoutter" の GUI 画面</div>
+<div class="title">Figure 102. "Bashoutter" の GUI 画面</div>
 </div>
 <div class="paragraph">
 <p>ページが表示されたら，一番上の "API Endpoint URL" と書いてあるテキストボックスに，今回デプロイした <strong>API Gateway の URL を入力</strong>する
@@ -9603,34 +9948,34 @@ Windows のユーザーは， Windows Subsytem for Linux (WSL) を使用する�
 </div>
 <div class="paragraph">
 <p>まず，ウェブブラウザから <a href="https://aws.amazon.com/console/">AWS コンソール</a> にアクセスし，右上の <code>Create an AWS Account</code> をクリックする
-(<a href="#fig:aws-signup-1">Figure 101</a> で実線で囲った部分)．</p>
+(<a href="#fig:aws-signup-1">Figure 103</a> で実線で囲った部分)．</p>
 </div>
 <div id="fig:aws-signup-1" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-1.png" alt="signup-1" width="500">
 </div>
-<div class="title">Figure 101. サインアップ (1): AWS コンソールにアクセス</div>
+<div class="title">Figure 103. サインアップ (1): AWS コンソールにアクセス</div>
 </div>
 <div class="paragraph">
-<p>次に，遷移した先のページでメールアドレスとパスワードなどの登録を行う (<a href="#fig:aws-signup-3">Figure 102</a>)．</p>
+<p>次に，遷移した先のページでメールアドレスとパスワードなどの登録を行う (<a href="#fig:aws-signup-3">Figure 104</a>)．</p>
 </div>
 <div id="fig:aws-signup-3" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-3.png" alt="signup-3" width="500">
 </div>
-<div class="title">Figure 102. サインアップ (2): メールアドレス・パスワードなどの登録．</div>
+<div class="title">Figure 104. サインアップ (2): メールアドレス・パスワードなどの登録．</div>
 </div>
 <div class="paragraph">
-<p>続いて，住所や電話番号などを訊かれるので，すべて入力しよう (<a href="#fig:aws-signup-4">Figure 103</a>)．</p>
+<p>続いて，住所や電話番号などを訊かれるので，すべて入力しよう (<a href="#fig:aws-signup-4">Figure 105</a>)．</p>
 </div>
 <div id="fig:aws-signup-4" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-4.png" alt="signup-4" width="500">
 </div>
-<div class="title">Figure 103. サインアップ (3): 住所・電話番号の入力</div>
+<div class="title">Figure 105. サインアップ (3): 住所・電話番号の入力</div>
 </div>
 <div class="paragraph">
-<p>次に，クレジットカードの情報の登録を求められる (<a href="#fig:aws-signup-5">Figure 104</a>)．
+<p>次に，クレジットカードの情報の登録を求められる (<a href="#fig:aws-signup-5">Figure 106</a>)．
 個人で AWS を利用する場合は，利用料金の請求はクレジットカードを経由して行われる．
 クレジットカードの登録なしには AWS を使い始めることはできないことに注意．</p>
 </div>
@@ -9638,37 +9983,37 @@ Windows のユーザーは， Windows Subsytem for Linux (WSL) を使用する�
 <div class="content">
 <img src="imgs/signup-5.png" alt="signup-5" width="500">
 </div>
-<div class="title">Figure 104. サインアップ (4): クレジットカードの登録</div>
+<div class="title">Figure 106. サインアップ (4): クレジットカードの登録</div>
 </div>
 <div class="paragraph">
-<p>次の画面では，携帯電話の SMS またはボイスメッセージを利用した本人確認が求められる (<a href="#fig:aws-signup-6">Figure 105</a>)．
+<p>次の画面では，携帯電話の SMS またはボイスメッセージを利用した本人確認が求められる (<a href="#fig:aws-signup-6">Figure 107</a>)．
 希望の認証方法を選択し，自分の携帯電話番号を入力しよう．</p>
 </div>
 <div id="fig:aws-signup-6" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-6.png" alt="signup-6" width="500">
 </div>
-<div class="title">Figure 105. サインアップ (5): 携帯電話による本人確認</div>
+<div class="title">Figure 107. サインアップ (5): 携帯電話による本人確認</div>
 </div>
 <div class="paragraph">
-<p>無事に本人確認が完了すると，最後にサポートプランの選択を求められる (<a href="#fig:aws-signup-8">Figure 106</a>)．
+<p>無事に本人確認が完了すると，最後にサポートプランの選択を求められる (<a href="#fig:aws-signup-8">Figure 108</a>)．
 無料の Basic support を選択しておけば問題ない．</p>
 </div>
 <div id="fig:aws-signup-8" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-8.png" alt="signup-8" width="500">
 </div>
-<div class="title">Figure 106. サインアップ (6): サポートプランの選択</div>
+<div class="title">Figure 108. サインアップ (6): サポートプランの選択</div>
 </div>
 <div class="paragraph">
-<p>以上のステップにより，アカウントの作成が完了する (<a href="#fig:aws-signup-9">Figure 107</a>)．
+<p>以上のステップにより，アカウントの作成が完了する (<a href="#fig:aws-signup-9">Figure 109</a>)．
 早速ログインをして， AWS コンソールにアクセスできるか確認しておこう．</p>
 </div>
 <div id="fig:aws-signup-9" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-9.png" alt="signup-9" width="500">
 </div>
-<div class="title">Figure 107. サインアップ (7): アカウントの作成が完了した</div>
+<div class="title">Figure 109. サインアップ (7): アカウントの作成が完了した</div>
 </div>
 </div>
 <div class="sect2">
@@ -9686,10 +10031,10 @@ AWS シークレットキーの詳細は
 <p>AWS コンソールにログインする．</p>
 </li>
 <li>
-<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 108</a>)</p>
+<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 110</a>)</p>
 </li>
 <li>
-<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 109</a>)</p>
+<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 111</a>)</p>
 </li>
 <li>
 <p>表示された Access key ID, Secret access key を記録しておく (画面を閉じると二度と表示されない)．</p>
@@ -9706,13 +10051,13 @@ AWS シークレットキーの詳細は
 <div class="content">
 <img src="imgs/aws_secret_key_1.png" alt="aws_secret_key_1" width="400">
 </div>
-<div class="title">Figure 108. AWS シークレットキーの発行1</div>
+<div class="title">Figure 110. AWS シークレットキーの発行1</div>
 </div>
 <div id="fig:aws_secret_key_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_2.png" alt="aws_secret_key_2" width="700">
 </div>
-<div class="title">Figure 109. AWS シークレットキーの発行2</div>
+<div class="title">Figure 111. AWS シークレットキーの発行2</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -9727,13 +10072,13 @@ AWS シークレットキーの詳細は
 <div class="ulist">
 <ul>
 <li>
-<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 110</a>)．</p>
+<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 112</a>)．</p>
 </li>
 <li>
 <p><code>Account Details</code> をクリックし，続いて <code>AWS CLI: Show</code> をクリックする．</p>
 </li>
 <li>
-<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 111</a>)．
+<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 113</a>)．
 ここで表示された内容を <code>~/.aws/credentials</code> にコピーする (<a href="#aws_cli_install">Section 15.3</a> 参照)．
 <code>aws_session_token</code> の箇所も漏らさずコピーすること．</p>
 </li>
@@ -9762,13 +10107,13 @@ output = json</pre>
 <div class="content">
 <img src="imgs/vocareum_console.png" alt="vocareum console" width="700">
 </div>
-<div class="title">Figure 110. vocareum コンソール</div>
+<div class="title">Figure 112. vocareum コンソール</div>
 </div>
 <div id="fig:vocareum_secret" class="imageblock text-center">
 <div class="content">
 <img src="imgs/vocareum_secret.png" alt="vocareum secret" width="700">
 </div>
-<div class="title">Figure 111. vocareum から AWS シークレットキーの発行</div>
+<div class="title">Figure 113. vocareum から AWS シークレットキーの発行</div>
 </div>
 </td>
 </tr>
@@ -9999,7 +10344,7 @@ X64 のシステムでは Version 1903, Build 18362 以上でなければなら�
 バージョンが対応していない場合は、 Windows のアップデートを行う．</p>
 </div>
 <div class="paragraph">
-<p>まず最初に， Administrator 権限で PowerShell を起動する (<a href="#fig:powershell">Figure 112</a>)．
+<p>まず最初に， Administrator 権限で PowerShell を起動する (<a href="#fig:powershell">Figure 114</a>)．
 左下の Windows メニューの検索バーに <code>powershell</code> と入力すると， PowerShell のプログラムが見つかるはずである，
 これを右クリックし、 <code>Run as administrator</code> を選択し起動する．</p>
 </div>
@@ -10007,7 +10352,7 @@ X64 のシステムでは Version 1903, Build 18362 以上でなければなら�
 <div class="content">
 <img src="imgs/wsl/powershell.png" alt="powershell" width="500">
 </div>
-<div class="title">Figure 112. 管理者権限での PowerShell の起動</div>
+<div class="title">Figure 114. 管理者権限での PowerShell の起動</div>
 </div>
 <div class="paragraph">
 <p>PowerShell が起動したら、次のコマンドを実行する．</p>
@@ -10055,14 +10400,14 @@ X64 のシステムでは Version 1903, Build 18362 以上でなければなら�
 </div>
 <div class="paragraph">
 <p>Microsoft store のアプリを起動し，検索バーに <code>Ubuntu</code> と入力する．
-Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き， “Get” ボタンをクリックする (<a href="#fig:microsoft_store">Figure 113</a>)．
+Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き， “Get” ボタンをクリックする (<a href="#fig:microsoft_store">Figure 115</a>)．
 しばらく待つと， Ubuntu 20.04 のインストールが完了する．</p>
 </div>
 <div id="fig:microsoft_store" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/microsoft_store.png" alt="microsoft_store" width="500">
 </div>
-<div class="title">Figure 113. Microsoft store から Ubuntu 20.04 をインストール</div>
+<div class="title">Figure 115. Microsoft store から Ubuntu 20.04 をインストール</div>
 </div>
 <div class="paragraph">
 <p>Ubuntu 20.04 を初回に起動すると，初期設定が自動で開始され，数分待つことになる．
@@ -10071,24 +10416,24 @@ Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き
 <div class="paragraph">
 <p>これで WSL2 のインストールが完了した．
 早速 WSL2 を起動してみよう．
-左下の Windows メニューの検索バーに <code>Ubuntu</code> と入力すると， Ubuntu 20.04 のプログラムが見つかるはずである (<a href="#fig:ubuntu">Figure 114</a>)．
+左下の Windows メニューの検索バーに <code>Ubuntu</code> と入力すると， Ubuntu 20.04 のプログラムが見つかるはずである (<a href="#fig:ubuntu">Figure 116</a>)．
 クリックして起動しよう．</p>
 </div>
 <div id="fig:ubuntu" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/ubuntu2004.png" alt="ubuntu2004" width="500">
 </div>
-<div class="title">Figure 114. Ubuntu 20.04 の起動</div>
+<div class="title">Figure 116. Ubuntu 20.04 の起動</div>
 </div>
 <div class="paragraph">
-<p>すると，ターミナルの黒い画面が立ち上がるだろう (<a href="#fig:wsl_window">Figure 115</a>)．
+<p>すると，ターミナルの黒い画面が立ち上がるだろう (<a href="#fig:wsl_window">Figure 117</a>)．
 <code>ls</code>, <code>top</code> などのコマンドを打ってみて， WSL がきちんと動作していることを確認しよう．</p>
 </div>
 <div id="fig:wsl_window" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/wsl_window.png" alt="wsl_window" width="500">
 </div>
-<div class="title">Figure 115. WSL の起動画面</div>
+<div class="title">Figure 117. WSL の起動画面</div>
 </div>
 <div class="paragraph">
 <p>オプションとして，
@@ -10212,14 +10557,14 @@ Docker Desktop をインストールすると， WSL からも <code>docker</cod
 <p>と実行する．</p>
 </div>
 <div class="paragraph">
-<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 116</a>)．
+<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 118</a>)．
 これが， "いまあなたは venv の中にいますよ" というしるしになる．</p>
 </div>
 <div id="fig_venv_prompt" class="imageblock text-center">
 <div class="content">
 <img src="imgs/venv_shell.png" alt="venv shell" width="500">
 </div>
-<div class="title">Figure 116. venv を起動したときのプロンプト</div>
+<div class="title">Figure 118. venv を起動したときのプロンプト</div>
 </div>
 <div class="paragraph">
 <p>仮想環境を起動すると，それ以降実行する <code>pip</code> コマンドは， <code>.env/</code> 以下にインストールされる．このようにして，プロジェクトごとに使うライブラリのバージョンを切り分けることができる．</p>
@@ -10438,7 +10783,7 @@ Docker イメージのビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-09-24 05:38:28 UTC
+Last updated 2021-09-29 05:56:44 UTC
 </div>
 </div>
 <style>

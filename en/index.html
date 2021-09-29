@@ -524,16 +524,45 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_deleting_the_stack_2">8.8. Deleting the stack</a></li>
 </ul>
 </li>
-<li><a href="#sec:appendix_settingup">9. Appendix: Environment setup</a>
+<li><a href="#sec_aws_batch">9. Hands-on #4: Using AWS Batch to Parallelize Hyperparameter Search for Machine Learning</a>
 <ul class="sectlevel2">
-<li><a href="#sec:create_aws_account">9.1. Creating an AWS account</a></li>
-<li><a href="#aws_secrets">9.2. Creating AWS access key</a></li>
-<li><a href="#aws_cli_install">9.3. Installing AWS CLI</a></li>
-<li><a href="#aws_cdk_install">9.4. Installing AWS CDK</a></li>
-<li><a href="#sec:install_wsl">9.5. Installing WSL</a></li>
-<li><a href="#sec:install_docker">9.6. Installing Docker</a></li>
-<li><a href="#venv_quick_guide">9.7. Quick tutorial on Python <code>venv</code></a></li>
-<li><a href="#sec_handson_docker">9.8. Working with Docker image for the hands-on exercise</a></li>
+<li><a href="#_auto_scaling_groups_asg">9.1. Auto scaling groups (ASG)</a></li>
+<li><a href="#_aws_batch">9.2. AWS Batch</a></li>
+<li><a href="#_preparations_2">9.3. Preparations</a></li>
+<li><a href="#_revisiting_mnist_handwritten_digit_recognition_task">9.4. Revisiting MNIST handwritten digit recognition task</a></li>
+<li><a href="#sec:aws_batch_code">9.5. Reading the application source code</a></li>
+<li><a href="#_deploying_the_stack">9.6. Deploying the stack</a></li>
+<li><a href="#sec:aws_batch_deploy_docker_on_ecr">9.7. Deploying Docker image on ECR</a></li>
+<li><a href="#_submitting_a_single_job">9.8. Submitting a single job</a></li>
+<li><a href="#sec:batch_parallel_jobs">9.9. Submitting parallel jobs</a></li>
+<li><a href="#sec:batch_destroy_app">9.10. Deleting the stack</a></li>
+<li><a href="#_short_summary">9.11. Short summary</a></li>
+</ul>
+</li>
+<li><a href="#_how_to_create_web_services">10. How to create web services</a>
+<ul class="sectlevel2">
+<li><a href="#_how_web_services_workusing_twitter_as_an_example">10.1. How Web Services Work&#8201;&#8212;&#8201;Using Twitter as an Example</a></li>
+<li><a href="#sec_rest_api">10.2. REST API</a></li>
+<li><a href="#_twitter_api">10.3. Twitter API</a></li>
+</ul>
+</li>
+<li><a href="#sec_serverless">11. Serverless architecture</a>
+<ul class="sectlevel2">
+<li><a href="#chap_serverful_cloud">11.1. Serverful cloud (conventional cloud)</a></li>
+<li><a href="#_to_the_serverless_cloud">11.2. To the serverless cloud</a></li>
+<li><a href="#_components_that_make_up_a_serverless_cloud">11.3. Components that make up a serverless cloud</a></li>
+</ul>
+</li>
+<li><a href="#sec:appendix_settingup">12. Appendix: Environment setup</a>
+<ul class="sectlevel2">
+<li><a href="#sec:create_aws_account">12.1. Creating an AWS account</a></li>
+<li><a href="#aws_secrets">12.2. Creating AWS access key</a></li>
+<li><a href="#aws_cli_install">12.3. Installing AWS CLI</a></li>
+<li><a href="#aws_cdk_install">12.4. Installing AWS CDK</a></li>
+<li><a href="#sec:install_wsl">12.5. Installing WSL</a></li>
+<li><a href="#sec:install_docker">12.6. Installing Docker</a></li>
+<li><a href="#venv_quick_guide">12.7. Quick tutorial on Python <code>venv</code></a></li>
+<li><a href="#sec_handson_docker">12.8. Working with Docker image for the hands-on exercise</a></li>
 </ul>
 </li>
 </ul>
@@ -695,7 +724,7 @@ Each of these topic is worth more than one book, but this book was written with 
 <div class="paragraph">
 <p>This book provides hands-on tutorials to run and deploy applications on AWS.
 Readers must have their own AWS account to run the hands-on excercises.
-A brief description of how to create an AWS account is given in the appendix at the end of the book (<a href="#sec:create_aws_account">Section 9.1</a>), so please refer to it if necessary.</p>
+A brief description of how to create an AWS account is given in the appendix at the end of the book (<a href="#sec:create_aws_account">Section 12.1</a>), so please refer to it if necessary.</p>
 </div>
 <div class="paragraph">
 <p>AWS offers free access to some features, and some hands-on excercises can be done for free.
@@ -717,7 +746,7 @@ AWS Educate provides a variety of learning materials, and I encourage you to tak
 <div class="paragraph">
 <p>In this book, we will provide hands-on sessions to deploy a cloud application on AWS.
 The following computer environment is required to run the programs provided in this book.
-The installation procedure is described in the appendix at the end of the book (<a href="#sec:appendix_settingup">Section 9</a>).
+The installation procedure is described in the appendix at the end of the book (<a href="#sec:appendix_settingup">Section 12</a>).
 Refer to the appendix as necessary and set up an environment in your local computer.</p>
 </div>
 <div class="ulist">
@@ -729,18 +758,18 @@ Mac or Linux users can use the console (also known as a terminal) that comes sta
 For Windows users, we recommend to install
 <a href="https://docs.microsoft.com/en-us/windows/wsl/about">Windows Subsystem for Linux (WSL)</a>
 and set up a virtual Linux environment
-(see <a href="#sec:install_wsl">Section 9.5</a> for more details).</p>
+(see <a href="#sec:install_wsl">Section 12.5</a> for more details).</p>
 </li>
 <li>
 <p><strong><a href="https://www.docker.com/">Docker</a></strong>:
 This book explains how to use a virtual computing environment called Docker.
-For the installation procedure, see <a href="#sec:install_docker">Section 9.6</a>.</p>
+For the installation procedure, see <a href="#sec:install_docker">Section 12.6</a>.</p>
 </li>
 <li>
 <p><strong><a href="https://github.com/python">Python</a></strong>:
 Version 3.6 or later is required.
 We will also use <code>venv</code> module to run programs.
-A quick tutorial on <code>venv</code> module is provided in the appendix (<a href="#venv_quick_guide">Section 9.7</a>).</p>
+A quick tutorial on <code>venv</code> module is provided in the appendix (<a href="#venv_quick_guide">Section 12.7</a>).</p>
 </li>
 <li>
 <p><strong><a href="https://github.com/nodejs/node">Node.js</a></strong>:
@@ -751,18 +780,18 @@ Version 12.0 or later is required.</p>
 WS CLI
 <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html">Version 2</a>
 is required.
-Refer to <a href="#aws_cli_install">Section 9.3</a> for installation and setup procedure.</p>
+Refer to <a href="#aws_cli_install">Section 12.3</a> for installation and setup procedure.</p>
 </li>
 <li>
 <p><strong><a href="https://github.com/aws/aws-cdk">AWS CDK</a></strong>:
 Version 1.00 or later is required.
 The tutorials are not compatible with version 2.
-Refer to <a href="#aws_cdk_install">Section 9.4</a> for installation and setup procedure.</p>
+Refer to <a href="#aws_cdk_install">Section 12.4</a> for installation and setup procedure.</p>
 </li>
 <li>
 <p><strong>AWS secret keys</strong>:
 In order to call the AWS API from the command line, an authentication key (secret key) must be set.
-Refer to <a href="#aws_cli_install">Section 9.3</a> for the setting of the authentication key.</p>
+Refer to <a href="#aws_cli_install">Section 12.3</a> for the setting of the authentication key.</p>
 </li>
 </ul>
 </div>
@@ -783,7 +812,7 @@ If you already know how to use Docker, then you can use this image to immediatel
 </div>
 </div>
 <div class="paragraph">
-<p>More details on this Docker image is given in the appendix (<a href="#sec_handson_docker">Section 9.8</a>).</p>
+<p>More details on this Docker image is given in the appendix (<a href="#sec_handson_docker">Section 12.8</a>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -1229,13 +1258,13 @@ At this point, it is enough if you could just memorize the names in a corner of 
 <strong>EC2 (Elastic Compute Cloud)</strong>
 Virtual machines with various specifications can be created and used to perform calculations.
 This is the most basic component of AWS.
-We will explore more on EC2 in later chapters (<a href="#sec_first_ec2">Section 4</a>, <a href="#sec_jupyter_and_deep_learning">Section 6</a>, <a href="#sec_aws_batch">[sec_aws_batch]</a>).</p>
+We will explore more on EC2 in later chapters (<a href="#sec_first_ec2">Section 4</a>, <a href="#sec_jupyter_and_deep_learning">Section 6</a>, <a href="#sec_aws_batch">Section 9</a>).</p>
 </div>
 <div class="paragraph">
 <p><span class="image left"><img src="imgs/aws_logos/Lambda.png" alt="S3" width="40"></span>
 <strong>Lambda</strong>
 Lambda is a part of the cloud called Function as a Service (FaaS), a service for performing small computations without a server.
-It will be described in detail in the chapter on serverless architecture (<a href="#sec_serverless">[sec_serverless]</a>).</p>
+It will be described in detail in the chapter on serverless architecture (<a href="#sec_serverless">Section 11</a>).</p>
 </div>
 </div>
 <div class="sect3">
@@ -1250,7 +1279,7 @@ Think of a "conventional" file system as used in common operating systems.</p>
 <p><span class="image left"><img src="imgs/aws_logos/S3.png" alt="S3" width="40"></span>
 <strong>S3 (Simple Storage Service)</strong>
 S3 is a "cloud-bative" data storage system called Object Storage, which uses APIs to read and write data.
-It will be described in detail in the chapter on serverless architecture (<a href="#sec_serverless">[sec_serverless]</a>).</p>
+It will be described in detail in the chapter on serverless architecture (<a href="#sec_serverless">Section 11</a>).</p>
 </div>
 </div>
 <div class="sect3">
@@ -1259,7 +1288,7 @@ It will be described in detail in the chapter on serverless architecture (<a hre
 <p><span class="image left"><img src="imgs/aws_logos/DynamoDB.png" alt="S3" width="40"></span>
 <strong>DynamoDB</strong>
 DynamoDB is a NoSQL type database service (think of <code>mongoDB</code> if you know it).
-It will be described in detail in the chapter on serverless architecture (<a href="#sec_serverless">[sec_serverless]</a>).</p>
+It will be described in detail in the chapter on serverless architecture (<a href="#sec_serverless">Section 11</a>).</p>
 </div>
 </div>
 <div class="sect3">
@@ -1396,7 +1425,7 @@ They are valuable resources for learning.</p>
 <h4 id="_operating_the_resources_through_the_apis">3.4.2. Operating the resources through the APIs</h4>
 <div class="paragraph">
 <p>By using <strong>API (Application Programming Interface)</strong>, you can send commands to AWS and manipulate cloud resources.
-APIs are simply a list of commands exposed by AWS, and consisted of <strong>REST APIs</strong> (REST APIs are explained in <a href="#sec_rest_api">[sec_rest_api]</a>).
+APIs are simply a list of commands exposed by AWS, and consisted of <strong>REST APIs</strong> (REST APIs are explained in <a href="#sec_rest_api">Section 10.2</a>).
 However, directly entering the REST APIs can be tedious, so various tools are provided to interact with AWS APIs more conveniently.</p>
 </div>
 <div class="paragraph">
@@ -1522,7 +1551,7 @@ For detailed usage of the <code>aws s3</code> command, please refer to <a href="
 </td>
 <td class="content">
 <div class="paragraph">
-<p>For information on installing the AWS CLI, see <a href="#aws_cli_install">Section 9.3</a>.</p>
+<p>For information on installing the AWS CLI, see <a href="#aws_cli_install">Section 12.3</a>.</p>
 </div>
 </td>
 </tr>
@@ -1553,7 +1582,7 @@ For detailed usage of the <code>aws s3</code> command, please refer to <a href="
 <div class="paragraph">
 <p>Before executing the following commands, make sure that your AWS credentials are set correctly.
 This requires that the settings are written to the file <code>~/.aws/credentials</code> or that the environment variables (<code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, and <code>AWS_DEFAULT_REGION</code>) are defined.
-See <a href="#aws_cli_install">Section 9.3</a> for details.</p>
+See <a href="#aws_cli_install">Section 12.3</a> for details.</p>
 </div>
 </td>
 </tr>
@@ -1919,7 +1948,7 @@ This is a prerequisite for the hands-on sessions in later chapters as well, so m
 <li>
 <p><strong>AWS account</strong>:
 You will need a personal AWS account to run the hands-on.
-See <a href="#sec:create_aws_account">Section 9.1</a> for obtaining an AWS account.</p>
+See <a href="#sec:create_aws_account">Section 12.1</a> for obtaining an AWS account.</p>
 </li>
 <li>
 <p><strong>Python and Node.js</strong>:
@@ -1927,12 +1956,12 @@ Python (3.6 or higher) and Node.js (12.0 or higher) must be installed in order t
 </li>
 <li>
 <p><strong>AWS CLI</strong>:
-For information on installing the AWS CLI, see <a href="#aws_cli_install">Section 9.3</a>.
+For information on installing the AWS CLI, see <a href="#aws_cli_install">Section 12.3</a>.
 Be sure to set up the authentication key described here.</p>
 </li>
 <li>
 <p><strong>AWS CDK</strong>:
-For information on installing the AWS CDK, see <a href="#aws_cdk_install">Section 9.4</a>.</p>
+For information on installing the AWS CDK, see <a href="#aws_cdk_install">Section 12.4</a>.</p>
 </li>
 <li>
 <p><strong>Downloading the source code</strong>:
@@ -1957,7 +1986,7 @@ The source code of the hands-on program has also been included in the image.
 If you already know how to use Docker, then you can use this image to immediately start the hands-on tutorials without having to install anything else.</p>
 </div>
 <div class="paragraph">
-<p>See <a href="#sec_handson_docker">Section 9.8</a> for more instructions.</p>
+<p>See <a href="#sec_handson_docker">Section 12.8</a> for more instructions.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2502,7 +2531,7 @@ as a tool to manage Python libraries.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>A quick tutorial on <code>venv</code> is provided in <a href="#venv_quick_guide">Section 9.7</a>.</p>
+<p>A quick tutorial on <code>venv</code> is provided in <a href="#venv_quick_guide">Section 12.7</a>.</p>
 </div>
 </td>
 </tr>
@@ -2513,8 +2542,8 @@ as a tool to manage Python libraries.</p>
 <h4 id="_setting_aws_access_key">4.4.2. Setting AWS access key</h4>
 <div class="paragraph">
 <p>To use the AWS CLI and AWS CDK, you need to have an AWS access key set up.
-Refer to <a href="#aws_secrets">Section 9.2</a> for issuing a access key.
-After issuing the access key, refer to <a href="#aws_cli_install">Section 9.3</a> to configure the command line settings.</p>
+Refer to <a href="#aws_secrets">Section 12.2</a> for issuing a access key.
+After issuing the access key, refer to <a href="#aws_cli_install">Section 12.3</a> to configure the command line settings.</p>
 </div>
 <div class="paragraph">
 <p>To summarize the procedure shortly, the first method is to set environment variables such as <code>AWS_ACCESS_KEY_ID</code>.
@@ -3411,7 +3440,7 @@ Jupyter Notebook is also already installed.</p>
 <p>The deployment procedure is almost the same as the first hands-on.
 Here, only the commands are listed (lines starting with <code>#</code> are comments).
 If you have forgotten the meaning of each command, review the first hands-on.
-You should not forget to set the access key (<a href="#aws_cli_install">Section 9.3</a>).</p>
+You should not forget to set the access key (<a href="#aws_cli_install">Section 12.3</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4282,7 +4311,7 @@ As described in <a href="#chap_cloud_basics">Section 2</a>, the greatest strengt
 That is to say, the true potential of the cloud can only be demonstrated by processing large amounts of data by running many servers simultaneously and executing multiple jobs in a distributed parallel fashion.</p>
 </div>
 <div class="paragraph">
-<p>Using the three sections starting from this chapter (<a href="#sec_docker_introduction">Section 7</a>, <a href="#sec_fargate_qabot">Section 8</a>, <a href="#sec_aws_batch">[sec_aws_batch]</a>), we would like to show you a glimpse of how to build a large-scale computing system using the cloud to tackle challenges like the big data analysis.
+<p>Using the three sections starting from this chapter (<a href="#sec_docker_introduction">Section 7</a>, <a href="#sec_fargate_qabot">Section 8</a>, <a href="#sec_aws_batch">Section 9</a>), we would like to show you a glimpse of how to build a large-scale computing system using the cloud to tackle challenges like the big data analysis.
 In particular, we would like to focus our discussion on how to apply the deep learning to big data.
 As a prelude to this, this chapter introduces a virtualization software called <a href="https://www.docker.com/">Docker</a>.
 It would not be an exaggeration to say that modern cloud computing would not be possible without Docker.
@@ -4432,7 +4461,7 @@ And what new tools will revolutionize programmers' workflows in the future?</p>
 In this section, I will give a brief tutorial on Docker.</p>
 </div>
 <div class="paragraph">
-<p>For Docker installation, please refer to <a href="#sec:install_docker">Section 9.6</a> and <a href="https://docs.docker.com/engine/install/">official documentation</a>.
+<p>For Docker installation, please refer to <a href="#sec:install_docker">Section 12.6</a> and <a href="https://docs.docker.com/engine/install/">official documentation</a>.
 The following assumes that you have already installed Docker.</p>
 </div>
 <div class="sect3">
@@ -4687,7 +4716,7 @@ When the computational load of the entire cluster exceeds a specified threshold 
 When the computational load is below a certain threshold, unnecessary instances are stoped (an operation called scale-in).
 The scaling of a cluster is achieved by the ECS cooperating with other AWS services.
 Specifically, ECS is most commonly paired with <strong>Auto scaling group (ASG)</strong> or <strong>Fargate</strong>.
-ASG and Fargate, respectively will be covered in <a href="#sec_aws_batch">[sec_aws_batch]</a> and <a href="#sec_fargate_qabot">Section 8</a>.</p>
+ASG and Fargate, respectively will be covered in <a href="#sec_aws_batch">Section 9</a> and <a href="#sec_fargate_qabot">Section 8</a>.</p>
 </div>
 <div class="paragraph">
 <p>ECS automatically manages the above explained operations for you.
@@ -4724,7 +4753,7 @@ By using ECS, we will build a system that dynamically controls the number of ins
 <td class="content">
 <div class="paragraph">
 <p>In a typical machine learning workflow, the normal workflow is model training followed by inference (application to data).
-However, training models using EC2 clusters with GPUs is a little advanced, so it will be covered in the next sectopm (<a href="#sec_aws_batch">[sec_aws_batch]</a>).
+However, training models using EC2 clusters with GPUs is a little advanced, so it will be covered in the next sectopm (<a href="#sec_aws_batch">Section 9</a>).
 This section introduces the parallelization of the inference using Fargate clusters, which can be implemented in a simpler program.
 This way you can familiarize yourself with the concepts of building clusters and managing tasks in the cloud.</p>
 </div>
@@ -4747,7 +4776,7 @@ This way you can familiarize yourself with the concepts of building clusters and
 <p>Let&#8217;s look again at <a href="#ecs_overview">Figure 42</a>, which gives an overview of ECS.
 This figure shows a cluster under the control of ECS, and there are two choices which carry out the computation in the cluster: either EC2 or Fargate.
 In the case of using EC2, the instance is launched in the same way as described in the previous sections (<a href="#sec_first_ec2">Section 4</a>, <a href="#sec_jupyter_and_deep_learning">Section 6</a>).
-However, the technical difficulty of creating and managing a compute cluster using EC2 is rather high, so we will explain it in the next section (<a href="#sec_aws_batch">[sec_aws_batch]</a>).</p>
+However, the technical difficulty of creating and managing a compute cluster using EC2 is rather high, so we will explain it in the next section (<a href="#sec_aws_batch">Section 9</a>).</p>
 </div>
 <div class="paragraph">
 <p>Fargate is a mechanism for running <strong>container-based computational tasks</strong>, designed specifically for use in <strong>ECS</strong>.
@@ -5128,7 +5157,7 @@ For documentation of the DistilBert implementation by huggingface/transformers, 
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
 <td>Here, we are preparing a database to write the results of the answers.
-DynamoDB will be covered in the sections on the serverless architecture (<a href="#sec_serverless">[sec_serverless]</a> and <a href="#sec_intro_serverless">[sec_intro_serverless]</a>), so don&#8217;t worry about it for now.</td>
+DynamoDB will be covered in the sections on the serverless architecture (<a href="#sec_serverless">Section 11</a> and <a href="#sec_intro_serverless">[sec_intro_serverless]</a>), so don&#8217;t worry about it for now.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -5272,7 +5301,7 @@ For the latest information, see
 <p>The deployment procedure is almost the same as the previous hands-on.
 Here, only the commands are listed (lines starting with <code>#</code> are comments).
 If you have forgotten the meaning of each command, review the first hands-on.
-You should not forget to set the access key (<a href="#aws_cli_install">Section 9.3</a>).</p>
+You should not forget to set the access key (<a href="#aws_cli_install">Section 12.3</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5499,7 +5528,2188 @@ Alternatively, you can execute the following command from the command line.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="sec:appendix_settingup">9. Appendix: Environment setup</h2>
+<h2 id="sec_aws_batch">9. Hands-on #4: Using AWS Batch to Parallelize Hyperparameter Search for Machine Learning</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the third hands-on session, we built an automatic question answering system using ECS and Fargate.
+Despite its simplicity, we were able to build a system where jobs are executed in parallel when multiple questions are sent.
+There, we built the application using a pre-tained language model.
+Generally speaking, however, the first step in a machine learning workflow should be to train your own models.
+Therefore, in the fourth hands-on session, we will consider parallelizing and accelerating the training of machine learning models using the cloud.</p>
+</div>
+<div class="paragraph">
+<p>In particular, we will focus on hyperparameter optimization in deep learning.
+Hyperparameters are parameters outside the weights of the neural network that are optimized by gradient descent, including those related to the architecture of the network such as the width and depth of the layers of the model, and those related to the parameter optimization method such as the learning rate and momentum.
+Tuning the hyperparameters is a very important task in deep learning.
+However, it requires a lot of computation time because the neural network needs to be trained many times while changing the conditions little by little.
+In research and development, exploring a large number of possible models is an important factor in determining productivity, and the problem of solving hyperparameter search quickly is of great interest.
+In this hands-on, you will learn how to solve this problem by training neural networks in parallel using the powerful computing resources of the cloud.</p>
+</div>
+<div class="sect2">
+<h3 id="_auto_scaling_groups_asg">9.1. Auto scaling groups (ASG)</h3>
+<div class="paragraph">
+<p>Before we get into the hands-on, you need to be familiar with the technique of EC2, called <strong>Auto scaling groups (ASG)</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Please take a look back at <a href="#ecs_overview">Figure 42</a>, which gives an overview of ECS.
+As explained in the previous chapter (<a href="#sec_fargate_qabot">Section 8</a>), EC2 and Fargate can be selected as the computational resource in ECS clusters.
+Fargate was described in the previous chapter.
+Using Fargate, we were able to build a highly scalable computing environment with a very simple setup.
+However, there were some limitations, such as not being able to use GPUs.
+By defining a computing environment that is based on EC2, although the programming complexity increases, we can build clusters with GPUs and other more advanced and complex configurations.</p>
+</div>
+<div class="paragraph">
+<p>A service called <strong>ASG</strong> is deployed in an EC2 cluster.
+An ASG constitutes a cluster by grouping multiple EC2 instances into logical units.
+ASGs are responsible for scaling, such as launching new instances in the cluster or stopping instances that are no longer needed.
+An important concept in ASG is the parameters callled <strong>desired capacity</strong>, <strong>minimum capacity</strong>, and <strong>maximum capacity</strong>.
+The <strong>minimum capacity</strong> and <strong>maximum capacity</strong> are parameters that specify the minimum and maximum number of instances that can be placed in a cluster, respectively.
+The former keeps the instances idle even when the cluster is not under load, so it can act as a buffer when the load suddenly increases.
+The latter prevents an excessive number of instances from being launched when the load increases unexpectedly, and serves to set an upper limit on the economic cost.</p>
+</div>
+<div class="paragraph">
+<p>The desired capacity specifies the number of instances required by the system at a given time.
+The desired capacity can be set based on a fixed schedule, such as increasing or decreasing the number of instances according to a 24-hour rhythm (e.g., more during the day and less at night).
+Alternatively, the desired capacity can be dynamically controlled according to the load on the entire cluster.
+The rules that define the criteria for scaling the cluster are called <strong>scaling policies</strong>.
+For example, we can assume a scaling policy such as maintaining the utilization (load) of the entire cluster at 80% at all times.
+In this case, the ASG automatically removes instances from the cluster when the load of the entire cluster falls below 80%, and adds instances when the load exceeds 80%s.</p>
+</div>
+<div class="paragraph">
+<p>After considering the above parameters, the user creates an ASG.
+Once ASG is created, one needs to write a program to link ASG with the ECS, which defines EC2-based ECS cluster.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_aws_batch">9.2. AWS Batch</h3>
+<div class="imageblock">
+<div class="content">
+<img src="imgs/aws_logos/Batch.png" alt="Batch" width="100">
+</div>
+<div class="title">Figure 54. AWS Batch icon</div>
+</div>
+<div class="paragraph">
+<p>As explained earlier, it is possible to construct a desired computation cluster by combining ECS and ASG.
+However, ECS and ASG require complicated settings, which makes programming quite tedious for both beginners and experienced users.
+To solve this problem, there is a service that automates the design of clusters using ECS and ASG.
+That service is <strong>AWS Batch</strong>.</p>
+</div>
+<div class="paragraph">
+<p>AWS Batch, as the name implies, is designed for batch jobs (i.e., independent operations with different input data that are executed repeatedly).
+Many scientific calculations and machine learning can be applied to batch calculations.
+For example, you can run multiple simulations with different initial parameters.
+The advantage of using AWS Batch is that the scaling of the cluster and the allocation of jobs are all done automatically, giving the user a system that can submit a large number of jobs without having to worry about the implementation details of the cloud.
+However, it is important to know that the ECS/ASG/EC2 triad is working in concert behind the scenes.</p>
+</div>
+<div class="paragraph">
+<p>In AWS Batch, the following concept is defined to facilitate job submission and management (<a href="#fig_batch_concept">Figure 55</a>).
+First, a <strong>Job</strong> is a unit of computation executed by AWS Batch.
+<strong>Job definitions</strong> define the specification of a job, including the address of the Docker image to be executed, the amount of CPU and RAM to be allocated, and environment variables.
+Each job is executed based on the job definition.
+When a job is executed, it is placed in <strong>Job queues</strong>.
+Job queues are a queue of jobs waiting to be executed, and the first job in the queue is executed first.
+In addition, multiple queues can be arranged, and each queue can be assigned a priority value, so that jobs in the queue with the highest priority are executed first.
+<strong>Compute environment</strong> is a concept that is almost synonymous with the cluster, and refers to the location where computations are executed (i.e. group of EC2 or Fargate instances).
+In the compute environment, one needs to specify the EC2 instance types to use, and a simple scaling policy, such as the upper and lower limit on the number of instances.
+Job queues monitor the availability of the compute environment and place jobs to the compute environment according to the availability.</p>
+</div>
+<div class="paragraph">
+<p>These are the concepts that you need to understand when using AWS Batch.
+To make a better sense of these concepts, let us actually construct an application using AWS Batch.</p>
+</div>
+<div id="fig_batch_concept" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/batch_concepts.png" alt="batch concepts" width="700">
+</div>
+<div class="title">Figure 55. AWS Batch concepts</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>EC2 or Fargate?</strong></p>
+</div>
+<div class="paragraph">
+<p>When configuring a cluster in ECS, we explained that there are two options for performing calculations: EC2 and Fargate.
+Each has its own advantages and disadvantages, but which one should be used in which case?
+To examine this, let&#8217;s first look at <a href="#tab:ec2_vs_fargate">Table 5</a>.
+This is a summary of the characteristics of EC2 and Fargate.
+Please note that it is heavily coarse-grained for the sake of explanation.</p>
+</div>
+<table id="tab:ec2_vs_fargate" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. EC2 vs Fargate</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">EC2</th>
+<th class="tableblock halign-left valign-top">Fargate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compute capacity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium to large</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Small to medium</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPU</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Launch speed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Slow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fast</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Task placement flexibility</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Programming complexity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>As we have seen so far, EC2 has high computing power in a single instance, with a large maximum number of CPUs and memory size, and the ability to use a GPU.
+In contrast, the maximum number of CPUs for a single instance of Fargate is capped at four cores.
+On the other hand, the time required to launch an instance is much faster in Fargate, which allows for more agile scaling of the cluster.
+Fargate also has higher flexibility when submitting tasks to the cluster.
+Flexibility refers to the situation where, for example, two or more containers can be run on a single instance.
+Such a design is often used to maximize the number of tasks per unit CPU.
+In terms of programming complexity, Fargate is generally simpler to implement.</p>
+</div>
+<div class="paragraph">
+<p>As described above, EC2 and Fargate have complementary characteristics, and the optimal computing environment must be considered carefully depending on the use cases.
+It is also possible to define a hybrid cluster that uses both EC2 and Fargate, and such an option is often used.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_preparations_2">9.3. Preparations</h3>
+<div class="paragraph">
+<p>The hands-on source code is available on GitHub at
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/aws-batch">handson/aws-batch</a>.</p>
+</div>
+<div class="paragraph">
+<p>To run this hands-on, it is assumed that the preparations described in the first hands-on (<a href="#handson_01_prep">Section 4.1</a>) have been completed.
+It is also assumed that Docker is already installed on your local machine.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Since this hands-on uses <code>g4dn.xlarge</code> EC2 instance, it will cost 0.526 $/hour in Virginia (<code>us-east-1</code>) region.
+If you choose Tokyo (<code>ap-northeast-1</code>), the cost will be 0.71 $/hour.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>As noted in <a href="#sec:jupyter_and_deep_learning_setup">Section 6.1</a>, before starting this hands-on, check the launch limit of G-type instances from the EC2 dashboard of the AWS console.
+If the limit is 0, you need to apply for increase of the limit.
+Also refer to <a href="#sec:aws_batch_code">Section 9.5</a> for related information.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_revisiting_mnist_handwritten_digit_recognition_task">9.4. Revisiting MNIST handwritten digit recognition task</h3>
+<div class="paragraph">
+<p>At the beginning of this hands-on, we mentioned that we would be covering hyperparameter tuning in machine learning.
+As the simplest example, let&#8217;s take the MNIST digit recognition problem again, which was covered in <a href="#sec_mnist_using_jupyter">Section 6.7</a>.
+In <a href="#sec_mnist_using_jupyter">Section 6.7</a>, we trained the model using arbitrarily chosen hyperparameters.
+The hyperparameters used in the program include learning rate and momentum in stochastic gradient descent (SGD) algorithm.
+In the code, the following lines correspond to them.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The learning rate (<code>lr=0.01</code>) and momentum (<code>momentum=0.5</code>) used here are arbitrarily chosen values, and we do not know if these are the best values.
+This choice may happen to be the best, or there may be other hyperparameter pairs that give higher accuracy.
+To answer this question, let&#8217;s perform a hyperparameter search.
+In this article, we will take the simplest approach: hyperparameter search by <strong>grid search</strong>.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">On the hyperparameter tuning</div>
+<div class="paragraph">
+<p>There are mainly three approaches to optimize hyperparameters in machine learning.
+These are grid search, random search, and Bayesian optimization.</p>
+</div>
+<div class="paragraph">
+<p>Grid search is a method to find the optimal set of parameters by computing all possible combinations of hyperparameters within a certain range.
+It is the simplest and most reliable method, but the computational cost is high because all possible combinations are computed.</p>
+</div>
+<div class="paragraph">
+<p>The random search method is a method that randomly extracts pairs of hyperparameters within a certain range, and finds the optimal pair of parameters among a large number of random pairs that have been tested.
+Although it does not exhaustively search all possibilities, it can cover a large search space more efficiently than grid search when there are a large number of parameters to be adjusted.</p>
+</div>
+<div class="paragraph">
+<p>In the method using Bayesian optimization, the parameters to be searched next are determined by calculating an index based on past search results.
+The index essentially points the most uncertain area within the parameter space.
+This method can theoretically reach the optimal parameters in a smaller number of trials than the grid search or random search methods.</p>
+</div>
+<div class="paragraph">
+<p>In terms of parallelization, grid search and random search can be easily parallelized because the computation of each hyperparameter pair can be performed independently.
+Such problems that can be divided and parallelized as independent jobs are called embarrassingly parallel problems.
+Embarrassingly parallel problems can be solved with a very simple implementation by using the powerful computing resources of the cloud.
+In this chapter, we will focus on this type of parallel computation.</p>
+</div>
+<div class="paragraph">
+<p>On the other hand, Bayesian optimization methods are not so simple to parallelize because the next search is determined based on past results.
+Recently, libraries for hyperparameter search, such as <a href="https://optuna.org/">optuna</a>, have been developed, and they are useful because they automatically perform the mathematical process of Bayesian optimization.
+Using these libraries, if there are multiple GPUs in a single computer (node), the computations can be performed in parallel.
+However, parallelization across multiple nodes not only requires advanced programming techniques, but is also heavily dependent on the architecture of the cloud, such as the network connection between nodes.
+In this book, we will not go into the usage of cloud computing at this level of sophistication.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>First, let&#8217;s run the Docker image used in this hands-on session locally.</p>
+</div>
+<div class="paragraph">
+<p>The source code of the Docker image can be found on GitHub at
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/docker">handson/aws-batch/docker</a>.
+It is based on the program we introduced in <a href="#sec_mnist_using_jupyter">Section 6.7</a>, with some minor changes for this handson.
+Interested readers are encouraged to read the source code as well.</p>
+</div>
+<div class="paragraph">
+<p>As an exercise, let&#8217;s start by building this Docker image on your local machine.
+Go to the directory where the <code>Dockerfile</code> is stored, and build the image with the tag <code>mymnist</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">cd </span>handson/aws-batch/docker
+<span class="nv">$ </span>docker build <span class="nt">-t</span> mymnist .</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you get an error with <code>docker build</code> command, please suspect the following possibility.
+In the build process, the MNIST image dataset is downloaded from <a href="http://yann.lecun.com/exdb/mnist/" class="bare">http://yann.lecun.com/exdb/mnist/</a>, and this server is sometimes down due to the heavy access from machine learning users.
+When the server is down, the build also fails.
+If you see something like this in the error message, suspect this possibility.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Instead of building the image yourself, you can pull it from Docker Hub.
+In this case, execute the following command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker pull tomomano/mymnist:latest</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When the image is ready, start the container with the following command and run MNIST training.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 10</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command will start optimizing the neural network using the specified hyperparameters (learning rate given by <code>--lr</code> and momentum given by <code>--momentum</code>).
+The maximum number of epochs to train is specified by <code>--epochs</code> parameter.
+You will see decrease of loss values on the command line, just as we saw in <a href="#sec_jupyter_and_deep_learning">Section 6</a> (<a href="#fig_mnist_log_output">Figure 56</a>).</p>
+</div>
+<div id="fig_mnist_log_output" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/mnist_log_output.png" alt="mnist log" width="600">
+</div>
+<div class="title">Figure 56. Output of Docker container</div>
+</div>
+<div class="paragraph">
+<p>If you use the above command, the computation will be performed using the CPU.
+If your local computer is equipped with a GPU and you have configured <a href="https://github.com/NVIDIA/nvidia-docker">nvidia-docker</a>, you can use the following command to run the computation using the GPU.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">--gpus</span> all mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 10</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this command, the parameter <code>--gpus all</code> has been added.</p>
+</div>
+<div class="paragraph">
+<p>You can see that the loss of the training data monotonically decreases as the number of epochs increases, regardless of whether it is run on CPU or GPU.
+On the other hand, you will notice that <strong>loss and accuracy of the validation data do not improve further</strong> after decreasing to a certain level.
+The actual plot of this behaviour should look like <a href="#fig_loss_epoch_profile">Figure 57</a>.</p>
+</div>
+<div id="fig_loss_epoch_profile" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/loss_epoch_profile.png" alt="loss epochs" width="600">
+</div>
+<div class="title">Figure 57. (Left) Change in loss for each epoch of train and validation data. (Right) Epoch-by-epoch change in accuracy of validation data.</div>
+</div>
+<div class="paragraph">
+<p>This is a phenomenon called <strong>overfitting</strong>, which indicates that the neural net is over-fitted for the training data and the accuracy (generalization performance) for data outside the training data is not improved.
+To deal with such cases, a technique called <strong>early stopping</strong> is known.
+In early stopping, we track the loss of the validation data, and stop learning at the epoch when it turns from decreasing to increasing.
+Then we adopt the weight parameters at that epoch.
+In this hands-on session, we will use early stopping technique to determine the end of training and evaluate the performance of the model.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In the MNIST handwriting dataset, 60,000 images are given as training data and 10,000 images as test data.
+In the code used in this hands-on session, 48,000 images (80% of the training data) are used as training data, and the remaining 12,000 images are used as validation data.
+For details, please refer to the source code.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:aws_batch_code">9.5. Reading the application source code</h3>
+<div class="paragraph">
+<p><a href="#fig_batch_architecture">Figure 58</a> shows an overview of the application we are creating in this hands-on.</p>
+</div>
+<div id="fig_batch_architecture" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/architecture.png" alt="architecture" width="600">
+</div>
+<div class="title">Figure 58. Application architecture</div>
+</div>
+<div class="paragraph">
+<p>The summary of the system design is as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The client submits a job to AWS Batch with a given set of hyperparameters.</p>
+</li>
+<li>
+<p>When Batch receives the job, it performs the computation on a cluster consisting of EC2</p>
+</li>
+<li>
+<p>A <code>g4dn.xlarge</code> instance is launched in the cluster.</p>
+</li>
+<li>
+<p>Docker images are retrieved from the Elastic Container Registry (ECR) in AWS.</p>
+</li>
+<li>
+<p>When multiple jobs are submitted, enough number of instances are launched and jobs are executed in parallel.</p>
+</li>
+<li>
+<p>The results of the computation by each job are stored in S3.</p>
+</li>
+<li>
+<p>Finally, the client downloads the results from S3 and decides the best set of hyperparameters.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let us take a look at the application source code
+(<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/app.py">handson/aws-batch/app.py</a>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">SimpleBatch</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">Stack</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">App</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="n">bucket</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"bucket"</span><span class="p">,</span>
+            <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span><span class="p">,</span>
+            <span class="n">auto_delete_objects</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">vpc</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">Vpc</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"vpc"</span><span class="p">,</span>
+            <span class="c1"># other parameters...
+</span>        <span class="p">)</span>
+
+        <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="n">managed_env</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">ComputeEnvironment</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"managed-env"</span><span class="p">,</span>
+            <span class="n">compute_resources</span><span class="o">=</span><span class="n">batch</span><span class="o">.</span><span class="n">ComputeResources</span><span class="p">(</span>
+                <span class="n">vpc</span><span class="o">=</span><span class="n">vpc</span><span class="p">,</span>
+                <span class="n">allocation_strategy</span><span class="o">=</span><span class="n">batch</span><span class="o">.</span><span class="n">AllocationStrategy</span><span class="o">.</span><span class="n">BEST_FIT</span><span class="p">,</span>
+                <span class="n">desiredv_cpus</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">maxv_cpus</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                <span class="n">minv_cpus</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">instance_types</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">ec2</span><span class="o">.</span><span class="n">InstanceType</span><span class="p">(</span><span class="s">"g4dn.xlarge"</span><span class="p">)</span>
+                <span class="p">],</span>
+            <span class="p">),</span>
+            <span class="n">managed</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">compute_environment_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack_name</span> <span class="o">+</span> <span class="s">"compute-env"</span>
+        <span class="p">)</span>
+
+        <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="n">job_queue</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">JobQueue</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"job-queue"</span><span class="p">,</span>
+            <span class="n">compute_environments</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">batch</span><span class="o">.</span><span class="n">JobQueueComputeEnvironment</span><span class="p">(</span>
+                    <span class="n">compute_environment</span><span class="o">=</span><span class="n">managed_env</span><span class="p">,</span>
+                    <span class="n">order</span><span class="o">=</span><span class="mi">100</span>
+                <span class="p">)</span>
+            <span class="p">],</span>
+            <span class="n">job_queue_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack_name</span> <span class="o">+</span> <span class="s">"job-queue"</span>
+        <span class="p">)</span>
+
+        <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="n">job_role</span> <span class="o">=</span> <span class="n">iam</span><span class="o">.</span><span class="n">Role</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"job-role"</span><span class="p">,</span>
+            <span class="n">assumed_by</span><span class="o">=</span><span class="n">iam</span><span class="o">.</span><span class="n">CompositePrincipal</span><span class="p">(</span>
+                <span class="n">iam</span><span class="o">.</span><span class="n">ServicePrincipal</span><span class="p">(</span><span class="s">"ecs-tasks.amazonaws.com"</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># allow read and write access to S3 bucket
+</span>        <span class="n">bucket</span><span class="o">.</span><span class="n">grant_read_write</span><span class="p">(</span><span class="n">job_role</span><span class="p">)</span>
+
+        <i class="conum" data-value="5"></i><b>(5)</b>
+        <span class="n">repo</span> <span class="o">=</span> <span class="n">ecr</span><span class="o">.</span><span class="n">Repository</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"repository"</span><span class="p">,</span>
+            <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <i class="conum" data-value="6"></i><b>(6)</b>
+        <span class="n">job_def</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">JobDefinition</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"job-definition"</span><span class="p">,</span>
+            <span class="n">container</span><span class="o">=</span><span class="n">batch</span><span class="o">.</span><span class="n">JobDefinitionContainer</span><span class="p">(</span>
+                <span class="n">image</span><span class="o">=</span><span class="n">ecs</span><span class="o">.</span><span class="n">ContainerImage</span><span class="o">.</span><span class="n">from_ecr_repository</span><span class="p">(</span><span class="n">repo</span><span class="p">),</span>
+                <span class="n">command</span><span class="o">=</span><span class="p">[</span><span class="s">"python3"</span><span class="p">,</span> <span class="s">"main.py"</span><span class="p">],</span>
+                <span class="n">vcpus</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="n">gpu_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">memory_limit_mib</span><span class="o">=</span><span class="mi">12000</span><span class="p">,</span>
+                <span class="n">job_role</span><span class="o">=</span><span class="n">job_role</span><span class="p">,</span>
+                <span class="n">environment</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s">"BUCKET_NAME"</span><span class="p">:</span> <span class="n">bucket</span><span class="o">.</span><span class="n">bucket_name</span>
+                <span class="p">}</span>
+            <span class="p">),</span>
+            <span class="n">job_definition_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stack_name</span> <span class="o">+</span> <span class="s">"job-definition"</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">Duration</span><span class="o">.</span><span class="n">hours</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Here, we prepare an S3 bucket to store the computation results.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Here, we define the compute environment.
+The <code>g4dn.xlarge</code> instance is used, and the maximum number of vCPU usage is specified as 64.
+The minimum vCPU is 0.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>This part defines the Job queue associated with the compute environment created in &lt;2&gt;.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Here we define the IAM role so that the job can write results to S3
+(IAM is a mechanism to manage the permissions of resources. See <a href="#sec:bashoutter_iam">[sec:bashoutter_iam]</a> for details).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>This line defines the ECR for deploying the Docker image.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Here we create the job definition.
+In the code, we specify each job to consume 4 vCPU and 12000 MB (=12GB).
+It also sets the environment variables (<code>BUCKET_NAME</code>) that will be used by the Docker container.
+In addition, the IAM created in &lt;4&gt; has been added.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Each <code>g4dn.xlarge</code> instance is allocated 4 vCPUs.
+In the above code, the maximum vCPUs of the compute environment is set to 64, which means that a maximum of 16 instances can be launched simultaneously.
+The reason for limiting the maximum vCPUs to 64 is to avoid incurring high AWS usage fees in the event that a large number of unintended jobs are submitted to the cluster due to some mistake.
+You can set the number of maximum vCPUs larger than 64 at your own risk if you judge that it is necessary for your application.</p>
+</div>
+<div class="paragraph">
+<p>There is one point to note here.
+AWS sets an upper limit for the number of instances that can be launched in EC2 for each account.
+You can check this limit by logging into the AWS console and clicking <code>Limits</code> on the left side menu bar of the EC2 console (<a href="#fig_ec2_limits">Figure 59</a>).
+To check the limits for <code>g4dn.xlarge</code> (which belongs to the G family in the EC2 classification), look at the item named <code>Running On-Demand All G instances</code>.
+The number here is the account limit imposed by AWS, and you cannot run instances that exceed this limit.
+If the limit is too low for your purpose, you can request to increase the limit.
+For more information, please refer to <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html">Official documentation "Amazon EC2 service quotas"</a>.</p>
+</div>
+<div id="fig_ec2_limits" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/ec2_limits.png" alt="EC2 limits" width="700">
+</div>
+<div class="title">Figure 59. Checking the limits from EC2 console</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deploying_the_stack">9.6. Deploying the stack</h3>
+<div class="paragraph">
+<p>Now that we understand the application source code, let&#8217;s deploy it.</p>
+</div>
+<div class="paragraph">
+<p>The deployment procedure is almost the same as the previous hands-on.
+Here, only the commands are listed (lines starting with <code>#</code> are comments).
+If you have forgotten the meaning of each command, review the first hands-on.
+You should not forget to set the access key (<a href="#aws_cli_install">Section 12.3</a>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="c"># move to the project directory</span>
+<span class="nv">$ </span><span class="nb">cd </span>handson/aws-batch
+
+<span class="c"># create venv and install dependent libraries</span>
+<span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
+<span class="nv">$ </span><span class="nb">source</span> .env/bin/activate
+<span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+
+<span class="c"># Deploy!</span>
+<span class="nv">$ </span>cdk deploy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After confirming that the deployment has been done successfully, let&#8217;s log in to the AWS console and check the deployed stack.
+Type <code>batch</code> in the search bar to open the AWS Batch management console (<a href="#fig_batch_console">Figure 60</a>).</p>
+</div>
+<div id="fig_batch_console" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/batch_console.png" alt="batch console" width="700">
+</div>
+<div class="title">Figure 60. AWS Batch management console</div>
+</div>
+<div class="paragraph">
+<p>The first thing you should look at is the item named <code>SimpleBatchcompute-env</code> in the "compute environment overview" at the bottom of the screen.
+Compute environment is the environment (or cluster) in which computations will be executed, as described earlier.
+As specified in the program, <code>g4dn.xlarge</code> is shown as the instance type to be used.
+You can also see that <code>Minimum vCPUs</code> is set to 0 and <code>Maximum vCPUs</code> is set to 64.
+In addition, <code>Desired vCPUs</code> is set to 0 because no job is running at this time.
+If you want to see more detailed information about the compute environment, click on the name to open the detail screen.</p>
+</div>
+<div class="paragraph">
+<p>Next, pay attention to the item <code>SimpleBatch-queue</code> in the "job queue overview".
+Here, you can see a list of jobs waiting for execution, jobs in progress, and jobs that have completed execution.
+You can see that there are columns such as <code>PENDING</code>, <code>RUNNING</code>, <code>SUCCEEDED</code>, <code>FAILED</code> and so on.
+As the job progresses, the state of the job transitions according to these columns.
+We&#8217;ll come back to this later when we actually submit the job.</p>
+</div>
+<div class="paragraph">
+<p>Finally, let&#8217;s check the job definition.
+Select <code>Job definitions</code> from the menu on the left side of the screen, and find and open the <code>SimpleBatchjob-definition</code> on the next screen.
+From here, you can see the details of the job definition (<a href="#fig:batch_job_definition">Figure 61</a>).
+Among the most important information, <code>vCPUs</code>, <code>Memory</code>, and <code>CPU</code> define the amount of vCPU, memory, and GPU allocated to Docker, respectively.
+In addition, <code>Image</code> specifies the Docker image to be used for the job.
+Here, it refers to the ECR repository.
+Currently, this ECR is empty.
+The next step is to deploy the image to this ECR.</p>
+</div>
+<div id="fig:batch_job_definition" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/batch_job_definition.png" alt="batch_job_definition" width="700">
+</div>
+<div class="title">Figure 61. Viewing the job definition from AWS Batch console</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:aws_batch_deploy_docker_on_ecr">9.7. Deploying Docker image on ECR</h3>
+<div class="paragraph">
+<p>In order for Batch to execute a job, it needs to download (pull) a Docker image from a specified location.
+In the previous hands-on (<a href="#sec_fargate_qabot">Section 8</a>), we pulled the image from Docker Hub, which is set to public.
+In this hands-on, we will adopt the design of deploying images in <strong>ECR (Elastic Container Registry)</strong>, a image registry provided by AWS.
+The advantage of using ECR is that you can prepare a private space for images that only you can access.
+Batch executes its tasks by pulling images from the ECR (<a href="#fig_batch_architecture">Figure 58</a>).</p>
+</div>
+<div class="paragraph">
+<p>In the source code, the following part defines the ECR.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><i class="conum" data-value="1"></i><b>(1)</b>
+<span class="n">repo</span> <span class="o">=</span> <span class="n">ecr</span><span class="o">.</span><span class="n">Repository</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="s">"repository"</span><span class="p">,</span>
+    <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">job_def</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">JobDefinition</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="s">"job-definition"</span><span class="p">,</span>
+    <span class="n">container</span><span class="o">=</span><span class="n">batch</span><span class="o">.</span><span class="n">JobDefinitionContainer</span><span class="p">(</span>
+        <span class="n">image</span><span class="o">=</span><span class="n">ecs</span><span class="o">.</span><span class="n">ContainerImage</span><span class="o">.</span><span class="n">from_ecr_repository</span><span class="p">(</span><span class="n">repo</span><span class="p">),</span> <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="o">...</span>
+    <span class="p">),</span>
+    <span class="o">...</span>
+<span class="p">)</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This creates a new ECR.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>In the job definition, we specify that the image should be retrieved from the ECR created in &lt;1&gt;.
+At the same time, the job definition is automatically granted access rights to the ECR through IAM.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>After the first deployment, the ECR is empty.
+You need to push the Docker image that you use for your application to ECR.</p>
+</div>
+<div class="paragraph">
+<p>To do so, first open the ECR screen from the AWS console (type <code>Elastic Container Registry</code> in the search bar).
+Select the <code>Private</code> tab and you will find a repository named <code>simplebatch-repositoryXXXXXXXX</code> (<a href="#fig_ecr_console1">Figure 62</a>).</p>
+</div>
+<div id="fig_ecr_console1" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/ecr_console1.png" alt="ecr console" width="700">
+</div>
+<div class="title">Figure 62. ECR console</div>
+</div>
+<div class="paragraph">
+<p>Next, click on the name of the repository to go to the repository details page.
+Then, click the <code>View push commands</code> button on the upper right corner of the screen.
+This will bring up a pop-up window like <a href="#fig_ecr_push_command">Figure 63</a>.</p>
+</div>
+<div id="fig_ecr_push_command" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/ecr_push_command.png" alt="ecr push command" width="700">
+</div>
+<div class="title">Figure 63. Command to push images to ECR</div>
+</div>
+<div class="paragraph">
+<p>You can push your Docker image to ECR by executing the four commands shown in this pop-up window in order.
+<strong>Before pushing, make sure your AWS credentials are set</strong>.
+Then, navigate to the directory <strong>named <code>docker/</code> in the hands-on source code</strong>.
+Then, execute the commands displayed in the pop-up window in order from the top.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you look at the second command that pops up, you will see <code>docker build -t XXXXX .</code>.
+The last <code>.</code> is important, because it means <em>build the image using the Dockerfile in the current directory</em>.
+For this reason, you need to move to the directory where the <code>Dockerfile</code> is located.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The fourth command may take a few minutes as it uploads several gigabytes of images to ECR, but when it completes, the image has been successfully placed in ECR.
+If you look at the ECR console again, you can see that the image has indeed been placed (<a href="#fig_ecr_console2">Figure 64</a>).
+This completes the final preparations for executing a job using AWS Batch.</p>
+</div>
+<div id="fig_ecr_console2" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/ecr_console2.png" alt="ecr console 2" width="700">
+</div>
+<div class="title">Figure 64. Docker image has been placed in ECR</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_submitting_a_single_job">9.8. Submitting a single job</h3>
+<div class="paragraph">
+<p>Now, we demonstrate how to submit a job to AWS Batch.</p>
+</div>
+<div class="paragraph">
+<p>In the <code>notebook/</code> directory of the hands-on directory, there is a file named
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/notebook/run_single.ipynb">run_single.ipynb</a>
+(<code>.ipynb</code> is the file format of Jupyter notebook).
+We will open this file from Jupyter notebook.</p>
+</div>
+<div class="paragraph">
+<p>In this hands-on, Jupyter Notebook server is already installed in the virtual environment by <code>venv</code>.
+We can launch Jupyter Notebook server from the local machine by the following command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="c"># Make sure that you are in a virtual environment</span>
+<span class="o">(</span>.env<span class="o">)</span> <span class="nv">$ </span><span class="nb">cd </span>notebook
+<span class="o">(</span>.env<span class="o">)</span> <span class="nv">$ </span>jupyter notebook</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After Jupyter Notebook server is started, open <code>run_single.ipynb</code>.</p>
+</div>
+<div class="paragraph">
+<p>The first cell [1], [2], [3] defines a function to submit a job to AWS Batch (<code>submit_job()</code>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+</pre></td><td class="code"><pre><span class="c1"># [1]
+</span><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="c1"># [2]
+# AWS 認証ヘルパー ...省略...
+</span>
+<span class="c1"># [3]
+</span><span class="k">def</span> <span class="nf">submit_job</span><span class="p">(</span><span class="n">lr</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">momentum</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">profile_name</span><span class="o">=</span><span class="s">"default"</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">profile_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">profile_name</span><span class="o">=</span><span class="n">profile_name</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s">"batch"</span><span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="s">"lr"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">lr</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"."</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span> <span class="o">+</span> <span class="s">"_m"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">momentum</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"."</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">submit_job</span><span class="p">(</span>
+        <span class="n">jobName</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="n">jobQueue</span><span class="o">=</span><span class="s">"SimpleBatchjob-queue"</span><span class="p">,</span>
+        <span class="n">jobDefinition</span><span class="o">=</span><span class="s">"SimpleBatchjob-definition"</span><span class="p">,</span>
+        <span class="n">containerOverrides</span><span class="o">=</span><span class="p">{</span>
+            <span class="s">"command"</span><span class="p">:</span> <span class="p">[</span><span class="s">"--lr"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lr</span><span class="p">),</span>
+                        <span class="s">"--momentum"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">momentum</span><span class="p">),</span>
+                        <span class="s">"--epochs"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">epochs</span><span class="p">),</span>
+                        <span class="s">"--uploadS3"</span><span class="p">,</span> <span class="s">"true"</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Job submitted!"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"job name"</span><span class="p">,</span> <span class="n">resp</span><span class="p">[</span><span class="s">"jobName"</span><span class="p">],</span> <span class="s">"job ID"</span><span class="p">,</span> <span class="n">resp</span><span class="p">[</span><span class="s">"jobId"</span><span class="p">])</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let us briefly explain the <code>submit_job()</code> function.
+In <a href="#sec_run_mnist_docker_local">[sec_run_mnist_docker_local]</a>, when we ran the MNIST Docker container locally, we used the following command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>docker run <span class="nt">-it</span> mymnist <span class="nt">--lr</span> 0.1 <span class="nt">--momentum</span> 0.5 <span class="nt">--epochs</span> 10</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, <code>--lr 0.1 --momentum 0.5 --epochs 10</code> is the command to be passed to the container.</p>
+</div>
+<div class="paragraph">
+<p>When you run a job with AWS Batch, you can also specify the command to be passed to the container by using the argument <code>ContainerOverrides</code> within <code>commands</code> parameter.
+The following part of the code corresponds to this parameter.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="n">containerOverrides</span><span class="o">=</span><span class="p">{</span>
+    <span class="s">"command"</span><span class="p">:</span> <span class="p">[</span><span class="s">"--lr"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lr</span><span class="p">),</span>
+                <span class="s">"--momentum"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">momentum</span><span class="p">),</span>
+                <span class="s">"--epochs"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">epochs</span><span class="p">),</span>
+                <span class="s">"--uploadS3"</span><span class="p">,</span> <span class="s">"true"</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, let&#8217;s move to cell [4].
+Here, we submit a job with learning rate = 0.01, momentum = 0.1, and epochs = 100 using the <code>submit_job()</code> function.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="c1"># [4]
+</span><span class="n">submit_job</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The AWS credentials need to be redefined from within the Jupyter Notebook.
+To help with this, we have prepared cell [2] of the notebook (which is all commented out by default).
+To use it, simply uncomment it.
+When you run this cell, you will be prompted to enter your AWS credentials interactively.
+By following the prompts and entering the aws secret key, the AWS credentials will be recorded in the environment variables (specific to the Jupyter session).</p>
+</div>
+<div class="paragraph">
+<p>As another authentication method, the <code>profile_name</code> parameter is provided to the <code>submit_job()</code> function.
+If your credentials are stored in <code>~/.aws/credentials</code> (see <a href="#aws_cli_install">Section 12.3</a> for details), you can authenticate by simply passing the name of the profile you want to use to <code>profile_name</code>.
+Familiar readers may find the latter approach more convenient.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>After executing the cell [4], let&#8217;s check whether the job is actually submitted from the AWS console.
+If you open the AWS Batch management console, you will see a screen like <a href="#fig_batch_running_job">Figure 65</a>.</p>
+</div>
+<div id="fig_batch_running_job" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/batch_running_job.png" alt="batch running job" width="700">
+</div>
+<div class="title">Figure 65. Monitoring the jobs in AWS Batch console</div>
+</div>
+<div class="paragraph">
+<p>Pay attention to the part circled in red in <a href="#fig_batch_running_job">Figure 65</a>.
+When a job is submitted, it goes through the state of <code>SUBMITTED</code> and then to the state of <code>RUNNABLE</code>.
+<code>RUNNABLE</code> corresponds to the state of waiting for a new instance to be launched because there is not available instances in the compute environment to run the job.
+When the instance is ready, the status of the job goes through <code>STARTING</code> to <code>RUNNING</code>.</p>
+</div>
+<div class="paragraph">
+<p>Next, let&#8217;s look at the <code>Desired vCPU</code> of the compute environment when the status of the job is <code>RUNNING</code> (the part circled in purple in <a href="#fig_batch_running_job">Figure 65</a>).
+The number 4 is the number of vCPU for one instance of <code>g4dn.xlarge</code>.
+You can see that the minimum number of EC2 instances required to run the job has been launched in response to the job submission.
+(If you are interested, you can also take a look at the EC2 console at the same time).</p>
+</div>
+<div class="paragraph">
+<p>After a while, the status of the job will change from <code>RUNNING</code> to <code>SUCCEEDED</code> (or <code>FAILED</code> if an error occurs for some reason).
+The training of MNIST used in this hands-on should take about 10 minutes.
+Let&#8217;s wait until the job status becomes <code>SUCCEEDED</code>.</p>
+</div>
+<div class="paragraph">
+<p>When the job completes, the training results (a CSV file containing the loss and accuracy for each epoch) will be saved in S3.
+You can check this from the AWS console.</p>
+</div>
+<div class="paragraph">
+<p>If you go to the S3 console, you should find a bucket named <code>simplebatch-bucketXXXX</code> (the XXXX part depends on the user).
+If you click on it and look at the contents, you will find a CSV file named <code>metrics_lr0.0100_m0.1000.csv</code> (<a href="#fig_s3_saved_file">Figure 66</a>).
+This is the result of training with learning rate = 0.01 and momentum = 0.1.</p>
+</div>
+<div id="fig_s3_saved_file" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/s3_saved_file.png" alt="s3 saved file" width="700">
+</div>
+<div class="title">Figure 66. Viewing the job output saved in S3</div>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s come back to <code>run_single.ipynb</code>.
+In cells [5] through [7], we are downloading the CSV file of the training results.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre></td><td class="code"><pre><span class="c1"># [5]
+</span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># [6]
+</span><span class="k">def</span> <span class="nf">read_table_from_s3</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">profile_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">profile_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">profile_name</span><span class="o">=</span><span class="n">profile_name</span><span class="p">)</span>
+    <span class="n">s3</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s">"s3"</span><span class="p">)</span>
+    <span class="n">bucket</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">Object</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">"Body"</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+
+<span class="c1"># [7]
+</span><span class="n">bucket_name</span> <span class="o">=</span> <span class="s">"simplebatch-bucket43879c71-mbqaltx441fu"</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">read_table_from_s3</span><span class="p">(</span>
+    <span class="n">bucket_name</span><span class="p">,</span>
+    <span class="s">"metrics_lr0.0100_m0.1000.csv"</span>
+<span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In [6], we define a function to download CSV data from S3 and load it as a pandas <code>DataFrame</code> object.
+Note that when you run [7], you should replace the value of the <code>bucket_name</code> variable with <strong>the name of your own bucket</strong>.
+(This is the <code>simplebatch-bucketXXXX</code> that we just checked from the S3 console).</p>
+</div>
+<div class="paragraph">
+<p>Next, in cell [9], we plot the CSV data (<a href="#fig_loss_epoch_profile2">Figure 67</a>).
+We have successfully trained the MNIST model using AWS Batch, just as we did when we ran it locally!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="code"><pre><span class="c1"># [9]
+</span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"train_loss"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s">"Train"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_loss"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s">"Val"</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_accuracy"</span><span class="p">])</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"Epochs"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"Loss"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">"Epochs"</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">"Accuracy"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Best loss:"</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_loss"</span><span class="p">]</span><span class="o">.</span><span class="nb">min</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Best loss epoch:"</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_loss"</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Best accuracy:"</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_accuracy"</span><span class="p">]</span><span class="o">.</span><span class="nb">max</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Best accuracy epoch:"</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_accuracy"</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">())</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div id="fig_loss_epoch_profile2" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/loss_epoch_profile2.png" alt="loss_epoch_profile2" width="600">
+</div>
+<div class="title">Figure 67. The result of the MNIST model training performed on AWS Batch</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:batch_parallel_jobs">9.9. Submitting parallel jobs</h3>
+<div class="paragraph">
+<p>Now, here comes the final part.
+Let&#8217;s use the AWS Batch system that we have built to perform real hyperparameter search.</p>
+</div>
+<div class="paragraph">
+<p>Open the file <code>run_sweep.ipynb</code> in the same directory as <code>run_single.ipynb</code> that we just ran.</p>
+</div>
+<div class="paragraph">
+<p>Cells [1], [2] and [3] are identical to <code>run_single.ipynb</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+</pre></td><td class="code"><pre><span class="c1"># [1]
+</span><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="c1"># [2]
+# AWS authentication helper. Skipping...
+</span>
+<span class="c1"># [3]
+</span><span class="k">def</span> <span class="nf">submit_job</span><span class="p">(</span><span class="n">lr</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">momentum</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">profile_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c1"># ...skip...</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A for loop in cell [4] is used to prepare a grid of hyperparameter combinations and submit the jobs to the batch.
+In this case, 3x3=9 jobs are created.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="c1"># [4]
+</span><span class="k">for</span> <span class="n">lr</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]:</span>
+        <span class="n">submit_job</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After executing the cell [4], open the Batch console.
+As before, you will see that the status of the jobs changes from <code>SUBMITTED</code> &gt; <code>RUNNABLE</code> &gt; <code>STARTING</code> &gt; <code>RUNNING</code>.
+Finally, make sure that all 9 jobs are in the <code>RUNNING</code> state (<a href="#fig_batch_many_parallel_jobs">Figure 68</a>).
+Also, make sure that the <code>Desired vCPUs</code> of the compute environment is 4x9=36 (<a href="#fig_batch_many_parallel_jobs">Figure 68</a>).</p>
+</div>
+<div id="fig_batch_many_parallel_jobs" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/batch_many_parallel_jobs.png" alt="batch many parallel jobs" width="700">
+</div>
+<div class="title">Figure 68. Bacth console when multiple jobs were submitted</div>
+</div>
+<div class="paragraph">
+<p>Next, let&#8217;s click <code>Jobs</code> from the left menu of the Batch console.
+Here, you can see the list of running jobs (<a href="#fig_batch_parallel_job_list">Figure 69</a>).
+It is also possible to filter jobs by their status.
+You can see that all 9 jobs are in the <code>RUNNING</code> status.</p>
+</div>
+<div id="fig_batch_parallel_job_list" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/batch_parallel_job_list.png" alt="batch many parallel jobs" width="700">
+</div>
+<div class="title">Figure 69. The list of jobs</div>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s take a look at the EC2 console.
+Select <code>Instances</code> from the menu on the left, and you will see a list of running instances as shown in <a href="#fig_ec2_instances_list">Figure 70</a>.
+You can see that 9 instances of <code>g4dn.xlarge</code> are running.
+Batch has launched the necessary number of instances according to the job submission!</p>
+</div>
+<div id="fig_ec2_instances_list" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/ec2_instances_list.png" alt="ec2 instances list" width="700">
+</div>
+<div class="title">Figure 70. List of EC2 instances when multiple jobs were submitted</div>
+</div>
+<div class="paragraph">
+<p>Once you have confirmed this, wait for a while until all jobs are finished (it takes about 10-15 minutes).
+When all the jobs are finished, you should see the number of <code>SUCCEEDED</code> jobs on the dashboard is 9.
+Also, make sure that the <code>Desired vCPUs</code> in the Compute environment has dropped to 0.
+Finally, go to the EC2 console and check that all GPU instances are stopped.</p>
+</div>
+<div class="paragraph">
+<p>In summary, by using AWS Batch, we were able to observe a sequence of events in which EC2 instances are automatically launched in response to job submissions, and the instances are immediately stopped upon completion of the job.
+Since it takes about 10 minutes to complete a single job, it would take 90 minutes if 9 hyperparameter pairs were calculated sequentially.
+By using AWS Batch to run these computations in parallel, we were able to complete all the computations in 10 minutes!</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s come back to <code>run_sweep.ipynb</code>.
+In the cells after [5], the results of grid search are visualized.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+</pre></td><td class="code"><pre><span class="c1"># [5]
+</span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># [6]
+</span><span class="k">def</span> <span class="nf">read_table_from_s3</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">profile_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">profile_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">profile_name</span><span class="o">=</span><span class="n">profile_name</span><span class="p">)</span>
+    <span class="n">s3</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s">"s3"</span><span class="p">)</span>
+    <span class="n">bucket</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">Object</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">"Body"</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+
+<span class="c1"># [7]
+</span><span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">lr</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">f</span><span class="s">"metrics_lr{lr:0.4f}_m{m:0.4f}.csv"</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">read_table_from_s3</span><span class="p">(</span><span class="s">"simplebatch-bucket43879c71-mbqaltx441fu"</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="n">grid</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">"val_accuracy"</span><span class="p">]</span><span class="o">.</span><span class="nb">max</span><span class="p">()</span>
+
+<span class="c1"># [8]
+</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s">'equal'</span><span class="p">)</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s">'w'</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">f</span><span class="s">"{grid[i, j]:0.1f}"</span><span class="p">,</span>
+                       <span class="n">ha</span><span class="o">=</span><span class="s">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s">"center"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"w"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The resulting plot is <a href="#fig_grid_search_result">Figure 71</a>.</p>
+</div>
+<div id="fig_grid_search_result" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/grid_search_result.png" alt="grid_search_result" width="400">
+</div>
+<div class="title">Figure 71. Result of the hyper parameter grid search</div>
+</div>
+<div class="paragraph">
+<p>From this plot, we can see that the accuracy is maximum when the learning rate is 0.1, although the difference is small.
+It can also be seen that when the learning rate is 0.1, there is no significant performance gains between different momentum values.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It should be noted that this parameter search is extremely simplified for learning purposes.</p>
+</div>
+<div class="paragraph">
+<p>For example, in the experiment here the best learning rate turned out to be 0.1.
+However, this may be because the number of training epochs is limited to 100.
+The lower the learning rate, the more epochs are needed for training.
+If the number of training epochs is increased, different results may be observed.</p>
+</div>
+<div class="paragraph">
+<p>In this study, we used 48,000 of the 60,000 training data from MNIST as training data and the remaining 12,000 as validation data.
+However, if you are concerned about the bias of the data due to the split, you may want to evaluate the model multiple times by changing the split (<strong>k-fold cross-validation</strong>) as a more sophisticated approach.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In this hands-on session, we experienced the steps to optimize the hyperparameters of the MNIST classification model.
+By using AWS Batch, we were able to build a system that can dynamically control EC2 clusters and process jobs in parallel.
+If you can master EC2 to this level, you will be able to solve many problems on our own!</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:batch_destroy_app">9.10. Deleting the stack</h3>
+<div class="paragraph">
+<p>This concludes the hands-on session.
+Finally, let&#8217;s delete the stack.
+In order to delete the stack for this hands-on, the Docker images placed in the ECR must be deleted manually.
+If you don&#8217;t do this, you&#8217;ll get an error when you run <code>cdk destroy</code>.
+This is a CloudFormation specification that you have to follow.</p>
+</div>
+<div class="paragraph">
+<p>To delete a Docker image in ECR, go to the ECR console and open the repository where the image is located.
+Then, click the <code>DELETE</code> button on the upper right corner of the screen to delete it (<a href="#fig_delete_ecr">Figure 72</a>).</p>
+</div>
+<div id="fig_delete_ecr" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/delete_ecr.png" alt="delete_ecr" width="700">
+</div>
+<div class="title">Figure 72. Deleting Docker image from ECR</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, to perform the same operation from the AWS CLI, use the following command (replace <code>XXXX</code> with the name of your ECR repository).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>aws ecr batch-delete-image <span class="nt">--repository-name</span> XXXX <span class="nt">--image-ids</span> <span class="nv">imageTag</span><span class="o">=</span>latest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After the image has been deleted, use the following command to delete the stack.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>cdk destroy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="#sec:batch_development_and_debug">[sec:batch_development_and_debug]</a>
+=== Development and debugging of machine learning applications using the cloud</p>
+</div>
+<div class="paragraph">
+<p>In the hands-on session described in this chapter, we used AWS Batch to run parallel neural network trainings to accelerate the model development.
+As the last topic in this chapter, we will discuss how to develop and debug machine learning applications using the cloud.</p>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t have a powerful local machine with GPUs, and you have the budget to use the cloud, then a development scheme like <a href="#fig:cloud_development">Figure 73</a> would be ideal.
+In the first stage, create an EC2 instance with GPUa using the method described in <a href="#sec_jupyter_and_deep_learning">Section 6</a>, and experiment with various models in an interactive environment such as Jupyter Notebook.
+When the application is completed to some extent with Jupyter, package the application into a Docker image.
+Then, run <code>docker run</code> on EC2 to check if the created image works without errors.
+Next, we will perform tuning, such as hyperparameter optimization, using a computational system such as AWS Batch, which we learned in the <a href="#sec_aws_batch">Section 9</a>.
+Once we have a good deep learning model, we will build a system to perform inference on large-scale data, using <a href="#sec_fargate_qabot">Section 8</a> as a reference.</p>
+</div>
+<div class="paragraph">
+<p>In fact, the exercises in this book have been carried out along this workflow.
+We first experimented with a model for solving the MNIST task using Jupyter Notebook, then packaged the code into Docker, and used AWS Batch to perform a hyperparameter search.
+By repeating this cycle, we can proceed with the development of machine learning applications that take full advantage of the cloud.</p>
+</div>
+<div id="fig:cloud_development" class="imageblock text-center">
+<div class="content">
+<img src="imgs/aws_batch/cloud_development.png" alt="cloud_development" width="700">
+</div>
+<div class="title">Figure 73. Development workflow of cloud-based machine learning applications</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_short_summary">9.11. Short summary</h3>
+<div class="paragraph">
+<p>This concludes Part II of this book.
+We hope you enjoyed the journey exploring the cloud technology.</p>
+</div>
+<div class="paragraph">
+<p>In Part II, we first explained how to launch an EC2 instance with GPUs in order to run deep learning calculations in the cloud.
+In the hands-on session, we trained a neural network to solve the MNIST digit recognition task using a virtual server launched in the cloud (<a href="#sec_jupyter_and_deep_learning">Section 6</a>).</p>
+</div>
+<div class="paragraph">
+<p>We also explained the steps to create a cluster using Docker and ECS as a means to build large scale machine learning applications (<a href="#sec_docker_introduction">Section 7</a>).
+As an exercise, we deployed a bot in the cloud that automatically generates answers to text questions given in English (<a href="#sec_fargate_qabot">Section 8</a>).
+You should have been able to get some experience how computational resources are created and deleted dynamically in response to the submission of tasks.</p>
+</div>
+<div class="paragraph">
+<p>Furthermore, in <a href="#sec_aws_batch">Section 9</a>, we introduced a method to train neural networks in parallel using AWS Batch.
+Although the methods introduced here are minimal, they cover the essence of how to scale up a computer system.
+We hope that these hands-on experiences have given you some idea of how to apply cloud technology to solve real-world problems.</p>
+</div>
+<div class="paragraph">
+<p>In the third part of this book, we take it a step further and explain the latest cloud design method called serverless architecture.
+In the hands-on session, we will implement a simple SNS service from scratch.
+Let&#8217;s continue our journey to enjoy the cutting-edge frontiers of cloud computing!</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_to_create_web_services">10. How to create web services</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is the third part of the book.
+In the previous sections, we have explained how to start a virtual server in the cloud and run computations on it.
+Using EC2, ECS, Fargate, and Batch, we have configured dynamically scaling clusters and implemented cloud systems that execute tasks in parallel.
+In retrospect, you may notice that the techniques we have introduced so far have been focused on embracing the cloud to solve your own scientific or engineering problem.
+On the other hand, another important role of the cloud is to provide computing services and databases <strong>that can be used by the general public</strong>.</p>
+</div>
+<div class="paragraph">
+<p>In Part III, which begins with this section, we would like to take a slightly different direction from the previous lectures and discuss how to deploy applications on the cloud and make them widely available to the general public.
+Through this lecture, we will learn how web services in the real world are created, and how to build such applications from scratch.
+In the process, we will explain the latest cloud design method called serverless architecture.</p>
+</div>
+<div class="paragraph">
+<p>As a prelude, this chapter provides an overview of the technology behind the web services and introduces some concepts and terminology.
+Theyse are essential knowledge for the hands-on exercises that follow, so please take your time to understand them well.</p>
+</div>
+<div class="sect2">
+<h3 id="_how_web_services_workusing_twitter_as_an_example">10.1. How Web Services Work&#8201;&#8212;&#8201;Using Twitter as an Example</h3>
+<div class="paragraph">
+<p>When you access Twitter, Facebook, YouTube, and other web services from your computer or smartphone, what is actually happening to render the contents in the page?</p>
+</div>
+<div class="paragraph">
+<p>Many readers may already be familiar with the communication between servers and clients via HTTP, and since it would take up too much space to thoroughly explain everything, we will only cover the essentials here.
+In the following, we will use
+<a href="https://twitter.com">Twitter</a>
+as a concrete example to outline the communication between the server and the client.
+As a sketch, <a href="#fig:web_server">Figure 74</a> depicts the communication between the client and the server.</p>
+</div>
+<div id="fig:web_server" class="imageblock text-center">
+<div class="content">
+<img src="imgs/web_server.png" alt="web_server" width="700">
+</div>
+<div class="title">Figure 74. Sketch of communication between client and web server</div>
+</div>
+<div class="paragraph">
+<p>As a premise, the client-server communication is done using <strong>HTTP (Hypertext Transfer Protocol)</strong>.
+Recently, it has become a standard to use <strong>HTTPS (Hypertext Transfer Protocol Secure)</strong>, which is an encrypted HTTP.
+In the first step, the client obtains static content from the server through HTTP(S) communication.
+Static content includes the main body of a web page document written in <strong>HTML (Hypertext Markup Language)</strong>, page design and layout files written in <strong>CSS (Cascading Style Sheets)</strong>, and programs that define the dynamic behavior of the page written in <strong>JavaScript (JS)</strong>.
+In the design of modern web applications, including Twitter, these static files only define the "frame" of the page, and the content (e.g., the list of tweets) must be retrieved using <strong>API (Application Programming Interface)</strong>.
+Therefore, the client sends the API request to the server according to the program defined in the JavaScript, and obtains the tweet list.
+<strong>JSON (JavaScript Object Notation)</strong> is often used to exchange text data.
+Media content such as images and videos are also retrieved by the API in the same way.
+The text and images retrieved in this way are embedded in the HTML document to create the final page presented to the user.
+Also, when posting a new tweet, the client uses the API to write the data to the server&#8217;s database.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec_rest_api">10.2. REST API</h3>
+<div class="paragraph">
+<p>API (Application Programming Interface) is a term that has been frequently used in this book, but we will give a more formal definition here.
+An API is a general term for an interface through which an application can exchange commands and data with external software.
+Especially in the context of web services, it refers to the list of commands that a server exposes to the outside world.
+The client obtains the desired data or sends data to the server by choosing the appropriate API commands.</p>
+</div>
+<div class="paragraph">
+<p>Especially in the context of the web, APIs based on a design philosophy called <strong>REST (Representational State Transfer)</strong> are most commonly used.
+An API that follows the REST design guidelines is called a <strong>REST API</strong> or <strong>RESTful API</strong>.</p>
+</div>
+<div class="paragraph">
+<p>A REST API consists of a pair of <strong>Method</strong> and <strong>URI (Universal Resource Identifier)</strong>, as shown in <a href="#rest_api">Figure 75</a>.</p>
+</div>
+<div id="rest_api" class="imageblock text-center">
+<div class="content">
+<img src="imgs/rest_api.png" alt="rest_api" width="700">
+</div>
+<div class="title">Figure 75. REST API</div>
+</div>
+<div class="paragraph">
+<p>A method can be thought of as a "verb" that abstractly expresses the kind of desired operation.
+Methods can use any of the nine verbs defined in the HTTP standard.
+Among them, the five most frequently used ones are <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, and <code>DELETE</code> (<a href="#tab:rest_api_methods">Table 6</a>).
+The operations using these five methods are collectively called <strong>CRUD</strong> (create, read, update, and delete).</p>
+</div>
+<table id="tab:rest_api_methods" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. REST API Methods</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Intended behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obtaining items</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creating a new item</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replacing an existing item with a new one</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PATCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Updating a part of an existing item</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deleting an item</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>On the other hand, a URI represents the target of an operation, i.e., the "object".
+In the context of the web, the target of an operation is often referred to as a <strong>resource</strong>.
+The URI often begins with the address of the web server, starting with http or https, and the path to the desired resource is specified after the / (slash).
+In the example of <a href="#rest_api">Figure 75</a>, it means to retrieve (GET) the resource <code>/1.1/status/home_timeline</code> with the address <code><a href="https://api.twitter.com" class="bare">https://api.twitter.com</a></code>.
+(Note that the number <code>1.1</code> here indicates the API version.)
+This API request retrieves the list of tweets in the user&#8217;s home timeline.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In addition to the methods listed in <a href="#tab:rest_api_methods">Table 6</a>, other methods defined in the HTTP protocol (OPTIONS, TRACE, etc.) can be used for the REST API methods, but they are not so common.</p>
+</div>
+<div class="paragraph">
+<p>In some cases, these methods alone are not enough to express a verb, but the meaning may be made clearer by using explicit path in URI.
+For example, the Twitter API for deleting tweets is defined as <code>POST statuses/destroy/:id</code>.
+In the end, you need to read the API documentation carefully to find out what each API does.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The concept of REST was established in the early 2000s and has become the standard for API design today.
+As web technology advances, on the other hand, the demand for new API design is growing.
+One approach that has become particularly popular in recent years is
+<a href="https://graphql.org/">GraphQL</a>.s
+GraphQL was first created by Facebook, and is currently maintained and updated by the GraghQL Foundation.
+GraphQL has several advantages over REST, including the ability for clients to query data with greater flexibility.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_twitter_api">10.3. Twitter API</h3>
+<div class="paragraph">
+<p>In order to have a more realistic feeling on the web APIs, let&#8217;s take a look at Twitter&#8217;s API.
+A list of APIs provided by Twitter can be found at
+<a href="https://developer.twitter.com/en/docs/api-reference-index">Twitter&#8217;s Developer Documentation</a>.
+Some representative API endpoints are listed in <a href="#tab_twitter_api">Table 7</a>.</p>
+</div>
+<table id="tab_twitter_api" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. Twitter API</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Endpoint</th>
+<th class="tableblock halign-left valign-top">Expected behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET statuses/home_timeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the list of tweets in the home timeline.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET statuses/show/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the details of the tweet specified by <code>:id</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET search</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search for tweets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/update</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Post a new tweet</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST media/upload</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Upload images</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/destroy/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a tweet specified by <code>:id</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/retweet/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retweet a tweet specified by <code>:id</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST statuses/unretweet/:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Undo retweet of a tweet specified by <code>:id</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST favorites/create</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Like the selected tweet.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST favorites/destroy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Undo like of the selected tweet.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Based on this list of APIs, let&#8217;s simulate the client-server communication that happens when you open a Twitter app or website.</p>
+</div>
+<div class="paragraph">
+<p>When a user opens Twitter, the first API request sent to the server is <code>GET statuses/home_timeline</code>, which retrieves a list of tweets in the user&#8217;s home timeline.
+Each tweet is in JSON format and contains attributes such as <code>id</code>, <code>text</code>, <code>user</code>, <code>coordinates</code>, and <code>entities</code>.
+The <code>id</code> represents the unique ID of the tweet, and the <code>text</code> contains the body of the tweet.
+The <code>user</code> is a JSON data containing the information of the user who posted the tweet, including the name and URL of the profile image.
+The <code>coordinates</code> contains the geographic coordinates of where the tweet was posted.
+<code>entities</code> contains the links to media files (images, etc.) related to the tweet.
+From <code>GET statuses/home_timeline</code>, a list of the most recent tweets is retrieved (or a part of the list if the list is too long).
+If you know the ID of the tweet, you can call <code>GET statuses/show/:id</code> to retrieve the specific tweet specified by the <code>:id</code> parameter.</p>
+</div>
+<div class="paragraph">
+<p>The <code>GET search</code> API is used to search tweets.
+The <code>GET search</code> API can be used to search for tweets by passing various query conditions, such as words in the tweet, hashtags, and the date, time, and location of the tweet.
+The API will return the tweet data in JSON format, similar to <code>GET statuses/home_timeline</code>.</p>
+</div>
+<div class="paragraph">
+<p>When a user posts a new tweet, the <code>POST statuses/update</code> endpoint is used.
+The <code>POST statuses/update</code> endpoint receives the text of the tweet, and in the case of a reply, the ID of the tweet to which the user is replying.
+If you want to attach images to the tweet, use <code>POST media/upload</code> as well.
+To delete a tweet, <code>POST statuses/destroy/:id</code> is used.</p>
+</div>
+<div class="paragraph">
+<p>Other frequently used operations are <code>POST statuses/retweet/:id</code> and <code>POST statuses/unretweet/:id</code>.
+These APIs are used to retweet or unretweet the tweet specified by <code>:id</code>, respectively.
+In addition, <code>POST favorites/create</code> and <code>POST favorites/destroy</code> can be used to add or remove a "like" to a selected tweet.</p>
+</div>
+<div class="paragraph">
+<p>This is the sequence of operations that takes place behind Twitter applications.
+If you want to create your own bot, you can do so by writing a custom program that combines these APIs.</p>
+</div>
+<div class="paragraph">
+<p>As you can see, APIs are the most fundamental element in the construction of any web service.
+In the following sections, the terms introduced in this section will appear many times, so please keep them in mind before reading on.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec_serverless">11. Serverless architecture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Serverless architecture or serverless computing is a way of designing cloud systems based on a completely different approach.
+Historically, <a href="https://aws.amazon.com/lambda/">Lamba</a>, released by AWS in 2014, is considered as a pioneer of serverless architecture.
+Since then, other cloud platforms such as Google and Microsoft have started to provide similar features.
+The advantage of serverless architecture is that it enables the creation of scalable cloud systems inexpensively and easily, and it is rapidly being adopted by many cloud systems in recent years.</p>
+</div>
+<div class="paragraph">
+<p>Serverless literally means computing without servers, but what does it actually mean?
+In order to explain serverless, we must first explain the traditional "serverful" system.</p>
+</div>
+<div class="sect2">
+<h3 id="chap_serverful_cloud">11.1. Serverful cloud (conventional cloud)</h3>
+<div class="paragraph">
+<p>A sketch of a traditional cloud system is shown in <a href="#serverful">Figure 76</a>.
+The request sent from the client is first sent to the API server.
+In the API server, tasks are executed according to the content of the request.
+Some tasks can be completed by the API server alone, but in most cases, reading and writing of the database is required.
+In general, an independent server machine dedicated to the database is used.
+Large sized data, such as images and videos, are often stored on a separate storage server.
+These API servers, database servers, and storage servers are all independent server machines.
+In AWS terms, you can think of them as virtual instances of EC2.</p>
+</div>
+<div class="paragraph">
+<p>Many web services are designed to have multiple server machines running in the cloud to handle requests from a large number of clients.
+The operation of distributing requests from clients to servers with enough computing capacity is called <strong>load balancing</strong>, and the machine in charge of such operation is called <strong>load balancer</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Launching a large number of instances for the purpose of distributing the computational load is fine, but it is a waste of cost and power if the computational load is too small and the most of the cluster is kept idling.
+Therefore, we need a mechanism that dynamically increases or decreases the number of virtual servers in a cluster according to the computational load so that all servers always maintain the certain load.
+Such a mechanism is called <strong>cluster scaling</strong>, and the operation of adding a new virtual instance to the cluster in response to an increase in load is called <strong>scale-out</strong>, and the operation of shutting down an instance in response to a decrease in load is called <strong>scale-in</strong>.
+Scaling of clusters is necessary not only for API servers, but also for database servers and storage servers.
+In the storage server, for example, frequently accessed data is stored in the cache area, and multiple copies of the data are made across instances.
+In the same way, database servers require distributed processing to prevent frequent data accesses from disrupting the system.
+It is necessary to adjust the load so that it is evenly distributed throughout the cloud system, and developers must spend a lot of time tuning the system.
+In addition, the scaling settings need to be constantly reviewed according to the number of users of the service, and continuous development is required.</p>
+</div>
+<div class="paragraph">
+<p>What makes the matters worse,  the tasks processed by the API server are non-uniform.
+Being non-uniform, means that, for example, task A consumes 3000 milliseconds of execution time and 512MB of memory, while another task B consumes 1000 milliseconds of execution time and 128MB of memory.
+Scaling a cluster becomes complex when a single server machine handles multiple tasks with different computational loads.
+In order to simplify this situation, it is possible to design the cluster so that only one type of task is executed by a single server, but there are many negative effects of adopting such design.</p>
+</div>
+<div id="serverful" class="imageblock text-center">
+<div class="content">
+<img src="imgs/serverful.png" alt="serverful" width="700">
+</div>
+<div class="title">Figure 76. Serverful cloud system</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_to_the_serverless_cloud">11.2. To the serverless cloud</h3>
+<div class="paragraph">
+<p>As we discussed in <a href="#chap_serverful_cloud">Section 11.1</a>, scaling of clusters is an essential task to maximize the economic efficiency and system stability of cloud systems.
+Reflecting this, a lot of developer&#8217;s time and efforts have been invested in it.</p>
+</div>
+<div class="paragraph">
+<p>Scaling a cluster is a task that all developers have done over and over again, and if some aspects could be templated and made common, it would greatly reduce the cost of development.
+In order to achieve this, one needs to rethink the design of cloud systems from a fundamental level.
+<strong>Is there a cloud system design that is simpler and more efficient by considering scaling as a first and built-in priority</strong>?
+Such was the motivation behind the birth of serverless architecture.</p>
+</div>
+<div class="paragraph">
+<p>The biggest problem with conventional serverful systems is that users <strong>occupy the entire server</strong>.
+Namely, when an EC2 instance is launched, it is available only to the user who launched it, and the computation resources (CPU and RAM) are allocated exclusively to that user.
+Since a fixed allocation of computing resources has been made, the same cost will be incurred in proportion to the launch time, regardless of whether the instance&#8217;s computing load is 0% or 100%.</p>
+</div>
+<div class="paragraph">
+<p>The starting point of serverless architecture is the complete elimination of such <strong>exclusively allocated computational resources</strong>.
+In a serverless architecture, all computation resources are managed by the cloud provider.
+Rather than renting an entire virtual instance, clients submit a program or commands to the cloud every time they need to perform a computational task.
+The cloud provider tries to find free space from its own huge computational resources, executes the submitted program, and returns the execution result back to the client.
+In other words, the cloud provider takes care of the scaling and allocation of computational resources, and the user focuses on submitting jobs.
+This can be illustrated as <a href="#serverless">Figure 77</a>.</p>
+</div>
+<div id="serverless" class="imageblock text-center">
+<div class="content">
+<img src="imgs/serverless.png" alt="serverless" width="700">
+</div>
+<div class="title">Figure 77. Comparison of serverful cloud and serverless cloud</div>
+</div>
+<div class="paragraph">
+<p>In a serverless cloud, scalability is guaranteed because all scaling is taken care of by the cloud provider.
+Even if a client sends a large number of tasks at the same time, the cloud provider&#8217;s sophisticated system ensures that all tasks are executed without delay.
+Also, by using a serverless cloud, <strong>the cost of the cloud is determined by the total amount of computation</strong>.
+This is a big difference compared to conventional systems where the cost is determined by the launch time of the instance regardless of the total amount of computation performed.</p>
+</div>
+<div class="paragraph">
+<p>Since serverless cloud is a fundamentally different approach from traditional cloud, the way to design the system and write code is very different.
+To develop and operate a serverless cloud, it is necessary to be familiar with concepts and terminology specific to serverless technology.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Traditional cloud systems running many virtual instances may be analogous to renting a room.
+When you rent a room, the monthly rent is constant, regardless of how much time you spend in the room.
+Similarly, a virtual server incurs a fixed fee per hour, regardless of how much computation it is doing.</p>
+</div>
+<div class="paragraph">
+<p>On the other hand, serverless clouds are similar to <strong>electricity, water, and gas bills</strong>.
+In this case, the fee is determined in proportion to the amount actually used.
+The serverless cloud is also a system where the fee is determined by the total amount of time the calculation is actually performed.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_components_that_make_up_a_serverless_cloud">11.3. Components that make up a serverless cloud</h3>
+<div class="paragraph">
+<p>Now that we have an overview of serverless architecture, let us introduce you to the components that make up a serverless cloud in AWS.
+In particular, we will focus on <strong>Lambda</strong>, <strong>S3</strong>, and <strong>DynamoDB</strong> (<a href="#fig:serverless_logos">Figure 78</a>).
+In a serverless cloud, a system is created by integrating these components.
+In what follows, we will go through all the knowledge that must be kept in mind when using Lambda, S3, and DynamoDB, so it may be difficult to get a concrete image.
+However, in the next section (<a href="#sec_intro_serverless">[sec_intro_serverless]</a>), we will provide hands-on exercises for each of them, so you can deepen your understanding.</p>
+</div>
+<div id="fig:serverless_logos" class="imageblock">
+<div class="content">
+<img src="imgs/serverless_logos.png" alt="Lambda" width="500">
+</div>
+<div class="title">Figure 78. Icons for Lambda, S3, and DynamoDB</div>
+</div>
+<div class="sect3">
+<h4 id="_lambda">11.3.1. Lambda</h4>
+<div class="paragraph">
+<p>The core of serverless computing in AWS is
+<a href="https://aws.amazon.com/lambda/">Lambda</a>.
+The summary of Lambda is illustrated in <a href="#lambda_workflow">Figure 79</a>.
+The workflow with Lambda is simple.
+First, users register the code of the program they want to execute.
+Programs are supported in major languages such as Python, Node.js, and Ruby.
+Each program registered with Lambda is referred to as a function.
+When a function is to be executed, an invoke command is sent to Lambda.
+As soon as Lambda receives the invoke request, it starts executing the program, within a few milliseconds to a few hundred milliseconds latency.
+It then returns the execution results to the client or other programs.</p>
+</div>
+<div id="lambda_workflow" class="imageblock text-center">
+<div class="content">
+<img src="imgs/lambda_workflow.png" alt="lambda_workflow" width="500">
+</div>
+<div class="title">Figure 79. AWS Lambda</div>
+</div>
+<div class="paragraph">
+<p>As you can see, in Lambda, there is no occupied virtual instance, only a program waiting to be executed.
+In response to an invoke request, the program is placed somewhere in the huge AWS compute pool and executed.
+Even if multiple requests come in at the same time, AWS allocates computing resources to execute them, and processes them in parallel.
+In principle, Lambda is able to execute thousands or tens of thousands of requests at the same time.
+This kind of service that dynamically executes functions without the existence of an occupied virtual server is collectively called <strong>FaaS (Function as a Service)</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Lambda can use 128MB to 10240MB of memory for each function (specifications at the time of writing).
+The effective CPU power is allocated in proportion to the amount of memory.
+In other words, the more memory allocated to a task, the more CPU resources will be allocated to it.
+(However, AWS does not provide a specific conversion table for RAM and CPU power.)
+The execution time is recorded in units of 100 milliseconds, and the price is proportional to the execution time.
+<a href="#lambda_pricing">Table 8</a> is the Lambda pricing table (when <code>ap-north-east1</code> region is selected at the time of writing).</p>
+</div>
+<table id="lambda_pricing" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Lambda pricing</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Memory (MB)</th>
+<th class="tableblock halign-left valign-top">Price per 100ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">128</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.0000002083</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.0000008333</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1024</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.0000016667</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3008</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.0000048958</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In addition to the fee proportional to the execution time, there is a fee for each request sent.
+This is $0.2 per million requests.
+For example, if a function that uses 128MB of memory is executed 200 milliseconds each, for a total of 1 million times, then the total cost would be 0.0000002083 * 2 * 10^6 + 0.2 = $0.6.
+Since many functions can be executed in about 200 milliseconds for simple calculations such as updating the database, the cost is only $0.6 even if the database is updated one million times.
+In addition, if the code is in a waiting state without being executed, the cost is zero.
+In this way, cost will be chaged for only the time when meaningful processing is performed.</p>
+</div>
+<div class="paragraph">
+<p>Lambda is most suitable for executing highly repetitive tasks that can be completed in a relatively short time.
+Reading and writing databases is a typical example, but other possible uses include cropping the size of an image or performing periodic server-side maintenance.
+It is also possible to connect multiple Lambdas in a relay fashion, and complex logic can be expressed by combining simple processes.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It should be noted that the Lambda fee calculation described above omits some factors that contribute to the cost for the sake of explanation.
+For example, it does not take into account the cost of reading and writing DynamoDB or the cost of network communication.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_serverless_storage_s3">11.3.2. Serverless storage: S3</h4>
+<div class="paragraph">
+<p>The concept of serverless has been extended to storage as well.</p>
+</div>
+<div class="paragraph">
+<p>Conventional storage (file system) requires the presence of a host machine and an OS.
+Therefore, a certain amount of CPU resources must be allocated, even if it does not require much power.
+In addition, with conventional file systems, the size of the storage space must be determined when the disk is first initialized, and it is often difficult to increase the capacity later.
+(Using a file system such as ZFS, it is possible to change the size of the file system freely to some extent.)
+Therefore, in traditional cloud computing, you have to specify the size of the disk in advance when you rent a storage space, and you will be charged the same fee whether the disk is empty or full (<a href="#fig:s3_vs_filesystem">Figure 80</a>).</p>
+</div>
+<div class="paragraph">
+<p><a href="https://aws.amazon.com/s3/">Simple Storage Service (S3)</a>
+provides a serverless storage system (<a href="#fig:s3_vs_filesystem">Figure 80</a>).
+Unlike conventional storage systems, S3 does not have the concept of being "mounted" on the OS.
+Basically, data read/write operations are performed through APIs.
+In addition, operations that normally require the intervention of the OS and CPU, such as data redundancy, encryption, and backup creation, can also be performed through the API.
+With S3, there is no predetermined disk space size, and the total storage space increases as more data is stored in S3.
+In principle, it is possible to store petabyte-scale data.
+The price of storage is determined by the total amount of the data stored.</p>
+</div>
+<div id="fig:s3_vs_filesystem" class="imageblock text-center">
+<div class="content">
+<img src="imgs/s3_vs_filesystem.png" alt="s3_vs_filesystem" width="700">
+</div>
+<div class="title">Figure 80. Comparison between S3 and conventional file systems</div>
+</div>
+<div class="paragraph">
+<p><a href="#tab:s3_pricing">Table 9</a> summarizes the main factors related to pricing when using S3.
+(This is for the <code>us-east-1</code> region.
+Only the major points are taken out for the sake of explanation.
+For details, see
+<a href="https://aws.amazon.com/s3/pricing/?nc=sn&amp;loc=4">Official Documentation "Amazon S3 pricing"</a>]).</p>
+</div>
+<table id="tab:s3_pricing" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. S3 pricing</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Item</th>
+<th class="tableblock halign-left valign-top">Price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data storage (First 50TB)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.023 per GB per month</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT, COPY, POST, LIST requests (per 1,000 requests)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.005</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET, SELECT, and all other requests (per 1,000 requests)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.0004</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data Transfer IN To Amazon S3 From Internet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data Transfer OUT From Amazon S3 To Internet</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.09 per GB</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>First, data storage costs $0.025 per GB per month.
+Therefore, if you store 1000GB of data in S3 for a month, you will be charged $25.
+In addition, requests such as <code>PUT</code>, <code>COPY</code>, and <code>POST</code> (i.e., operations to write data) incur a cost of $0.005 per 1000 requests, regardless of the amount of data.
+Requests such as <code>GET</code> and <code>SELECT</code> (= operations to read data) incur a cost of $0.0004 per 1000 requests.
+S3 also incurs a cost for communication when retrieving data out of S3.
+At the time of writing, transferring data from S3 to the outside via the Internet (data-out) incurs a cost of $0.09 per GB.
+Sending data into S3 via the Internet (data-in) is free of charge.
+Transferring data to services in the same AWS region (Lambda, EC2, etc.) is also free.
+There is a cost for transferring data across AWS regions.
+In any case, in keeping with the serverless concept, all fees are determined on a pay-as-you-go basis.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_serverless_database_dynamodb">11.3.3. Serverless database: DynamoDB</h4>
+<div class="paragraph">
+<p>The concept of serverless can also be applied to databases.
+A database here refers to a fast storage area for web services to record data such as user and product information.
+Some of the popular databases include
+<a href="https://www.mysql.com/">MySQL</a>,
+<a href="https://www.postgresql.org/">PostgreSQL</a>,
+<a href="https://www.mongodb.com/">MongoDB</a>.</p>
+</div>
+<div class="paragraph">
+<p>The difference between a database and ordinary storage is in the data retrieval function.
+In ordinary storage, data is simply written to disk.
+In a database, data is arranged in a way that makes searching more efficient, and
+frequently accessed data is cached in memory.
+This makes it possible to retrieve the elements of interest from a huge amount of data rapidly.</p>
+</div>
+<div class="paragraph">
+<p>Naturally, the involvement of a CPU is essential to realize such a search function.
+Therefore, when constructing a conventional database, a machine with a large number of CPU cores is often used in addition to the large storage space.
+Often, a distributed system consisted of multiple machines is designed to host a massive database.
+In the case of a distributed system, it is necessary to scale appropriately according to the access load to the database, as discussed in <a href="#chap_serverful_cloud">Section 11.1</a>.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://aws.amazon.com/dynamodb/">DynamoDB</a>
+is a serverless and distributed database provided by AWS.
+Because it is serverless, there is no occupied virtual instance for the database, and operations such as writing, reading, and searching data are performed through APIs.
+As with S3, there is no upper limit to the data storage space, and the storage space increases as more data is stored.
+In addition, DynamoDB automatically handles scaling when the load on the database increases or decreases, eliminating complicated programming to control the database scaling.</p>
+</div>
+<div class="paragraph">
+<p>The calculation of DynamoDB pricing is rather complicated, but <a href="#tab:dynamodb_pricing">Table 10</a> summarizes the main factors involved in pricing when using the "On-demand Capacity" mode.
+(The table is for the <code>us-east-1</code> region.
+For details, see
+<a href="https://aws.amazon.com/dynamodb/pricing/on-demand/">Official Documentation "Pricing for On-Demand Capacity"</a>).</p>
+</div>
+<table id="tab:dynamodb_pricing" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. DynamoDB pricing</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Item</th>
+<th class="tableblock halign-left valign-top">Price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Write request units</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$1.25 per million write request units</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read request units</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.25 per million read request units</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data storage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$0.25 per GB-month</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In DynamoDB, the unit for data write operations is called a write request unit, and the unit for data read operations is called a read request unit.
+Basically, writing data of 1kB or less once consumes 1 write request unit, and reading data of 4kB or less once consumes 1 read request unit.
+(For details, see
+<a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html">Official Documentation "Read/Write Capacity Mode"</a>).
+The cost of write request units is set at $1.25 per million requests, and the cost of read request units is set at $0.25 per million requests.
+There is also a monthly cost of $0.25 per GB chaged for stored data.
+Since DynamoDB is a database with a high-speed search function, the storage cost per GB is about 10 times higher than S3.
+The cost of DynamoDB data transfer is zero for both data-in and data-out within the same region.
+A separate cost is incurred for communication across regions.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_other_serverless_components_in_aws">11.3.4. Other serverless components in AWS</h4>
+<div class="paragraph">
+<p>Lambda, S3, and DynamoDB described above are the most frequently used services in serverless cloud.
+Other components of serverless cloud are listed below.
+Some of them will be explained during the hands-on sessions in the later sections.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://aws.amazon.com/api-gateway/">API Gateway</a>:
+This is responsible for routing when building the REST API.
+It will be covered in <a href="#sec_bashoutter">[sec_bashoutter]</a>.</p>
+</li>
+<li>
+<p><a href="https://aws.amazon.com/fargate/">Fargate</a>:
+Fargate, which we used in <a href="#sec_fargate_qabot">Section 8</a>, is another element of the serverless cloud.
+The difference between Fargate and Lambda is that Fargate can perform calculations that require a larger amount of memory and CPU than Lambda.</p>
+</li>
+<li>
+<p><a href="https://aws.amazon.com/sns/">Simple Notification Service (SNS)</a>:
+A service for exchanging events between serverless services.</p>
+</li>
+<li>
+<p><a href="https://aws.amazon.com/step-functions/">Step Functions</a>:
+Orchestration between serverless services.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Is serverless architecture a solution for everything?</strong></p>
+</div>
+<div class="paragraph">
+<p>We think the answer to this question is no.
+Serveless is still a new technology, and it has several disadvantages or limitations compared to serverful system.</p>
+</div>
+<div class="paragraph">
+<p>One major disadvantage is that serverless systems are specific to each cloud platform, so they can only be operated on a particular platform.
+Migrating a serverless system created in AWS to Google&#8217;s cloud, for example, would require a rather large rewrite of the program.
+On the other hand, for serverful systems, migration between platforms is relatively easy.
+This is probably the cloud providers' buisiness strategy to increase the dependency on their own systems and keep their customers.</p>
+</div>
+<div class="paragraph">
+<p>Other limitations and future challenges of serverless computing are discussed in detail in the following paper.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://arxiv.org/abs/1812.03651">Hellerstein et al., "Serverless Computing: One Step Forward, Two Steps Back" arXiv (2018)</a></p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:appendix_settingup">12. Appendix: Environment setup</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>To read through this book, you need to set up an environment on your local machine to run the hands-on programs.
@@ -5510,34 +7720,34 @@ If you have already built your environment, you need to read through only the re
 <div class="ulist">
 <ul>
 <li>
-<p>Creating an AWS account (<a href="#sec:create_aws_account">Section 9.1</a>)</p>
+<p>Creating an AWS account (<a href="#sec:create_aws_account">Section 12.1</a>)</p>
 </li>
 <li>
-<p>Creating AWS access key (<a href="#aws_secrets">Section 9.2</a>)</p>
+<p>Creating AWS access key (<a href="#aws_secrets">Section 12.2</a>)</p>
 </li>
 <li>
-<p>Installing AWS CLI (<a href="#aws_cli_install">Section 9.3</a>)</p>
+<p>Installing AWS CLI (<a href="#aws_cli_install">Section 12.3</a>)</p>
 </li>
 <li>
-<p>Installing AWS CDK (<a href="#aws_cdk_install">Section 9.4</a>)</p>
+<p>Installing AWS CDK (<a href="#aws_cdk_install">Section 12.4</a>)</p>
 </li>
 <li>
-<p>Installing WSL (<a href="#sec:install_wsl">Section 9.5</a>)</p>
+<p>Installing WSL (<a href="#sec:install_wsl">Section 12.5</a>)</p>
 </li>
 <li>
-<p>Installing Docker (<a href="#sec:install_docker">Section 9.6</a>)</p>
+<p>Installing Docker (<a href="#sec:install_docker">Section 12.6</a>)</p>
 </li>
 <li>
-<p>Quick tutorial on Python venv (<a href="#venv_quick_guide">Section 9.7</a>)</p>
+<p>Quick tutorial on Python venv (<a href="#venv_quick_guide">Section 12.7</a>)</p>
 </li>
 <li>
-<p>Working with Docker image for the hands-on exercises (<a href="#sec_handson_docker">Section 9.8</a>)</p>
+<p>Working with Docker image for the hands-on exercises (<a href="#sec_handson_docker">Section 12.8</a>)</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>The OS can be Linux, Mac, or Windows.
-Windows users are assumed to use Windows Subsytem for Linux (WSL) (<a href="#sec:install_wsl">Section 9.5</a>).</p>
+Windows users are assumed to use Windows Subsytem for Linux (WSL) (<a href="#sec:install_wsl">Section 12.5</a>).</p>
 </div>
 <div class="paragraph">
 <p>You can also use the
@@ -5546,7 +7756,7 @@ to run the hands-on programs in this book.
 This will be useful for readers who know how to use Docker, as it allows them to skip AWS CLI/CDK and Python installation.</p>
 </div>
 <div class="sect2">
-<h3 id="sec:create_aws_account">9.1. Creating an AWS account</h3>
+<h3 id="sec:create_aws_account">12.1. Creating an AWS account</h3>
 <div class="paragraph">
 <p>In order to try the hands-on exercises provided in this book, you need to create your own AWS account.
 Detailed instructions for creating an account can be found at
@@ -5556,34 +7766,34 @@ Follow the steps below to create an account.</p>
 </div>
 <div class="paragraph">
 <p>First, access <a href="https://aws.amazon.com/console/">AWS Management Console</a> from your web browser, and click <code>Create an AWS Account</code> in the upper right corner.
-(<a href="#fig:aws-signup-1">Figure 54</a>, boxed with a solid line).</p>
+(<a href="#fig:aws-signup-1">Figure 81</a>, boxed with a solid line).</p>
 </div>
 <div id="fig:aws-signup-1" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-1.png" alt="signup-1" width="500">
 </div>
-<div class="title">Figure 54. Sign up (1) - Accessing AWS Management Console</div>
+<div class="title">Figure 81. Sign up (1) - Accessing AWS Management Console</div>
 </div>
 <div class="paragraph">
-<p>Then, you will be taken to a page where you register your email address and password (<a href="#fig:aws-signup-3">Figure 55</a>).</p>
+<p>Then, you will be taken to a page where you register your email address and password (<a href="#fig:aws-signup-3">Figure 82</a>).</p>
 </div>
 <div id="fig:aws-signup-3" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-3.png" alt="signup-3" width="500">
 </div>
-<div class="title">Figure 55. Sign up (2): Register email and password</div>
+<div class="title">Figure 82. Sign up (2): Register email and password</div>
 </div>
 <div class="paragraph">
-<p>Next, you will be asked to enter your address, phone number, and other information (<a href="#fig:aws-signup-4">Figure 56</a>).</p>
+<p>Next, you will be asked to enter your address, phone number, and other information (<a href="#fig:aws-signup-4">Figure 83</a>).</p>
 </div>
 <div id="fig:aws-signup-4" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-4.png" alt="signup-4" width="500">
 </div>
-<div class="title">Figure 56. Sign up (3): Entering address and phone number</div>
+<div class="title">Figure 83. Sign up (3): Entering address and phone number</div>
 </div>
 <div class="paragraph">
-<p>Next, you will be asked to register your credit card information (<a href="#fig:aws-signup-5">Figure 57</a>).
+<p>Next, you will be asked to register your credit card information (<a href="#fig:aws-signup-5">Figure 84</a>).
 If you are using AWS as an individual, you will be billed for your usage via your credit card.
 Note that you cannot start using AWS without registering your credit card information.</p>
 </div>
@@ -5591,41 +7801,41 @@ Note that you cannot start using AWS without registering your credit card inform
 <div class="content">
 <img src="imgs/signup-5.png" alt="signup-5" width="500">
 </div>
-<div class="title">Figure 57. Sign up (4): Registering a credit card</div>
+<div class="title">Figure 84. Sign up (4): Registering a credit card</div>
 </div>
 <div class="paragraph">
-<p>On the next page, you will be asked to verify your identity using SMS or voice message on your cell phone (<a href="#fig:aws-signup-6">Figure 58</a>).
+<p>On the next page, you will be asked to verify your identity using SMS or voice message on your cell phone (<a href="#fig:aws-signup-6">Figure 85</a>).
 Select your preferred authentication method and enter your cell phone number.</p>
 </div>
 <div id="fig:aws-signup-6" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-6.png" alt="signup-6" width="500">
 </div>
-<div class="title">Figure 58. Sign up (5): Identify verification by cell phone</div>
+<div class="title">Figure 85. Sign up (5): Identify verification by cell phone</div>
 </div>
 <div class="paragraph">
-<p>After successfully verifying your identity, you will be asked to select a support plan (<a href="#fig:aws-signup-8">Figure 59</a>).
+<p>After successfully verifying your identity, you will be asked to select a support plan (<a href="#fig:aws-signup-8">Figure 86</a>).
 You can just select the Basic support plan, which is free.</p>
 </div>
 <div id="fig:aws-signup-8" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-8.png" alt="signup-8" width="500">
 </div>
-<div class="title">Figure 59. Sign up (6): Selecting a support plan</div>
+<div class="title">Figure 86. Sign up (6): Selecting a support plan</div>
 </div>
 <div class="paragraph">
-<p>These steps will complete the creation of your account (<a href="#fig:aws-signup-9">Figure 60</a>).
+<p>These steps will complete the creation of your account (<a href="#fig:aws-signup-9">Figure 87</a>).
 Let&#8217;s log in and see if we can access the AWS console.</p>
 </div>
 <div id="fig:aws-signup-9" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-9.png" alt="signup-9" width="500">
 </div>
-<div class="title">Figure 60. Sign up (7): Sign up is complete!</div>
+<div class="title">Figure 87. Sign up (7): Sign up is complete!</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_secrets">9.2. Creating AWS access key</h3>
+<h3 id="aws_secrets">12.2. Creating AWS access key</h3>
 <div class="paragraph">
 <p>AWS access key is a key used for user authentication when operating the AWS API from the AWS CLI or AWS CDK.
 To use the AWS CLI/CDK, you need to issue a secret key first.
@@ -5638,10 +7848,10 @@ For more information on AWS secret keys, please refer to
 <p>First, log in to your AWS console</p>
 </li>
 <li>
-<p>Then, click on your account name in the upper right corner of the screen, and select "My Security Credentials" from the pull-down menu (<a href="#fig:aws_secret_key_1">Figure 61</a>)</p>
+<p>Then, click on your account name in the upper right corner of the screen, and select "My Security Credentials" from the pull-down menu (<a href="#fig:aws_secret_key_1">Figure 88</a>)</p>
 </li>
 <li>
-<p>Under "Access keys for CLI, SDK, &amp; API access", find the button that says "Create accesss key" and click it (<a href="#fig:aws_secret_key_2">Figure 62</a>)</p>
+<p>Under "Access keys for CLI, SDK, &amp; API access", find the button that says "Create accesss key" and click it (<a href="#fig:aws_secret_key_2">Figure 89</a>)</p>
 </li>
 <li>
 <p>Record the displayed access key ID and secret access key (if you close the window, they will not be displayed again)</p>
@@ -5650,7 +7860,7 @@ For more information on AWS secret keys, please refer to
 <p>If you forget your key, you can reissue it by the same procedure</p>
 </li>
 <li>
-<p>Use the issued secret key by writing it to the file <code>~/.aws/credentials</code> or by setting it to an environment variable (also see <a href="#aws_cli_install">Section 9.3</a>)</p>
+<p>Use the issued secret key by writing it to the file <code>~/.aws/credentials</code> or by setting it to an environment variable (also see <a href="#aws_cli_install">Section 12.3</a>)</p>
 </li>
 </ol>
 </div>
@@ -5658,17 +7868,17 @@ For more information on AWS secret keys, please refer to
 <div class="content">
 <img src="imgs/aws_secret_key_1.png" alt="aws_secret_key_1" width="400">
 </div>
-<div class="title">Figure 61. Creating an AWS secret key (1)</div>
+<div class="title">Figure 88. Creating an AWS secret key (1)</div>
 </div>
 <div id="fig:aws_secret_key_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_2.png" alt="aws_secret_key_2" width="700">
 </div>
-<div class="title">Figure 62. Creating an AWS secret key (2)</div>
+<div class="title">Figure 89. Creating an AWS secret key (2)</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_cli_install">9.3. Installing AWS CLI</h3>
+<h3 id="aws_cli_install">12.3. Installing AWS CLI</h3>
 <div class="paragraph">
 <p>This is a brief description of the installation procedure for Linux at the time of writing.
 Please remember to always check
@@ -5703,7 +7913,7 @@ for the latest information, as it may change in future versions.</p>
 </div>
 <div class="paragraph">
 <p>When you execute this command, you will be prompted to enter the <code>AWS Access Key ID</code> and <code>AWS Secret Access Key</code>.
-See <a href="#aws_secrets">Section 9.2</a> for issuing access keys.
+See <a href="#aws_secrets">Section 12.2</a> for issuing access keys.
 The command also asks for the <code>Default region name</code>.
 You can specify your favorite region (e.g. <code>ap-northeast-1</code> = Tokyo) here.
 The last entry, <code>Default output format</code>, should be <code>json</code>.</p>
@@ -5764,7 +7974,7 @@ If you want to use several different profiles, follow the default example and ad
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_cdk_install">9.4. Installing AWS CDK</h3>
+<h3 id="aws_cdk_install">12.4. Installing AWS CDK</h3>
 <div class="paragraph">
 <p>This is a brief description of the installation procedure for Linux at the time of writing.
 Please remember to always check
@@ -5826,7 +8036,7 @@ If errors occur due to API changes, it is recommended to use version 1.100.0.</p
 <div class="paragraph">
 <p>When you run <code>cdk bootstrap</code>, make sure that your AWS credentials and region are set correctly.
 By default, the default profile in <code>~/.aws/config</code> is used.
-If you want to use a profile other than the default, use the technique described in <a href="#aws_cli_install">Section 9.3</a> to switch profiles.</p>
+If you want to use a profile other than the default, use the technique described in <a href="#aws_cli_install">Section 12.3</a> to switch profiles.</p>
 </div>
 </td>
 </tr>
@@ -5841,7 +8051,7 @@ If you want to use a profile other than the default, use the technique described
 <td class="content">
 <div class="paragraph">
 <p>The configuration of AWS credentials for CDK is basically the same as that of AWS CLI.
-See <a href="#aws_cli_install">Section 9.3</a> for details.</p>
+See <a href="#aws_cli_install">Section 12.3</a> for details.</p>
 </div>
 </td>
 </tr>
@@ -5849,7 +8059,7 @@ See <a href="#aws_cli_install">Section 9.3</a> for details.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec:install_wsl">9.5. Installing WSL</h3>
+<h3 id="sec:install_wsl">12.5. Installing WSL</h3>
 <div class="paragraph">
 <p>In this book, the commands are basically written with a UNIX terminal in mind.
 Linux and Mac users can use the terminal that comes standard with their OS.
@@ -5879,7 +8089,7 @@ For X64 systems, it must be Version 1903, Build 18362 or higher.
 If the version does not support WSL, update Windows first.</p>
 </div>
 <div class="paragraph">
-<p>First, start PowerShell with administrator privileges (<a href="#fig:powershell">Figure 63</a>).
+<p>First, start PowerShell with administrator privileges (<a href="#fig:powershell">Figure 90</a>).
 To do this, type <code>powershell</code> in the search bar of the Windows menu in the lower left corner, and you should find the PowerShell program.
 Then, right-click on it, and select <code>Run as administrator</code> to launch.</p>
 </div>
@@ -5887,7 +8097,7 @@ Then, right-click on it, and select <code>Run as administrator</code> to launch.
 <div class="content">
 <img src="imgs/wsl/powershell.png" alt="powershell" width="500">
 </div>
-<div class="title">Figure 63. Starting PowerShell with administrator privileges</div>
+<div class="title">Figure 90. Starting PowerShell with administrator privileges</div>
 </div>
 <div class="paragraph">
 <p>Once the PowerShell is ready, execute the following command:</p>
@@ -5935,14 +8145,14 @@ In this tutorial, let&#8217;s install <strong>Ubuntu 20.04</strong>.</p>
 </div>
 <div class="paragraph">
 <p>Launch the Microsoft Store app and type <code>Ubuntu</code> in the search bar.
-Open Ubuntu 20.04 LTS and click the "Get" button (<a href="#fig:microsoft_store">Figure 64</a>).
+Open Ubuntu 20.04 LTS and click the "Get" button (<a href="#fig:microsoft_store">Figure 91</a>).
 Wait for a while, and the installation of Ubuntu 20.04 will be completed.</p>
 </div>
 <div id="fig:microsoft_store" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/microsoft_store.png" alt="microsoft_store" width="500">
 </div>
-<div class="title">Figure 64. Installing Ubuntu 20.04 from Microsoft Store</div>
+<div class="title">Figure 91. Installing Ubuntu 20.04 from Microsoft Store</div>
 </div>
 <div class="paragraph">
 <p>The first time you start Ubuntu 20.04, the initial setup will start automatically and you will have to wait for a few minutes.
@@ -5951,24 +8161,24 @@ After the initial setup, you will be prompted to enter your user name and passwo
 <div class="paragraph">
 <p>This completes the installation of WSL2.
 Let&#8217;s launch WSL2!
-Type <code>Ubuntu</code> in the search bar of the Windows menu in the lower left corner, and you should find Ubuntu 20.04 (<a href="#fig:ubuntu">Figure 65</a>).
+Type <code>Ubuntu</code> in the search bar of the Windows menu in the lower left corner, and you should find Ubuntu 20.04 (<a href="#fig:ubuntu">Figure 92</a>).
 Click on it to start it.</p>
 </div>
 <div id="fig:ubuntu" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/ubuntu2004.png" alt="ubuntu2004" width="500">
 </div>
-<div class="title">Figure 65. Launching Ubuntu 20.04</div>
+<div class="title">Figure 92. Launching Ubuntu 20.04</div>
 </div>
 <div class="paragraph">
-<p>This should bring up a black terminal screen (<a href="#fig:wsl_window">Figure 66</a>).
+<p>This should bring up a black terminal screen (<a href="#fig:wsl_window">Figure 93</a>).
 Try typing <code>ls</code>, <code>top</code>, etc. to confirm that WSL is working properly.</p>
 </div>
 <div id="fig:wsl_window" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/wsl_window.png" alt="wsl_window" width="500">
 </div>
-<div class="title">Figure 66. WSL terminal</div>
+<div class="title">Figure 93. WSL terminal</div>
 </div>
 <div class="paragraph">
 <p>Optionally, you can install
@@ -5978,7 +8188,7 @@ We recommend that you to install this tool.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec:install_docker">9.6. Installing Docker</h3>
+<h3 id="sec:install_docker">12.6. Installing Docker</h3>
 <div class="paragraph">
 <p>The installation method of Docker varies depending on the OS.</p>
 </div>
@@ -6052,7 +8262,7 @@ The changes to the group will be reflected in your terminal session.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="venv_quick_guide">9.7. Quick tutorial on Python <code>venv</code></h3>
+<h3 id="venv_quick_guide">12.7. Quick tutorial on Python <code>venv</code></h3>
 <div class="paragraph">
 <p>Many of you may have experienced a situation where a program given to you by someone else does not work because of the library version mismatch.
 If you have only one Python environment in your machine, you will have to re-install the correct version every time you switch projects.
@@ -6092,14 +8302,14 @@ Tools like <code>pyenv</code> and <code>conda</code> require separate installati
 </div>
 </div>
 <div class="paragraph">
-<p>Notice that the shell prompt starts with <code>(.env)</code> (<a href="#fig_venv_prompt">Figure 67</a>).
+<p>Notice that the shell prompt starts with <code>(.env)</code> (<a href="#fig_venv_prompt">Figure 94</a>).
 This is a sign that signifies, "You are now in a venv".</p>
 </div>
 <div id="fig_venv_prompt" class="imageblock text-center">
 <div class="content">
 <img src="imgs/venv_shell.png" alt="venv shell" width="500">
 </div>
-<div class="title">Figure 67. Shell prompt after activating venv</div>
+<div class="title">Figure 94. Shell prompt after activating venv</div>
 </div>
 <div class="paragraph">
 <p>When the virtual Python environment is activated, all subsequent <code>pip</code> commands will install libraries under <code>.env/</code> directory.
@@ -6130,7 +8340,7 @@ If a project you are workin on has a <code>requirements.txt</code> file defined,
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec_handson_docker">9.8. Working with Docker image for the hands-on exercise</h3>
+<h3 id="sec_handson_docker">12.8. Working with Docker image for the hands-on exercise</h3>
 <div class="paragraph">
 <p>We prepared a Docker image with Node.js, Python, AWS CDK, etc. installed, which is necessary to run the hands-on exercises.
 Using this image, you can run the hands-on code immediately without having to install anything on your local machine.</p>
@@ -6192,7 +8402,7 @@ Since each hands-on uses different dependent libraries, the design is to create 
 </div>
 <div class="paragraph">
 <p>Don&#8217;t forget to set your AWS credentials.
-An easy way to do this is to set environment variables such as <code>AWS_ACCESS_KEY_ID</code> as described in <a href="#aws_cli_install">Section 9.3</a>.
+An easy way to do this is to set environment variables such as <code>AWS_ACCESS_KEY_ID</code> as described in <a href="#aws_cli_install">Section 12.3</a>.
 Alternatively, if your credentials are stored in local machine&#8217;s <code>~/.aws/credentials</code>, you can <strong>mount</strong> this directory in the container and refer to the same credentials file from inside the container.
 If you take this option, start the container with the following command.</p>
 </div>
@@ -6233,7 +8443,7 @@ The technique of mounting the authentication file described here can also be use
 <div id="footer">
 <div id="footer-text">
 Version 1.0-en<br>
-Last updated 2021-09-24 05:38:28 UTC
+Last updated 2021-09-29 05:56:44 UTC
 </div>
 </div>
 <style>
