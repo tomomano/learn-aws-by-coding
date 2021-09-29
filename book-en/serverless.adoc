@@ -308,13 +308,12 @@ Orchestration between serverless services.
 **Is serverless architecture a solution for everything?**
 
 We think the answer to this question is no.
-
-However, as it is still a new technology, it has several disadvantages or limitations compared to serverful system.
+Serveless is still a new technology, and it has several disadvantages or limitations compared to serverful system.
 
 One major disadvantage is that serverless systems are specific to each cloud platform, so they can only be operated on a particular platform.
 Migrating a serverless system created in AWS to Google's cloud, for example, would require a rather large rewrite of the program.
 On the other hand, for serverful systems, migration between platforms is relatively easy.
-Cloud providers may want to increase the dependency on their own systems in order to keep their customers...
+This is probably the cloud providers' buisiness strategy to increase the dependency on their own systems and keep their customers.
 
 Other limitations and future challenges of serverless computing are discussed in detail in the following paper.
 
