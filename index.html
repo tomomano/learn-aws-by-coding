@@ -527,7 +527,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_auto_scaling_groups_asg">9.1. Auto scaling groups (ASG)</a></li>
 <li><a href="#_aws_batch">9.2. AWS Batch</a></li>
 <li><a href="#_準備_2">9.3. 準備</a></li>
-<li><a href="#_mnist_手書き文字認識_再訪">9.4. MNIST 手書き文字認識 (再訪)</a></li>
+<li><a href="#sec_run_mnist_docker_local">9.4. MNIST 手書き文字認識 (再訪)</a></li>
 <li><a href="#sec:aws_batch_code">9.5. アプリケーションの説明</a></li>
 <li><a href="#_スタックのデプロイ_3">9.6. スタックのデプロイ</a></li>
 <li><a href="#sec:aws_batch_deploy_docker_on_ecr">9.7. Docker image を ECR に配置する</a></li>
@@ -564,7 +564,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_アプリケーションの説明_4">13.2. アプリケーションの説明</a></li>
 <li><a href="#_アプリケーションのデプロイ">13.3. アプリケーションのデプロイ</a></li>
 <li><a href="#sec:bashoutter_test_api">13.4. API リクエストを送信する</a></li>
-<li><a href="#_大量の_api_リクエストをシミュレートする">13.5. 大量の API リクエストをシミュレートする</a></li>
+<li><a href="#simulating_many_apis">13.5. 大量の API リクエストをシミュレートする</a></li>
 <li><a href="#_bashoutter_gui_を動かしてみる">13.6. Bashoutter GUI を動かしてみる</a></li>
 <li><a href="#_アプリケーションの削除">13.7. アプリケーションの削除</a></li>
 <li><a href="#_小括_3">13.8. 小括</a></li>
@@ -5815,7 +5815,7 @@ Job queues は Compute environment の空き状況を監視しており， そ�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_mnist_手書き文字認識_再訪">9.4. MNIST 手書き文字認識 (再訪)</h3>
+<h3 id="sec_run_mnist_docker_local">9.4. MNIST 手書き文字認識 (再訪)</h3>
 <div class="paragraph">
 <p>今回のハンズオンでは，機械学習のハイパーパラメータ調整を取り上げると冒頭で述べた．
 その最もシンプルな例題として， <a href="#sec_mnist_using_jupyter">Section 6.7</a> で扱った MNIST 手書き文字認識の問題を再度取り上げよう．
@@ -6218,7 +6218,7 @@ Early stopping とは，検証データの Loss を追跡し，それが減少�
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>で，ジョブが計算結果を S3 に書き込むことができるよう， IAM ロールを定義している．
-(IAM とはリソースがもつ権限を管理する仕組みである．詳しくは <a href="#sec:bashoutter_iam">[sec:bashoutter_iam]</a> を参照)</td>
+(IAM とはリソースがもつ権限を管理する仕組みである．詳しくは <a href="#sec:bashoutter_iam">Section 13.2.5</a> を参照)</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -6526,7 +6526,7 @@ Batch は ECR からイメージを pull してくることで，タスクを実
 </div>
 <div class="paragraph">
 <p><code>submit_job()</code> 関数について簡単に説明しよう．
-<a href="#sec_run_mnist_docker_local">[sec_run_mnist_docker_local]</a> で， MNIST の Docker をローカルで実行したとき，次のようなコマンドを使用した．</p>
+<a href="#sec_run_mnist_docker_local">Section 9.4</a> で， MNIST の Docker をローカルで実行したとき，次のようなコマンドを使用した．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7786,31 +7786,16 @@ AWS で作成したサーバーレスのシステムを， Google のクラウ�
 <div class="sectionbody">
 <div class="paragraph">
 <p>前章ではサーバーレスアーキテクチャの概要の説明を行った．
-今回のハンズオンでは，サーバーレスクラウドを実際に動かしながら，具体的な使用方法を学んでいこう．</p>
-</div>
-<div class="paragraph">
-<p>今回のハンズオンで触れるのは以下の3つである．
+本章では，ハンズオン形式でサーバーレスクラウドを実際に動かしながら，具体的な使用方法を学んでいこう．
+今回のハンズオンでは Lambda, S3, DynamoDB の三つのサーバーレスクラウドの構成要素に触れていく．
 それぞれについて，短いチュートリアルを用意してある．</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Lambda: サーバーレスの計算エンジン</p>
-</li>
-<li>
-<p>DynamoDB: サーバーレス・データベース</p>
-</li>
-<li>
-<p>S3: サーバーレス・ストレージ</p>
-</li>
-</ul>
 </div>
 <div class="sect2">
 <h3 id="_lambda_ハンズオン">12.1. Lambda ハンズオン</h3>
 <div class="paragraph">
 <p>まずは， Lambda を実際に動かしてみよう．
 ハンズオンのソースコードは GitHub の
-<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda">/handson/serverless/lambda</a>
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda">handson/serverless/lambda</a>
 に置いてある．</p>
 </div>
 <div class="paragraph">
@@ -7840,7 +7825,7 @@ Lambda のワークフローを体験する目的で最小限の設定である�
 </table>
 </div>
 <div class="paragraph">
-<p><a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda/app.py">app.py</a> にデプロイするプログラムが書かれている．
+<p><a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/app.py">app.py</a> にデプロイするプログラムが書かれている．
 中身を見てみよう．</p>
 </div>
 <div class="listingblock">
@@ -7878,8 +7863,8 @@ import time
 from random import choice, randint
 def handler(event, context):
     time.sleep(randint(2,5))
-    pokemon = ["Charmander", "Bulbasaur", "Squirtle"]
-    message = "Congratulations! You are given " + choice(pokemon)
+    sushi = ["salmon", "tuna", "squid"]
+    message = "Welcome to Cloud Sushi. Your order is " + choice(sushi)
     print(message)
     return message
 """</span>
@@ -7907,8 +7892,7 @@ def handler(event, context):
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
 <td>ここで， Lambda で実行されるべき関数を定義している．
-これは非常に単純な関数で，2-5秒のランダムな時間スリープした後，["Charmander", "Bulbasaur", "Squirtle"] のいずれかの文字列をランダムに返す
-(これらは初代ポケットモンスターのゲームでオーキド博士にもらうヒトカゲ・フシギダネ・ゼニガメのことだ)．</td>
+これは非常に単純な関数で，2-5秒のランダムな時間スリープした後，["salmon", "tuna", "squid"] のいずれかの文字列をランダムに選択し， "Welcome to Cloud Sushi. Your order is XXXX" (XXXX は選ばれた寿司のネタ) というメッセージをリターンする．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -8030,7 +8014,9 @@ Python3.7 のほかに， Node.js, Java, Ruby, Go などの言語を指定する
 <div class="paragraph">
 <p>それでは，作成した Lambda 関数を実行 (invoke) してみよう．
 AWS の API を使うことで，関数の実行をスタートすることができる．
-今回は， <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_one.py">invoke_one.py</a> に関数を実行するための簡単なプログラムを提供している．
+今回は，
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_one.py">handson/serverless/lambda/invoke_one.py</a>
+に関数を実行するための簡単なプログラムを提供している．
 興味のある読者はコードを読んでもらいたい．</p>
 </div>
 <div class="paragraph">
@@ -8043,16 +8029,18 @@ AWS の API を使うことで，関数の実行をスタートすることが�
 </div>
 </div>
 <div class="paragraph">
-<p>すると， <code>"Congratulations! You are given Squirtle"</code> という出力が得られるはずだ．
-とてもシンプルではあるが，クラウド上で先ほどの関数が走り，乱数が生成されたうえで，ポケモンが選択されて出力が返されている．
-このコマンドを何度か打ってみて，実行ごとに異なるポケモンが返されることを確認しよう．</p>
+<p>すると， <code>"Welcome to Cloud Sushi. Your order is salmon"</code> という出力が得られるはずだ．
+とてもシンプルではあるが，クラウド上で先ほどの関数が走り，乱数が生成されたうえで，ランダムな寿司ネタが選択されて出力が返されている．
+このコマンドを何度か打ってみて，実行ごとに異なる寿司ネタが返されることを確認しよう．</p>
 </div>
 <div class="paragraph">
 <p>さて，このコマンドは，一度につき一回の関数を実行したわけであるが， Lambda の本領は一度に大量のタスクを同時に実行できる点である．
-そこで，今度は一度に100個のタスクを同時に送信してみよう．</p>
+そこで，今度は一度に100個のタスクを同時に送信してみよう．
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_many.py">handson/serverless/lambda/invoke_many.py</a>
+のスクリプトを使用する．</p>
 </div>
 <div class="paragraph">
-<p>次のコマンドを実行する．
+<p>次のコマンドを実行しよう．
 XXXX の部分は前述と同様に置き換える．
 第二引数の <code>100</code> は 100個のタスクを投入せよ，という意味である．</p>
 </div>
@@ -8128,10 +8116,8 @@ Lambda はそのような大量のリクエストにも対応できることが�
 <div class="sect3">
 <h4 id="_スタックの削除_3">12.1.3. スタックの削除</h4>
 <div class="paragraph">
-<p>最後にスタックを削除しよう．</p>
-</div>
-<div class="paragraph">
-<p>スタックを削除するには，次のコマンドを実行すればよい．</p>
+<p>最後にスタックを削除しよう．
+スタックを削除するには，次のコマンドを実行すればよい．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8174,7 +8160,8 @@ STEP 1 では，AWS CDK を使用して DynamoDB のテーブルを初期化し�
 </table>
 </div>
 <div class="paragraph">
-<p><a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/app.py">app.py</a> にデプロイするプログラムが書かれている．
+<p><a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/app.py">handson/serverless/dynamodb/app.py</a>
+にデプロイするプログラムが書かれている．
 中身を見てみよう．</p>
 </div>
 <div class="listingblock">
@@ -8192,17 +8179,23 @@ STEP 1 では，AWS CDK を使用して DynamoDB のテーブルを初期化し�
 11
 12
 13
+14
+15
+16
 </pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">SimpleDynamoDb</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">Stack</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">App</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">table</span> <span class="o">=</span> <span class="n">ddb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="s">"SimpleTable"</span><span class="p">,</span>
+            <i class="conum" data-value="1"></i><b>(1)</b>
             <span class="n">partition_key</span><span class="o">=</span><span class="n">ddb</span><span class="o">.</span><span class="n">Attribute</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="s">"item_id"</span><span class="p">,</span>
                 <span class="nb">type</span><span class="o">=</span><span class="n">ddb</span><span class="o">.</span><span class="n">AttributeType</span><span class="o">.</span><span class="n">STRING</span>
             <span class="p">),</span>
+            <i class="conum" data-value="2"></i><b>(2)</b>
             <span class="n">billing_mode</span><span class="o">=</span><span class="n">ddb</span><span class="o">.</span><span class="n">BillingMode</span><span class="o">.</span><span class="n">PAY_PER_REQUEST</span><span class="p">,</span>
+            <i class="conum" data-value="3"></i><b>(3)</b>
             <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span>
         <span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre>
@@ -8212,37 +8205,39 @@ STEP 1 では，AWS CDK を使用して DynamoDB のテーブルを初期化し�
 <p>このコードで，最低限の設定がなされた空の DynamoDB テーブルが作成される．
 それぞれのパラメータの意味を簡単に解説しよう．</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>partition_key</code>:
-すべての DynamoDB テーブルには Partition Key が定義されていなければならない．
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>partition_key</code>:
+すべての DynamoDB テーブルには Partition key が定義されていなければならない．
 Partition key とは，テーブル内の要素 (レコード) ごとに存在する固有のIDのことである．
 同一の Partition key をもった要素がテーブルの中に二つ以上存在することはできない
 (注: Sort Key を使用している場合は除く．詳しくは <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html">公式ドキュメンテーション "Core Components of Amazon DynamoDB"</a> 参照)．
 また， Partition key が定義されていない要素はテーブルの中に存在することはできない．
-ここでは， Partition key に <code>item_id</code> という名前をつけている．</p>
-</li>
-<li>
-<p><code>billing_mode</code>:
+ここでは， Partition key に <code>item_id</code> という名前をつけている．</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>billing_mode</code>:
 <code>ddb.BillingMode.PAY_PER_REQUEST</code> を指定することで，
 <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html#HowItWorks.OnDemand">On-demand Capacity Mode</a>
 の DynamoDB が作成される．
-ほかに <code>PROVISIONED</code> というモードがあるが，これはかなり高度なケースを除いて使用しないだろう．</p>
-</li>
-<li>
-<p><code>removal_policy</code>: CloudFormation のスタックが消去されたときに， DynamoDB も一緒に消去されるかどうかを指定する．
+ほかに <code>PROVISIONED</code> というモードがあるが，これはかなり高度なケースを除いて使用しないだろう．</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><code>removal_policy</code>: CloudFormation のスタックが消去されたときに， DynamoDB も一緒に消去されるかどうかを指定する．
 このコードでは <code>DESTROY</code> を選んでいるので，すべて消去される．
-ほかのオプションを選択すると，スタックを消去しても DynamoDB のバックアップを残す，などの動作を定義することができる．</p>
-</li>
-</ul>
+ほかのオプションを選択すると，スタックを消去しても DynamoDB のバックアップを残す，などの動作を定義することができる．</td>
+</tr>
+</table>
 </div>
 <div class="sect3">
 <h4 id="sec:serverless_dynamodb_deploy">12.2.1. デプロイ</h4>
 <div class="paragraph">
 <p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
-それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
 シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </div>
 <div class="listingblock">
@@ -8281,7 +8276,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 <div class="title">Figure 89. DynamoDB のコンソール (テーブルの一覧)</div>
 </div>
 <div class="paragraph">
-<p>今回のアプリケーションで作成したのが <code>SimpleDynamoDb</code> ではじまるランダムな名前のついたテーブルだ．
+<p>今回のアプリケーションで作成したのが <code>SimpleDynamoDb</code> で始まるランダムな名前のついたテーブルだ．
 テーブルの名前をクリックして，詳細を見てみる．
 すると <a href="#handson_04_dynamodb_table_detail">Figure 90</a> のような画面が表示されるはずだ．
 "Items" のタブをクリックすると，テーブルの中のレコードを確認できる．
@@ -8302,7 +8297,9 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 </div>
 <div class="paragraph">
 <p>まずは，テーブルに新しい要素を追加してみよう．
-ハンズオンのディレクトリにある <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/simple_write.py">simple_write.py</a> を開いてみよう．
+ハンズオンのディレクトリにある
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/simple_write.py">simple_write.py</a>
+を開いてみよう．
 中には次のような関数が書かれている．</p>
 </div>
 <div class="listingblock">
@@ -8340,7 +8337,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 </div>
 <div class="paragraph">
 <p>コードを上から読んでいくと，まず最初に boto3 ライブラリをインポートし， <code>dynamodb</code> のリソースを呼び出している．
-<code>write_item()</code> 関数は， DynamoDB のテーブルの名前 (上で見たSimpleDynamoDb-YYYY) を引数として受け取る．
+<code>write_item()</code> 関数は， DynamoDB のテーブルの名前 (上で見たSimpleDynamoDb-XXXX) を引数として受け取る．
 そして， <code>put_item()</code> メソッドを呼ぶことで，新しいアイテムを DB に書き込んでいる．
 アイテムには <code>item_id</code>, <code>first_name</code>, <code>last_name</code>, <code>age</code> の4つの属性が定義されている．
 ここで， <code>item_id</code> は先ほど説明した Partition key に相当しており，
@@ -8369,7 +8366,9 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 </div>
 <div class="paragraph">
 <p>boto3 を使ってテーブルから要素を読みだすことも可能である．
-ハンズオンのディレクトリにある <a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/simple_read.py">simple_read.py</a> を見てみよう．</p>
+ハンズオンのディレクトリにある
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/simple_read.py">simple_read.py</a>
+を見てみよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8413,7 +8412,8 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 </div>
 <div class="paragraph">
 <p>そこで，ここでは一度に大量のデータを書き込む場合をシミュレートしてみよう．
-<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py">batch_rw.py</a> に，一度に大量の書き込みを実行するためのプログラムが書いてある．</p>
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py">batch_rw.py</a>
+に，一度に大量の書き込みを実行するためのプログラムが書いてある．</p>
 </div>
 <div class="paragraph">
 <p>次のコマンドを実行してみよう (XXXX は自分のテーブルの名前に置き換える)．</p>
@@ -8461,7 +8461,7 @@ Partition key とは，テーブル内の要素 (レコード) ごとに存在�
 <div class="paragraph">
 <p>最後に， S3 の簡単なチュートリアルを紹介する．
 ハンズオンのソースコードは GitHub の
-<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3">/handson/serverless/s3</a>
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3">handson/serverless/s3</a>
 に置いてある．</p>
 </div>
 <div class="paragraph">
@@ -8490,7 +8490,8 @@ STEP 1 として， AWS CDK を用いて S3 に新しい空のバケット (Buck
 </table>
 </div>
 <div class="paragraph">
-<p><a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3/app.py">app.py</a> にデプロイするプログラムが書かれている．
+<p><a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/s3/app.py">app.py</a>
+にデプロイするプログラムが書かれている．
 中身を見てみよう．</p>
 </div>
 <div class="listingblock">
@@ -8590,8 +8591,11 @@ STEP 1 として， AWS CDK を用いて S3 に新しい空のバケット (Buck
 </div>
 </div>
 <div class="paragraph">
-<p>ハンズオンのディレクトリにある <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/s3/simple_s3.py">simple_s3.py</a> に
-<a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">boto3</a> ライブラリを使用した S3 のファイルのアップロード・ダウンロードのスクリプトが書いてある．
+<p>ハンズオンのディレクトリにある
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/s3/simple_s3.py">simple_s3.py</a>
+に
+<a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">boto3</a>
+ライブラリを使用した S3 のファイルのアップロード・ダウンロードのスクリプトが書いてある．
 <code>simple_s3.py</code> を使って，上で作成した <code>tmp.txt</code> を以下のコマンドによりバケットにアップロードする．
 <code>XXXX</code> のところは，自分自身のバケットの名前で置き換えること．</p>
 </div>
@@ -8634,11 +8638,11 @@ Key という呼び方は， S3 が <a href="https://en.wikipedia.org/wiki/Objec
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>$ python simple_s3.py XXXX upload tmp.txt --key /a/b/tmp.txt</pre>
+<pre>$ python simple_s3.py XXXX upload tmp.txt --key a/b/tmp.txt</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>上ではアップロードされたファイルに <code>a/b/tmp.txt</code> という Key を割り当てている．</p>
+<p>ここではアップロードされたファイルに <code>a/b/tmp.txt</code> という Key を割り当てている．</p>
 </div>
 <div class="paragraph">
 <p>ここまでコマンドを実行し終えたところで，一度 AWS コンソールに行き S3 の中身を確認してみよう．
@@ -8653,7 +8657,7 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 <div class="title">Figure 94. S3 バケットの中のファイル一覧</div>
 </div>
 <div class="paragraph">
-<p>上で実行した2つのコマンドによって， <code>tmp.txt</code> というファイルと， <code>a/b/tmp.txt</code> というファイルが見つかることに注目しよう．
+<p>ここで実行した2つのコマンドによって， <code>tmp.txt</code> というファイルと， <code>a/b/tmp.txt</code> というファイルが見つかることに注目しよう．
 従来的なファイルシステムと似た体験を提供するため， S3 では Key が <strong>"/" (スラッシュ)</strong> によって区切られていた場合，<strong>ツリー状の階層構造</strong>によってファイルを管理することができる．</p>
 </div>
 <div class="admonitionblock note">
@@ -8673,7 +8677,7 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 </div>
 <div class="paragraph">
 <p>次に，バケットからファイルのダウンロードを実行してみよう．
-<code>simple_s3.py</code> を使って，以下のコマンドを実行すれば良い．
+<code>simple_s3.py</code> を使って，以下のコマンドを実行すればよい．
 <code>XXXX</code> のところは，自分自身のバケットの名前で置き換えること．</p>
 </div>
 <div class="listingblock">
@@ -8712,10 +8716,8 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 <h4 id="_スタックの削除_5">12.3.3. スタックの削除</h4>
 <div class="paragraph">
 <p>以上のハンズオンで， S3 の一番基本的な使い方を紹介した．
-ここまでのハンズオンが理解できたら，忘れずにスタックを削除しよう．</p>
-</div>
-<div class="paragraph">
-<p>これまでのハンズオンと同様，スタックを削除するには，次のコマンドを実行すればよい．</p>
+ここまでのハンズオンが理解できたら，忘れずにスタックを削除しよう．
+これまでのハンズオンと同様，スタックを削除するには，次のコマンドを実行すればよい．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8732,13 +8734,25 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 <div class="paragraph">
 <p>さて，最後のハンズオンとなる第六回では，これまで学んできたサーバーレスクラウドの技術を使って，簡単なウェブサービスを作ってみよう．
 具体的には，人々が自分の作った俳句を投稿するSNSサービス (<strong>Bashoutter</strong> と名付ける) を作成してみよう．
-これまでの講義の集大成として，コードの長さとしては最も長くなっているが，頑張ってついてきてもらいたい．
+Lambda, DynamoDB, S3 などの技術をすべて盛り込み，シンプルながらもサーバーレスの利点を生かしたスケーラブルな SNS アプリが誕生する．
 最終的には， <a href="#handson_05_bashoutter">Figure 95</a> のような，ミニマルではあるがとても現代風な SNS サイトが完成する！</p>
 </div>
+<div id="handson_05_bashoutter" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/bashoutter.png" alt="bashoutter" width="700">
+</div>
+<div class="title">Figure 95. ハンズオン#6で作製する SNS アプリケーション "Bashoutter"</div>
+</div>
+<div class="sect2">
+<h3 id="_準備_3">13.1. 準備</h3>
 <div class="paragraph">
 <p>ハンズオンのソースコードは GitHub の
-<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter">/handson/bashoutter</a>
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter">handson/bashoutter</a>
 に置いてある．</p>
+</div>
+<div class="paragraph">
+<p>本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<a href="#handson_01_prep">Section 4.1</a>) が整っていることを前提とする．
+それ以外に必要な準備はない．</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -8754,17 +8768,6 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 </tr>
 </table>
 </div>
-<div id="handson_05_bashoutter" class="imageblock text-center">
-<div class="content">
-<img src="imgs/handson-bashoutter/bashoutter.png" alt="bashoutter" width="700">
-</div>
-<div class="title">Figure 95. ハンズオン#5で作製する SNS アプリケーション "Bashoutter"</div>
-</div>
-<div class="sect2">
-<h3 id="_準備_3">13.1. 準備</h3>
-<div class="paragraph">
-<p>本ハンズオンの実行には，第一回ハンズオンで説明した準備 (<a href="#handson_01_prep">Section 4.1</a>) が整っていることを前提とする．それ以外に必要な準備はない．</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_アプリケーションの説明_4">13.2. アプリケーションの説明</h3>
@@ -8772,10 +8775,12 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 <h4 id="_api">13.2.1. API</h4>
 <div class="paragraph">
 <p>今回のアプリケーションでは，人々からの俳句の投稿を受け付けたり，投稿された俳句の一覧を取得する，といった機能を実装したい．
-この機能を実現するための最小限の設計として， <a href="#tab_handson_05_api">Table 11</a> に示すような四つの REST API を今回は実装する．</p>
+この機能を実現するための最小限の設計として， <a href="#tab_handson_05_api">Table 11</a> に示すような四つの REST API を今回は実装する．
+俳句を投稿する，閲覧する，削除するという基本的なデータ操作を行うための API が完備されている．
+また， <code>PATCH /haiku/{item_id}</code> は， <code>{item_id}</code> で指定された俳句に”いいね”をするために使用する．</p>
 </div>
 <table id="tab_handson_05_api" class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. Hands-on #5 で実装するAPI</caption>
+<caption class="title">Table 11. Bashoutter API</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -8800,7 +8805,9 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 </tbody>
 </table>
 <div class="paragraph">
-<p>それぞれのAPIのパラメータおよび返り値の詳細は，ハンズオンのソースコードの中の <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/specs/swagger.yml">swagger.yml</a> に定義してある．</p>
+<p>それぞれのAPIのパラメータおよび返り値の詳細は，ハンズオンのソースコードの中の
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/specs/swagger.yml">swagger.yml</a>
+に定義してある．</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -8812,7 +8819,8 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 <div class="paragraph">
 <p><strong>Open API Specification</strong> (OAS; 少し前は Swagger Specification とよばれていた) は， REST API のための記述フォーマットである．
 OAS に従って API の仕様が記述されていると，簡単にドキュメンテーションを生成したり，クライアントアプリケーションを自動生成することができる．
-<a href="https://gitlab.com/tomomano/intro-aws/-/blob/master/handson/05-bashoutter/specs/swagger.yml">今回用意したAPI仕様</a> も， OAS に従って書いてあるので，非常に見やすいドキュメンテーションを瞬時に生成できる．
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/specs/swagger.yml">今回用意したAPI仕様</a>
+も， OAS に従って書いてある．
 詳しくは
 <a href="https://swagger.io/docs/specification/about/">Swagger の公式ドキュメンテーション</a>
 などを参照．</p>
@@ -8856,7 +8864,8 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 </ul>
 </div>
 <div class="paragraph">
-<p>それでは，プログラムのソースコードを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/app.py">/handson/bashoutter/app.py</a>)．</p>
+<p>それでは，プログラムのソースコードを見てみよう
+(<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/app.py">handson/bashoutter/app.py</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9082,12 +9091,12 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 <td><i class="conum" data-value="3"></i><b>3</b></td>
 <td>それぞれの API で実行される Lambda 関数を定義している．
 関数は Python3.7 で書かれており，コードは
-<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py">/handson/bashoutter/api/api.py</a>
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py">handson/bashoutter/api/api.py</a>
 にある．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>&lt;2&gt; で定義された Lambda 関数に対し，データベースへの読み書きのアクセス権限を付与している．</td>
+<td>&lt;3&gt; で定義された Lambda 関数に対し，データベースへの読み書きのアクセス権限を付与している．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -9122,10 +9131,8 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 </div>
 </div>
 <div class="paragraph">
-<p>ここで注目してほしいのは <code>public_read_access=True</code> の部分だ．</p>
-</div>
-<div class="paragraph">
-<p>前章で， S3 について説明を行ったときには触れなかったが， S3 には <strong>Public access mode</strong> という機能がある．
+<p>ここで注目してほしいのは <code>public_read_access=True</code> の部分だ．
+前章で， S3 について説明を行ったときには触れなかったが， S3 には <strong>Public access mode</strong> という機能がある．
 Public access mode をオンにしておくと，バケットの中のファイルは認証なしで (i.e. インターネット上の誰でも) 閲覧できるようになる．
 この設定は，一般公開されているウェブサイトの静的なコンテンツを置いておくのに最適であり，多くのサーバーレスによるウェブサービスでこのような設計が行われる．
 public access mode を設定しておくと， <code><a href="http://XXXX.s3-website-ap-northeast-1.amazonaws.com/" class="bare">http://XXXX.s3-website-ap-northeast-1.amazonaws.com/</a></code> のような固有の URL がバケットに対して付与される．
@@ -9199,7 +9206,7 @@ CloudFront についての詳細は
 <p>このコードの意味は， <code>./gui/dist</code> のディレクトリの中にあるファイルをバケットに配置せよ，と言っている．
 <code>./gui/dist</code> にはビルド済みのウェブサイトの静的コンテンツ (HTML/CSS/JavaScript) が入っている．
 今回は GUI の説明はとくに行わないが，コードは
-<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter/gui">/handson/bashoutter/gui</a>
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter/gui">handson/bashoutter/gui</a>
 のディレクトリの中にある．
 興味のある読者は中身を確認してみるとよい．</p>
 </div>
@@ -9223,7 +9230,7 @@ Vue を使うことで， Single page application (SPA) の技術でウェブサ
 <h4 id="_api_のハンドラ関数">13.2.4. API のハンドラ関数</h4>
 <div class="paragraph">
 <p>API リクエストが来たときに，リクエストされた処理を行う関数のことをハンドラ (handler) 関数とよぶ．
-<code>GET /haiku</code> の API に対してのハンドラ関数を定義している部分を見てみよう．</p>
+<code>GET /haiku</code> の API に対してのハンドラ関数を Lambda で定義している部分を見てみよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9247,8 +9254,11 @@ Vue を使うことで， Single page application (SPA) の技術でウェブサ
 <div class="paragraph">
 <p>簡単なところから見ていくと， <code>memory_size=512</code> の箇所でメモリーの使用量を512MBに指定している．
 また， <code>code=_lambda.Code.from_asset("api")</code> によって外部のディレクトリ (<code>api/</code>) を参照せよと指定しており，
-<code>handler="api.get_haiku"</code> のところで <code>api.py</code> というファイルの <code>get_haiku()</code> という関数をハンドラ関数として実行せよ，と定義している．
-次に，ハンドラ関数として使用されている <code>get_haiku()</code> のコードを見てみよう (<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py">/handson/bashoutter/api/api.py</a>)．</p>
+<code>handler="api.get_haiku"</code> のところで <code>api.py</code> というファイルの <code>get_haiku()</code> という関数をハンドラ関数として実行せよ，と定義している．</p>
+</div>
+<div class="paragraph">
+<p>次に，ハンドラ関数として使用されている <code>get_haiku()</code> のコードを見てみよう
+(<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py">handson/bashoutter/api/api.py</a>)．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9321,7 +9331,7 @@ DynamoDB の <code>scan()</code> メソッドは，最大で 1MB までのデー
 </div>
 </div>
 <div class="sect3">
-<h4 id="_aws_における権限の管理_iam">13.2.5. AWS における権限の管理 (IAM)</h4>
+<h4 id="sec:bashoutter_iam">13.2.5. AWS における権限の管理 (IAM)</h4>
 <div class="paragraph">
 <p>以下の部分のコードに注目してほしい．</p>
 </div>
@@ -9345,7 +9355,10 @@ Lambdaは，デフォルトの状態ではほかのリソースにアクセス�
 したがって， Lambda 関数が DynamoDB のデータを読み書きするためには，それを許可するような IAM が Lambda 関数に付与されていなければならない．</p>
 </div>
 <div class="paragraph">
-<p>CDK による <code>dynamodb.Table</code> オブジェクトには <code>grant_read_write_data()</code> という便利なメソッドが備わっており，アクセスを許可したい Lambda 関数を引数としてこのメソッドを呼ぶことで，データベースへの読み書きを許可する IAM を付与することができる．</p>
+<p>CDK による <code>dynamodb.Table</code> オブジェクトには <code>grant_read_write_data()</code> という便利なメソッドが備わっており，アクセスを許可したい Lambda 関数を引数としてこのメソッドを呼ぶことで，データベースへの読み書きを許可する IAM を付与することができる．
+同様に，CDK の <code>s3.Bucket</code> オブジェクトにも <code>grant_read_write()</code> というメソッドが備わっており，これによってバケットへの読み書きを許可することができる．
+このメソッドは，実は <a href="#sec_aws_batch">Section 9</a> で AWS Batch によるクラスターを構成した際に使用した．
+興味のある読者は振り返ってコードを確認してみよう．</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -9369,11 +9382,18 @@ Lambdaは，デフォルトの状態ではほかのリソースにアクセス�
 <div class="sect3">
 <h4 id="_api_gateway">13.2.6. API Gateway</h4>
 <div class="paragraph">
-<p><a href="https://aws.amazon.com/api-gateway/">API Gateway</a> とは， API の"入り口"として，APIのリクエストパスに従って Lambda 関数などに接続を行うという機能を担う．
-このような API のリソースパスに応じて接続先を振り分けるようなサーバーを<strong>ルーター</strong>，あるいは<strong>リバースプロキシ</strong>とよんだりする．
+<p><a href="https://aws.amazon.com/api-gateway/">API Gateway</a> とは， API の"入り口"として，APIのリクエストパスに従って Lambda や EC2 などに接続を行うという機能を担う (<a href="#fig:bashoutter_api_gateway">Figure 97</a>)．
+Lambda や EC2 によって行われた処理の結果は，再び API Gateway を経由してクライアントに返される．
+このように，クライアントとバックエンドサーバーの間に立ち， API のリソースパスに応じて接続先を振り分けるようなサーバーを<strong>ルーター</strong>，あるいは<strong>リバースプロキシ</strong>とよんだりする．
 従来的には，ルーターにはそれ専用の仮想サーバーが置かれることが一般的であった．
 しかし， API Gateway はサーバーレスなルーターとして，固定されたサーバーを配置することなく， API のリクエストが来たときのみ起動し，API のルーティングを実行する．
 サーバーレスであることの当然の帰結として，アクセスの件数が増大したときにはそれにルーティングの処理能力を自動で増やす機能も備わっている．</p>
+</div>
+<div id="fig:bashoutter_api_gateway" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/api_gateway.png" alt="api_gateway" width="700">
+</div>
+<div class="title">Figure 97. API Gateway</div>
 </div>
 <div class="paragraph">
 <p>API Gateway を配置することで，大量 (1秒間に数千から数万件) の API リクエストに対応することのできるシステムを容易に構築することができる．
@@ -9443,7 +9463,13 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 12</a>
 25
 26
 27
-</pre></td><td class="code"><pre><span class="n">api</span> <span class="o">=</span> <span class="n">apigw</span><span class="o">.</span><span class="n">RestApi</span><span class="p">(</span>
+28
+29
+30
+31
+32
+</pre></td><td class="code"><pre><i class="conum" data-value="1"></i><b>(1)</b>
+<span class="n">api</span> <span class="o">=</span> <span class="n">apigw</span><span class="o">.</span><span class="n">RestApi</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="s">"BashoutterApi"</span><span class="p">,</span>
     <span class="n">default_cors_preflight_options</span><span class="o">=</span><span class="n">apigw</span><span class="o">.</span><span class="n">CorsOptions</span><span class="p">(</span>
         <span class="n">allow_origins</span><span class="o">=</span><span class="n">apigw</span><span class="o">.</span><span class="n">Cors</span><span class="o">.</span><span class="n">ALL_ORIGINS</span><span class="p">,</span>
@@ -9451,7 +9477,9 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 12</a>
     <span class="p">)</span>
 <span class="p">)</span>
 
+<i class="conum" data-value="2"></i><b>(2)</b>
 <span class="n">haiku</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="s">"haiku"</span><span class="p">)</span>
+<i class="conum" data-value="3"></i><b>(3)</b>
 <span class="n">haiku</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span>
     <span class="s">"GET"</span><span class="p">,</span>
     <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">get_haiku_lambda</span><span class="p">)</span>
@@ -9461,7 +9489,9 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 12</a>
     <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">post_haiku_lambda</span><span class="p">)</span>
 <span class="p">)</span>
 
+<i class="conum" data-value="4"></i><b>(4)</b>
 <span class="n">haiku_item_id</span> <span class="o">=</span> <span class="n">haiku</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="s">"{item_id}"</span><span class="p">)</span>
+<i class="conum" data-value="5"></i><b>(5)</b>
 <span class="n">haiku_item_id</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span>
     <span class="s">"PATCH"</span><span class="p">,</span>
     <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">patch_haiku_lambda</span><span class="p">)</span>
@@ -9473,24 +9503,29 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 12</a>
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>api = apigw.RestApi()</code> により，空の API Gateway を作成している．</p>
-</li>
-<li>
-<p>次に， <code>api.root.add_resource()</code> のメソッドを呼ぶことで， <code>/haiku</code> という API パスを追加している．</p>
-</li>
-<li>
-<p>続いて， <code>add_method()</code> を呼ぶことで， <code>GET</code>, <code>POST</code> のメソッドを <code>/haiku</code> のパスに定義している．</p>
-</li>
-<li>
-<p>さらに， <code>haiku.add_resource("{item_id}")</code> により， <code>/haiku/{item_id}</code> という API パスを追加している．</p>
-</li>
-<li>
-<p>最後に， <code>add_method()</code> を呼ぶことにより， <code>PATCH</code>, <code>DELETE</code> のメソッドを <code>/haiku/{item_id}</code> のパスに定義している．</p>
-</li>
-</ul>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>最初に， <code>api = apigw.RestApi()</code> により，空の API Gateway を作成している．</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>次に， <code>api.root.add_resource()</code> のメソッドを呼ぶことで， <code>/haiku</code> という API パスを追加している．</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>続いて， <code>add_method()</code> を呼ぶことで， <code>GET</code>, <code>POST</code> のメソッドを <code>/haiku</code> のパスに定義している．</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>さらに， <code>haiku.add_resource("{item_id}")</code> により， <code>/haiku/{item_id}</code> という API パスを追加している．</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>最後に， <code>add_method()</code> を呼ぶことにより， <code>PATCH</code>, <code>DELETE</code> のメソッドを <code>/haiku/{item_id}</code> のパスに定義している．</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>このように， API Gateway の使い方は非常にシンプルで，逐次的に API パスとそこで実行されるメソッド・Lambda を記述していくだけでよい．</p>
@@ -9530,10 +9565,8 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 12</a>
 <div class="sect2">
 <h3 id="_アプリケーションのデプロイ">13.3. アプリケーションのデプロイ</h3>
 <div class="paragraph">
-<p>アプリケーションの中身が理解できたところで，早速デプロイを行ってみよう．</p>
-</div>
-<div class="paragraph">
-<p>デプロイの手順は，これまでのハンズオンとほとんど共通である．
+<p>アプリケーションの中身が理解できたところで，早速デプロイを行ってみよう．
+デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (<code>#</code> で始まる行はコメントである)．
 シークレットキーの設定も忘れずに (<a href="#aws_cli_install">Section 15.3</a>)．</p>
 </div>
@@ -9552,78 +9585,76 @@ API Gateway の料金は <a href="#tab_handson_05_apigateway_price">Table 12</a>
 </div>
 </div>
 <div class="paragraph">
-<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_05_cdk_output">Figure 97</a> のような出力が得られるはずである．
-ここで表示されている <code>Bashoutter.BashoutterApiEndpoint = XXXX</code>, <code>Bashoutter.BucketUrl = YYYY</code> の二つ文字列は次に使うのでメモしておこう．</p>
+<p>デプロイのコマンドが無事に実行されれば， <a href="#handson_05_cdk_output">Figure 98</a> のような出力が得られるはずである．
+ここで表示されている <code>Bashoutter.BashoutterApiEndpoint = XXXX</code>, <code>Bashoutter.BucketUrl = YYYY</code> の二つ文字列はあとで使うのでメモしておこう．</p>
 </div>
 <div id="handson_05_cdk_output" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/cdk_output.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 97. CDKデプロイ実行後の出力</div>
+<div class="title">Figure 98. CDKデプロイ実行後の出力</div>
 </div>
 <div class="paragraph">
-<p>AWS コンソールにログインして，デプロイされたスタックを確認してみよう．</p>
-</div>
-<div class="paragraph">
-<p>まずは，コンソールから API Gateway のページに行く．
-すると， <a href="#handson_05_apigw_console_list">Figure 98</a> のような画面が表示され，デプロイ済みの API エンドポイントの一覧が確認できる．</p>
+<p>AWS コンソールにログインして，デプロイされたスタックを確認してみよう．
+まずは，コンソールから API Gateway のページに行く．
+すると， <a href="#handson_05_apigw_console_list">Figure 99</a> のような画面が表示され，デプロイ済みの API エンドポイントの一覧が確認できる．</p>
 </div>
 <div id="handson_05_apigw_console_list" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/apigw_console_list.png" alt="apigw_console_list" width="700">
 </div>
-<div class="title">Figure 98. API Gateway コンソール画面 (1)</div>
+<div class="title">Figure 99. API Gateway コンソール画面 (1)</div>
 </div>
 <div class="paragraph">
-<p>今回デプロイした "BashoutterApi" という名前の API をクリックすることで <a href="#handson_05_apigw_console_detail">Figure 99</a> のような画面に遷移し，詳細情報を閲覧できる．
+<p>今回デプロイした "BashoutterApi" という名前の API をクリックすることで <a href="#handson_05_apigw_console_detail">Figure 100</a> のような画面に遷移し，詳細情報を閲覧できる．
 <code>GET /haiku</code>, <code>POST /haiku</code> などが定義されていることが確認できる．</p>
 </div>
 <div class="paragraph">
 <p>それぞれのメソッドをクリックすると，そのメソッドの詳細情報を確認できる．
 API Gateway は，前述したルーティングの機能だけでなく，認証機能などを追加することも可能である．
 このハンズオンではとくにこれらの機能は使用しないが， "Method Request" と書いてある項目などがそれに相当する．
-次に， <a href="#handson_05_apigw_console_detail">Figure 99</a> で画面右端の赤色で囲った部分に，この API で呼ばれる Lambda 関数が指定されていることに注目しよう．
+次に， <a href="#handson_05_apigw_console_detail">Figure 100</a> で画面右端の赤色で囲った部分に，この API で呼ばれる Lambda 関数が指定されていることに注目しよう．
 関数名をクリックと，該当する Lambda のコンソールに遷移し，関数の中身を閲覧することが可能である．</p>
 </div>
 <div id="handson_05_apigw_console_detail" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/apigw_console_detail.png" alt="apigw_console_detail" width="700">
 </div>
-<div class="title">Figure 99. API Gateway コンソール画面 (2)</div>
+<div class="title">Figure 100. API Gateway コンソール画面 (2)</div>
 </div>
 <div class="paragraph">
 <p>次に， S3 のコンソール画面に移ってみよう．
-<code>bashouter-</code> で始まるランダムな名前のバケットが見つかるはずである (<a href="#handson_05_s3_console">Figure 100</a>)．</p>
+<code>bashouter-</code> で始まるランダムな名前のバケットが見つかるはずである (<a href="#handson_05_s3_console">Figure 101</a>)．</p>
 </div>
 <div id="handson_05_s3_console" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/s3_console.png" alt="s3_console" width="700">
 </div>
-<div class="title">Figure 100. S3 コンソール画面</div>
+<div class="title">Figure 101. S3 コンソール画面</div>
 </div>
 <div class="paragraph">
 <p>バケットの名前をクリックすることで，バケットの中身を確認してみよう．
-<code>index.html</code> のほか， <code>css/</code>, <code>js/</code> などのディレクトリがあるのが確認できるだろう (<a href="#handson_05_s3_contents">Figure 101</a>)．
+<code>index.html</code> のほか， <code>css/</code>, <code>js/</code> などのディレクトリがあるのが確認できるだろう (<a href="#handson_05_s3_contents">Figure 102</a>)．
 これらが，ウェブページの"枠"を定義している静的コンテンツである．</p>
 </div>
 <div id="handson_05_s3_contents" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/s3_contents.png" alt="s3_contents" width="700">
 </div>
-<div class="title">Figure 101. S3 バケットの中身</div>
+<div class="title">Figure 102. S3 バケットの中身</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="sec:bashoutter_test_api">13.4. API リクエストを送信する</h3>
 <div class="paragraph">
-<p>それでは，デプロイしたアプリケーションに対し，実際に API リクエストを送信してみよう
-(S3 にある GUI は一旦おいておく．
-なぜなら，今回のアプリケーションでより本質的なのは API の方だからである)．</p>
+<p>それでは，デプロイしたアプリケーションに対し，実際に API リクエストを送信してみよう．
+まずはコマンドラインから API を送信する演習を行おう．
+S3 に配置した GUI は一旦おいておく．</p>
 </div>
 <div class="paragraph">
 <p>ここではコマンドラインから HTTP API リクエストを送信するためのシンプルなHTTPクライアントである <a href="https://httpie.org/">HTTPie</a> を使ってみよう．
 HTTPie は，スタックをデプロイするときに Python 仮想環境 (venv) を作成したとき，一緒にインストールされている．
-念のためインストールがうまくいっているか確認するには，コマンドラインに <code>http</code> と打ってみる．
+念のためインストールがうまくいっているか確認するには，仮想環境を立ち上げたあとコマンドラインに <code>http</code> と打ってみる．
 ヘルプのメッセージが出力されたら準備OKである．</p>
 </div>
 <div class="paragraph">
@@ -9646,7 +9677,7 @@ HTTPie は，スタックをデプロイするときに Python 仮想環境 (ven
 <p>現時点では，まだだれも俳句を投稿していないので，空の配列 (<code>[]</code>) が返ってくる．</p>
 </div>
 <div class="paragraph">
-<p>それでは次に，俳句を投稿してみよう．</p>
+<p>それでは次に， <code>POST /haiku</code> を使って俳句を投稿してみよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9711,7 +9742,8 @@ Content-Type: application/json
 </div>
 </div>
 <div class="paragraph">
-<p>再び GET リクエストを送ることで，いいね (<code>likes</code>) が1増えたことを確認しよう．</p>
+<p><code>{"description": "OK"}</code> という出力が得られるはずである．
+再び GET リクエストを送ることで，いいね (<code>likes</code>) が1増えたことを確認しよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9739,11 +9771,11 @@ Content-Type: application/json
 <p>再び GET リクエストを送ることで，返り値が空 (<code>[]</code>) になっていることを確認しよう．</p>
 </div>
 <div class="paragraph">
-<p>以上のように， SNS に必要な基本的な API がきちんと動作していることが確認できた．</p>
+<p>これで，俳句の投稿・取得・削除そしていいねの追加，といった基本的な API がきちんと動作していることが確認できた．</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_大量の_api_リクエストをシミュレートする">13.5. 大量の API リクエストをシミュレートする</h3>
+<h3 id="simulating_many_apis">13.5. 大量の API リクエストをシミュレートする</h3>
 <div class="paragraph">
 <p>さて，前節ではマニュアルで一つずつ俳句を投稿した．
 多数のユーザーがいるような SNS では，1秒間に数千件以上の投稿がされている．
@@ -9751,12 +9783,12 @@ Content-Type: application/json
 このポイントを実証するため，ここでは大量の API が送信された状況をシミュレートしてみよう．</p>
 </div>
 <div class="paragraph">
-<p><a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/client.py">/handson/bashoutter/client.py</a>
+<p><a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/client.py">handson/bashoutter/client.py</a>
 に，大量のAPIリクエストをシミュレートするためのプログラムが書かれている．
 このプログラムを使用すると， <code>POST /haiku</code> の API リクエストを指定された回数だけ実行することができる．</p>
 </div>
 <div class="paragraph">
-<p>テストとして， API を300回送ってみよう．
+<p>テストとして， API を300回実行してみよう．
 次のコマンドを実行する．</p>
 </div>
 <div class="listingblock">
@@ -9796,22 +9828,22 @@ Content-Type: application/json
 <h3 id="_bashoutter_gui_を動かしてみる">13.6. Bashoutter GUI を動かしてみる</h3>
 <div class="paragraph">
 <p>前節ではコマンドラインから API を送信する演習を行った．
-ウェブアプリケーションでは，これらの API はウェブブラウザ上のウェブページから送信され，コンテンツが表示されている (<a href="#fig:web_server">Figure 75</a> 参照)．
+ウェブアプリケーションでは，これと同じことがウェブブラウザの背後で行われ，ページのコンテンツが表示されている (<a href="#fig:web_server">Figure 75</a> 参照)．
 最後に， API が GUI と統合されるとどうなるのか，見てみよう．</p>
 </div>
 <div class="paragraph">
-<p>デプロイを実行したときにコマンドラインで出力された， <code>Bashoutter.BucketUrl=</code> で与えられた URL を確認しよう (<a href="#handson_05_cdk_output">Figure 97</a>)．
+<p>デプロイを実行したときにコマンドラインで出力された， <code>Bashoutter.BucketUrl=</code> で与えられた URL を確認しよう (<a href="#handson_05_cdk_output">Figure 98</a>)．
 これは，先述したとおり， Public access mode の S3 バケットの URL である．</p>
 </div>
 <div class="paragraph">
 <p>ウェブブラウザを開き，アドレスバーに S3 の URL を入力しへアクセスしてみよう．
-すると， <a href="#handson_05_bashoutter_2">Figure 102</a> のようなページが表示されるはずである．</p>
+すると， <a href="#handson_05_bashoutter_2">Figure 103</a> のようなページが表示されるはずである．</p>
 </div>
 <div id="handson_05_bashoutter_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/bashoutter_2.png" alt="bashoutter" width="700">
 </div>
-<div class="title">Figure 102. "Bashoutter" の GUI 画面</div>
+<div class="title">Figure 103. "Bashoutter" の GUI 画面</div>
 </div>
 <div class="paragraph">
 <p>ページが表示されたら，一番上の "API Endpoint URL" と書いてあるテキストボックスに，今回デプロイした <strong>API Gateway の URL を入力</strong>する
@@ -9824,16 +9856,20 @@ Content-Type: application/json
 <p>新しい俳句を投稿するには，五七五と投稿者の名前を入力して， "POST" を押す．
 "POST" を押した後は，再び "REFRESH" ボタンを押すことで最新の俳句のリストをデータベースから取得する．</p>
 </div>
-<div class="paragraph">
-<p>今回は，どうやって GUI を作成したかは触れないが，基本的にページの背後では <code>GET /haiku</code>, <code>POST /haiku</code> などの API がクラウドに送信されることで，コンテンツが表示されている．
-興味のある読者は GUI のソースコードも読んでみるとよい (<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter/gui">/handson/bashoutter/gui/</a>)．</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_アプリケーションの削除">13.7. アプリケーションの削除</h3>
 <div class="paragraph">
-<p>これにて，今回のハンズオンは終了である．
-最後にスタックを削除しよう．</p>
+<p>これで， Bashoutter プロジェクトが完成した！
+この SNS は，インターネットを通じて世界のどこからでもアクセスできる状態にある．
+また， <a href="#simulating_many_apis">Section 13.5</a> で見たように，大量のユーザーの同時アクセスによる負荷がかかっても，柔軟にスケールが行われ遅延なく処理を行うことができる．
+極めて簡素ながらも，立派なウェブサービスとしてのスペックは満たしているのである！</p>
+</div>
+<div class="paragraph">
+<p>Bashoutter アプリを存分に楽しむことができたら，最後に忘れずにスタックを削除しよう．</p>
+</div>
+<div class="paragraph">
+<p>コマンドラインからスタックの削除を実行するには，次のコマンドを使う．</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9948,34 +9984,34 @@ Windows のユーザーは， Windows Subsytem for Linux (WSL) を使用する�
 </div>
 <div class="paragraph">
 <p>まず，ウェブブラウザから <a href="https://aws.amazon.com/console/">AWS コンソール</a> にアクセスし，右上の <code>Create an AWS Account</code> をクリックする
-(<a href="#fig:aws-signup-1">Figure 103</a> で実線で囲った部分)．</p>
+(<a href="#fig:aws-signup-1">Figure 104</a> で実線で囲った部分)．</p>
 </div>
 <div id="fig:aws-signup-1" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-1.png" alt="signup-1" width="500">
 </div>
-<div class="title">Figure 103. サインアップ (1): AWS コンソールにアクセス</div>
+<div class="title">Figure 104. サインアップ (1): AWS コンソールにアクセス</div>
 </div>
 <div class="paragraph">
-<p>次に，遷移した先のページでメールアドレスとパスワードなどの登録を行う (<a href="#fig:aws-signup-3">Figure 104</a>)．</p>
+<p>次に，遷移した先のページでメールアドレスとパスワードなどの登録を行う (<a href="#fig:aws-signup-3">Figure 105</a>)．</p>
 </div>
 <div id="fig:aws-signup-3" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-3.png" alt="signup-3" width="500">
 </div>
-<div class="title">Figure 104. サインアップ (2): メールアドレス・パスワードなどの登録．</div>
+<div class="title">Figure 105. サインアップ (2): メールアドレス・パスワードなどの登録．</div>
 </div>
 <div class="paragraph">
-<p>続いて，住所や電話番号などを訊かれるので，すべて入力しよう (<a href="#fig:aws-signup-4">Figure 105</a>)．</p>
+<p>続いて，住所や電話番号などを訊かれるので，すべて入力しよう (<a href="#fig:aws-signup-4">Figure 106</a>)．</p>
 </div>
 <div id="fig:aws-signup-4" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-4.png" alt="signup-4" width="500">
 </div>
-<div class="title">Figure 105. サインアップ (3): 住所・電話番号の入力</div>
+<div class="title">Figure 106. サインアップ (3): 住所・電話番号の入力</div>
 </div>
 <div class="paragraph">
-<p>次に，クレジットカードの情報の登録を求められる (<a href="#fig:aws-signup-5">Figure 106</a>)．
+<p>次に，クレジットカードの情報の登録を求められる (<a href="#fig:aws-signup-5">Figure 107</a>)．
 個人で AWS を利用する場合は，利用料金の請求はクレジットカードを経由して行われる．
 クレジットカードの登録なしには AWS を使い始めることはできないことに注意．</p>
 </div>
@@ -9983,37 +10019,37 @@ Windows のユーザーは， Windows Subsytem for Linux (WSL) を使用する�
 <div class="content">
 <img src="imgs/signup-5.png" alt="signup-5" width="500">
 </div>
-<div class="title">Figure 106. サインアップ (4): クレジットカードの登録</div>
+<div class="title">Figure 107. サインアップ (4): クレジットカードの登録</div>
 </div>
 <div class="paragraph">
-<p>次の画面では，携帯電話の SMS またはボイスメッセージを利用した本人確認が求められる (<a href="#fig:aws-signup-6">Figure 107</a>)．
+<p>次の画面では，携帯電話の SMS またはボイスメッセージを利用した本人確認が求められる (<a href="#fig:aws-signup-6">Figure 108</a>)．
 希望の認証方法を選択し，自分の携帯電話番号を入力しよう．</p>
 </div>
 <div id="fig:aws-signup-6" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-6.png" alt="signup-6" width="500">
 </div>
-<div class="title">Figure 107. サインアップ (5): 携帯電話による本人確認</div>
+<div class="title">Figure 108. サインアップ (5): 携帯電話による本人確認</div>
 </div>
 <div class="paragraph">
-<p>無事に本人確認が完了すると，最後にサポートプランの選択を求められる (<a href="#fig:aws-signup-8">Figure 108</a>)．
+<p>無事に本人確認が完了すると，最後にサポートプランの選択を求められる (<a href="#fig:aws-signup-8">Figure 109</a>)．
 無料の Basic support を選択しておけば問題ない．</p>
 </div>
 <div id="fig:aws-signup-8" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-8.png" alt="signup-8" width="500">
 </div>
-<div class="title">Figure 108. サインアップ (6): サポートプランの選択</div>
+<div class="title">Figure 109. サインアップ (6): サポートプランの選択</div>
 </div>
 <div class="paragraph">
-<p>以上のステップにより，アカウントの作成が完了する (<a href="#fig:aws-signup-9">Figure 109</a>)．
+<p>以上のステップにより，アカウントの作成が完了する (<a href="#fig:aws-signup-9">Figure 110</a>)．
 早速ログインをして， AWS コンソールにアクセスできるか確認しておこう．</p>
 </div>
 <div id="fig:aws-signup-9" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-9.png" alt="signup-9" width="500">
 </div>
-<div class="title">Figure 109. サインアップ (7): アカウントの作成が完了した</div>
+<div class="title">Figure 110. サインアップ (7): アカウントの作成が完了した</div>
 </div>
 </div>
 <div class="sect2">
@@ -10031,10 +10067,10 @@ AWS シークレットキーの詳細は
 <p>AWS コンソールにログインする．</p>
 </li>
 <li>
-<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 110</a>)</p>
+<p>画面右上のアカウント名をクリックし，表示されるプルダウンメニューから "My Security Credentials" を選択 (<a href="#fig:aws_secret_key_1">Figure 111</a>)</p>
 </li>
 <li>
-<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 111</a>)</p>
+<p>"Access keys for CLI, SDK, &amp; API access" の下にある "Create accesss key" のボタンをクリックする (<a href="#fig:aws_secret_key_2">Figure 112</a>)</p>
 </li>
 <li>
 <p>表示された Access key ID, Secret access key を記録しておく (画面を閉じると二度と表示されない)．</p>
@@ -10051,13 +10087,13 @@ AWS シークレットキーの詳細は
 <div class="content">
 <img src="imgs/aws_secret_key_1.png" alt="aws_secret_key_1" width="400">
 </div>
-<div class="title">Figure 110. AWS シークレットキーの発行1</div>
+<div class="title">Figure 111. AWS シークレットキーの発行1</div>
 </div>
 <div id="fig:aws_secret_key_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_2.png" alt="aws_secret_key_2" width="700">
 </div>
-<div class="title">Figure 111. AWS シークレットキーの発行2</div>
+<div class="title">Figure 112. AWS シークレットキーの発行2</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -10072,13 +10108,13 @@ AWS シークレットキーの詳細は
 <div class="ulist">
 <ul>
 <li>
-<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 112</a>)．</p>
+<p>AWS Educate のコンソール画面から， <code>vocareum</code> のコンソールに移動する (<a href="#fig:vocareum_console">Figure 113</a>)．</p>
 </li>
 <li>
 <p><code>Account Details</code> をクリックし，続いて <code>AWS CLI: Show</code> をクリックする．</p>
 </li>
 <li>
-<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 113</a>)．
+<p><code>aws_access_key_id</code>, <code>aws_secret_access_key</code>, <code>aws_session_token</code> が表示される (<a href="#fig:vocareum_secret">Figure 114</a>)．
 ここで表示された内容を <code>~/.aws/credentials</code> にコピーする (<a href="#aws_cli_install">Section 15.3</a> 参照)．
 <code>aws_session_token</code> の箇所も漏らさずコピーすること．</p>
 </li>
@@ -10107,13 +10143,13 @@ output = json</pre>
 <div class="content">
 <img src="imgs/vocareum_console.png" alt="vocareum console" width="700">
 </div>
-<div class="title">Figure 112. vocareum コンソール</div>
+<div class="title">Figure 113. vocareum コンソール</div>
 </div>
 <div id="fig:vocareum_secret" class="imageblock text-center">
 <div class="content">
 <img src="imgs/vocareum_secret.png" alt="vocareum secret" width="700">
 </div>
-<div class="title">Figure 113. vocareum から AWS シークレットキーの発行</div>
+<div class="title">Figure 114. vocareum から AWS シークレットキーの発行</div>
 </div>
 </td>
 </tr>
@@ -10344,7 +10380,7 @@ X64 のシステムでは Version 1903, Build 18362 以上でなければなら�
 バージョンが対応していない場合は、 Windows のアップデートを行う．</p>
 </div>
 <div class="paragraph">
-<p>まず最初に， Administrator 権限で PowerShell を起動する (<a href="#fig:powershell">Figure 114</a>)．
+<p>まず最初に， Administrator 権限で PowerShell を起動する (<a href="#fig:powershell">Figure 115</a>)．
 左下の Windows メニューの検索バーに <code>powershell</code> と入力すると， PowerShell のプログラムが見つかるはずである，
 これを右クリックし、 <code>Run as administrator</code> を選択し起動する．</p>
 </div>
@@ -10352,7 +10388,7 @@ X64 のシステムでは Version 1903, Build 18362 以上でなければなら�
 <div class="content">
 <img src="imgs/wsl/powershell.png" alt="powershell" width="500">
 </div>
-<div class="title">Figure 114. 管理者権限での PowerShell の起動</div>
+<div class="title">Figure 115. 管理者権限での PowerShell の起動</div>
 </div>
 <div class="paragraph">
 <p>PowerShell が起動したら、次のコマンドを実行する．</p>
@@ -10400,14 +10436,14 @@ X64 のシステムでは Version 1903, Build 18362 以上でなければなら�
 </div>
 <div class="paragraph">
 <p>Microsoft store のアプリを起動し，検索バーに <code>Ubuntu</code> と入力する．
-Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き， “Get” ボタンをクリックする (<a href="#fig:microsoft_store">Figure 115</a>)．
+Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き， “Get” ボタンをクリックする (<a href="#fig:microsoft_store">Figure 116</a>)．
 しばらく待つと， Ubuntu 20.04 のインストールが完了する．</p>
 </div>
 <div id="fig:microsoft_store" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/microsoft_store.png" alt="microsoft_store" width="500">
 </div>
-<div class="title">Figure 115. Microsoft store から Ubuntu 20.04 をインストール</div>
+<div class="title">Figure 116. Microsoft store から Ubuntu 20.04 をインストール</div>
 </div>
 <div class="paragraph">
 <p>Ubuntu 20.04 を初回に起動すると，初期設定が自動で開始され，数分待つことになる．
@@ -10416,24 +10452,24 @@ Ubuntu 20.04 LTS という項目が見つかるはずなので，それを開き
 <div class="paragraph">
 <p>これで WSL2 のインストールが完了した．
 早速 WSL2 を起動してみよう．
-左下の Windows メニューの検索バーに <code>Ubuntu</code> と入力すると， Ubuntu 20.04 のプログラムが見つかるはずである (<a href="#fig:ubuntu">Figure 116</a>)．
+左下の Windows メニューの検索バーに <code>Ubuntu</code> と入力すると， Ubuntu 20.04 のプログラムが見つかるはずである (<a href="#fig:ubuntu">Figure 117</a>)．
 クリックして起動しよう．</p>
 </div>
 <div id="fig:ubuntu" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/ubuntu2004.png" alt="ubuntu2004" width="500">
 </div>
-<div class="title">Figure 116. Ubuntu 20.04 の起動</div>
+<div class="title">Figure 117. Ubuntu 20.04 の起動</div>
 </div>
 <div class="paragraph">
-<p>すると，ターミナルの黒い画面が立ち上がるだろう (<a href="#fig:wsl_window">Figure 117</a>)．
+<p>すると，ターミナルの黒い画面が立ち上がるだろう (<a href="#fig:wsl_window">Figure 118</a>)．
 <code>ls</code>, <code>top</code> などのコマンドを打ってみて， WSL がきちんと動作していることを確認しよう．</p>
 </div>
 <div id="fig:wsl_window" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/wsl_window.png" alt="wsl_window" width="500">
 </div>
-<div class="title">Figure 117. WSL の起動画面</div>
+<div class="title">Figure 118. WSL の起動画面</div>
 </div>
 <div class="paragraph">
 <p>オプションとして，
@@ -10557,14 +10593,14 @@ Docker Desktop をインストールすると， WSL からも <code>docker</cod
 <p>と実行する．</p>
 </div>
 <div class="paragraph">
-<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 118</a>)．
+<p>シェルのプロンプトに <code>(.env)</code> という文字が追加されていることを確認しよう (<a href="#fig_venv_prompt">Figure 119</a>)．
 これが， "いまあなたは venv の中にいますよ" というしるしになる．</p>
 </div>
 <div id="fig_venv_prompt" class="imageblock text-center">
 <div class="content">
 <img src="imgs/venv_shell.png" alt="venv shell" width="500">
 </div>
-<div class="title">Figure 118. venv を起動したときのプロンプト</div>
+<div class="title">Figure 119. venv を起動したときのプロンプト</div>
 </div>
 <div class="paragraph">
 <p>仮想環境を起動すると，それ以降実行する <code>pip</code> コマンドは， <code>.env/</code> 以下にインストールされる．このようにして，プロジェクトごとに使うライブラリのバージョンを切り分けることができる．</p>
@@ -10783,7 +10819,7 @@ Docker イメージのビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2021-09-29 05:56:44 UTC
+Last updated 2021-09-30 14:40:35 UTC
 </div>
 </div>
 <style>

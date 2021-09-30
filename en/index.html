@@ -529,7 +529,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_auto_scaling_groups_asg">9.1. Auto scaling groups (ASG)</a></li>
 <li><a href="#_aws_batch">9.2. AWS Batch</a></li>
 <li><a href="#_preparations_2">9.3. Preparations</a></li>
-<li><a href="#_revisiting_mnist_handwritten_digit_recognition_task">9.4. Revisiting MNIST handwritten digit recognition task</a></li>
+<li><a href="#sec_run_mnist_docker_local">9.4. Revisiting MNIST handwritten digit recognition task</a></li>
 <li><a href="#sec:aws_batch_code">9.5. Reading the application source code</a></li>
 <li><a href="#_deploying_the_stack">9.6. Deploying the stack</a></li>
 <li><a href="#sec:aws_batch_deploy_docker_on_ecr">9.7. Deploying Docker image on ECR</a></li>
@@ -553,16 +553,33 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_components_that_make_up_a_serverless_cloud">11.3. Components that make up a serverless cloud</a></li>
 </ul>
 </li>
-<li><a href="#sec:appendix_settingup">12. Appendix: Environment setup</a>
+<li><a href="#sec_intro_serverless">12. Hands-on #5: Introduction to serverless computing</a>
 <ul class="sectlevel2">
-<li><a href="#sec:create_aws_account">12.1. Creating an AWS account</a></li>
-<li><a href="#aws_secrets">12.2. Creating AWS access key</a></li>
-<li><a href="#aws_cli_install">12.3. Installing AWS CLI</a></li>
-<li><a href="#aws_cdk_install">12.4. Installing AWS CDK</a></li>
-<li><a href="#sec:install_wsl">12.5. Installing WSL</a></li>
-<li><a href="#sec:install_docker">12.6. Installing Docker</a></li>
-<li><a href="#venv_quick_guide">12.7. Quick tutorial on Python <code>venv</code></a></li>
-<li><a href="#sec_handson_docker">12.8. Working with Docker image for the hands-on exercise</a></li>
+<li><a href="#_lambda_hands_on">12.1. Lambda hands-on</a></li>
+</ul>
+</li>
+<li><a href="#sec_bashoutter">13. Hands-on #6: Bashoutter</a>
+<ul class="sectlevel2">
+<li><a href="#_preparation">13.1. Preparation</a></li>
+<li><a href="#_reading_the_application_source_code_4">13.2. Reading the application source code</a></li>
+<li><a href="#_deploying_the_application_4">13.3. Deploying the application</a></li>
+<li><a href="#sec:bashoutter_test_api">13.4. Sending API requests</a></li>
+<li><a href="#_simulating_a_large_simultaneous_api_request">13.5. Simulating a large simultaneous API request</a></li>
+<li><a href="#_interacting_with_bashoutter_gui">13.6. Interacting with Bashoutter GUI</a></li>
+<li><a href="#_deleting_the_stack_4">13.7. Deleting the stack</a></li>
+<li><a href="#_short_summary_2">13.8. Short summary</a></li>
+</ul>
+</li>
+<li><a href="#sec:appendix_settingup">14. Appendix: Environment setup</a>
+<ul class="sectlevel2">
+<li><a href="#sec:create_aws_account">14.1. Creating an AWS account</a></li>
+<li><a href="#aws_secrets">14.2. Creating AWS access key</a></li>
+<li><a href="#aws_cli_install">14.3. Installing AWS CLI</a></li>
+<li><a href="#aws_cdk_install">14.4. Installing AWS CDK</a></li>
+<li><a href="#sec:install_wsl">14.5. Installing WSL</a></li>
+<li><a href="#sec:install_docker">14.6. Installing Docker</a></li>
+<li><a href="#venv_quick_guide">14.7. Quick tutorial on Python <code>venv</code></a></li>
+<li><a href="#sec_handson_docker">14.8. Working with Docker image for the hands-on exercise</a></li>
 </ul>
 </li>
 </ul>
@@ -724,7 +741,7 @@ Each of these topic is worth more than one book, but this book was written with 
 <div class="paragraph">
 <p>This book provides hands-on tutorials to run and deploy applications on AWS.
 Readers must have their own AWS account to run the hands-on excercises.
-A brief description of how to create an AWS account is given in the appendix at the end of the book (<a href="#sec:create_aws_account">Section 12.1</a>), so please refer to it if necessary.</p>
+A brief description of how to create an AWS account is given in the appendix at the end of the book (<a href="#sec:create_aws_account">Section 14.1</a>), so please refer to it if necessary.</p>
 </div>
 <div class="paragraph">
 <p>AWS offers free access to some features, and some hands-on excercises can be done for free.
@@ -746,7 +763,7 @@ AWS Educate provides a variety of learning materials, and I encourage you to tak
 <div class="paragraph">
 <p>In this book, we will provide hands-on sessions to deploy a cloud application on AWS.
 The following computer environment is required to run the programs provided in this book.
-The installation procedure is described in the appendix at the end of the book (<a href="#sec:appendix_settingup">Section 12</a>).
+The installation procedure is described in the appendix at the end of the book (<a href="#sec:appendix_settingup">Section 14</a>).
 Refer to the appendix as necessary and set up an environment in your local computer.</p>
 </div>
 <div class="ulist">
@@ -758,18 +775,18 @@ Mac or Linux users can use the console (also known as a terminal) that comes sta
 For Windows users, we recommend to install
 <a href="https://docs.microsoft.com/en-us/windows/wsl/about">Windows Subsystem for Linux (WSL)</a>
 and set up a virtual Linux environment
-(see <a href="#sec:install_wsl">Section 12.5</a> for more details).</p>
+(see <a href="#sec:install_wsl">Section 14.5</a> for more details).</p>
 </li>
 <li>
 <p><strong><a href="https://www.docker.com/">Docker</a></strong>:
 This book explains how to use a virtual computing environment called Docker.
-For the installation procedure, see <a href="#sec:install_docker">Section 12.6</a>.</p>
+For the installation procedure, see <a href="#sec:install_docker">Section 14.6</a>.</p>
 </li>
 <li>
 <p><strong><a href="https://github.com/python">Python</a></strong>:
 Version 3.6 or later is required.
 We will also use <code>venv</code> module to run programs.
-A quick tutorial on <code>venv</code> module is provided in the appendix (<a href="#venv_quick_guide">Section 12.7</a>).</p>
+A quick tutorial on <code>venv</code> module is provided in the appendix (<a href="#venv_quick_guide">Section 14.7</a>).</p>
 </li>
 <li>
 <p><strong><a href="https://github.com/nodejs/node">Node.js</a></strong>:
@@ -780,18 +797,18 @@ Version 12.0 or later is required.</p>
 WS CLI
 <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html">Version 2</a>
 is required.
-Refer to <a href="#aws_cli_install">Section 12.3</a> for installation and setup procedure.</p>
+Refer to <a href="#aws_cli_install">Section 14.3</a> for installation and setup procedure.</p>
 </li>
 <li>
 <p><strong><a href="https://github.com/aws/aws-cdk">AWS CDK</a></strong>:
 Version 1.00 or later is required.
 The tutorials are not compatible with version 2.
-Refer to <a href="#aws_cdk_install">Section 12.4</a> for installation and setup procedure.</p>
+Refer to <a href="#aws_cdk_install">Section 14.4</a> for installation and setup procedure.</p>
 </li>
 <li>
 <p><strong>AWS secret keys</strong>:
 In order to call the AWS API from the command line, an authentication key (secret key) must be set.
-Refer to <a href="#aws_cli_install">Section 12.3</a> for the setting of the authentication key.</p>
+Refer to <a href="#aws_cli_install">Section 14.3</a> for the setting of the authentication key.</p>
 </li>
 </ul>
 </div>
@@ -812,7 +829,7 @@ If you already know how to use Docker, then you can use this image to immediatel
 </div>
 </div>
 <div class="paragraph">
-<p>More details on this Docker image is given in the appendix (<a href="#sec_handson_docker">Section 12.8</a>).</p>
+<p>More details on this Docker image is given in the appendix (<a href="#sec_handson_docker">Section 14.8</a>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -1046,11 +1063,11 @@ This book does not cover PaaS techniques and concepts.</p>
 <div class="paragraph">
 <p>SaaS can be considered a development "product" in the context of this book.
 In other words, the final goal of development is to provide a computational service or database on the available to the general public by deploying the programs on IaaS platform.
-As a practical demonstration, we will provide hands-on exercises such as creating a simple SNS (<a href="#sec_bashoutter">[sec_bashoutter]</a>).</p>
+As a practical demonstration, we will provide hands-on exercises such as creating a simple SNS (<a href="#sec_bashoutter">Section 13</a>).</p>
 </div>
 <div class="paragraph">
 <p>Recently, Function as a Service (FaaS) and serverless computing have been recognized as new cloud categories.
-These concepts will be discussed in detail in later chapters (<a href="#sec_intro_serverless">[sec_intro_serverless]</a>).
+These concepts will be discussed in detail in later chapters (<a href="#sec_intro_serverless">Section 12</a>).
 As will become clear as you read through this book, cloud technology is constantly and rapidly evolving.
 This book first touches on traditional cloud design concepts from a practical and educational point of view, and then covers the latest technologies such as serverless.</p>
 </div>
@@ -1303,7 +1320,7 @@ EC2 must be placed inside a VPC.</p>
 <p><strong>API Gateway</strong>
 <span class="image left"><img src="imgs/aws_logos/APIGateway.png" alt="S3" width="40"></span>
 API Gateway acts as a reverse proxy to connect API endpoints to backend services (such as Lambda).
-It will be described in detail in <a href="#sec_bashoutter">[sec_bashoutter]</a>.</p>
+It will be described in detail in <a href="#sec_bashoutter">Section 13</a>.</p>
 </div>
 </div>
 </div>
@@ -1551,7 +1568,7 @@ For detailed usage of the <code>aws s3</code> command, please refer to <a href="
 </td>
 <td class="content">
 <div class="paragraph">
-<p>For information on installing the AWS CLI, see <a href="#aws_cli_install">Section 12.3</a>.</p>
+<p>For information on installing the AWS CLI, see <a href="#aws_cli_install">Section 14.3</a>.</p>
 </div>
 </td>
 </tr>
@@ -1582,7 +1599,7 @@ For detailed usage of the <code>aws s3</code> command, please refer to <a href="
 <div class="paragraph">
 <p>Before executing the following commands, make sure that your AWS credentials are set correctly.
 This requires that the settings are written to the file <code>~/.aws/credentials</code> or that the environment variables (<code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, and <code>AWS_DEFAULT_REGION</code>) are defined.
-See <a href="#aws_cli_install">Section 12.3</a> for details.</p>
+See <a href="#aws_cli_install">Section 14.3</a> for details.</p>
 </div>
 </td>
 </tr>
@@ -1948,7 +1965,7 @@ This is a prerequisite for the hands-on sessions in later chapters as well, so m
 <li>
 <p><strong>AWS account</strong>:
 You will need a personal AWS account to run the hands-on.
-See <a href="#sec:create_aws_account">Section 12.1</a> for obtaining an AWS account.</p>
+See <a href="#sec:create_aws_account">Section 14.1</a> for obtaining an AWS account.</p>
 </li>
 <li>
 <p><strong>Python and Node.js</strong>:
@@ -1956,12 +1973,12 @@ Python (3.6 or higher) and Node.js (12.0 or higher) must be installed in order t
 </li>
 <li>
 <p><strong>AWS CLI</strong>:
-For information on installing the AWS CLI, see <a href="#aws_cli_install">Section 12.3</a>.
+For information on installing the AWS CLI, see <a href="#aws_cli_install">Section 14.3</a>.
 Be sure to set up the authentication key described here.</p>
 </li>
 <li>
 <p><strong>AWS CDK</strong>:
-For information on installing the AWS CDK, see <a href="#aws_cdk_install">Section 12.4</a>.</p>
+For information on installing the AWS CDK, see <a href="#aws_cdk_install">Section 14.4</a>.</p>
 </li>
 <li>
 <p><strong>Downloading the source code</strong>:
@@ -1986,7 +2003,7 @@ The source code of the hands-on program has also been included in the image.
 If you already know how to use Docker, then you can use this image to immediately start the hands-on tutorials without having to install anything else.</p>
 </div>
 <div class="paragraph">
-<p>See <a href="#sec_handson_docker">Section 12.8</a> for more instructions.</p>
+<p>See <a href="#sec_handson_docker">Section 14.8</a> for more instructions.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2531,7 +2548,7 @@ as a tool to manage Python libraries.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>A quick tutorial on <code>venv</code> is provided in <a href="#venv_quick_guide">Section 12.7</a>.</p>
+<p>A quick tutorial on <code>venv</code> is provided in <a href="#venv_quick_guide">Section 14.7</a>.</p>
 </div>
 </td>
 </tr>
@@ -2542,8 +2559,8 @@ as a tool to manage Python libraries.</p>
 <h4 id="_setting_aws_access_key">4.4.2. Setting AWS access key</h4>
 <div class="paragraph">
 <p>To use the AWS CLI and AWS CDK, you need to have an AWS access key set up.
-Refer to <a href="#aws_secrets">Section 12.2</a> for issuing a access key.
-After issuing the access key, refer to <a href="#aws_cli_install">Section 12.3</a> to configure the command line settings.</p>
+Refer to <a href="#aws_secrets">Section 14.2</a> for issuing a access key.
+After issuing the access key, refer to <a href="#aws_cli_install">Section 14.3</a> to configure the command line settings.</p>
 </div>
 <div class="paragraph">
 <p>To summarize the procedure shortly, the first method is to set environment variables such as <code>AWS_ACCESS_KEY_ID</code>.
@@ -3440,7 +3457,7 @@ Jupyter Notebook is also already installed.</p>
 <p>The deployment procedure is almost the same as the first hands-on.
 Here, only the commands are listed (lines starting with <code>#</code> are comments).
 If you have forgotten the meaning of each command, review the first hands-on.
-You should not forget to set the access key (<a href="#aws_cli_install">Section 12.3</a>).</p>
+You should not forget to set the access key (<a href="#aws_cli_install">Section 14.3</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4461,7 +4478,7 @@ And what new tools will revolutionize programmers' workflows in the future?</p>
 In this section, I will give a brief tutorial on Docker.</p>
 </div>
 <div class="paragraph">
-<p>For Docker installation, please refer to <a href="#sec:install_docker">Section 12.6</a> and <a href="https://docs.docker.com/engine/install/">official documentation</a>.
+<p>For Docker installation, please refer to <a href="#sec:install_docker">Section 14.6</a> and <a href="https://docs.docker.com/engine/install/">official documentation</a>.
 The following assumes that you have already installed Docker.</p>
 </div>
 <div class="sect3">
@@ -5157,7 +5174,7 @@ For documentation of the DistilBert implementation by huggingface/transformers, 
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
 <td>Here, we are preparing a database to write the results of the answers.
-DynamoDB will be covered in the sections on the serverless architecture (<a href="#sec_serverless">Section 11</a> and <a href="#sec_intro_serverless">[sec_intro_serverless]</a>), so don&#8217;t worry about it for now.</td>
+DynamoDB will be covered in the sections on the serverless architecture (<a href="#sec_serverless">Section 11</a> and <a href="#sec_intro_serverless">Section 12</a>), so don&#8217;t worry about it for now.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -5301,7 +5318,7 @@ For the latest information, see
 <p>The deployment procedure is almost the same as the previous hands-on.
 Here, only the commands are listed (lines starting with <code>#</code> are comments).
 If you have forgotten the meaning of each command, review the first hands-on.
-You should not forget to set the access key (<a href="#aws_cli_install">Section 12.3</a>).</p>
+You should not forget to set the access key (<a href="#aws_cli_install">Section 14.3</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5534,16 +5551,16 @@ Alternatively, you can execute the following command from the command line.</p>
 <p>In the third hands-on session, we built an automatic question answering system using ECS and Fargate.
 Despite its simplicity, we were able to build a system where jobs are executed in parallel when multiple questions are sent.
 There, we built the application using a pre-tained language model.
-Generally speaking, however, the first step in a machine learning workflow should be to train your own models.
+Generally speaking, though, the first step in a machine learning workflow should be to train your own models.
 Therefore, in the fourth hands-on session, we will consider parallelizing and accelerating the training of machine learning models using the cloud.</p>
 </div>
 <div class="paragraph">
 <p>In particular, we will focus on hyperparameter optimization in deep learning.
-Hyperparameters are parameters outside the weights of the neural network that are optimized by gradient descent, including those related to the architecture of the network such as the width and depth of the layers of the model, and those related to the parameter optimization method such as the learning rate and momentum.
+Hyperparameters are parameters outside the weights of the neural network that are optimized by gradient descent, including those related to the architecture of the network such as the width and depth of the layers, and those related to the parameter optimization method such as the learning rate and momentum.
 Tuning the hyperparameters is a very important task in deep learning.
 However, it requires a lot of computation time because the neural network needs to be trained many times while changing the conditions little by little.
 In research and development, exploring a large number of possible models is an important factor in determining productivity, and the problem of solving hyperparameter search quickly is of great interest.
-In this hands-on, you will learn how to solve this problem by training neural networks in parallel using the powerful computing resources of the cloud.</p>
+In this hands-on, we will learn how to solve this problem by training neural networks in parallel using the powerful computing resources of the cloud.</p>
 </div>
 <div class="sect2">
 <h3 id="_auto_scaling_groups_asg">9.1. Auto scaling groups (ASG)</h3>
@@ -5554,7 +5571,7 @@ In this hands-on, you will learn how to solve this problem by training neural ne
 <p>Please take a look back at <a href="#ecs_overview">Figure 42</a>, which gives an overview of ECS.
 As explained in the previous chapter (<a href="#sec_fargate_qabot">Section 8</a>), EC2 and Fargate can be selected as the computational resource in ECS clusters.
 Fargate was described in the previous chapter.
-Using Fargate, we were able to build a highly scalable computing environment with a very simple setup.
+Using Fargate, we were able to build a highly scalable computing environment with a simple setup.
 However, there were some limitations, such as not being able to use GPUs.
 By defining a computing environment that is based on EC2, although the programming complexity increases, we can build clusters with GPUs and other more advanced and complex configurations.</p>
 </div>
@@ -5572,7 +5589,7 @@ The latter prevents an excessive number of instances from being launched when th
 The desired capacity can be set based on a fixed schedule, such as increasing or decreasing the number of instances according to a 24-hour rhythm (e.g., more during the day and less at night).
 Alternatively, the desired capacity can be dynamically controlled according to the load on the entire cluster.
 The rules that define the criteria for scaling the cluster are called <strong>scaling policies</strong>.
-For example, we can assume a scaling policy such as maintaining the utilization (load) of the entire cluster at 80% at all times.
+For example, we can assume a scaling policy which maintains the utilization (load) of the entire cluster at 80% at all times.
 In this case, the ASG automatically removes instances from the cluster when the load of the entire cluster falls below 80%, and adds instances when the load exceeds 80%s.</p>
 </div>
 <div class="paragraph">
@@ -5596,18 +5613,18 @@ That service is <strong>AWS Batch</strong>.</p>
 </div>
 <div class="paragraph">
 <p>AWS Batch, as the name implies, is designed for batch jobs (i.e., independent operations with different input data that are executed repeatedly).
-Many scientific calculations and machine learning can be applied to batch calculations.
+Many scientific calculations and machine learning can be considered as batch calculations.
 For example, you can run multiple simulations with different initial parameters.
-The advantage of using AWS Batch is that the scaling of the cluster and the allocation of jobs are all done automatically, giving the user a system that can submit a large number of jobs without having to worry about the implementation details of the cloud.
+The advantage of using AWS Batch is that the scaling of the cluster and the allocation of jobs are all done automatically, giving the users a system where they can submit a large number of jobs without worrying about the implementation details of the cloud.
 However, it is important to know that the ECS/ASG/EC2 triad is working in concert behind the scenes.</p>
 </div>
 <div class="paragraph">
 <p>In AWS Batch, the following concept is defined to facilitate job submission and management (<a href="#fig_batch_concept">Figure 55</a>).
-First, a <strong>Job</strong> is a unit of computation executed by AWS Batch.
+First, a <strong>job</strong> is a unit of computation executed by AWS Batch.
 <strong>Job definitions</strong> define the specification of a job, including the address of the Docker image to be executed, the amount of CPU and RAM to be allocated, and environment variables.
 Each job is executed based on the job definition.
-When a job is executed, it is placed in <strong>Job queues</strong>.
-Job queues are a queue of jobs waiting to be executed, and the first job in the queue is executed first.
+When a job is executed, it is placed in <strong>job queues</strong>.
+Job queue is a queue of jobs waiting to be executed, and the first job in the queue is executed first.
 In addition, multiple queues can be arranged, and each queue can be assigned a priority value, so that jobs in the queue with the highest priority are executed first.
 <strong>Compute environment</strong> is a concept that is almost synonymous with the cluster, and refers to the location where computations are executed (i.e. group of EC2 or Fargate instances).
 In the compute environment, one needs to specify the EC2 instance types to use, and a simple scaling policy, such as the upper and lower limit on the number of instances.
@@ -5683,7 +5700,7 @@ Please note that it is heavily coarse-grained for the sake of explanation.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>As we have seen so far, EC2 has high computing power in a single instance, with a large maximum number of CPUs and memory size, and the ability to use a GPU.
+<p>As we have seen so far, EC2 has high computing power in a single instance, with a large maximum number of CPUs and memory size, and the ability to use GPUs.
 In contrast, the maximum number of CPUs for a single instance of Fargate is capped at four cores.
 On the other hand, the time required to launch an instance is much faster in Fargate, which allows for more agile scaling of the cluster.
 Fargate also has higher flexibility when submitting tasks to the cluster.
@@ -5743,7 +5760,7 @@ Also refer to <a href="#sec:aws_batch_code">Section 9.5</a> for related informat
 </div>
 </div>
 <div class="sect2">
-<h3 id="_revisiting_mnist_handwritten_digit_recognition_task">9.4. Revisiting MNIST handwritten digit recognition task</h3>
+<h3 id="sec_run_mnist_docker_local">9.4. Revisiting MNIST handwritten digit recognition task</h3>
 <div class="paragraph">
 <p>At the beginning of this hands-on, we mentioned that we would be covering hyperparameter tuning in machine learning.
 As the simplest example, let&#8217;s take the MNIST digit recognition problem again, which was covered in <a href="#sec_mnist_using_jupyter">Section 6.7</a>.
@@ -5771,7 +5788,7 @@ These are grid search, random search, and Bayesian optimization.</p>
 </div>
 <div class="paragraph">
 <p>Grid search is a method to find the optimal set of parameters by computing all possible combinations of hyperparameters within a certain range.
-It is the simplest and most reliable method, but the computational cost is high because all possible combinations are computed.</p>
+It is the simplest and most reliable method, but the computational cost is high because all possible combinations are tested.</p>
 </div>
 <div class="paragraph">
 <p>The random search method is a method that randomly extracts pairs of hyperparameters within a certain range, and finds the optimal pair of parameters among a large number of random pairs that have been tested.
@@ -5779,7 +5796,7 @@ Although it does not exhaustively search all possibilities, it can cover a large
 </div>
 <div class="paragraph">
 <p>In the method using Bayesian optimization, the parameters to be searched next are determined by calculating an index based on past search results.
-The index essentially points the most uncertain area within the parameter space.
+The index essentially points the most uncertain and promising area within the parameter space.
 This method can theoretically reach the optimal parameters in a smaller number of trials than the grid search or random search methods.</p>
 </div>
 <div class="paragraph">
@@ -5803,7 +5820,7 @@ In this book, we will not go into the usage of cloud computing at this level of 
 <div class="paragraph">
 <p>The source code of the Docker image can be found on GitHub at
 <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/docker">handson/aws-batch/docker</a>.
-It is based on the program we introduced in <a href="#sec_mnist_using_jupyter">Section 6.7</a>, with some minor changes for this handson.
+It is based on the program we introduced in <a href="#sec_mnist_using_jupyter">Section 6.7</a>, with some minor changes made for this handson.
 Interested readers are encouraged to read the source code as well.</p>
 </div>
 <div class="paragraph">
@@ -5825,7 +5842,7 @@ Go to the directory where the <code>Dockerfile</code> is stored, and build the i
 <td class="content">
 <div class="paragraph">
 <p>If you get an error with <code>docker build</code> command, please suspect the following possibility.
-In the build process, the MNIST image dataset is downloaded from <a href="http://yann.lecun.com/exdb/mnist/" class="bare">http://yann.lecun.com/exdb/mnist/</a>, and this server is sometimes down due to the heavy access from machine learning users.
+In the build process, the MNIST image dataset is downloaded from <a href="http://yann.lecun.com/exdb/mnist/" class="bare">http://yann.lecun.com/exdb/mnist/</a>, and this server is sometimes down due to the heavy access from machine learning users across the world.
 When the server is down, the build also fails.
 If you see something like this in the error message, suspect this possibility.</p>
 </div>
@@ -5896,7 +5913,7 @@ The actual plot of this behaviour should look like <a href="#fig_loss_epoch_prof
 <div class="title">Figure 57. (Left) Change in loss for each epoch of train and validation data. (Right) Epoch-by-epoch change in accuracy of validation data.</div>
 </div>
 <div class="paragraph">
-<p>This is a phenomenon called <strong>overfitting</strong>, which indicates that the neural net is over-fitted for the training data and the accuracy (generalization performance) for data outside the training data is not improved.
+<p>This is a phenomenon called <strong>overfitting</strong>, which indicates that the neural network is over-fitted to the training data and the accuracy (generalization performance) for data outside the training data is not improved.
 To deal with such cases, a technique called <strong>early stopping</strong> is known.
 In early stopping, we track the loss of the validation data, and stop learning at the epoch when it turns from decreasing to increasing.
 Then we adopt the weight parameters at that epoch.
@@ -6129,7 +6146,7 @@ For details, please refer to the source code.</p>
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Here, we prepare an S3 bucket to store the computation results.</td>
+<td>Here, we prepare an S3 bucket to store the results of the jobs.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -6139,12 +6156,12 @@ The minimum vCPU is 0.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>This part defines the Job queue associated with the compute environment created in &lt;2&gt;.</td>
+<td>This part defines the job queue associated with the compute environment created in &lt;2&gt;.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>Here we define the IAM role so that the job can write results to S3
-(IAM is a mechanism to manage the permissions of resources. See <a href="#sec:bashoutter_iam">[sec:bashoutter_iam]</a> for details).</td>
+(IAM is a mechanism to manage the permissions of resources. See <a href="#sec:bashoutter_iam">Section 13.2.5</a> for details).</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -6155,7 +6172,7 @@ The minimum vCPU is 0.</td>
 <td>Here we create the job definition.
 In the code, we specify each job to consume 4 vCPU and 12000 MB (=12GB).
 It also sets the environment variables (<code>BUCKET_NAME</code>) that will be used by the Docker container.
-In addition, the IAM created in &lt;4&gt; has been added.</td>
+In addition, the IAM created in &lt;4&gt; has been attatched.</td>
 </tr>
 </table>
 </div>
@@ -6201,7 +6218,7 @@ For more information, please refer to <a href="https://docs.aws.amazon.com/AWSEC
 <p>The deployment procedure is almost the same as the previous hands-on.
 Here, only the commands are listed (lines starting with <code>#</code> are comments).
 If you have forgotten the meaning of each command, review the first hands-on.
-You should not forget to set the access key (<a href="#aws_cli_install">Section 12.3</a>).</p>
+You should not forget to set the access key (<a href="#aws_cli_install">Section 14.3</a>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6308,7 +6325,7 @@ You need to push the Docker image that you use for your application to ECR.</p>
 </div>
 <div class="paragraph">
 <p>To do so, first open the ECR screen from the AWS console (type <code>Elastic Container Registry</code> in the search bar).
-Select the <code>Private</code> tab and you will find a repository named <code>simplebatch-repositoryXXXXXXXX</code> (<a href="#fig_ecr_console1">Figure 62</a>).</p>
+Select the <code>Private</code> tab and you will find a repository named <code>simplebatch-repositoryXXXX</code> (<a href="#fig_ecr_console1">Figure 62</a>).</p>
 </div>
 <div id="fig_ecr_console1" class="imageblock text-center">
 <div class="content">
@@ -6367,9 +6384,9 @@ This completes the final preparations for executing a job using AWS Batch.</p>
 <p>Now, we demonstrate how to submit a job to AWS Batch.</p>
 </div>
 <div class="paragraph">
-<p>In the <code>notebook/</code> directory of the hands-on directory, there is a file named
+<p>In the <code>notebook/</code> directory of the hands-on source code, there is a file named
 <a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/aws-batch/notebook/run_single.ipynb">run_single.ipynb</a>
-(<code>.ipynb</code> is the file format of Jupyter notebook).
+(<code>.ipynb</code> is the file extension of Jupyter notebook).
 We will open this file from Jupyter notebook.</p>
 </div>
 <div class="paragraph">
@@ -6454,7 +6471,7 @@ We can launch Jupyter Notebook server from the local machine by the following co
 </div>
 <div class="paragraph">
 <p>Let us briefly explain the <code>submit_job()</code> function.
-In <a href="#sec_run_mnist_docker_local">[sec_run_mnist_docker_local]</a>, when we ran the MNIST Docker container locally, we used the following command.</p>
+In <a href="#sec_run_mnist_docker_local">Section 9.4</a>, when we ran the MNIST Docker container locally, we used the following command.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6462,11 +6479,11 @@ In <a href="#sec_run_mnist_docker_local">[sec_run_mnist_docker_local]</a>, when 
 </div>
 </div>
 <div class="paragraph">
-<p>Here, <code>--lr 0.1 --momentum 0.5 --epochs 10</code> is the command to be passed to the container.</p>
+<p>Here, <code>--lr 0.1 --momentum 0.5 --epochs 10</code> is the argument passed to the container.</p>
 </div>
 <div class="paragraph">
 <p>When you run a job with AWS Batch, you can also specify the command to be passed to the container by using the argument <code>ContainerOverrides</code> within <code>commands</code> parameter.
-The following part of the code corresponds to this parameter.</p>
+The following part of the code corresponds to this.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6511,7 +6528,7 @@ By following the prompts and entering the aws secret key, the AWS credentials wi
 </div>
 <div class="paragraph">
 <p>As another authentication method, the <code>profile_name</code> parameter is provided to the <code>submit_job()</code> function.
-If your credentials are stored in <code>~/.aws/credentials</code> (see <a href="#aws_cli_install">Section 12.3</a> for details), you can authenticate by simply passing the name of the profile you want to use to <code>profile_name</code>.
+If your credentials are stored in <code>~/.aws/credentials</code> (see <a href="#aws_cli_install">Section 14.3</a> for details), you can authenticate by simply passing the name of the profile you want to use to <code>profile_name</code>.
 Familiar readers may find the latter approach more convenient.</p>
 </div>
 </td>
@@ -7380,7 +7397,7 @@ The serverless cloud is also a system where the fee is determined by the total a
 In particular, we will focus on <strong>Lambda</strong>, <strong>S3</strong>, and <strong>DynamoDB</strong> (<a href="#fig:serverless_logos">Figure 78</a>).
 In a serverless cloud, a system is created by integrating these components.
 In what follows, we will go through all the knowledge that must be kept in mind when using Lambda, S3, and DynamoDB, so it may be difficult to get a concrete image.
-However, in the next section (<a href="#sec_intro_serverless">[sec_intro_serverless]</a>), we will provide hands-on exercises for each of them, so you can deepen your understanding.</p>
+However, in the next section (<a href="#sec_intro_serverless">Section 12</a>), we will provide hands-on exercises for each of them, so you can deepen your understanding.</p>
 </div>
 <div id="fig:serverless_logos" class="imageblock">
 <div class="content">
@@ -7653,7 +7670,7 @@ Some of them will be explained during the hands-on sessions in the later section
 <li>
 <p><a href="https://aws.amazon.com/api-gateway/">API Gateway</a>:
 This is responsible for routing when building the REST API.
-It will be covered in <a href="#sec_bashoutter">[sec_bashoutter]</a>.</p>
+It will be covered in <a href="#sec_bashoutter">Section 13</a>.</p>
 </li>
 <li>
 <p><a href="https://aws.amazon.com/fargate/">Fargate</a>:
@@ -7709,7 +7726,1554 @@ This is probably the cloud providers' buisiness strategy to increase the depende
 </div>
 </div>
 <div class="sect1">
-<h2 id="sec:appendix_settingup">12. Appendix: Environment setup</h2>
+<h2 id="sec_intro_serverless">12. Hands-on #5: Introduction to serverless computing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the previous chapter, we gave an overview of serverless architecture.
+In this chapter, let&#8217;s learn how to use serverless cloud through hands-on exercises.
+In this hands-on session, we will go through three serverless cloud components: Lambda, S3, and DynamoDB.
+A short tutorial is provided for each of them.</p>
+</div>
+<div class="sect2">
+<h3 id="_lambda_hands_on">12.1. Lambda hands-on</h3>
+<div class="paragraph">
+<p>First, let&#8217;s learn how to use Lambda.
+The source code for the hands-on is available on GitHub at
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda">handson/serverless/lambda</a>.</p>
+</div>
+<div class="paragraph">
+<p>A sketch of the application used in this hands-on is shown in <a href="#fig:lambda_deploy">Figure 81</a>.
+In STEP 1, code written in Python is registered to Lambda using AWS CDK.
+Then, in STEP 2, we use the invoke API to launch multiple Lambdas simultaneously to perform parallel computations.
+This is a minimal setup for the purpose of experiencing the Lambda workflow.</p>
+</div>
+<div id="fig:lambda_deploy" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/lambda_deploy.png" alt="lambda_deploy" width="700">
+</div>
+<div class="title">Figure 81. Overview on Lambda tutorial</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This hands-on exercise can be performed within the
+<a href="https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&amp;all-free-tier.sort-order=asc">free Lambda tier</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The program to deploy is written in
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/app.py">app.py</a>.
+Let&#8217;s take a look at the code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre></td><td class="code"><pre><i class="conum" data-value="1"></i><b>(1)</b>
+<span class="n">FUNC</span> <span class="o">=</span> <span class="s">"""
+import time
+from random import choice, randint
+def handler(event, context):
+    time.sleep(randint(2,5))
+    sushi = ["salmon", "tuna", "squid"]
+    message = "Welcome to Cloud Sushi. Your order is " + choice(sushi)
+    print(message)
+    return message
+"""</span>
+
+<span class="k">class</span> <span class="nc">SimpleLambda</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">Stack</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">App</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">_lambda</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">'LambdaHandler'</span><span class="p">,</span>
+            <span class="n">runtime</span><span class="o">=</span><span class="n">_lambda</span><span class="o">.</span><span class="n">Runtime</span><span class="o">.</span><span class="n">PYTHON_3_7</span><span class="p">,</span>
+            <span class="n">code</span><span class="o">=</span><span class="n">_lambda</span><span class="o">.</span><span class="n">Code</span><span class="o">.</span><span class="n">from_inline</span><span class="p">(</span><span class="n">FUNC</span><span class="p">),</span>
+            <span class="n">handler</span><span class="o">=</span><span class="s">"index.handler"</span><span class="p">,</span>
+            <span class="n">memory_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">Duration</span><span class="o">.</span><span class="n">seconds</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+            <span class="n">dead_letter_queue_enabled</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Here, we define a function that should be executed by Lambda.
+This is a very simple function that sleeps for a random period of 2-5 seconds, then randomly selects one of the strings ["salmon", "tuna", "squid"], and returns a message "Welcome to Cloud Sushi. Your order is XXXX" (where XXXX is the chosen sushi item).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Next, the function written in &lt;1&gt; is registered in Lambda.
+The meanings of the parameters are quite obvious, but let us explin for the completeness.
+<div class="ulist">
+<ul>
+<li>
+<p><code>runtime=_lambda.Runtime.PYTHON_3_7</code>:
+Here, we want to use Python 3.7 to execute the function defined above.
+In addition to Python 3.7, other languages such as Node.js, Java, Ruby and Go are also available.</p>
+</li>
+<li>
+<p><code>code=_lambda.Code.from_inline(FUNC)</code>
+We specify the code to be executed by Lambda.
+Here, the string defined in <code>FUNC=&#8230;&#8203;</code> is passed.
+You can also pass the path of a file.</p>
+</li>
+<li>
+<p><code>handler="index.handler"</code>:
+This is a parameter to distinguish between the main and sub functions when the code contains several sub functions.
+It means that the function named <code>handler</code> should be executed as the main function.</p>
+</li>
+<li>
+<p><code>memory_size=128</code>:
+Specifies that the maximum memory size is 128MB.</p>
+</li>
+<li>
+<p><code>timeout=core.Duration.seconds(10)</code>.
+The timeout period is set to 10 seconds.
+If the function does not finish within 10 seconds, an error is returned.</p>
+</li>
+<li>
+<p><code>dead_letter_queue_enabled=True</code>:
+This is an advanced setting and is not explained here.</p>
+</li>
+</ul>
+</div></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>By running the above program, a Lambda function will be created in the cloud.
+Now let&#8217;s deploy it.</p>
+</div>
+<div class="sect3">
+<h4 id="_deploying_the_application_3">12.1.1. Deploying the application</h4>
+<div class="paragraph">
+<p>The deployment procedure is almost the same as the previous hands-on.
+Here, only the commands are listed (lines starting with <code>#</code> are comments).
+If you have forgotten the meaning of each command, review the first hands-on.
+You should not forget to set the access key (<a href="#aws_cli_install">Section 14.3</a>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="c"># move to the project directory</span>
+<span class="nv">$ </span><span class="nb">cd </span>handson/serverless/lambda
+
+<span class="c"># create venv and install dependent libraries</span>
+<span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
+<span class="nv">$ </span><span class="nb">source</span> .env/bin/activate
+<span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+
+<span class="c"># deploy!</span>
+<span class="nv">$ </span>cdk deploy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the deployment command is executed successfully, you should get an output like <a href="#handson_04_lambda_cdk_output">Figure 82</a>.
+In the output you should see a message <code>FunctionName = SimpleLambda-XXXX</code> where <code>XXXX</code> is some random string.
+We will use this <code>XXXX</code> string later, so make a note of it.</p>
+</div>
+<div id="handson_04_lambda_cdk_output" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/handson_04_lambda_cdk_output.png" alt="cdk output" width="700">
+</div>
+<div class="title">Figure 82. Output of <code>cdk deploy</code></div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s log in to the AWS console and check the deployed stack.
+If you go to the Lambda page from the console, you can see the list of Lambda functions (<a href="#handson_04_lambda_console_func_list">Figure 83</a>).</p>
+</div>
+<div id="handson_04_lambda_console_func_list" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/lambda_console_func_list.png" alt="cdk output" width="700">
+</div>
+<div class="title">Figure 83. Viewing the list of functions from Lambda console</div>
+</div>
+<div class="paragraph">
+<p>In this application, we have created a function with a name <code>SimpleLambda-XXXX</code>.
+Click on the name of the function to see the details.
+You should see a screen like <a href="#handson_04_lambda_console_func_detail">Figure 84</a>.
+In the editor, you can see the Python function that you have just defined in the code.
+Scroll down to the bottom of the screen to see the various settings for the function.</p>
+</div>
+<div id="handson_04_lambda_console_func_detail" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/lambda_console_func_detail.png" alt="lambda_console_func_detail" width="700">
+</div>
+<div class="title">Figure 84. Viewing the details of the Lambda function</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The code executed by Lambda can also be edited using the editor on the Lambda console screen (<a href="#handson_04_lambda_console_func_detail">Figure 84</a>).
+In some cases, it is faster to directly edit the code here for debugging purpose.
+In this case, do not forget to update the CDK code to reflect the edits you made.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_executing_lambda_function">12.1.2. Executing Lambda function</h4>
+<div class="paragraph">
+<p>Now, let&#8217;s execute (invoke) the Lambda function we have created.
+Using the AWS API, we can start executing the function.
+Here, we will use the
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_one.py">handson/serverless/lambda/invoke _one.py</a>,
+which contains a simple code to invoke Lambda function.
+Interested readers are recommended to read the code.</p>
+</div>
+<div class="paragraph">
+<p>The following command invokes a Lambda function.
+Replace the <code>XXXX</code> part of the command with the string obtained by <code>SimpleLambda.FunctionName = SimpleLambda-XXXX</code> when you deployed it earlier.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python invoke_one.py SimpleLambda-XXXX</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After a few seconds, you should get the output <code>"Welcome to Cloud Sushi. Your order is salmon"</code>.
+It seems like a toy example, but the function was indeed executed in the cloud, where it generated a random number, selected a random sushi item, and returned the output.
+Try running this command a few times and see that different sushi menu is returned for each execution.</p>
+</div>
+<div class="paragraph">
+<p>Now, this command executes one function at a time, but the real power of Lambda is that it can execute a large number of tasks at the same time.
+Next, let&#8217;s try sending 100 tasks at once.
+We use a Python script saved as
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_many.py">handson/serverless/lambda/ invoke_many.py</a>.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command.
+Remember to replace the <code>XXXX</code> part as before.
+The second argument, <code>100</code>, means to submit 100 tasks.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python invoke_many.py XXXX 100</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output will be something like below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">....................................................................................................
+Submitted 100 tasks to Lambda!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s confirm that 100 tasks are actually running simultaneously.
+Go back to the Lambda console (<a href="#handson_04_lambda_console_func_detail">Figure 84</a>), and click on the "Monitoring" tab.
+You will see a graph like <a href="#handson_04_lambda_console_monitoring">Figure 85</a>.</p>
+</div>
+<div id="handson_04_lambda_console_monitoring" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/lambda_console_monitoring.png" alt="lambda_console_monitoring" width="700">
+</div>
+<div class="title">Figure 85. Monitoring the execution statistics from Lambda console</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It takes some time for the graph shown in <a href="#handson_04_lambda_console_monitoring">Figure 85</a> to be updated.
+If nothing is shown, wait a while and refresh the graph again.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In <a href="#handson_04_lambda_console_monitoring">Figure 85</a>, "Invocations" means how many times the function has been executed.
+You can see that it has been indeed executed 100 times.
+Furthermore, "Concurrent executions" shows how many tasks were executed simultaneously.
+In this case, the number is 96, which means that 96 tasks were executed in parallel.
+(The reason this does not equal 100 is that the commands to start the tasks were not sent at exactly the same time.)</p>
+</div>
+<div class="paragraph">
+<p>As we just saw, although it is very simple, using Lambda, we were able to create a cloud system that can execute a task concurrently.</p>
+</div>
+<div class="paragraph">
+<p>If we tried to do this in a traditional serverful cloud, we would have to write a lot of code for scaling the cluster, and also adjust various parameters.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you are interested, you can try submitting 1000 tasks at once.
+You will see that Lambda can handle such a large number of requests.
+However, be careful not to overdo it, or you will exceed the free usage limit of Lambda.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_deleting_the_stack_3">12.1.3. Deleting the stack</h4>
+<div class="paragraph">
+<p>Finally, let&#8217;s remove the stack.
+To remove the stack, execute the following command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>cdk destroy</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec_bashoutter">13. Hands-on #6: Bashoutter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the sixth and final hands-on session, we will create a simple web service using the serverless cloud technology we have learned so far.
+Specifically, let&#8217;s create a social networking service (SNS), named <strong>Bashoutter</strong>, where people can post their own haiku poems.
+(<a href="https://en.wikipedia.org/wiki/Haiku">Haiku</a>
+is a Japanese poetic form where it is consisted of 17 characters divided in to 5,5,7 character phrases.)
+By incorporating all the technologies such as Lambda, DynamoDB, and S3, a simple yet scalable social networking service that makes full use of serverless cloud will be born.
+By the end of this hands-on, we will deploy a modern-looking SNS shown in <a href="#handson_05_bashoutter">Figure 86</a>.</p>
+</div>
+<div id="handson_05_bashoutter" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/bashoutter.png" alt="bashoutter" width="700">
+</div>
+<div class="title">Figure 86. "Bashoutter" SNS app we will be building in this hands-on session</div>
+</div>
+<div class="sect2">
+<h3 id="_preparation">13.1. Preparation</h3>
+<div class="paragraph">
+<p>The source code for the hands-on is available on GitHub at
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter">handson/bashoutter</a>.</p>
+</div>
+<div class="paragraph">
+<p>To run this hands-on, it is assumed that the preparations described in the first hands-on (<a href="#handson_01_prep">Section 4.1</a>) have been completed.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This hands-on exercise can be performed within the
+<a href="https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&amp;all-free-tier.sort-order=asc">free AWS tier</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_reading_the_application_source_code_4">13.2. Reading the application source code</h3>
+<div class="sect3">
+<h4 id="_api">13.2.1. API</h4>
+<div class="paragraph">
+<p>In this application, we implement functions such as accepting haiku submissions from people, and retrieving a list of haiku from the database.
+As a minimum design to realize this service, we will implement four REST APIs as shown in <a href="#tab_handson_05_api">Table 11</a>.
+The APIs for basic data manipulation, such as posting, browsing, and deleting haiku, are provided.
+In addition, <code>PATCH /haiku/{item_id}</code> is used to "like" the haiku specified by <code>{item_id}</code>.</p>
+</div>
+<table id="tab_handson_05_api" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Bashoutter API</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /haiku</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get a list of haiku</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /haiku</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Post a new haiku</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PATCH /haiku/{item_id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Like a haiku specified by <code>{item_id}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE /haiku/{item_id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete the haiku specified by <code>{item_id}</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <strong>Open API Specification</strong> (OAS; formerly known as the Swagger Specification) is a description format for REST APIs.
+If the API specification is written according to the OAS, you can easily generate API documentation and client applications.
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/specs/swagger.yml">API specification prepared for this project</a>
+is also written according to the OAS.
+For more information, see
+<a href="https://swagger.io/docs/specification/about/">official Swagger documentation</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:bashoutter_application">13.2.2. Application architecture</h4>
+<div class="paragraph">
+<p><a href="#handson_05_architecture">Figure 87</a> shows an overview of the application we are creating in this hands-on.</p>
+</div>
+<div id="handson_05_architecture" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/handson-05-architecture.png" alt="hands-on 05 architecture" width="600">
+</div>
+<div class="title">Figure 87. Application architecture</div>
+</div>
+<div class="paragraph">
+<p>The summary of the system design is as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>API requests from the client are first sent to the <strong>API Gateway</strong> (described below), and then forwarded to the Lambda function specified by the API path.</p>
+</li>
+<li>
+<p>An independent Lambda function is defined for each API path.</p>
+</li>
+<li>
+<p>A database (powered by DynamoDB) is created to record the haiku information (author, text, submission date, etc.).</p>
+</li>
+<li>
+<p>Give each Lambda function read and write access to DynamoDB.</p>
+</li>
+<li>
+<p>Finally, we create an S3 bucket to deliver the static contents of the web page.
+Clients retrive HTML, CSS and JavaScript from this bucket and the contents will be displayed on a web browser.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Now, let us take a look at the main application code
+(<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/app.py">handson/bashoutter/app.py</a>)．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">Bashoutter</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">Stack</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">App</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <i class="conum" data-value="1"></i><b>(1)</b>
+        <span class="c1"># dynamoDB table to store haiku
+</span>        <span class="n">table</span> <span class="o">=</span> <span class="n">ddb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"Bashoutter-Table"</span><span class="p">,</span>
+            <span class="n">partition_key</span><span class="o">=</span><span class="n">ddb</span><span class="o">.</span><span class="n">Attribute</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s">"item_id"</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">ddb</span><span class="o">.</span><span class="n">AttributeType</span><span class="o">.</span><span class="n">STRING</span>
+            <span class="p">),</span>
+            <span class="n">billing_mode</span><span class="o">=</span><span class="n">ddb</span><span class="o">.</span><span class="n">BillingMode</span><span class="o">.</span><span class="n">PAY_PER_REQUEST</span><span class="p">,</span>
+            <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span>
+        <span class="p">)</span>
+
+        <i class="conum" data-value="2"></i><b>(2)</b>
+        <span class="n">bucket</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"Bashoutter-Bucket"</span><span class="p">,</span>
+            <span class="n">website_index_document</span><span class="o">=</span><span class="s">"index.html"</span><span class="p">,</span>
+            <span class="n">public_read_access</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span>
+        <span class="p">)</span>
+        <span class="n">s3_deploy</span><span class="o">.</span><span class="n">BucketDeployment</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"BucketDeployment"</span><span class="p">,</span>
+            <span class="n">destination_bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span>
+            <span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="n">s3_deploy</span><span class="o">.</span><span class="n">Source</span><span class="o">.</span><span class="n">asset</span><span class="p">(</span><span class="s">"./gui/dist"</span><span class="p">)],</span>
+            <span class="n">retain_on_delete</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">common_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">"runtime"</span><span class="p">:</span> <span class="n">_lambda</span><span class="o">.</span><span class="n">Runtime</span><span class="o">.</span><span class="n">PYTHON_3_7</span><span class="p">,</span>
+            <span class="s">"environment"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">"TABLE_NAME"</span><span class="p">:</span> <span class="n">table</span><span class="o">.</span><span class="n">table_name</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="c1"># define Lambda functions
+</span>        <span class="n">get_haiku_lambda</span> <span class="o">=</span> <span class="n">_lambda</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"GetHaiku"</span><span class="p">,</span>
+            <span class="n">code</span><span class="o">=</span><span class="n">_lambda</span><span class="o">.</span><span class="n">Code</span><span class="o">.</span><span class="n">from_asset</span><span class="p">(</span><span class="s">"api"</span><span class="p">),</span>
+            <span class="n">handler</span><span class="o">=</span><span class="s">"api.get_haiku"</span><span class="p">,</span>
+            <span class="n">memory_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">common_params</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">post_haiku_lambda</span> <span class="o">=</span> <span class="n">_lambda</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"PostHaiku"</span><span class="p">,</span>
+            <span class="n">code</span><span class="o">=</span><span class="n">_lambda</span><span class="o">.</span><span class="n">Code</span><span class="o">.</span><span class="n">from_asset</span><span class="p">(</span><span class="s">"api"</span><span class="p">),</span>
+            <span class="n">handler</span><span class="o">=</span><span class="s">"api.post_haiku"</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">common_params</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">patch_haiku_lambda</span> <span class="o">=</span> <span class="n">_lambda</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"PatchHaiku"</span><span class="p">,</span>
+            <span class="n">code</span><span class="o">=</span><span class="n">_lambda</span><span class="o">.</span><span class="n">Code</span><span class="o">.</span><span class="n">from_asset</span><span class="p">(</span><span class="s">"api"</span><span class="p">),</span>
+            <span class="n">handler</span><span class="o">=</span><span class="s">"api.patch_haiku"</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">common_params</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">delete_haiku_lambda</span> <span class="o">=</span> <span class="n">_lambda</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"DeleteHaiku"</span><span class="p">,</span>
+            <span class="n">code</span><span class="o">=</span><span class="n">_lambda</span><span class="o">.</span><span class="n">Code</span><span class="o">.</span><span class="n">from_asset</span><span class="p">(</span><span class="s">"api"</span><span class="p">),</span>
+            <span class="n">handler</span><span class="o">=</span><span class="s">"api.delete_haiku"</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">common_params</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <i class="conum" data-value="4"></i><b>(4)</b>
+        <span class="c1"># grant permissions
+</span>        <span class="n">table</span><span class="o">.</span><span class="n">grant_read_data</span><span class="p">(</span><span class="n">get_haiku_lambda</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">grant_read_write_data</span><span class="p">(</span><span class="n">post_haiku_lambda</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">grant_read_write_data</span><span class="p">(</span><span class="n">patch_haiku_lambda</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">grant_read_write_data</span><span class="p">(</span><span class="n">delete_haiku_lambda</span><span class="p">)</span>
+
+        <i class="conum" data-value="5"></i><b>(5)</b>
+        <span class="c1"># define API Gateway
+</span>        <span class="n">api</span> <span class="o">=</span> <span class="n">apigw</span><span class="o">.</span><span class="n">RestApi</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"BashoutterApi"</span><span class="p">,</span>
+            <span class="n">default_cors_preflight_options</span><span class="o">=</span><span class="n">apigw</span><span class="o">.</span><span class="n">CorsOptions</span><span class="p">(</span>
+                <span class="n">allow_origins</span><span class="o">=</span><span class="n">apigw</span><span class="o">.</span><span class="n">Cors</span><span class="o">.</span><span class="n">ALL_ORIGINS</span><span class="p">,</span>
+                <span class="n">allow_methods</span><span class="o">=</span><span class="n">apigw</span><span class="o">.</span><span class="n">Cors</span><span class="o">.</span><span class="n">ALL_METHODS</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">haiku</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="s">"haiku"</span><span class="p">)</span>
+        <span class="n">haiku</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span>
+            <span class="s">"GET"</span><span class="p">,</span>
+            <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">get_haiku_lambda</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">haiku</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span>
+            <span class="s">"POST"</span><span class="p">,</span>
+            <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">post_haiku_lambda</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">haiku_item_id</span> <span class="o">=</span> <span class="n">haiku</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="s">"{item_id}"</span><span class="p">)</span>
+        <span class="n">haiku_item_id</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span>
+            <span class="s">"PATCH"</span><span class="p">,</span>
+            <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">patch_haiku_lambda</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">haiku_item_id</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span>
+            <span class="s">"DELETE"</span><span class="p">,</span>
+            <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">delete_haiku_lambda</span><span class="p">)</span>
+        <span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Here, a DynamoDB table is created to record the haiku information.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>This part creates an S3 bucket to store and deliver the static site contents.
+<code>s3_deploy.BucketDeployment()</code> configures the settings to automatically upload the necessary files when the stack is deployed.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>This part defines the Lambda functions to be executed by each API path.
+The functions are written in Python 3.7 and the code can be found at
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py">handson/bashoutter/api/api.py</a>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The Lambda function defined in &lt;3&gt; is given read and write access to the database.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Here, the API Gateway is used to link each API path with the corresponding Lambda function.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_s3_bucket_in_public_access_mode">13.2.3. S3 bucket in Public access mode</h4>
+<div class="paragraph">
+<p>Take a closer look at the part of the code where an S3 bucket is created.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="n">bucket</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="s">"Bashoutter-Bucket"</span><span class="p">,</span>
+    <span class="n">website_index_document</span><span class="o">=</span><span class="s">"index.html"</span><span class="p">,</span>
+    <span class="n">public_read_access</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span>
+<span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What you should pay attention to here is the line <code>public_read_access=True</code>.
+S3 has a feature called <strong>Public access mode</strong>.
+When the public access mode is turned on, the files in the bucket can be viewed without authentication (i.e., by anyone on the Internet).
+This setting is ideal for storing static content for public websites, and many serverless web services are designed this way.
+When the public access mode is set, a unique URL such as <code><a href="http://XXXX.s3-website-ap-northeast-1.amazonaws.com/" class="bare">http://XXXX.s3-website-ap-northeast-1.amazonaws.com/</a></code> is assigned to the bucket.
+When a client accesses this URL, <code>index.html</code> in the bucket is returned to the client, and the page is loaded
+(Note that we are specifying which file to be returned in the line <code>website_index_document="index.html"</code>.)</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When operating a web site for production, it is common to add the service called
+<a href="https://aws.amazon.com/cloudfront/">CloudFront</a>
+to the S3 bucket in public access mode.
+CloudFront can be used to configure <strong>Content Delivery Nework (CDN)</strong> and encrypted HTTPS communication.
+For more information about CloudFront, please refer to
+<a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html">official documentation "What is Amazon CloudFront?</a>.</p>
+</div>
+<div class="paragraph">
+<p>In this hands-on session, CloudFront configuration was not performed to simplify the code, but readers who are interested may find the program at the following link helpful.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/aws-samples/aws-cdk-examples/tree/master/typescript/static-site" class="bare">https://github.com/aws-samples/aws-cdk-examples/tree/master/typescript/static-site</a></p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The public S3 bucket is assigned a random URL by AWS.
+If you want to host it in your own domain such as <code>example.com</code>, you can configure Domain Name System (DNS), such as Amazon Route 53, and add an appropriate record.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>After creating an S3 bucket in public access mode, the following code is used to upload the website contents to the bucket upon deployment of the stack.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="n">s3_deploy</span><span class="o">.</span><span class="n">BucketDeployment</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="s">"BucketDeployment"</span><span class="p">,</span>
+    <span class="n">destination_bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span>
+    <span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="n">s3_deploy</span><span class="o">.</span><span class="n">Source</span><span class="o">.</span><span class="n">asset</span><span class="p">(</span><span class="s">"./gui/dist"</span><span class="p">)],</span>
+    <span class="n">retain_on_delete</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this code, the files in the directory <code>./gui/dist</code> will be placed in the bucket when the deployment is started.
+The directory <code>./gui/dist</code> contains the static contents (HTML/CSS/JavaScript) of the website.
+We will not explain the implementation details of the GUI here, but the code can be found at
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter/gui">handson/bashoutter/gui</a>.
+If you are interested, we recommend to read the source code.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This website was built using the UI frameworks called
+<a href="https://vuejs.org/">Vue.js</a>
+and
+<a href="https://vuetifyjs.com/">Vuetify</a>.
+By using Vue, the web page is rendered using single page application (SPA) technology.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_api_handler_functions">13.2.4. API handler functions</h4>
+<div class="paragraph">
+<p>When an API request comes, the function that performs the requested processing is called the handler function.
+Let&#8217;s take a look at the part where the handler function for the <code>GET /haiku</code> API is defined in Lambda.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="n">get_haiku_lambda</span> <span class="o">=</span> <span class="n">_lambda</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="s">"GetHaiku"</span><span class="p">,</span>
+    <span class="n">code</span><span class="o">=</span><span class="n">_lambda</span><span class="o">.</span><span class="n">Code</span><span class="o">.</span><span class="n">from_asset</span><span class="p">(</span><span class="s">"api"</span><span class="p">),</span>
+    <span class="n">handler</span><span class="o">=</span><span class="s">"api.get_haiku"</span><span class="p">,</span>
+    <span class="n">memory_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">common_params</span>
+<span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Starting from the simplest part, <code>memory_size=512</code> specifies the memory allocated for this function as 512MB.
+<code>code=_lambda.Code.from_asset("api")</code> defines that the source code of the function should be retrieved from an external directory named <code>api/</code>.
+Then, the line <code>handler="api.get_haiku"</code> specifies that <code>get_haiku()</code> function from <code>api.py</code> should be executed as a handler function.</p>
+</div>
+<div class="paragraph">
+<p>Next, let&#8217;s look at the source code of <code>get_haiku()</code> function in <code>api.py</code>
+(<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py">handson/bashoutter/api/api.py</a>)．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="code"><pre><span class="n">ddb</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s">"dynamodb"</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">ddb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">"TABLE_NAME"</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">get_haiku</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="s">"""
+    handler for GET /haiku
+    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span>
+
+        <span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">"Items"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">status_code</span> <span class="o">=</span> <span class="mi">500</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="p">{</span><span class="s">"description"</span><span class="p">:</span> <span class="n">f</span><span class="s">"Internal server error. {str(e)}"</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">"statusCode"</span><span class="p">:</span> <span class="n">status_code</span><span class="p">,</span>
+        <span class="s">"headers"</span><span class="p">:</span> <span class="n">HEADERS</span><span class="p">,</span>
+        <span class="s">"body"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">cls</span><span class="o">=</span><span class="n">DecimalEncoder</span><span class="p">)</span>
+    <span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the line <code>response = table.scan()</code>, all the elements are retrieved from the DynamoDB table.
+If no error occurs, the status code 200 is returned along with the haiku data, and if any error occurs, the status code 500 is returned.</p>
+</div>
+<div class="paragraph">
+<p>By repeating the above operations for other APIs, handler functions for all APIs are defined.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In the handler function of <code>GET /haiku</code>, notice the line <code>response = table.scan()</code>.
+This is actually not the best way to write a data retrieval from DynamoDB.
+The <code>scan()</code> method of DynamoDB returns only data up to 1MB in size.
+If the size of the data in the database is larger than 1MB, you need to call the <code>scan()</code> method recursively.
+For more information, refer to
+<a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Table.scan">the official documentation of boto3 library</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sec:bashoutter_iam">13.2.5. Identity and Access Management (IAM)</h4>
+<div class="paragraph">
+<p>Look at the following part of the code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="n">table</span><span class="o">.</span><span class="n">grant_read_data</span><span class="p">(</span><span class="n">get_haiku_lambda</span><span class="p">)</span>
+<span class="n">table</span><span class="o">.</span><span class="n">grant_read_write_data</span><span class="p">(</span><span class="n">post_haiku_lambda</span><span class="p">)</span>
+<span class="n">table</span><span class="o">.</span><span class="n">grant_read_write_data</span><span class="p">(</span><span class="n">patch_haiku_lambda</span><span class="p">)</span>
+<span class="n">table</span><span class="o">.</span><span class="n">grant_read_write_data</span><span class="p">(</span><span class="n">delete_haiku_lambda</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>AWS has an important concept called
+<a href="https://aws.amazon.com/iam/">IAM (Identity and Access Management)</a>.
+Although we have not mentioned it so far for the sake of simplicity, IAM is a very important concept in designing the cloud system on AWS.
+IAM basically defines what permissions a resource has over other resources.
+For example, in its default state, Lambda does not have any permissions to access other resources such as DynamoDB.
+Therefore, in order for a Lambda function to read or write DynamoDB data, an IAM must be granted to the Lambda function to allow such operation.</p>
+</div>
+<div class="paragraph">
+<p><code>dynamodb.Table</code> object in CDK has a convenient method <code>grant_read_write_data()</code>, which assigns IAM to other resources so that they can perform read and write operation to the database.
+Similarly, the <code>s3.Bucket</code> object in CDK has a method <code>grant_read_write()</code> to allow reading and writing to the bucket.
+Indeed, we used this method in <a href="#sec_aws_batch">Section 9</a> where we granted AWS Batch to write data to S3 bucket.
+Interested readers can look back and check the code.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The best practice to manage IAM is that the minimam permissions necessary for the system to work should be assigned to each resource.
+This will not only improve security of the system, but also reduce bugs by, for example, preventing unintended resources from reading or writing to the database.
+For this reason, the above code grants only read permission to the handler of <code>GET /haiku</code> API (notice the use of <code>grant_read_data()</code> method instead of <code>grant_read_write_data()</code>).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_api_gateway">13.2.6. API Gateway</h4>
+<div class="paragraph">
+<p><a href="https://aws.amazon.com/api-gateway/">API Gateway</a> is literally an gateway that forwards API requests to Lambda, EC2, and other resources according to the API request path (<a href="#fig:bashoutter_api_ gateway">[fig:bashoutter_api_ gateway]</a>).
+Then, the outputs of the processing performed by Lambda and EC2 are returned to the client via API Gateway.
+In cloud terminology, the server that stands between the client and the backend server whose job is to forward the connection according to the API path is called a <strong>router</strong> or a <strong>reverse proxy</strong>.
+Traditionally, routers are usually served by a dedicated virtual server.
+API Gateway, on the other hand, is a serverless router service where it achieves routing without a fixed server.
+API Gateway is dynamically launched only when the API request arrives.
+As a natural consequence of being serverless, it has the ability to automatically increase its routing capacity as the number of accesses increases.</p>
+</div>
+<div id="fig:bashoutter_api_gateway" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/api_gateway.png" alt="api_gateway" width="700">
+</div>
+<div class="title">Figure 88. API Gateway</div>
+</div>
+<div class="paragraph">
+<p>By deploying an API Gateway, one can easily build a system that can handle a large number of API requests (thousands to tens of thousands per second) without having to write codes.
+The summary of the API Gateway cost is shown in <a href="#tab_handson_05_apigateway_price">Table 12</a>.
+API Gateway also offers free tier, so up to one million requests per month can be used for free.</p>
+</div>
+<table id="tab_handson_05_apigateway_price" class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 12. Pricing of API Gateway</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Number of Requests (per month)</th>
+<th class="tableblock halign-left valign-top">Price (per million)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">First 333 million</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$4.25</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Next 667 million</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$3.53</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Next 19 billion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$3.00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Over 20 billion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$1.91</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Let&#8217;s look at the source code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre></td><td class="code"><pre><i class="conum" data-value="1"></i><b>(1)</b>
+<span class="n">api</span> <span class="o">=</span> <span class="n">apigw</span><span class="o">.</span><span class="n">RestApi</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="s">"BashoutterApi"</span><span class="p">,</span>
+    <span class="n">default_cors_preflight_options</span><span class="o">=</span><span class="n">apigw</span><span class="o">.</span><span class="n">CorsOptions</span><span class="p">(</span>
+        <span class="n">allow_origins</span><span class="o">=</span><span class="n">apigw</span><span class="o">.</span><span class="n">Cors</span><span class="o">.</span><span class="n">ALL_ORIGINS</span><span class="p">,</span>
+        <span class="n">allow_methods</span><span class="o">=</span><span class="n">apigw</span><span class="o">.</span><span class="n">Cors</span><span class="o">.</span><span class="n">ALL_METHODS</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<i class="conum" data-value="2"></i><b>(2)</b>
+<span class="n">haiku</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="s">"haiku"</span><span class="p">)</span>
+<i class="conum" data-value="3"></i><b>(3)</b>
+<span class="n">haiku</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span>
+    <span class="s">"GET"</span><span class="p">,</span>
+    <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">get_haiku_lambda</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">haiku</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span>
+    <span class="s">"POST"</span><span class="p">,</span>
+    <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">post_haiku_lambda</span><span class="p">)</span>
+<span class="p">)</span>
+
+<i class="conum" data-value="4"></i><b>(4)</b>
+<span class="n">haiku_item_id</span> <span class="o">=</span> <span class="n">haiku</span><span class="o">.</span><span class="n">add_resource</span><span class="p">(</span><span class="s">"{item_id}"</span><span class="p">)</span>
+<i class="conum" data-value="5"></i><b>(5)</b>
+<span class="n">haiku_item_id</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span>
+    <span class="s">"PATCH"</span><span class="p">,</span>
+    <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">patch_haiku_lambda</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">haiku_item_id</span><span class="o">.</span><span class="n">add_method</span><span class="p">(</span>
+    <span class="s">"DELETE"</span><span class="p">,</span>
+    <span class="n">apigw</span><span class="o">.</span><span class="n">LambdaIntegration</span><span class="p">(</span><span class="n">delete_haiku_lambda</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>First, an empty API Gateway is created by <code>api = apigw.RestApi()</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Next, we add add the API path <code>/haiku</code> by calling the method <code>api.root.add_resource()</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Next, <code>add_method()</code> is called to define the <code>GET</code> and <code>POST</code> methods for the <code>/haiku</code> path.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Similarly, <code>haiku.add_resource("{item_id}")</code> adds the API path <code>/haiku/{item_id}</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Finally, <code>add_method()</code> is used to define <code>PATCH</code> and <code>DELETE</code> methods in the path <code>/haiku/{item_id}</code>.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>As you can see, API Gateway is very simple to use.
+All you need to do is to sequentially describe the API path and the methods that will be executed.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When you create a new API with this program, a random URL will be assigned as the API endpoint.
+If you want to host it in your own domain such as <code>example.com</code>, you can configure Domain Name System (DNS), such as Amazon Route 53, and add an appropriate record.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When we created a new API with API Gateway, the parameter <code>default_cors_preflight_options</code> was used to set up
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">Cross Origin Resource Sharing (CORS)</a>.
+This setting is necessary when accessing the API from a web browser.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deploying_the_application_4">13.3. Deploying the application</h3>
+<div class="paragraph">
+<p>The deployment procedure is almost the same as the previous hands-on.
+Here, only the commands are listed (lines starting with <code>#</code> are comments).
+If you have forgotten the meaning of each command, review the first hands-on.
+You should not forget to set the access key (<a href="#aws_cli_install">Section 14.3</a>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="c"># move to the project directory</span>
+<span class="nv">$ </span><span class="nb">cd </span>intro-aws/handson/bashoutter
+
+<span class="c"># create venv and install dependent libraries</span>
+<span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
+<span class="nv">$ </span><span class="nb">source</span> .env/bin/activate
+<span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+
+<span class="c"># Deploy!</span>
+<span class="nv">$ </span>cdk deploy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the deployment is successful, you should see an output like <a href="#handson_05_cdk_output">Figure 89</a>.
+In the output you should find <code>Bashoutter.BashoutterApiEndpoint = XXXX</code> and <code>Bashoutter.BucketUrl = YYYY</code>.
+We will use these string values later, so be sure to make notes of them.</p>
+</div>
+<div id="handson_05_cdk_output" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/cdk_output.png" alt="cdk output" width="700">
+</div>
+<div class="title">Figure 89. Output of <code>cdk deploy</code></div>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s log in to the AWS console and check the deployed stack.
+First, go to the API Gateway page.
+You will see a screen like <a href="#handson_05_apigw_console_list">Figure 90</a>, where you can check the list of deployed API endpoints.</p>
+</div>
+<div id="handson_05_apigw_console_list" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/apigw_console_list.png" alt="apigw_console_list" width="700">
+</div>
+<div class="title">Figure 90. API Gateway console (1)</div>
+</div>
+<div class="paragraph">
+<p>By clicking on the API named "BashoutterApi", you can move to a screen like <a href="#handson_05_apigw_console_detail">Figure 91</a> and view detailed information.
+You can see that <code>GET /haiku</code>, <code>POST /haiku</code>, and other APIs are defined.</p>
+</div>
+<div class="paragraph">
+<p>Click on each method to see detailed information about that method.
+In addition to the aforementioned routing functions, API Gateway can also be used to add authentication.
+We won&#8217;t be using these authentication feature in this hands-on, but this feature will be useful in many web applications.
+Next, in <a href="#handson_05_apigw_console_detail">Figure 91</a>, notice that the Lambda functions called by this API is shown in the area circled in red.
+Clicking on the function name will take you to the console of the corresponding Lambda function, where you can view the contents of the function.</p>
+</div>
+<div id="handson_05_apigw_console_detail" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/apigw_console_detail.png" alt="apigw_console_detail" width="700">
+</div>
+<div class="title">Figure 91. API Gateway console (2)</div>
+</div>
+<div class="paragraph">
+<p>Next, we will move to the S3 console.
+There, you should be able to find a bucket whose name starts with <code>bashouter-XXXX</code> (where <code>XXXX</code> is some random string) (<a href="#handson_05_s3_console">Figure 92</a>).</p>
+</div>
+<div id="handson_05_s3_console" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/s3_console.png" alt="s3_console" width="700">
+</div>
+<div class="title">Figure 92. S3 console</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s check the contents of the bucket by clicking on the bucket name.
+You will find the main html document, <code>index.html</code>, along with <code>css/</code>, <code>js/</code> and other directories which store the components to render the web page (<a href="#handson_05_s3_contents">Figure 93</a>).</p>
+</div>
+<div id="handson_05_s3_contents" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/s3_contents.png" alt="s3_contents" width="700">
+</div>
+<div class="title">Figure 93. The files in the S3 bucket</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:bashoutter_test_api">13.4. Sending API requests</h3>
+<div class="paragraph">
+<p>Now, let&#8217;s actually send API requests to the deployed application.
+First, let&#8217;s practice sending API requests from the command line.</p>
+</div>
+<div class="paragraph">
+<p>Here we use a simple HTTP client tool,
+<a href="https://httpie.org/">HTTPie</a>,
+to send HTTP API requests from the command line.
+HTTPie is installed together with the Python virtual environment (venv) when we deployed the stack.
+To make sure that the installation is successful, activate the virtual environment and type <code>http</code> on the command line.
+If you get a help message, you are ready to go.</p>
+</div>
+<div class="paragraph">
+<p>First, set the URL of the API endpoint to a command line variable　(the <code>XXXX</code> string from <code>Bashoutter.BashoutterApiEndpoint = XXXX</code>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span><span class="nb">export </span><span class="nv">ENDPOINT_URL</span><span class="o">=</span>XXXX</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, obtain a list of haiku by sending <code>GET /haiku</code> API.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>http GET <span class="s2">"</span><span class="k">${</span><span class="nv">ENDPOINT_URL</span><span class="k">}</span><span class="s2">/haiku"</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Unfortunately, there is no haiku registered in the database at this moment, so you will see an empty array (<code>[]</code>) as return.</p>
+</div>
+<div class="paragraph">
+<p>Next, let&#8217;s post our very first haiku using <code>POST /haiku</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>http POST <span class="s2">"</span><span class="k">${</span><span class="nv">ENDPOINT_URL</span><span class="k">}</span><span class="s2">/haiku"</span> <span class="se">\</span>
+<span class="nv">username</span><span class="o">=</span><span class="s2">"Mastuo Bashou"</span> <span class="se">\</span>
+<span class="nv">first</span><span class="o">=</span><span class="s2">"the stillness"</span> <span class="se">\</span>
+<span class="nv">second</span><span class="o">=</span><span class="s2">"penetrating the rock"</span> <span class="se">\</span>
+<span class="nv">third</span><span class="o">=</span><span class="s2">"a cicada's cry"</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following output will be obtained.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>HTTP/1.1 201 Created
+Connection: keep-alive
+Content-Length: 49
+Content-Type: application/json
+....
+{
+    "description": "Successfully added a new haiku"
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It seems we successfully submited a new haiku.
+Let&#8217;s confirm that the haiku is indeed added to the database by calling the GET request again.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>http GET <span class="s2">"</span><span class="k">${</span><span class="nv">ENDPOINT_URL</span><span class="k">}</span><span class="s2">/haiku"</span>
+
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 258
+Content-Type: application/json
+...
+<span class="o">[</span>
+    <span class="o">{</span>
+        <span class="s2">"created_at"</span>: <span class="s2">"2020-07-06T02:46:04+00:00"</span>,
+        <span class="s2">"first"</span>: <span class="s2">"the stillness"</span>,
+        <span class="s2">"item_id"</span>: <span class="s2">"7e91c5e4d7ad47909e0ac14c8bbab05b"</span>,
+        <span class="s2">"likes"</span>: 0.0,
+        <span class="s2">"second"</span>: <span class="s2">"penetrating the rock"</span>,
+        <span class="s2">"third"</span>: <span class="s2">"a cicada's cry"</span>,
+        <span class="s2">"username"</span>: <span class="s2">"Mastuo Bashou"</span>
+    <span class="o">}</span>
+<span class="o">]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Excellent!</p>
+</div>
+<div class="paragraph">
+<p>Next, let&#8217;s add a "like" to this haiku by calling <code>PATCH /haiku/{item_id}</code>.
+To do this, run the following command after replacing <code>XXXX</code> with the ID of the haiku that you created in the previous command (i.e. <code>item_id</code> in the response text).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>http PATCH <span class="s2">"</span><span class="k">${</span><span class="nv">ENDPOINT_URL</span><span class="k">}</span><span class="s2">/haiku/XXXX"</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should get the output <code>{"description": "OK"}</code>.
+We confirm that the number of likes has increased by 1 by sending the GET request one more time.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>http GET <span class="s2">"</span><span class="k">${</span><span class="nv">ENDPOINT_URL</span><span class="k">}</span><span class="s2">/haiku"</span>
+...
+<span class="o">[</span>
+    <span class="o">{</span>
+        ...
+        <span class="s2">"likes"</span>: 1.0,
+        ...
+    <span class="o">}</span>
+<span class="o">]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Lastly, we delete the haiku by sending the DELETE request.
+Run the following command after replacing <code>XXXX</code> with the ID of the haiku.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>http DELETE <span class="s2">"</span><span class="k">${</span><span class="nv">ENDPOINT_URL</span><span class="k">}</span><span class="s2">/haiku/XXXX"</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we send GET request, the return will be an empty array (<code>[]</code>).</p>
+</div>
+<div class="paragraph">
+<p>Now we were able to validate that the basic APIs for posting, retrieving, deleting, and adding "likes" to haiku are working properly.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_simulating_a_large_simultaneous_api_request">13.5. Simulating a large simultaneous API request</h3>
+<div class="paragraph">
+<p>In the previous section, we manually posted haiku one by one.
+In a social networking service with a large number of users, several thousand haiku would be posted every second.
+By adopting a serverless architecture, we have built a system that can easily handle such instantaneous heavy access.
+To demonstrate this point, let&#8217;s simulate a situation where a large number of APIs are sent to the system.</p>
+</div>
+<div class="paragraph">
+<p>In
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/client.py">handson/bashoutter/client.py</a>,
+we provide a short script to send many API requests simultaneously.
+By using this script, we can send <code>POST /haiku</code> API request for a specified number of times.</p>
+</div>
+<div class="paragraph">
+<p>As a test, we will send the API request for 300 times.
+Run the following command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python client.py <span class="nv">$ENDPOINT_URL</span> post_many 300</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The execution would be completed in a matter of seconds.
+If this API had been supported by a single server, it would have taken much longer to process such a large number of requests.
+In the worst case, it might have even led to a server shutdown.
+The serverless application we have created is a very simple yet scalable cloud system that can handle hundreds of requests every second.
+Did you get a glimpse of the benefits and power of a serverless cloud?</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you submit a large number of haiku using the above command, the database will be filled with useless data.
+To completely empty the database, use the following command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python client.py <span class="nv">$ENDPOINT_URL</span> clear_database</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interacting_with_bashoutter_gui">13.6. Interacting with Bashoutter GUI</h3>
+<div class="paragraph">
+<p>In the previous part, we practiced sending APIs from the command line.
+In a web application, the exact same thing is done behind a web browser to display the contents of a page (see <a href="#fig:web_server">Figure 74</a>).
+Lastly, let&#8217;s see what happens when the API is integrated with the GUI.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s check the URL given by <code>Bashoutter.BucketUrl=</code> that is output on the command line when we deployed the stack (<a href="#handson_05_cdk_output">Figure 89</a>).
+As mentioned earlier, this is the URL of the S3 bucket in public access mode.</p>
+</div>
+<div class="paragraph">
+<p>Open a web browser and enter the URL of S3 in the address bar to access it.
+You should see a page like shown in <a href="#handson_05_bashoutter_2">Figure 94</a>.</p>
+</div>
+<div id="handson_05_bashoutter_2" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-bashoutter/bashoutter_2.png" alt="bashoutter" width="700">
+</div>
+<div class="title">Figure 94. Bashoutter GUI</div>
+</div>
+<div class="paragraph">
+<p>When the page is loaded, enter the URL of the <strong>API Gateway</strong> you deployed in the text box at the top that says "API Endpoint URL".
+(In this application, the API Gateway URL is randomly assigned, so the GUI is designed like this.)
+Then, press the "REFRESH" button on the screen.
+If you have already registered some haiku in the database, you will see a list of haiku.
+Click on the heart icon at the bottom left of each haiku to give it a "like" vote.</p>
+</div>
+<div class="paragraph">
+<p>To submit a new haiku, enter the new phrase and the name of the author, then press "POST".
+After pressing "POST", be sure to press the "REFRESH" button again to retrieve the latest list of haiku from the database.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deleting_the_stack_4">13.7. Deleting the stack</h3>
+<div class="paragraph">
+<p>This concludes the Bashoutter project!
+We created an SNS that can be accessed from anywhere in the world via the Internet.
+As we demonstrated in <a href="#simulating_many_apis">[simulating_many_apis]</a>, Bashoutter can scale flexibly to handle a large number of simultaneous access without delay.
+Although it is extremely simple, it satisfies the basic requirements for an modern and scalable web service!</p>
+</div>
+<div class="paragraph">
+<p>When you have enjoyed Bashoutter application, don&#8217;t forget to delete the stack.</p>
+</div>
+<div class="paragraph">
+<p>To delete the stack from the command line, use the following command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>cdk destroy</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Depending on the version of CDK, <code>cdk destroy</code> may output an error if the S3 bucket is not empty.
+In this case, you have to delete all the files in the S3 bucket before deleting the stack.</p>
+</div>
+<div class="paragraph">
+<p>To do this from the AWS console, go to the S3 console, open the bucket, select all the files, and execute "Actions" &#8594; "Delete".</p>
+</div>
+<div class="paragraph">
+<p>To do this from the command line, use the following command.
+Remember to replace &lt;BUCKET NAME&gt; with the name of your bucket.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>aws s3 <span class="nb">rm</span> &lt;BUCKET NAME&gt; <span class="nt">--recursive</span></code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_short_summary_2">13.8. Short summary</h3>
+<div class="paragraph">
+<p>This is the end of Part III of this book.</p>
+</div>
+<div class="paragraph">
+<p>In Part III, we focused on how to create web applications and databases that can be used by the general public as an application of cloud computing.
+Along the way, we explained the traditional design of cloud systems and the latest design method called serverless architecture.
+In <a href="#sec_intro_serverless">Section 12</a>, we practiced serverless architecture in AWS by using Lambda, S3, and DynamoDB.
+Finally, in <a href="#sec_bashoutter">Section 13</a>, we integrated these serverless technologies to create a simple web application called "Bashoutter".</p>
+</div>
+<div class="paragraph">
+<p>Through these exercises, we hope you have gained a better understanding of how web services are developed and maintained in the real world.
+We also hope that this hands-on session was a good starting point for you to create amazing web application yourself.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sec:appendix_settingup">14. Appendix: Environment setup</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>To read through this book, you need to set up an environment on your local machine to run the hands-on programs.
@@ -7720,34 +9284,34 @@ If you have already built your environment, you need to read through only the re
 <div class="ulist">
 <ul>
 <li>
-<p>Creating an AWS account (<a href="#sec:create_aws_account">Section 12.1</a>)</p>
+<p>Creating an AWS account (<a href="#sec:create_aws_account">Section 14.1</a>)</p>
 </li>
 <li>
-<p>Creating AWS access key (<a href="#aws_secrets">Section 12.2</a>)</p>
+<p>Creating AWS access key (<a href="#aws_secrets">Section 14.2</a>)</p>
 </li>
 <li>
-<p>Installing AWS CLI (<a href="#aws_cli_install">Section 12.3</a>)</p>
+<p>Installing AWS CLI (<a href="#aws_cli_install">Section 14.3</a>)</p>
 </li>
 <li>
-<p>Installing AWS CDK (<a href="#aws_cdk_install">Section 12.4</a>)</p>
+<p>Installing AWS CDK (<a href="#aws_cdk_install">Section 14.4</a>)</p>
 </li>
 <li>
-<p>Installing WSL (<a href="#sec:install_wsl">Section 12.5</a>)</p>
+<p>Installing WSL (<a href="#sec:install_wsl">Section 14.5</a>)</p>
 </li>
 <li>
-<p>Installing Docker (<a href="#sec:install_docker">Section 12.6</a>)</p>
+<p>Installing Docker (<a href="#sec:install_docker">Section 14.6</a>)</p>
 </li>
 <li>
-<p>Quick tutorial on Python venv (<a href="#venv_quick_guide">Section 12.7</a>)</p>
+<p>Quick tutorial on Python venv (<a href="#venv_quick_guide">Section 14.7</a>)</p>
 </li>
 <li>
-<p>Working with Docker image for the hands-on exercises (<a href="#sec_handson_docker">Section 12.8</a>)</p>
+<p>Working with Docker image for the hands-on exercises (<a href="#sec_handson_docker">Section 14.8</a>)</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>The OS can be Linux, Mac, or Windows.
-Windows users are assumed to use Windows Subsytem for Linux (WSL) (<a href="#sec:install_wsl">Section 12.5</a>).</p>
+Windows users are assumed to use Windows Subsytem for Linux (WSL) (<a href="#sec:install_wsl">Section 14.5</a>).</p>
 </div>
 <div class="paragraph">
 <p>You can also use the
@@ -7756,7 +9320,7 @@ to run the hands-on programs in this book.
 This will be useful for readers who know how to use Docker, as it allows them to skip AWS CLI/CDK and Python installation.</p>
 </div>
 <div class="sect2">
-<h3 id="sec:create_aws_account">12.1. Creating an AWS account</h3>
+<h3 id="sec:create_aws_account">14.1. Creating an AWS account</h3>
 <div class="paragraph">
 <p>In order to try the hands-on exercises provided in this book, you need to create your own AWS account.
 Detailed instructions for creating an account can be found at
@@ -7766,34 +9330,34 @@ Follow the steps below to create an account.</p>
 </div>
 <div class="paragraph">
 <p>First, access <a href="https://aws.amazon.com/console/">AWS Management Console</a> from your web browser, and click <code>Create an AWS Account</code> in the upper right corner.
-(<a href="#fig:aws-signup-1">Figure 81</a>, boxed with a solid line).</p>
+(<a href="#fig:aws-signup-1">Figure 95</a>, boxed with a solid line).</p>
 </div>
 <div id="fig:aws-signup-1" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-1.png" alt="signup-1" width="500">
 </div>
-<div class="title">Figure 81. Sign up (1) - Accessing AWS Management Console</div>
+<div class="title">Figure 95. Sign up (1) - Accessing AWS Management Console</div>
 </div>
 <div class="paragraph">
-<p>Then, you will be taken to a page where you register your email address and password (<a href="#fig:aws-signup-3">Figure 82</a>).</p>
+<p>Then, you will be taken to a page where you register your email address and password (<a href="#fig:aws-signup-3">Figure 96</a>).</p>
 </div>
 <div id="fig:aws-signup-3" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-3.png" alt="signup-3" width="500">
 </div>
-<div class="title">Figure 82. Sign up (2): Register email and password</div>
+<div class="title">Figure 96. Sign up (2): Register email and password</div>
 </div>
 <div class="paragraph">
-<p>Next, you will be asked to enter your address, phone number, and other information (<a href="#fig:aws-signup-4">Figure 83</a>).</p>
+<p>Next, you will be asked to enter your address, phone number, and other information (<a href="#fig:aws-signup-4">Figure 97</a>).</p>
 </div>
 <div id="fig:aws-signup-4" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-4.png" alt="signup-4" width="500">
 </div>
-<div class="title">Figure 83. Sign up (3): Entering address and phone number</div>
+<div class="title">Figure 97. Sign up (3): Entering address and phone number</div>
 </div>
 <div class="paragraph">
-<p>Next, you will be asked to register your credit card information (<a href="#fig:aws-signup-5">Figure 84</a>).
+<p>Next, you will be asked to register your credit card information (<a href="#fig:aws-signup-5">Figure 98</a>).
 If you are using AWS as an individual, you will be billed for your usage via your credit card.
 Note that you cannot start using AWS without registering your credit card information.</p>
 </div>
@@ -7801,41 +9365,41 @@ Note that you cannot start using AWS without registering your credit card inform
 <div class="content">
 <img src="imgs/signup-5.png" alt="signup-5" width="500">
 </div>
-<div class="title">Figure 84. Sign up (4): Registering a credit card</div>
+<div class="title">Figure 98. Sign up (4): Registering a credit card</div>
 </div>
 <div class="paragraph">
-<p>On the next page, you will be asked to verify your identity using SMS or voice message on your cell phone (<a href="#fig:aws-signup-6">Figure 85</a>).
+<p>On the next page, you will be asked to verify your identity using SMS or voice message on your cell phone (<a href="#fig:aws-signup-6">Figure 99</a>).
 Select your preferred authentication method and enter your cell phone number.</p>
 </div>
 <div id="fig:aws-signup-6" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-6.png" alt="signup-6" width="500">
 </div>
-<div class="title">Figure 85. Sign up (5): Identify verification by cell phone</div>
+<div class="title">Figure 99. Sign up (5): Identify verification by cell phone</div>
 </div>
 <div class="paragraph">
-<p>After successfully verifying your identity, you will be asked to select a support plan (<a href="#fig:aws-signup-8">Figure 86</a>).
+<p>After successfully verifying your identity, you will be asked to select a support plan (<a href="#fig:aws-signup-8">Figure 100</a>).
 You can just select the Basic support plan, which is free.</p>
 </div>
 <div id="fig:aws-signup-8" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-8.png" alt="signup-8" width="500">
 </div>
-<div class="title">Figure 86. Sign up (6): Selecting a support plan</div>
+<div class="title">Figure 100. Sign up (6): Selecting a support plan</div>
 </div>
 <div class="paragraph">
-<p>These steps will complete the creation of your account (<a href="#fig:aws-signup-9">Figure 87</a>).
+<p>These steps will complete the creation of your account (<a href="#fig:aws-signup-9">Figure 101</a>).
 Let&#8217;s log in and see if we can access the AWS console.</p>
 </div>
 <div id="fig:aws-signup-9" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-9.png" alt="signup-9" width="500">
 </div>
-<div class="title">Figure 87. Sign up (7): Sign up is complete!</div>
+<div class="title">Figure 101. Sign up (7): Sign up is complete!</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_secrets">12.2. Creating AWS access key</h3>
+<h3 id="aws_secrets">14.2. Creating AWS access key</h3>
 <div class="paragraph">
 <p>AWS access key is a key used for user authentication when operating the AWS API from the AWS CLI or AWS CDK.
 To use the AWS CLI/CDK, you need to issue a secret key first.
@@ -7848,10 +9412,10 @@ For more information on AWS secret keys, please refer to
 <p>First, log in to your AWS console</p>
 </li>
 <li>
-<p>Then, click on your account name in the upper right corner of the screen, and select "My Security Credentials" from the pull-down menu (<a href="#fig:aws_secret_key_1">Figure 88</a>)</p>
+<p>Then, click on your account name in the upper right corner of the screen, and select "My Security Credentials" from the pull-down menu (<a href="#fig:aws_secret_key_1">Figure 102</a>)</p>
 </li>
 <li>
-<p>Under "Access keys for CLI, SDK, &amp; API access", find the button that says "Create accesss key" and click it (<a href="#fig:aws_secret_key_2">Figure 89</a>)</p>
+<p>Under "Access keys for CLI, SDK, &amp; API access", find the button that says "Create accesss key" and click it (<a href="#fig:aws_secret_key_2">Figure 103</a>)</p>
 </li>
 <li>
 <p>Record the displayed access key ID and secret access key (if you close the window, they will not be displayed again)</p>
@@ -7860,7 +9424,7 @@ For more information on AWS secret keys, please refer to
 <p>If you forget your key, you can reissue it by the same procedure</p>
 </li>
 <li>
-<p>Use the issued secret key by writing it to the file <code>~/.aws/credentials</code> or by setting it to an environment variable (also see <a href="#aws_cli_install">Section 12.3</a>)</p>
+<p>Use the issued secret key by writing it to the file <code>~/.aws/credentials</code> or by setting it to an environment variable (also see <a href="#aws_cli_install">Section 14.3</a>)</p>
 </li>
 </ol>
 </div>
@@ -7868,17 +9432,17 @@ For more information on AWS secret keys, please refer to
 <div class="content">
 <img src="imgs/aws_secret_key_1.png" alt="aws_secret_key_1" width="400">
 </div>
-<div class="title">Figure 88. Creating an AWS secret key (1)</div>
+<div class="title">Figure 102. Creating an AWS secret key (1)</div>
 </div>
 <div id="fig:aws_secret_key_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_2.png" alt="aws_secret_key_2" width="700">
 </div>
-<div class="title">Figure 89. Creating an AWS secret key (2)</div>
+<div class="title">Figure 103. Creating an AWS secret key (2)</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_cli_install">12.3. Installing AWS CLI</h3>
+<h3 id="aws_cli_install">14.3. Installing AWS CLI</h3>
 <div class="paragraph">
 <p>This is a brief description of the installation procedure for Linux at the time of writing.
 Please remember to always check
@@ -7913,7 +9477,7 @@ for the latest information, as it may change in future versions.</p>
 </div>
 <div class="paragraph">
 <p>When you execute this command, you will be prompted to enter the <code>AWS Access Key ID</code> and <code>AWS Secret Access Key</code>.
-See <a href="#aws_secrets">Section 12.2</a> for issuing access keys.
+See <a href="#aws_secrets">Section 14.2</a> for issuing access keys.
 The command also asks for the <code>Default region name</code>.
 You can specify your favorite region (e.g. <code>ap-northeast-1</code> = Tokyo) here.
 The last entry, <code>Default output format</code>, should be <code>json</code>.</p>
@@ -7974,7 +9538,7 @@ If you want to use several different profiles, follow the default example and ad
 </div>
 </div>
 <div class="sect2">
-<h3 id="aws_cdk_install">12.4. Installing AWS CDK</h3>
+<h3 id="aws_cdk_install">14.4. Installing AWS CDK</h3>
 <div class="paragraph">
 <p>This is a brief description of the installation procedure for Linux at the time of writing.
 Please remember to always check
@@ -8036,7 +9600,7 @@ If errors occur due to API changes, it is recommended to use version 1.100.0.</p
 <div class="paragraph">
 <p>When you run <code>cdk bootstrap</code>, make sure that your AWS credentials and region are set correctly.
 By default, the default profile in <code>~/.aws/config</code> is used.
-If you want to use a profile other than the default, use the technique described in <a href="#aws_cli_install">Section 12.3</a> to switch profiles.</p>
+If you want to use a profile other than the default, use the technique described in <a href="#aws_cli_install">Section 14.3</a> to switch profiles.</p>
 </div>
 </td>
 </tr>
@@ -8051,7 +9615,7 @@ If you want to use a profile other than the default, use the technique described
 <td class="content">
 <div class="paragraph">
 <p>The configuration of AWS credentials for CDK is basically the same as that of AWS CLI.
-See <a href="#aws_cli_install">Section 12.3</a> for details.</p>
+See <a href="#aws_cli_install">Section 14.3</a> for details.</p>
 </div>
 </td>
 </tr>
@@ -8059,7 +9623,7 @@ See <a href="#aws_cli_install">Section 12.3</a> for details.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec:install_wsl">12.5. Installing WSL</h3>
+<h3 id="sec:install_wsl">14.5. Installing WSL</h3>
 <div class="paragraph">
 <p>In this book, the commands are basically written with a UNIX terminal in mind.
 Linux and Mac users can use the terminal that comes standard with their OS.
@@ -8089,7 +9653,7 @@ For X64 systems, it must be Version 1903, Build 18362 or higher.
 If the version does not support WSL, update Windows first.</p>
 </div>
 <div class="paragraph">
-<p>First, start PowerShell with administrator privileges (<a href="#fig:powershell">Figure 90</a>).
+<p>First, start PowerShell with administrator privileges (<a href="#fig:powershell">Figure 104</a>).
 To do this, type <code>powershell</code> in the search bar of the Windows menu in the lower left corner, and you should find the PowerShell program.
 Then, right-click on it, and select <code>Run as administrator</code> to launch.</p>
 </div>
@@ -8097,7 +9661,7 @@ Then, right-click on it, and select <code>Run as administrator</code> to launch.
 <div class="content">
 <img src="imgs/wsl/powershell.png" alt="powershell" width="500">
 </div>
-<div class="title">Figure 90. Starting PowerShell with administrator privileges</div>
+<div class="title">Figure 104. Starting PowerShell with administrator privileges</div>
 </div>
 <div class="paragraph">
 <p>Once the PowerShell is ready, execute the following command:</p>
@@ -8145,14 +9709,14 @@ In this tutorial, let&#8217;s install <strong>Ubuntu 20.04</strong>.</p>
 </div>
 <div class="paragraph">
 <p>Launch the Microsoft Store app and type <code>Ubuntu</code> in the search bar.
-Open Ubuntu 20.04 LTS and click the "Get" button (<a href="#fig:microsoft_store">Figure 91</a>).
+Open Ubuntu 20.04 LTS and click the "Get" button (<a href="#fig:microsoft_store">Figure 105</a>).
 Wait for a while, and the installation of Ubuntu 20.04 will be completed.</p>
 </div>
 <div id="fig:microsoft_store" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/microsoft_store.png" alt="microsoft_store" width="500">
 </div>
-<div class="title">Figure 91. Installing Ubuntu 20.04 from Microsoft Store</div>
+<div class="title">Figure 105. Installing Ubuntu 20.04 from Microsoft Store</div>
 </div>
 <div class="paragraph">
 <p>The first time you start Ubuntu 20.04, the initial setup will start automatically and you will have to wait for a few minutes.
@@ -8161,24 +9725,24 @@ After the initial setup, you will be prompted to enter your user name and passwo
 <div class="paragraph">
 <p>This completes the installation of WSL2.
 Let&#8217;s launch WSL2!
-Type <code>Ubuntu</code> in the search bar of the Windows menu in the lower left corner, and you should find Ubuntu 20.04 (<a href="#fig:ubuntu">Figure 92</a>).
+Type <code>Ubuntu</code> in the search bar of the Windows menu in the lower left corner, and you should find Ubuntu 20.04 (<a href="#fig:ubuntu">Figure 106</a>).
 Click on it to start it.</p>
 </div>
 <div id="fig:ubuntu" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/ubuntu2004.png" alt="ubuntu2004" width="500">
 </div>
-<div class="title">Figure 92. Launching Ubuntu 20.04</div>
+<div class="title">Figure 106. Launching Ubuntu 20.04</div>
 </div>
 <div class="paragraph">
-<p>This should bring up a black terminal screen (<a href="#fig:wsl_window">Figure 93</a>).
+<p>This should bring up a black terminal screen (<a href="#fig:wsl_window">Figure 107</a>).
 Try typing <code>ls</code>, <code>top</code>, etc. to confirm that WSL is working properly.</p>
 </div>
 <div id="fig:wsl_window" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/wsl_window.png" alt="wsl_window" width="500">
 </div>
-<div class="title">Figure 93. WSL terminal</div>
+<div class="title">Figure 107. WSL terminal</div>
 </div>
 <div class="paragraph">
 <p>Optionally, you can install
@@ -8188,7 +9752,7 @@ We recommend that you to install this tool.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec:install_docker">12.6. Installing Docker</h3>
+<h3 id="sec:install_docker">14.6. Installing Docker</h3>
 <div class="paragraph">
 <p>The installation method of Docker varies depending on the OS.</p>
 </div>
@@ -8262,7 +9826,7 @@ The changes to the group will be reflected in your terminal session.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="venv_quick_guide">12.7. Quick tutorial on Python <code>venv</code></h3>
+<h3 id="venv_quick_guide">14.7. Quick tutorial on Python <code>venv</code></h3>
 <div class="paragraph">
 <p>Many of you may have experienced a situation where a program given to you by someone else does not work because of the library version mismatch.
 If you have only one Python environment in your machine, you will have to re-install the correct version every time you switch projects.
@@ -8302,14 +9866,14 @@ Tools like <code>pyenv</code> and <code>conda</code> require separate installati
 </div>
 </div>
 <div class="paragraph">
-<p>Notice that the shell prompt starts with <code>(.env)</code> (<a href="#fig_venv_prompt">Figure 94</a>).
+<p>Notice that the shell prompt starts with <code>(.env)</code> (<a href="#fig_venv_prompt">Figure 108</a>).
 This is a sign that signifies, "You are now in a venv".</p>
 </div>
 <div id="fig_venv_prompt" class="imageblock text-center">
 <div class="content">
 <img src="imgs/venv_shell.png" alt="venv shell" width="500">
 </div>
-<div class="title">Figure 94. Shell prompt after activating venv</div>
+<div class="title">Figure 108. Shell prompt after activating venv</div>
 </div>
 <div class="paragraph">
 <p>When the virtual Python environment is activated, all subsequent <code>pip</code> commands will install libraries under <code>.env/</code> directory.
@@ -8340,7 +9904,7 @@ If a project you are workin on has a <code>requirements.txt</code> file defined,
 </div>
 </div>
 <div class="sect2">
-<h3 id="sec_handson_docker">12.8. Working with Docker image for the hands-on exercise</h3>
+<h3 id="sec_handson_docker">14.8. Working with Docker image for the hands-on exercise</h3>
 <div class="paragraph">
 <p>We prepared a Docker image with Node.js, Python, AWS CDK, etc. installed, which is necessary to run the hands-on exercises.
 Using this image, you can run the hands-on code immediately without having to install anything on your local machine.</p>
@@ -8402,7 +9966,7 @@ Since each hands-on uses different dependent libraries, the design is to create 
 </div>
 <div class="paragraph">
 <p>Don&#8217;t forget to set your AWS credentials.
-An easy way to do this is to set environment variables such as <code>AWS_ACCESS_KEY_ID</code> as described in <a href="#aws_cli_install">Section 12.3</a>.
+An easy way to do this is to set environment variables such as <code>AWS_ACCESS_KEY_ID</code> as described in <a href="#aws_cli_install">Section 14.3</a>.
 Alternatively, if your credentials are stored in local machine&#8217;s <code>~/.aws/credentials</code>, you can <strong>mount</strong> this directory in the container and refer to the same credentials file from inside the container.
 If you take this option, start the container with the following command.</p>
 </div>
@@ -8443,7 +10007,7 @@ The technique of mounting the authentication file described here can also be use
 <div id="footer">
 <div id="footer-text">
 Version 1.0-en<br>
-Last updated 2021-09-29 05:56:44 UTC
+Last updated 2021-09-30 14:40:34 UTC
 </div>
 </div>
 <style>
