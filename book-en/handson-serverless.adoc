@@ -1,0 +1,226 @@
+[[sec_intro_serverless]]
+== Hands-on #5: Introduction to serverless computing
+
+In the previous chapter, we gave an overview of serverless architecture.
+In this chapter, let's learn how to use serverless cloud through hands-on exercises.
+In this hands-on session, we will go through three serverless cloud components: Lambda, S3, and DynamoDB.
+A short tutorial is provided for each of them.
+
+=== Lambda hands-on
+
+First, let's learn how to use Lambda.
+The source code for the hands-on is available on GitHub at
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda[handson/serverless/lambda].
+
+A sketch of the application used in this hands-on is shown in <<fig:lambda_deploy>>.
+In STEP 1, code written in Python is registered to Lambda using AWS CDK.
+Then, in STEP 2, we use the invoke API to launch multiple Lambdas simultaneously to perform parallel computations.
+This is a minimal setup for the purpose of experiencing the Lambda workflow.
+
+[[fig:lambda_deploy]]
+.Overview on Lambda tutorial
+image::imgs/handson-serverless/lambda_deploy.png[lambda_deploy, 700, align="center"]
+
+[WARNING]
+====
+This hands-on exercise can be performed within the
+https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[free Lambda tier].
+====
+
+The program to deploy is written in
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/app.py[app.py].
+Let's take a look at the code.
+
+[source, python, linenums]
+----
+# <1>
+FUNC = """
+import time
+from random import choice, randint
+def handler(event, context):
+    time.sleep(randint(2,5))
+    sushi = ["salmon", "tuna", "squid"]
+    message = "Welcome to Cloud Sushi. Your order is " + choice(sushi)
+    print(message)
+    return message
+"""
+
+class SimpleLambda(core.Stack):
+
+    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
+        super().__init__(scope, name, **kwargs)
+
+        # <2>
+        handler = _lambda.Function(
+            self, 'LambdaHandler',
+            runtime=_lambda.Runtime.PYTHON_3_7,
+            code=_lambda.Code.from_inline(FUNC),
+            handler="index.handler",
+            memory_size=128,
+            timeout=core.Duration.seconds(10),
+            dead_letter_queue_enabled=True,
+        )
+----
+
+<1> Here, we define a function that should be executed by Lambda.
+This is a very simple function that sleeps for a random period of 2-5 seconds, then randomly selects one of the strings ["salmon", "tuna", "squid"], and returns a message "Welcome to Cloud Sushi. Your order is XXXX" (where XXXX is the chosen sushi item).
+<2> Next, the function written in <1> is registered in Lambda.
+The meanings of the parameters are quite obvious, but let us explin for the completeness.
+* `runtime=_lambda.Runtime.PYTHON_3_7`:
+Here, we want to use Python 3.7 to execute the function defined above.
+In addition to Python 3.7, other languages such as Node.js, Java, Ruby and Go are also available.
+* `code=_lambda.Code.from_inline(FUNC)`
+We specify the code to be executed by Lambda.
+Here, the string defined in `FUNC=...` is passed.
+You can also pass the path of a file.
+* `handler="index.handler"`:
+This is a parameter to distinguish between the main and sub functions when the code contains several sub functions.
+It means that the function named `handler` should be executed as the main function.
+* `memory_size=128`:
+Specifies that the maximum memory size is 128MB.
+* `timeout=core.Duration.seconds(10)`.
+The timeout period is set to 10 seconds.
+If the function does not finish within 10 seconds, an error is returned.
+* `dead_letter_queue_enabled=True`:
+This is an advanced setting and is not explained here.
+
+By running the above program, a Lambda function will be created in the cloud.
+Now let's deploy it.
+
+==== Deploying the application
+
+The deployment procedure is almost the same as the previous hands-on.
+Here, only the commands are listed (lines starting with `#` are comments).
+If you have forgotten the meaning of each command, review the first hands-on.
+You should not forget to set the access key (<<aws_cli_install>>).
+
+[source, bash]
+----
+# move to the project directory
+$ cd handson/serverless/lambda
+
+# create venv and install dependent libraries
+$ python3 -m venv .env
+$ source .env/bin/activate
+$ pip install -r requirements.txt
+
+# deploy!
+$ cdk deploy
+----
+
+If the deployment command is executed successfully, you should get an output like <<handson_04_lambda_cdk_output>>.
+In the output you should see a message `FunctionName = SimpleLambda-XXXX` where `XXXX` is some random string.
+We will use this `XXXX` string later, so make a note of it.
+
+[[handson_04_lambda_cdk_output]]
+.Output of `cdk deploy`
+image::imgs/handson-serverless/handson_04_lambda_cdk_output.png[cdk output, 700, align="center"]
+
+Let's log in to the AWS console and check the deployed stack.
+If you go to the Lambda page from the console, you can see the list of Lambda functions (<<handson_04_lambda_console_func_list>>).
+
+[[handson_04_lambda_console_func_list]]
+.Viewing the list of functions from Lambda console
+image::imgs/handson-serverless/lambda_console_func_list.png[cdk output, 700, align="center"]
+
+In this application, we have created a function with a name `SimpleLambda-XXXX`.
+Click on the name of the function to see the details.
+You should see a screen like <<handson_04_lambda_console_func_detail>>.
+In the editor, you can see the Python function that you have just defined in the code.
+Scroll down to the bottom of the screen to see the various settings for the function.
+
+[[handson_04_lambda_console_func_detail]]
+.Viewing the details of the Lambda function
+image::imgs/handson-serverless/lambda_console_func_detail.png[lambda_console_func_detail, 700, align="center"]
+
+[TIP]
+====
+The code executed by Lambda can also be edited using the editor on the Lambda console screen (<<handson_04_lambda_console_func_detail>>).
+In some cases, it is faster to directly edit the code here for debugging purpose.
+In this case, do not forget to update the CDK code to reflect the edits you made.
+====
+
+==== Executing Lambda function
+
+Now, let's execute (invoke) the Lambda function we have created.
+Using the AWS API, we can start executing the function.
+Here, we will use the
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_one.py[handson/serverless/lambda/invoke _one.py],
+which contains a simple code to invoke Lambda function.
+Interested readers are recommended to read the code.
+
+The following command invokes a Lambda function.
+Replace the `XXXX` part of the command with the string obtained by `SimpleLambda.FunctionName = SimpleLambda-XXXX` when you deployed it earlier.
+
+[source, bash]
+----
+$ python invoke_one.py SimpleLambda-XXXX
+----
+
+After a few seconds, you should get the output `"Welcome to Cloud Sushi. Your order is salmon"`.
+It seems like a toy example, but the function was indeed executed in the cloud, where it generated a random number, selected a random sushi item, and returned the output.
+Try running this command a few times and see that different sushi menu is returned for each execution.
+
+Now, this command executes one function at a time, but the real power of Lambda is that it can execute a large number of tasks at the same time.
+Next, let's try sending 100 tasks at once.
+We use a Python script saved as
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_many.py[handson/serverless/lambda/ invoke_many.py].
+
+Run the following command.
+Remember to replace the `XXXX` part as before.
+The second argument, `100`, means to submit 100 tasks.
+
+[source, bash]
+----
+$ python invoke_many.py XXXX 100
+----
+
+The output will be something like below.
+
+[source, bash]
+----
+....................................................................................................
+Submitted 100 tasks to Lambda!
+----
+
+Let's confirm that 100 tasks are actually running simultaneously.
+Go back to the Lambda console (<<handson_04_lambda_console_func_detail>>), and click on the "Monitoring" tab.
+You will see a graph like <<handson_04_lambda_console_monitoring>>.
+
+[[handson_04_lambda_console_monitoring]]
+.Monitoring the execution statistics from Lambda console
+image::imgs/handson-serverless/lambda_console_monitoring.png[lambda_console_monitoring, 700, align="center"]
+
+[WARNING]
+====
+It takes some time for the graph shown in <<handson_04_lambda_console_monitoring>> to be updated.
+If nothing is shown, wait a while and refresh the graph again.
+====
+
+In <<handson_04_lambda_console_monitoring>>, "Invocations" means how many times the function has been executed.
+You can see that it has been indeed executed 100 times.
+Furthermore, "Concurrent executions" shows how many tasks were executed simultaneously.
+In this case, the number is 96, which means that 96 tasks were executed in parallel.
+(The reason this does not equal 100 is that the commands to start the tasks were not sent at exactly the same time.)
+
+As we just saw, although it is very simple, using Lambda, we were able to create a cloud system that can execute a task concurrently.
+
+If we tried to do this in a traditional serverful cloud, we would have to write a lot of code for scaling the cluster, and also adjust various parameters.
+
+[TIP]
+====
+If you are interested, you can try submitting 1000 tasks at once.
+You will see that Lambda can handle such a large number of requests.
+However, be careful not to overdo it, or you will exceed the free usage limit of Lambda.
+====
+
+==== Deleting the stack
+
+Finally, let's remove the stack.
+To remove the stack, execute the following command.
+
+[source, bash]
+----
+$ cdk destroy
+----
+

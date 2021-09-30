@@ -1,0 +1,745 @@
+[[sec_bashoutter]]
+== Hands-on #6: Bashoutter
+
+In the sixth and final hands-on session, we will create a simple web service using the serverless cloud technology we have learned so far.
+Specifically, let's create a social networking service (SNS), named **Bashoutter**, where people can post their own haiku poems.
+(https://en.wikipedia.org/wiki/Haiku[Haiku]
+is a Japanese poetic form where it is consisted of 17 characters divided in to 5,5,7 character phrases.)
+By incorporating all the technologies such as Lambda, DynamoDB, and S3, a simple yet scalable social networking service that makes full use of serverless cloud will be born.
+By the end of this hands-on, we will deploy a modern-looking SNS shown in <<handson_05_bashoutter>>.
+
+[[handson_05_bashoutter]]
+."Bashoutter" SNS app we will be building in this hands-on session
+image::imgs/handson-bashoutter/bashoutter.png[bashoutter, 700, align="center"]
+
+=== Preparation
+
+The source code for the hands-on is available on GitHub at
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter[handson/bashoutter].
+
+To run this hands-on, it is assumed that the preparations described in the first hands-on (<<handson_01_prep>>) have been completed.
+
+[WARNING]
+====
+This hands-on exercise can be performed within the
+https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[free AWS tier].
+====
+
+=== Reading the application source code
+
+==== API
+
+In this application, we implement functions such as accepting haiku submissions from people, and retrieving a list of haiku from the database.
+As a minimum design to realize this service, we will implement four REST APIs as shown in <<tab_handson_05_api>>.
+The APIs for basic data manipulation, such as posting, browsing, and deleting haiku, are provided.
+In addition, `PATCH /haiku/{item_id}` is used to "like" the haiku specified by `{item_id}`.
+
+[[tab_handson_05_api]]
+[cols="1,1"]
+.Bashoutter API
+|===
+|`GET /haiku`
+|Get a list of haiku
+
+|`POST /haiku`
+|Post a new haiku
+
+|`PATCH /haiku/{item_id}`
+|Like a haiku specified by `{item_id}`
+
+|`DELETE /haiku/{item_id}`
+|Delete the haiku specified by `{item_id}`
+|===
+
+[TIP]
+====
+The **Open API Specification** (OAS; formerly known as the Swagger Specification) is a description format for REST APIs.
+If the API specification is written according to the OAS, you can easily generate API documentation and client applications.
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/specs/swagger.yml[API specification prepared for this project]
+is also written according to the OAS.
+For more information, see
+https://swagger.io/docs/specification/about/[official Swagger documentation].
+====
+
+[[sec:bashoutter_application]]
+==== Application architecture
+
+<<handson_05_architecture>> shows an overview of the application we are creating in this hands-on.
+
+[[handson_05_architecture]]
+.Application architecture
+image::imgs/handson-bashoutter/handson-05-architecture.png[hands-on 05 architecture, 600, align="center"]
+
+The summary of the system design is as follows:
+
+* API requests from the client are first sent to the **API Gateway** (described below), and then forwarded to the Lambda function specified by the API path.
+* An independent Lambda function is defined for each API path.
+* A database (powered by DynamoDB) is created to record the haiku information (author, text, submission date, etc.).
+* Give each Lambda function read and write access to DynamoDB.
+* Finally, we create an S3 bucket to deliver the static contents of the web page.
+Clients retrive HTML, CSS and JavaScript from this bucket and the contents will be displayed on a web browser.
+
+Now, let us take a look at the main application code
+(https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/app.py[handson/bashoutter/app.py])．
+
+[source, python, linenums]
+----
+class Bashoutter(core.Stack):
+
+    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
+        super().__init__(scope, name, **kwargs)
+
+        # <1>
+        # dynamoDB table to store haiku
+        table = ddb.Table(
+            self, "Bashoutter-Table",
+            partition_key=ddb.Attribute(
+                name="item_id",
+                type=ddb.AttributeType.STRING
+            ),
+            billing_mode=ddb.BillingMode.PAY_PER_REQUEST,
+            removal_policy=core.RemovalPolicy.DESTROY
+        )
+
+        # <2>
+        bucket = s3.Bucket(
+            self, "Bashoutter-Bucket",
+            website_index_document="index.html",
+            public_read_access=True,
+            removal_policy=core.RemovalPolicy.DESTROY
+        )
+        s3_deploy.BucketDeployment(
+            self, "BucketDeployment",
+            destination_bucket=bucket,
+            sources=[s3_deploy.Source.asset("./gui/dist")],
+            retain_on_delete=False,
+        )
+
+        common_params = {
+            "runtime": _lambda.Runtime.PYTHON_3_7,
+            "environment": {
+                "TABLE_NAME": table.table_name
+            }
+        }
+
+        # <3>
+        # define Lambda functions
+        get_haiku_lambda = _lambda.Function(
+            self, "GetHaiku",
+            code=_lambda.Code.from_asset("api"),
+            handler="api.get_haiku",
+            memory_size=512,
+            **common_params,
+        )
+        post_haiku_lambda = _lambda.Function(
+            self, "PostHaiku",
+            code=_lambda.Code.from_asset("api"),
+            handler="api.post_haiku",
+            **common_params,
+        )
+        patch_haiku_lambda = _lambda.Function(
+            self, "PatchHaiku",
+            code=_lambda.Code.from_asset("api"),
+            handler="api.patch_haiku",
+            **common_params,
+        )
+        delete_haiku_lambda = _lambda.Function(
+            self, "DeleteHaiku",
+            code=_lambda.Code.from_asset("api"),
+            handler="api.delete_haiku",
+            **common_params,
+        )
+
+        # <4>
+        # grant permissions
+        table.grant_read_data(get_haiku_lambda)
+        table.grant_read_write_data(post_haiku_lambda)
+        table.grant_read_write_data(patch_haiku_lambda)
+        table.grant_read_write_data(delete_haiku_lambda)
+
+        # <5>
+        # define API Gateway
+        api = apigw.RestApi(
+            self, "BashoutterApi",
+            default_cors_preflight_options=apigw.CorsOptions(
+                allow_origins=apigw.Cors.ALL_ORIGINS,
+                allow_methods=apigw.Cors.ALL_METHODS,
+            )
+        )
+
+        haiku = api.root.add_resource("haiku")
+        haiku.add_method(
+            "GET",
+            apigw.LambdaIntegration(get_haiku_lambda)
+        )
+        haiku.add_method(
+            "POST",
+            apigw.LambdaIntegration(post_haiku_lambda)
+        )
+
+        haiku_item_id = haiku.add_resource("{item_id}")
+        haiku_item_id.add_method(
+            "PATCH",
+            apigw.LambdaIntegration(patch_haiku_lambda)
+        )
+        haiku_item_id.add_method(
+            "DELETE",
+            apigw.LambdaIntegration(delete_haiku_lambda)
+        )
+----
+
+<1> Here, a DynamoDB table is created to record the haiku information.
+<2> This part creates an S3 bucket to store and deliver the static site contents.
+`s3_deploy.BucketDeployment()` configures the settings to automatically upload the necessary files when the stack is deployed.
+<3> This part defines the Lambda functions to be executed by each API path.
+The functions are written in Python 3.7 and the code can be found at
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py[handson/bashoutter/api/api.py].
+<4> The Lambda function defined in <3> is given read and write access to the database.
+<5> Here, the API Gateway is used to link each API path with the corresponding Lambda function.
+
+==== S3 bucket in Public access mode
+
+Take a closer look at the part of the code where an S3 bucket is created.
+
+[source, python, linenums]
+----
+bucket = s3.Bucket(
+    self, "Bashoutter-Bucket",
+    website_index_document="index.html",
+    public_read_access=True,
+    removal_policy=core.RemovalPolicy.DESTROY
+)
+----
+
+What you should pay attention to here is the line `public_read_access=True`.
+S3 has a feature called **Public access mode**.
+When the public access mode is turned on, the files in the bucket can be viewed without authentication (i.e., by anyone on the Internet).
+This setting is ideal for storing static content for public websites, and many serverless web services are designed this way.
+When the public access mode is set, a unique URL such as `http://XXXX.s3-website-ap-northeast-1.amazonaws.com/` is assigned to the bucket.
+When a client accesses this URL, `index.html` in the bucket is returned to the client, and the page is loaded
+(Note that we are specifying which file to be returned in the line `website_index_document="index.html"`.)
+
+[TIP]
+====
+When operating a web site for production, it is common to add the service called
+https://aws.amazon.com/cloudfront/[CloudFront]
+to the S3 bucket in public access mode.
+CloudFront can be used to configure **Content Delivery Nework (CDN)** and encrypted HTTPS communication.
+For more information about CloudFront, please refer to
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html[official documentation "What is Amazon CloudFront?].
+
+In this hands-on session, CloudFront configuration was not performed to simplify the code, but readers who are interested may find the program at the following link helpful.
+
+* https://github.com/aws-samples/aws-cdk-examples/tree/master/typescript/static-site
+====
+
+[TIP]
+====
+The public S3 bucket is assigned a random URL by AWS.
+If you want to host it in your own domain such as `example.com`, you can configure Domain Name System (DNS), such as Amazon Route 53, and add an appropriate record.
+====
+
+After creating an S3 bucket in public access mode, the following code is used to upload the website contents to the bucket upon deployment of the stack.
+
+[source, python, linenums]
+----
+s3_deploy.BucketDeployment(
+    self, "BucketDeployment",
+    destination_bucket=bucket,
+    sources=[s3_deploy.Source.asset("./gui/dist")],
+    retain_on_delete=False,
+)
+----
+
+With this code, the files in the directory `./gui/dist` will be placed in the bucket when the deployment is started.
+The directory `./gui/dist` contains the static contents (HTML/CSS/JavaScript) of the website.
+We will not explain the implementation details of the GUI here, but the code can be found at
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter/gui[handson/bashoutter/gui].
+If you are interested, we recommend to read the source code.
+
+[TIP]
+====
+This website was built using the UI frameworks called
+https://vuejs.org/[Vue.js]
+and
+https://vuetifyjs.com/[Vuetify].
+By using Vue, the web page is rendered using single page application (SPA) technology.
+====
+
+==== API handler functions
+
+When an API request comes, the function that performs the requested processing is called the handler function.
+Let's take a look at the part where the handler function for the `GET /haiku` API is defined in Lambda.
+
+[source, python, linenums]
+----
+get_haiku_lambda = _lambda.Function(
+    self, "GetHaiku",
+    code=_lambda.Code.from_asset("api"),
+    handler="api.get_haiku",
+    memory_size=512,
+    **common_params
+)
+----
+
+Starting from the simplest part, `memory_size=512` specifies the memory allocated for this function as 512MB.
+`code=_lambda.Code.from_asset("api")` defines that the source code of the function should be retrieved from an external directory named `api/`.
+Then, the line `handler="api.get_haiku"` specifies that `get_haiku()` function from `api.py` should be executed as a handler function.
+
+Next, let's look at the source code of `get_haiku()` function in `api.py`
+(https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py[handson/bashoutter/api/api.py])．
+
+[source, python, linenums]
+----
+ddb = boto3.resource("dynamodb")
+table = ddb.Table(os.environ["TABLE_NAME"])
+
+def get_haiku(event, context):
+    """
+    handler for GET /haiku
+    """
+    try:
+        response = table.scan()
+
+        status_code = 200
+        resp = response.get("Items")
+    except Exception as e:
+        status_code = 500
+        resp = {"description": f"Internal server error. {str(e)}"}
+    return {
+        "statusCode": status_code,
+        "headers": HEADERS,
+        "body": json.dumps(resp, cls=DecimalEncoder)
+    }
+----
+
+In the line `response = table.scan()`, all the elements are retrieved from the DynamoDB table.
+If no error occurs, the status code 200 is returned along with the haiku data, and if any error occurs, the status code 500 is returned.
+
+By repeating the above operations for other APIs, handler functions for all APIs are defined.
+
+[TIP]
+====
+In the handler function of `GET /haiku`, notice the line `response = table.scan()`.
+This is actually not the best way to write a data retrieval from DynamoDB.
+The `scan()` method of DynamoDB returns only data up to 1MB in size.
+If the size of the data in the database is larger than 1MB, you need to call the `scan()` method recursively.
+For more information, refer to
+https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Table.scan[the official documentation of boto3 library].
+====
+
+[[sec:bashoutter_iam]]
+==== Identity and Access Management (IAM)
+
+Look at the following part of the code.
+
+[source, python, linenums]
+----
+table.grant_read_data(get_haiku_lambda)
+table.grant_read_write_data(post_haiku_lambda)
+table.grant_read_write_data(patch_haiku_lambda)
+table.grant_read_write_data(delete_haiku_lambda)
+----
+
+AWS has an important concept called
+https://aws.amazon.com/iam/[IAM (Identity and Access Management)].
+Although we have not mentioned it so far for the sake of simplicity, IAM is a very important concept in designing the cloud system on AWS.
+IAM basically defines what permissions a resource has over other resources.
+For example, in its default state, Lambda does not have any permissions to access other resources such as DynamoDB.
+Therefore, in order for a Lambda function to read or write DynamoDB data, an IAM must be granted to the Lambda function to allow such operation.
+
+`dynamodb.Table` object in CDK has a convenient method `grant_read_write_data()`, which assigns IAM to other resources so that they can perform read and write operation to the database.
+Similarly, the `s3.Bucket` object in CDK has a method `grant_read_write()` to allow reading and writing to the bucket.
+Indeed, we used this method in <<sec_aws_batch>> where we granted AWS Batch to write data to S3 bucket.
+Interested readers can look back and check the code.
+
+[NOTE]
+====
+The best practice to manage IAM is that the minimam permissions necessary for the system to work should be assigned to each resource.
+This will not only improve security of the system, but also reduce bugs by, for example, preventing unintended resources from reading or writing to the database.
+For this reason, the above code grants only read permission to the handler of `GET /haiku` API (notice the use of `grant_read_data()` method instead of `grant_read_write_data()`).
+====
+
+==== API Gateway
+
+https://aws.amazon.com/api-gateway/[API Gateway] is literally an gateway that forwards API requests to Lambda, EC2, and other resources according to the API request path (<<fig:bashoutter_api_ gateway>>).
+Then, the outputs of the processing performed by Lambda and EC2 are returned to the client via API Gateway.
+In cloud terminology, the server that stands between the client and the backend server whose job is to forward the connection according to the API path is called a **router** or a **reverse proxy**.
+Traditionally, routers are usually served by a dedicated virtual server.
+API Gateway, on the other hand, is a serverless router service where it achieves routing without a fixed server.
+API Gateway is dynamically launched only when the API request arrives.
+As a natural consequence of being serverless, it has the ability to automatically increase its routing capacity as the number of accesses increases.
+
+[[fig:bashoutter_api_gateway]]
+.API Gateway
+image::imgs/handson-bashoutter/api_gateway.png[api_gateway, 700, align="center"]
+
+By deploying an API Gateway, one can easily build a system that can handle a large number of API requests (thousands to tens of thousands per second) without having to write codes.
+The summary of the API Gateway cost is shown in <<tab_handson_05_apigateway_price>>.
+API Gateway also offers free tier, so up to one million requests per month can be used for free.
+
+[[tab_handson_05_apigateway_price]]
+[cols="1,1", options="header"]
+.Pricing of API Gateway
+|===
+|Number of Requests (per month)
+|Price (per million)
+
+|First 333 million
+|$4.25
+
+|Next 667 million
+|$3.53
+
+|Next 19 billion
+|$3.00
+|Over 20 billion
+|$1.91
+|===
+
+Let's look at the source code.
+
+[source, python, linenums]
+----
+# <1>
+api = apigw.RestApi(
+    self, "BashoutterApi",
+    default_cors_preflight_options=apigw.CorsOptions(
+        allow_origins=apigw.Cors.ALL_ORIGINS,
+        allow_methods=apigw.Cors.ALL_METHODS,
+    )
+)
+
+# <2>
+haiku = api.root.add_resource("haiku")
+# <3>
+haiku.add_method(
+    "GET",
+    apigw.LambdaIntegration(get_haiku_lambda)
+)
+haiku.add_method(
+    "POST",
+    apigw.LambdaIntegration(post_haiku_lambda)
+)
+
+# <4>
+haiku_item_id = haiku.add_resource("{item_id}")
+# <5>
+haiku_item_id.add_method(
+    "PATCH",
+    apigw.LambdaIntegration(patch_haiku_lambda)
+)
+haiku_item_id.add_method(
+    "DELETE",
+    apigw.LambdaIntegration(delete_haiku_lambda)
+)
+----
+
+<1> First, an empty API Gateway is created by `api = apigw.RestApi()`.
+<2> Next, we add add the API path `/haiku` by calling the method `api.root.add_resource()`.
+<3> Next, `add_method()` is called to define the `GET` and `POST` methods for the `/haiku` path.
+<4> Similarly, `haiku.add_resource("{item_id}")` adds the API path `/haiku/{item_id}`.
+<5> Finally, `add_method()` is used to define `PATCH` and `DELETE` methods in the path `/haiku/{item_id}`.
+
+As you can see, API Gateway is very simple to use.
+All you need to do is to sequentially describe the API path and the methods that will be executed.
+
+[TIP]
+====
+When you create a new API with this program, a random URL will be assigned as the API endpoint.
+If you want to host it in your own domain such as `example.com`, you can configure Domain Name System (DNS), such as Amazon Route 53, and add an appropriate record.
+====
+
+[TIP]
+====
+When we created a new API with API Gateway, the parameter `default_cors_preflight_options` was used to set up
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS[Cross Origin Resource Sharing (CORS)].
+This setting is necessary when accessing the API from a web browser.
+====
+
+=== Deploying the application
+
+The deployment procedure is almost the same as the previous hands-on.
+Here, only the commands are listed (lines starting with `#` are comments).
+If you have forgotten the meaning of each command, review the first hands-on.
+You should not forget to set the access key (<<aws_cli_install>>).
+
+[source, bash]
+----
+# move to the project directory
+$ cd intro-aws/handson/bashoutter
+
+# create venv and install dependent libraries
+$ python3 -m venv .env
+$ source .env/bin/activate
+$ pip install -r requirements.txt
+
+# Deploy!
+$ cdk deploy
+----
+
+If the deployment is successful, you should see an output like <<handson_05_cdk_output>>.
+In the output you should find `Bashoutter.BashoutterApiEndpoint = XXXX` and `Bashoutter.BucketUrl = YYYY`.
+We will use these string values later, so be sure to make notes of them.
+
+[[handson_05_cdk_output]]
+.Output of `cdk deploy`
+image::imgs/handson-bashoutter/cdk_output.png[cdk output, 700, align="center"]
+
+Now, let's log in to the AWS console and check the deployed stack.
+First, go to the API Gateway page.
+You will see a screen like <<handson_05_apigw_console_list>>, where you can check the list of deployed API endpoints.
+
+[[handson_05_apigw_console_list]]
+.API Gateway console (1)
+image::imgs/handson-bashoutter/apigw_console_list.png[apigw_console_list, 700, align="center"]
+
+By clicking on the API named "BashoutterApi", you can move to a screen like <<handson_05_apigw_console_detail>> and view detailed information.
+You can see that `GET /haiku`, `POST /haiku`, and other APIs are defined.
+
+Click on each method to see detailed information about that method.
+In addition to the aforementioned routing functions, API Gateway can also be used to add authentication.
+We won't be using these authentication feature in this hands-on, but this feature will be useful in many web applications.
+Next, in <<handson_05_apigw_console_detail>>, notice that the Lambda functions called by this API is shown in the area circled in red.
+Clicking on the function name will take you to the console of the corresponding Lambda function, where you can view the contents of the function.
+
+[[handson_05_apigw_console_detail]]
+.API Gateway console (2)
+image::imgs/handson-bashoutter/apigw_console_detail.png[apigw_console_detail, 700, align="center"]
+
+Next, we will move to the S3 console.
+There, you should be able to find a bucket whose name starts with `bashouter-XXXX` (where `XXXX` is some random string) (<<handson_05_s3_console>>).
+
+[[handson_05_s3_console]]
+.S3 console
+image::imgs/handson-bashoutter/s3_console.png[s3_console, 700, align="center"]
+
+Let's check the contents of the bucket by clicking on the bucket name.
+You will find the main html document, `index.html`, along with `css/`, `js/` and other directories which store the components to render the web page (<<handson_05_s3_contents>>).
+
+[[handson_05_s3_contents]]
+.The files in the S3 bucket
+image::imgs/handson-bashoutter/s3_contents.png[s3_contents, 700, align="center"]
+
+[[sec:bashoutter_test_api]]
+=== Sending API requests
+
+Now, let's actually send API requests to the deployed application.
+First, let's practice sending API requests from the command line.
+
+Here we use a simple HTTP client tool,
+https://httpie.org/[HTTPie],
+to send HTTP API requests from the command line.
+HTTPie is installed together with the Python virtual environment (venv) when we deployed the stack.
+To make sure that the installation is successful, activate the virtual environment and type `http` on the command line.
+If you get a help message, you are ready to go.
+
+First, set the URL of the API endpoint to a command line variable　(the `XXXX` string from `Bashoutter.BashoutterApiEndpoint = XXXX`).
+
+[source, bash]
+----
+$ export ENDPOINT_URL=XXXX
+----
+
+Then, obtain a list of haiku by sending `GET /haiku` API.
+
+[source, bash]
+----
+$ http GET "${ENDPOINT_URL}/haiku"
+----
+
+Unfortunately, there is no haiku registered in the database at this moment, so you will see an empty array (`[]`) as return.
+
+Next, let's post our very first haiku using `POST /haiku`.
+
+[source, bash]
+----
+$ http POST "${ENDPOINT_URL}/haiku" \
+username="Mastuo Bashou" \
+first="the stillness" \
+second="penetrating the rock" \
+third="a cicada's cry"
+----
+
+The following output will be obtained.
+
+----
+HTTP/1.1 201 Created
+Connection: keep-alive
+Content-Length: 49
+Content-Type: application/json
+....
+{
+    "description": "Successfully added a new haiku"
+}
+----
+
+It seems we successfully submited a new haiku.
+Let's confirm that the haiku is indeed added to the database by calling the GET request again.
+
+[source, bash]
+----
+$ http GET "${ENDPOINT_URL}/haiku"
+
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 258
+Content-Type: application/json
+...
+[
+    {
+        "created_at": "2020-07-06T02:46:04+00:00",
+        "first": "the stillness",
+        "item_id": "7e91c5e4d7ad47909e0ac14c8bbab05b",
+        "likes": 0.0,
+        "second": "penetrating the rock",
+        "third": "a cicada's cry",
+        "username": "Mastuo Bashou"
+    }
+]
+----
+
+Excellent!
+
+Next, let's add a "like" to this haiku by calling `PATCH /haiku/{item_id}`.
+To do this, run the following command after replacing `XXXX` with the ID of the haiku that you created in the previous command (i.e. `item_id` in the response text).
+
+[source, bash]
+----
+$ http PATCH "${ENDPOINT_URL}/haiku/XXXX"
+----
+
+You should get the output `{"description": "OK"}`.
+We confirm that the number of likes has increased by 1 by sending the GET request one more time.
+
+[source, bash]
+----
+$ http GET "${ENDPOINT_URL}/haiku"
+...
+[
+    {
+        ...
+        "likes": 1.0,
+        ...
+    }
+]
+----
+
+Lastly, we delete the haiku by sending the DELETE request.
+Run the following command after replacing `XXXX` with the ID of the haiku.
+
+[source, bash]
+----
+$ http DELETE "${ENDPOINT_URL}/haiku/XXXX"
+----
+
+If we send GET request, the return will be an empty array (`[]`).
+
+Now we were able to validate that the basic APIs for posting, retrieving, deleting, and adding "likes" to haiku are working properly.
+
+=== Simulating a large simultaneous API request
+
+In the previous section, we manually posted haiku one by one.
+In a social networking service with a large number of users, several thousand haiku would be posted every second.
+By adopting a serverless architecture, we have built a system that can easily handle such instantaneous heavy access.
+To demonstrate this point, let's simulate a situation where a large number of APIs are sent to the system.
+
+In
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/client.py[handson/bashoutter/client.py],
+we provide a short script to send many API requests simultaneously.
+By using this script, we can send `POST /haiku` API request for a specified number of times.
+
+As a test, we will send the API request for 300 times.
+Run the following command.
+
+[source, bash]
+----
+$ python client.py $ENDPOINT_URL post_many 300
+----
+
+The execution would be completed in a matter of seconds.
+If this API had been supported by a single server, it would have taken much longer to process such a large number of requests.
+In the worst case, it might have even led to a server shutdown.
+The serverless application we have created is a very simple yet scalable cloud system that can handle hundreds of requests every second.
+Did you get a glimpse of the benefits and power of a serverless cloud?
+
+[TIP]
+====
+If you submit a large number of haiku using the above command, the database will be filled with useless data.
+To completely empty the database, use the following command.
+
+[source, bash]
+----
+$ python client.py $ENDPOINT_URL clear_database
+----
+====
+
+=== Interacting with Bashoutter GUI
+
+In the previous part, we practiced sending APIs from the command line.
+In a web application, the exact same thing is done behind a web browser to display the contents of a page (see <<fig:web_server>>).
+Lastly, let's see what happens when the API is integrated with the GUI.
+
+Let's check the URL given by `Bashoutter.BucketUrl=` that is output on the command line when we deployed the stack (<<handson_05_cdk_output>>).
+As mentioned earlier, this is the URL of the S3 bucket in public access mode.
+
+Open a web browser and enter the URL of S3 in the address bar to access it.
+You should see a page like shown in <<handson_05_bashoutter_2>>.
+
+[[handson_05_bashoutter_2]]
+.Bashoutter GUI
+image::imgs/handson-bashoutter/bashoutter_2.png[bashoutter, 700, align="center"]
+
+When the page is loaded, enter the URL of the **API Gateway** you deployed in the text box at the top that says "API Endpoint URL".
+(In this application, the API Gateway URL is randomly assigned, so the GUI is designed like this.)
+Then, press the "REFRESH" button on the screen.
+If you have already registered some haiku in the database, you will see a list of haiku.
+Click on the heart icon at the bottom left of each haiku to give it a "like" vote.
+
+To submit a new haiku, enter the new phrase and the name of the author, then press "POST".
+After pressing "POST", be sure to press the "REFRESH" button again to retrieve the latest list of haiku from the database.
+
+=== Deleting the stack
+
+This concludes the Bashoutter project!
+We created an SNS that can be accessed from anywhere in the world via the Internet.
+As we demonstrated in <<simulating_many_apis>>, Bashoutter can scale flexibly to handle a large number of simultaneous access without delay.
+Although it is extremely simple, it satisfies the basic requirements for an modern and scalable web service!
+
+When you have enjoyed Bashoutter application, don't forget to delete the stack.
+
+To delete the stack from the command line, use the following command.
+
+[source, bash]
+----
+$ cdk destroy
+----
+
+[WARNING]
+====
+Depending on the version of CDK, `cdk destroy` may output an error if the S3 bucket is not empty.
+In this case, you have to delete all the files in the S3 bucket before deleting the stack.
+
+To do this from the AWS console, go to the S3 console, open the bucket, select all the files, and execute "Actions" -> "Delete".
+
+To do this from the command line, use the following command.
+Remember to replace <BUCKET NAME> with the name of your bucket.
+
+[source, bash]
+----
+$ aws s3 rm <BUCKET NAME> --recursive
+----
+====
+
+=== Short summary
+
+This is the end of Part III of this book.
+
+In Part III, we focused on how to create web applications and databases that can be used by the general public as an application of cloud computing.
+Along the way, we explained the traditional design of cloud systems and the latest design method called serverless architecture.
+In <<sec_intro_serverless>>, we practiced serverless architecture in AWS by using Lambda, S3, and DynamoDB.
+Finally, in <<sec_bashoutter>>, we integrated these serverless technologies to create a simple web application called "Bashoutter".
+
+Through these exercises, we hope you have gained a better understanding of how web services are developed and maintained in the real world.
+We also hope that this hands-on session was a good starting point for you to create amazing web application yourself.
+

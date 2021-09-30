@@ -2,20 +2,15 @@
 == Hands-on #5: サーバーレス入門
 
 前章ではサーバーレスアーキテクチャの概要の説明を行った．
-今回のハンズオンでは，サーバーレスクラウドを実際に動かしながら，具体的な使用方法を学んでいこう．
-
-今回のハンズオンで触れるのは以下の3つである．
+本章では，ハンズオン形式でサーバーレスクラウドを実際に動かしながら，具体的な使用方法を学んでいこう．
+今回のハンズオンでは Lambda, S3, DynamoDB の三つのサーバーレスクラウドの構成要素に触れていく．
 それぞれについて，短いチュートリアルを用意してある．
-
-* Lambda: サーバーレスの計算エンジン
-* DynamoDB: サーバーレス・データベース
-* S3: サーバーレス・ストレージ
 
 === Lambda ハンズオン
 
 まずは， Lambda を実際に動かしてみよう．
 ハンズオンのソースコードは GitHub の
-https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda[/handson/serverless/lambda]
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda[handson/serverless/lambda]
 に置いてある．
 
 このハンズオンで使用するアプリケーションのスケッチを <<fig:lambda_deploy>> に示す．
@@ -32,7 +27,7 @@ image::imgs/handson-serverless/lambda_deploy.png[lambda_deploy, 700, align="cent
 このハンズオンは，基本的に https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[AWS Lambda の無料枠] の範囲内で実行することができる．
 ====
 
-https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/lambda/app.py[app.py] にデプロイするプログラムが書かれている．
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/app.py[app.py] にデプロイするプログラムが書かれている．
 中身を見てみよう．
 
 [source, python, linenums]
@@ -43,8 +38,8 @@ import time
 from random import choice, randint
 def handler(event, context):
     time.sleep(randint(2,5))
-    pokemon = ["Charmander", "Bulbasaur", "Squirtle"]
-    message = "Congratulations! You are given " + choice(pokemon)
+    sushi = ["salmon", "tuna", "squid"]
+    message = "Welcome to Cloud Sushi. Your order is " + choice(sushi)
     print(message)
     return message
 """
@@ -66,8 +61,7 @@ class SimpleLambda(core.Stack):
         )
 ----
 <1> ここで， Lambda で実行されるべき関数を定義している．
-これは非常に単純な関数で，2-5秒のランダムな時間スリープした後，["Charmander", "Bulbasaur", "Squirtle"] のいずれかの文字列をランダムに返す
-(これらは初代ポケットモンスターのゲームでオーキド博士にもらうヒトカゲ・フシギダネ・ゼニガメのことだ)．
+これは非常に単純な関数で，2-5秒のランダムな時間スリープした後，["salmon", "tuna", "squid"] のいずれかの文字列をランダムに選択し， "Welcome to Cloud Sushi. Your order is XXXX" (XXXX は選ばれた寿司のネタ) というメッセージをリターンする．
 <2> 次に， Lambda に <1> で書いた関数を配置している．
 パラメータの意味は，文字どおりの意味なので難しくはないが，以下に解説する．
 * `runtime=_lambda.Runtime.PYTHON_3_7`:
@@ -146,7 +140,9 @@ Lambda で実行されるコードは， Lambda のコンソール画面 (<<hand
 
 それでは，作成した Lambda 関数を実行 (invoke) してみよう．
 AWS の API を使うことで，関数の実行をスタートすることができる．
-今回は， https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_one.py[invoke_one.py] に関数を実行するための簡単なプログラムを提供している．
+今回は，
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_one.py[handson/serverless/lambda/invoke_one.py]
+に関数を実行するための簡単なプログラムを提供している．
 興味のある読者はコードを読んでもらいたい．
 
 以下のコマンドで，Lambda の関数を実行する．
@@ -157,14 +153,16 @@ AWS の API を使うことで，関数の実行をスタートすることが�
 $ python invoke_one.py XXXX
 ----
 
-すると， `"Congratulations! You are given Squirtle"` という出力が得られるはずだ．
-とてもシンプルではあるが，クラウド上で先ほどの関数が走り，乱数が生成されたうえで，ポケモンが選択されて出力が返されている．
-このコマンドを何度か打ってみて，実行ごとに異なるポケモンが返されることを確認しよう．
+すると， `"Welcome to Cloud Sushi. Your order is salmon"` という出力が得られるはずだ．
+とてもシンプルではあるが，クラウド上で先ほどの関数が走り，乱数が生成されたうえで，ランダムな寿司ネタが選択されて出力が返されている．
+このコマンドを何度か打ってみて，実行ごとに異なる寿司ネタが返されることを確認しよう．
 
 さて，このコマンドは，一度につき一回の関数を実行したわけであるが， Lambda の本領は一度に大量のタスクを同時に実行できる点である．
 そこで，今度は一度に100個のタスクを同時に送信してみよう．
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/lambda/invoke_many.py[handson/serverless/lambda/invoke_many.py]
+のスクリプトを使用する．
 
-次のコマンドを実行する．
+次のコマンドを実行しよう．
 XXXX の部分は前述と同様に置き換える．
 第二引数の `100` は 100個のタスクを投入せよ，という意味である．
 
@@ -214,7 +212,6 @@ Lambda はそのような大量のリクエストにも対応できることが�
 ==== スタックの削除
 
 最後にスタックを削除しよう．
-
 スタックを削除するには，次のコマンドを実行すればよい．
 
 [source, bash]
@@ -243,7 +240,8 @@ image::imgs/handson-serverless/dynamodb_deploy.png[dynamodb_deploy, 700, align="
 このハンズオンは，基本的に https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[AWS DynamoDB の無料枠] の範囲内で実行できる．
 ====
 
-https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/app.py[app.py] にデプロイするプログラムが書かれている．
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/app.py[handson/serverless/dynamodb/app.py]
+にデプロイするプログラムが書かれている．
 中身を見てみよう．
 
 [source, python, linenums]
@@ -254,11 +252,14 @@ class SimpleDynamoDb(core.Stack):
 
         table = ddb.Table(
             self, "SimpleTable",
+            # <1>
             partition_key=ddb.Attribute(
                 name="item_id",
                 type=ddb.AttributeType.STRING
             ),
+            # <2>
             billing_mode=ddb.BillingMode.PAY_PER_REQUEST,
+            # <3>
             removal_policy=core.RemovalPolicy.DESTROY
         )
 ----
@@ -266,19 +267,19 @@ class SimpleDynamoDb(core.Stack):
 このコードで，最低限の設定がなされた空の DynamoDB テーブルが作成される．
 それぞれのパラメータの意味を簡単に解説しよう．
 
-* `partition_key`:
-すべての DynamoDB テーブルには Partition Key が定義されていなければならない．
+<1> `partition_key`:
+すべての DynamoDB テーブルには Partition key が定義されていなければならない．
 Partition key とは，テーブル内の要素 (レコード) ごとに存在する固有のIDのことである．
 同一の Partition key をもった要素がテーブルの中に二つ以上存在することはできない
 (注: Sort Key を使用している場合は除く．詳しくは https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html[公式ドキュメンテーション "Core Components of Amazon DynamoDB"] 参照)．
 また， Partition key が定義されていない要素はテーブルの中に存在することはできない．
 ここでは， Partition key に `item_id` という名前をつけている．
-* `billing_mode`:
+<2> `billing_mode`:
 `ddb.BillingMode.PAY_PER_REQUEST` を指定することで，
 https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html#HowItWorks.OnDemand[On-demand Capacity Mode]
 の DynamoDB が作成される．
 ほかに `PROVISIONED` というモードがあるが，これはかなり高度なケースを除いて使用しないだろう．
-* `removal_policy`: CloudFormation のスタックが消去されたときに， DynamoDB も一緒に消去されるかどうかを指定する．
+<3> `removal_policy`: CloudFormation のスタックが消去されたときに， DynamoDB も一緒に消去されるかどうかを指定する．
 このコードでは `DESTROY` を選んでいるので，すべて消去される．
 ほかのオプションを選択すると，スタックを消去しても DynamoDB のバックアップを残す，などの動作を定義することができる．
 
@@ -287,7 +288,6 @@ https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.Read
 
 デプロイの手順は，これまでのハンズオンとほとんど共通である．
 ここでは，コマンドのみ列挙する (`#` で始まる行はコメントである)．
-それぞれの意味を忘れてしまった場合は，ハンズオン1, 2に戻って復習していただきたい．
 シークレットキーの設定も忘れずに (<<aws_cli_install>>)．
 
 [source, bash]
@@ -319,7 +319,7 @@ AWS コンソールにログインして，デプロイされたスタックを�
 .DynamoDB のコンソール (テーブルの一覧)
 image::imgs/handson-serverless/dynamodb_table_list.png[cdk output, 700, align="center"]
 
-今回のアプリケーションで作成したのが `SimpleDynamoDb` ではじまるランダムな名前のついたテーブルだ．
+今回のアプリケーションで作成したのが `SimpleDynamoDb` で始まるランダムな名前のついたテーブルだ．
 テーブルの名前をクリックして，詳細を見てみる．
 すると <<handson_04_dynamodb_table_detail>> のような画面が表示されるはずだ．
 "Items" のタブをクリックすると，テーブルの中のレコードを確認できる．
@@ -335,7 +335,9 @@ image::imgs/handson-serverless/dynamodb_table_detail.png[cdk output, 700, align=
 ここでは Python と https://boto3.amazonaws.com/v1/documentation/api/latest/index.html[boto3] ライブラリを用いた方法を紹介する．
 
 まずは，テーブルに新しい要素を追加してみよう．
-ハンズオンのディレクトリにある https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/simple_write.py[simple_write.py] を開いてみよう．
+ハンズオンのディレクトリにある
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/simple_write.py[simple_write.py]
+を開いてみよう．
 中には次のような関数が書かれている．
 
 [source, python, linenums]
@@ -357,7 +359,7 @@ def write_item(table_name):
 ----
 
 コードを上から読んでいくと，まず最初に boto3 ライブラリをインポートし， `dynamodb` のリソースを呼び出している．
-`write_item()` 関数は， DynamoDB のテーブルの名前 (上で見たSimpleDynamoDb-YYYY) を引数として受け取る．
+`write_item()` 関数は， DynamoDB のテーブルの名前 (上で見たSimpleDynamoDb-XXXX) を引数として受け取る．
 そして， `put_item()` メソッドを呼ぶことで，新しいアイテムを DB に書き込んでいる．
 アイテムには `item_id`, `first_name`, `last_name`, `age` の4つの属性が定義されている．
 ここで， `item_id` は先ほど説明した Partition key に相当しており，
@@ -381,7 +383,9 @@ $ python simple_write.py XXXX
 image::imgs/handson-serverless/dynamodb_table_new_item.png[cdk output, 700, align="center"]
 
 boto3 を使ってテーブルから要素を読みだすことも可能である．
-ハンズオンのディレクトリにある https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb/simple_read.py[simple_read.py] を見てみよう．
+ハンズオンのディレクトリにある
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/simple_read.py[simple_read.py]
+を見てみよう．
 
 [source, python, linenums]
 ----
@@ -411,7 +415,8 @@ $ python simple_read.py XXXX
 DynamoDB の利点は，最初に述べたとおり，負荷に応じて自在にその処理能力を拡大できる点である．
 
 そこで，ここでは一度に大量のデータを書き込む場合をシミュレートしてみよう．
-https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py[batch_rw.py] に，一度に大量の書き込みを実行するためのプログラムが書いてある．
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py[batch_rw.py]
+に，一度に大量の書き込みを実行するためのプログラムが書いてある．
 
 次のコマンドを実行してみよう (XXXX は自分のテーブルの名前に置き換える)．
 
@@ -450,7 +455,7 @@ $ cdk destroy
 
 最後に， S3 の簡単なチュートリアルを紹介する．
 ハンズオンのソースコードは GitHub の
-https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3[/handson/serverless/s3]
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3[handson/serverless/s3]
 に置いてある．
 
 <<fig:s3_deploy>> が今回提供する S3 チュートリアルの概要である．
@@ -466,7 +471,8 @@ image::imgs/handson-serverless/s3_deploy.png[s3_deploy, 700, align="center"]
 このハンズオンは，基本的に https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[S3 の無料枠] の範囲内で実行することができる．
 ====
 
-https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/s3/app.py[app.py] にデプロイするプログラムが書かれている．
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/s3/app.py[app.py]
+にデプロイするプログラムが書かれている．
 中身を見てみよう．
 
 [source, python, linenums]
@@ -537,8 +543,11 @@ image::imgs/handson-serverless/s3_deploy_output.png[cdk output, 700, align="cent
 $ echo "Hello world!" >> tmp.txt
 ----
 
-ハンズオンのディレクトリにある https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/s3/simple_s3.py[simple_s3.py] に
-https://boto3.amazonaws.com/v1/documentation/api/latest/index.html[boto3] ライブラリを使用した S3 のファイルのアップロード・ダウンロードのスクリプトが書いてある．
+ハンズオンのディレクトリにある
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/s3/simple_s3.py[simple_s3.py]
+に
+https://boto3.amazonaws.com/v1/documentation/api/latest/index.html[boto3]
+ライブラリを使用した S3 のファイルのアップロード・ダウンロードのスクリプトが書いてある．
 `simple_s3.py` を使って，上で作成した `tmp.txt` を以下のコマンドによりバケットにアップロードする．
 `XXXX` のところは，自分自身のバケットの名前で置き換えること．
 
@@ -570,10 +579,10 @@ Key という呼び方は， S3 が https://en.wikipedia.org/wiki/Object_storage
 
 [sorce, bash]
 ----
-$ python simple_s3.py XXXX upload tmp.txt --key /a/b/tmp.txt
+$ python simple_s3.py XXXX upload tmp.txt --key a/b/tmp.txt
 ----
 
-上ではアップロードされたファイルに `a/b/tmp.txt` という Key を割り当てている．
+ここではアップロードされたファイルに `a/b/tmp.txt` という Key を割り当てている．
 
 ここまでコマンドを実行し終えたところで，一度 AWS コンソールに行き S3 の中身を確認してみよう．
 S3 のコンソールに行くと，バケットの一覧が見つかるはずである．
@@ -584,7 +593,7 @@ S3 のコンソールに行くと，バケットの一覧が見つかるはず�
 .S3 バケットの中のファイル一覧
 image::imgs/handson-serverless/s3_bucket_filelist.png[cdk output, 700, align="center"]
 
-上で実行した2つのコマンドによって， `tmp.txt` というファイルと， `a/b/tmp.txt` というファイルが見つかることに注目しよう．
+ここで実行した2つのコマンドによって， `tmp.txt` というファイルと， `a/b/tmp.txt` というファイルが見つかることに注目しよう．
 従来的なファイルシステムと似た体験を提供するため， S3 では Key が **"/" (スラッシュ)** によって区切られていた場合，**ツリー状の階層構造**によってファイルを管理することができる．
 
 [NOTE]
@@ -594,7 +603,7 @@ image::imgs/handson-serverless/s3_bucket_filelist.png[cdk output, 700, align="ce
 ====
 
 次に，バケットからファイルのダウンロードを実行してみよう．
-`simple_s3.py` を使って，以下のコマンドを実行すれば良い．
+`simple_s3.py` を使って，以下のコマンドを実行すればよい．
 `XXXX` のところは，自分自身のバケットの名前で置き換えること．
 
 [source, bash]
@@ -622,7 +631,6 @@ S3 からのダウンロードはシンプルで， `download_file()` メソッ�
 
 以上のハンズオンで， S3 の一番基本的な使い方を紹介した．
 ここまでのハンズオンが理解できたら，忘れずにスタックを削除しよう．
-
 これまでのハンズオンと同様，スタックを削除するには，次のコマンドを実行すればよい．
 
 [source, bash]

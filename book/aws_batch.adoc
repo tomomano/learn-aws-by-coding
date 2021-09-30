@@ -152,6 +152,7 @@ https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/aws-batch[hand
 <<sec:aws_batch_code>> にも関連した情報を記載しているので，併せて参照されたい．
 ====
 
+[[sec_run_mnist_docker_local]]
 === MNIST 手書き文字認識 (再訪)
 
 今回のハンズオンでは，機械学習のハイパーパラメータ調整を取り上げると冒頭で述べた．
