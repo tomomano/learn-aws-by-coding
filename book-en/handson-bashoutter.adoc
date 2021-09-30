@@ -441,5 +441,305 @@ haiku_item_id.add_method(
 <4> Similarly, `haiku.add_resource("{item_id}")` adds the API path `/haiku/{item_id}`.
 <5> Finally, `add_method()` is used to define `PATCH` and `DELETE` methods in the path `/haiku/{item_id}`.
 
-As you can see, the API Gateway is very simple to use.
+As you can see, API Gateway is very simple to use.
 All you need to do is to sequentially describe the API path and the methods that will be executed.
+
+[TIP]
+====
+When you create a new API with this program, a random URL will be assigned as the API endpoint.
+If you want to host it in your own domain such as `example.com`, you can configure Domain Name System (DNS), such as Amazon Route 53, and add an appropriate record.
+====
+
+[TIP]
+====
+When we created a new API with API Gateway, the parameter `default_cors_preflight_options` was used to set up
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS[Cross Origin Resource Sharing (CORS)].
+This setting is necessary when accessing the API from a web browser.
+====
+
+=== Deploying the application
+
+The deployment procedure is almost the same as the previous hands-on.
+Here, only the commands are listed (lines starting with `#` are comments).
+If you have forgotten the meaning of each command, review the first hands-on.
+You should not forget to set the access key (<<aws_cli_install>>).
+
+[source, bash]
+----
+# move to the project directory
+$ cd intro-aws/handson/bashoutter
+
+# create venv and install dependent libraries
+$ python3 -m venv .env
+$ source .env/bin/activate
+$ pip install -r requirements.txt
+
+# Deploy!
+$ cdk deploy
+----
+
+If the deployment is successful, you should see an output like <<handson_05_cdk_output>>.
+In the output you should find `Bashoutter.BashoutterApiEndpoint = XXXX` and `Bashoutter.BucketUrl = YYYY`.
+We will use these string values later, so be sure to make notes of them.
+
+[[handson_05_cdk_output]]
+.Output of `cdk deploy`
+image::imgs/handson-bashoutter/cdk_output.png[cdk output, 700, align="center"]
+
+Now, let's log in to the AWS console and check the deployed stack.
+First, go to the API Gateway page.
+You will see a screen like <<handson_05_apigw_console_list>>, where you can check the list of deployed API endpoints.
+
+[[handson_05_apigw_console_list]]
+.API Gateway console (1)
+image::imgs/handson-bashoutter/apigw_console_list.png[apigw_console_list, 700, align="center"]
+
+By clicking on the API named "BashoutterApi", you can move to a screen like <<handson_05_apigw_console_detail>> and view detailed information.
+You can see that `GET /haiku`, `POST /haiku`, and other APIs are defined.
+
+Click on each method to see detailed information about that method.
+In addition to the aforementioned routing functions, API Gateway can also be used to add authentication.
+We won't be using these authentication feature in this hands-on, but this feature will be useful in many web applications.
+Next, in <<handson_05_apigw_console_detail>>, notice that the Lambda functions called by this API is shown in the area circled in red.
+Clicking on the function name will take you to the console of the corresponding Lambda function, where you can view the contents of the function.
+
+[[handson_05_apigw_console_detail]]
+.API Gateway console (2)
+image::imgs/handson-bashoutter/apigw_console_detail.png[apigw_console_detail, 700, align="center"]
+
+Next, we will move to the S3 console.
+There, you should be able to find a bucket whose name starts with `bashouter-XXXX` (where `XXXX` is some random string) (<<handson_05_s3_console>>).
+
+[[handson_05_s3_console]]
+.S3 console
+image::imgs/handson-bashoutter/s3_console.png[s3_console, 700, align="center"]
+
+Let's check the contents of the bucket by clicking on the bucket name.
+You will find the main html document, `index.html`, along with `css/`, `js/` and other directories which store the components to render the web page (<<handson_05_s3_contents>>).
+
+[[handson_05_s3_contents]]
+.The files in the S3 bucket
+image::imgs/handson-bashoutter/s3_contents.png[s3_contents, 700, align="center"]
+
+[[sec:bashoutter_test_api]]
+=== Sending API requests
+
+Now, let's actually send API requests to the deployed application.
+First, let's practice sending API requests from the command line.
+
+Here we use a simple HTTP client tool,
+https://httpie.org/[HTTPie],
+to send HTTP API requests from the command line.
+HTTPie is installed together with the Python virtual environment (venv) when we deployed the stack.
+To make sure that the installation is successful, activate the virtual environment and type `http` on the command line.
+If you get a help message, you are ready to go.
+
+First, set the URL of the API endpoint to a command line variable　(the `XXXX` string from `Bashoutter.BashoutterApiEndpoint = XXXX`).
+
+[source, bash]
+----
+$ export ENDPOINT_URL=XXXX
+----
+
+Then, obtain a list of haiku by sending `GET /haiku` API.
+
+[source, bash]
+----
+$ http GET "${ENDPOINT_URL}/haiku"
+----
+
+Unfortunately, there is no haiku registered in the database at this moment, so you will see an empty array (`[]`) as return.
+
+Next, let's post our very first haiku using `POST /haiku`.
+
+[source, bash]
+----
+$ http POST "${ENDPOINT_URL}/haiku" \
+username="Mastuo Bashou" \
+first="the stillness" \
+second="penetrating the rock" \
+third="a cicada's cry"
+----
+
+The following output will be obtained.
+
+----
+HTTP/1.1 201 Created
+Connection: keep-alive
+Content-Length: 49
+Content-Type: application/json
+....
+{
+    "description": "Successfully added a new haiku"
+}
+----
+
+It seems we successfully submited a new haiku.
+Let's confirm that the haiku is indeed added to the database by calling the GET request again.
+
+[source, bash]
+----
+$ http GET "${ENDPOINT_URL}/haiku"
+
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 258
+Content-Type: application/json
+...
+[
+    {
+        "created_at": "2020-07-06T02:46:04+00:00",
+        "first": "the stillness",
+        "item_id": "7e91c5e4d7ad47909e0ac14c8bbab05b",
+        "likes": 0.0,
+        "second": "penetrating the rock",
+        "third": "a cicada's cry",
+        "username": "Mastuo Bashou"
+    }
+]
+----
+
+Excellent!
+
+Next, let's add a "like" to this haiku by calling `PATCH /haiku/{item_id}`.
+To do this, run the following command after replacing `XXXX` with the ID of the haiku that you created in the previous command (i.e. `item_id` in the response text).
+
+[source, bash]
+----
+$ http PATCH "${ENDPOINT_URL}/haiku/XXXX"
+----
+
+You should get the output `{"description": "OK"}`.
+We confirm that the number of likes has increased by 1 by sending the GET request one more time.
+
+[source, bash]
+----
+$ http GET "${ENDPOINT_URL}/haiku"
+...
+[
+    {
+        ...
+        "likes": 1.0,
+        ...
+    }
+]
+----
+
+Lastly, we delete the haiku by sending the DELETE request.
+Run the following command after replacing `XXXX` with the ID of the haiku.
+
+[source, bash]
+----
+$ http DELETE "${ENDPOINT_URL}/haiku/XXXX"
+----
+
+If we send GET request, the return will be an empty array (`[]`).
+
+Now we were able to validate that the basic APIs for posting, retrieving, deleting, and adding "likes" to haiku are working properly.
+
+=== Simulating a large simultaneous API request
+
+In the previous section, we manually posted haiku one by one.
+In a social networking service with a large number of users, several thousand haiku would be posted every second.
+By adopting a serverless architecture, we have built a system that can easily handle such instantaneous heavy access.
+To demonstrate this point, let's simulate a situation where a large number of APIs are sent to the system.
+
+In
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/client.py[handson/bashoutter/client.py],
+we provide a short script to send many API requests simultaneously.
+By using this script, we can send `POST /haiku` API request for a specified number of times.
+
+As a test, we will send the API request for 300 times.
+Run the following command.
+
+[source, bash]
+----
+$ python client.py $ENDPOINT_URL post_many 300
+----
+
+The execution would be completed in a matter of seconds.
+If this API had been supported by a single server, it would have taken much longer to process such a large number of requests.
+In the worst case, it might have even led to a server shutdown.
+The serverless application we have created is a very simple yet scalable cloud system that can handle hundreds of requests every second.
+Did you get a glimpse of the benefits and power of a serverless cloud?
+
+[TIP]
+====
+If you submit a large number of haiku using the above command, the database will be filled with useless data.
+To completely empty the database, use the following command.
+
+[source, bash]
+----
+$ python client.py $ENDPOINT_URL clear_database
+----
+====
+
+=== Interacting with Bashoutter GUI
+
+In the previous part, we practiced sending APIs from the command line.
+In a web application, the exact same thing is done behind a web browser to display the contents of a page (see <<fig:web_server>>).
+Lastly, let's see what happens when the API is integrated with the GUI.
+
+Let's check the URL given by `Bashoutter.BucketUrl=` that is output on the command line when we deployed the stack (<<handson_05_cdk_output>>).
+As mentioned earlier, this is the URL of the S3 bucket in public access mode.
+
+Open a web browser and enter the URL of S3 in the address bar to access it.
+You should see a page like shown in <<handson_05_bashoutter_2>>.
+
+[[handson_05_bashoutter_2]]
+.Bashoutter GUI
+image::imgs/handson-bashoutter/bashoutter_2.png[bashoutter, 700, align="center"]
+
+When the page is loaded, enter the URL of the **API Gateway** you deployed in the text box at the top that says "API Endpoint URL".
+(In this application, the API Gateway URL is randomly assigned, so the GUI is designed like this.)
+Then, press the "REFRESH" button on the screen.
+If you have already registered some haiku in the database, you will see a list of haiku.
+Click on the heart icon at the bottom left of each haiku to give it a "like" vote.
+
+To submit a new haiku, enter the new phrase and the name of the author, then press "POST".
+After pressing "POST", be sure to press the "REFRESH" button again to retrieve the latest list of haiku from the database.
+
+=== Deleting the stack
+
+This concludes the Bashoutter project!
+We created an SNS that can be accessed from anywhere in the world via the Internet.
+As we demonstrated in <<simulating_many_apis>>, Bashoutter can scale flexibly to handle a large number of simultaneous access without delay.
+Although it is extremely simple, it satisfies the basic requirements for an modern and scalable web service!
+
+When you have enjoyed Bashoutter application, don't forget to delete the stack.
+
+To delete the stack from the command line, use the following command.
+
+[source, bash]
+----
+$ cdk destroy
+----
+
+[WARNING]
+====
+Depending on the version of CDK, `cdk destroy` may output an error if the S3 bucket is not empty.
+In this case, you have to delete all the files in the S3 bucket before deleting the stack.
+
+To do this from the AWS console, go to the S3 console, open the bucket, select all the files, and execute "Actions" -> "Delete".
+
+To do this from the command line, use the following command.
+Remember to replace <BUCKET NAME> with the name of your bucket.
+
+[source, bash]
+----
+$ aws s3 rm <BUCKET NAME> --recursive
+----
+====
+
+=== Short summary
+
+This is the end of Part III of this book.
+
+In Part III, we focused on how to create web applications and databases that can be used by the general public as an application of cloud computing.
+Along the way, we explained the traditional design of cloud systems and the latest design method called serverless architecture.
+In <<sec_intro_serverless>>, we practiced serverless architecture in AWS by using Lambda, S3, and DynamoDB.
+Finally, in <<sec_bashoutter>>, we integrated these serverless technologies to create a simple web application called "Bashoutter".
+
+Through these exercises, we hope you have gained a better understanding of how web services are developed and maintained in the real world.
+We also hope that this hands-on session was a good starting point for you to create amazing web application yourself.
+
