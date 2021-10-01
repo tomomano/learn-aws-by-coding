@@ -556,6 +556,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#sec_intro_serverless">12. Hands-on #5: Introduction to serverless computing</a>
 <ul class="sectlevel2">
 <li><a href="#_lambda_hands_on">12.1. Lambda hands-on</a></li>
+<li><a href="#sec:dynamodb_tutorial">12.2. DynamoDB hands-on</a></li>
+<li><a href="#sec:s3_tutorial">12.3. S3 hands-on</a></li>
 </ul>
 </li>
 <li><a href="#sec_bashoutter">13. Hands-on #6: Bashoutter</a>
@@ -566,7 +568,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#sec:bashoutter_test_api">13.4. Sending API requests</a></li>
 <li><a href="#_simulating_a_large_simultaneous_api_request">13.5. Simulating a large simultaneous API request</a></li>
 <li><a href="#_interacting_with_bashoutter_gui">13.6. Interacting with Bashoutter GUI</a></li>
-<li><a href="#_deleting_the_stack_4">13.7. Deleting the stack</a></li>
+<li><a href="#_deleting_the_stack_5">13.7. Deleting the stack</a></li>
 <li><a href="#_short_summary_2">13.8. Short summary</a></li>
 </ul>
 </li>
@@ -8074,6 +8076,347 @@ To remove the stack, execute the following command.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="sec:dynamodb_tutorial">12.2. DynamoDB hands-on</h3>
+<div class="paragraph">
+<p>Next, let&#8217;s work on a short tutorial on DynamoDB.
+The source code for the hands-on is available on GitHub at
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb">/handson/serverless/dynamodb</a>.</p>
+</div>
+<div class="paragraph">
+<p>A sketch of the application used in this hands-on is shown in <a href="#fig:dynamodb_deploy">Figure 86</a>.
+In STEP 1, we deploy an empty DynamoDB tables using AWS CDK.
+Then, in STEP 2, we practice basic operations such as writing, reading, and deleting data from the database using the API.</p>
+</div>
+<div id="fig:dynamodb_deploy" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/dynamodb_deploy.png" alt="dynamodb_deploy" width="700">
+</div>
+<div class="title">Figure 86. Overview on DynamoDB tutorial</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This hands-on exercise can be performed within the
+<a href="https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&amp;all-free-tier.sort-order=asc">free DynamoDB tier</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The program to deploy is written in
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/app.py">handson/serverless/dynamodb/app.py</a>.
+Let&#8217;s take a look at the code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">SimpleDynamoDb</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">Stack</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">App</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">table</span> <span class="o">=</span> <span class="n">ddb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s">"SimpleTable"</span><span class="p">,</span>
+            <i class="conum" data-value="1"></i><b>(1)</b>
+            <span class="n">partition_key</span><span class="o">=</span><span class="n">ddb</span><span class="o">.</span><span class="n">Attribute</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s">"item_id"</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">ddb</span><span class="o">.</span><span class="n">AttributeType</span><span class="o">.</span><span class="n">STRING</span>
+            <span class="p">),</span>
+            <i class="conum" data-value="2"></i><b>(2)</b>
+            <span class="n">billing_mode</span><span class="o">=</span><span class="n">ddb</span><span class="o">.</span><span class="n">BillingMode</span><span class="o">.</span><span class="n">PAY_PER_REQUEST</span><span class="p">,</span>
+            <i class="conum" data-value="3"></i><b>(3)</b>
+            <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span>
+        <span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this code, an empty DynamoDB table with the minimum configuration is created.
+Let us explain the meanings of each parameter.</p>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Here we define <strong>partition key</strong> of the table.
+Every DynamoDB table must have a partition key.
+The partition key is a unique ID for each element (record) in the table.
+Every record in the table must have a partition key.
+There cannot be more than one element with the same partition key in a table.
+(except for the case where sort Key is used. For more information, see
+<a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html">official documentation "Core Components of Amazon DynamoDB"</a>).
+In this example, the partition key is named <code>item_id</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Here we specify the <code>billing_mode</code> parameter.
+By specifying <code>ddb.BillingMode.PAY_PER_REQUEST</code>, DynamoDB table in <strong>on-demand capacity mode</strong> is created.
+There is another mode called <code>PROVISIONED</code>, but this is for more advanced use cases.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Here we specify the <code>removal_policy</code>.
+It specifies whether DynamoDB table will be removed together when the CloudFormation stack is deleted.
+In this code, <code>DESTROY</code> is selected, so all the data will be deleted.
+If you select other options, you can define other behaviors such as keeping DynamoDB backups even if the stack is deleted.</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="sec:serverless_dynamodb_deploy">12.2.1. Deploying the application</h4>
+<div class="paragraph">
+<p>The deployment procedure is almost the same as the previous hands-on.
+Here, only the commands are listed (lines starting with <code>#</code> are comments).
+If you have forgotten the meaning of each command, review the first hands-on.
+You should not forget to set the access key (<a href="#aws_cli_install">Section 14.3</a>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="c"># move to the project directory</span>
+<span class="nv">$ </span><span class="nb">cd </span>handson/serverless/dynamodb
+
+<span class="c"># create venv and install dependent libraries</span>
+<span class="nv">$ </span>python3 <span class="nt">-m</span> venv .env
+<span class="nv">$ </span><span class="nb">source</span> .env/bin/activate
+<span class="nv">$ </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+
+<span class="c"># deploy!</span>
+<span class="nv">$ </span>cdk deploy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the deployment command is executed successfully, you should get an output like <a href="#handson_04_dynamodb_cdk_output">Figure 87</a>.
+In the output you should see a message <code>TableName = XXXX</code> where <code>XXXX</code> is some random string.
+We will use this <code>XXXX</code> string later, so make a note of it.</p>
+</div>
+<div id="handson_04_dynamodb_cdk_output" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/handson_04_dynamodb_cdk_output.png" alt="cdk output" width="700">
+</div>
+<div class="title">Figure 87. Output of <code>cdk deploy</code></div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s log in to the AWS console and check the deployed stack.
+From the console, go to the DynamoDB page and select "Tables" from the menu bar on the left.
+Then, you can see the list of tables in a screen like <a href="#handson_04_dynamodb_table_list">Figure 88</a>.</p>
+</div>
+<div id="handson_04_dynamodb_table_list" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/dynamodb_table_list.png" alt="cdk output" width="700">
+</div>
+<div class="title">Figure 88. Viewing the list of DynamoDB tables</div>
+</div>
+<div class="paragraph">
+<p>The deployment will createa a table with a random name starting with <code>SimpleDynamoDb</code>.
+Click on the name of the table to see the details.
+You should see a screen like <a href="#handson_04_dynamodb_table_detail">Figure 89</a>.
+Click on the "Items" tab to see the records in the table.
+At this point, the table is empty because no data has been written to it.</p>
+</div>
+<div id="handson_04_dynamodb_table_detail" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/dynamodb_table_detail.png" alt="cdk output" width="700">
+</div>
+<div class="title">Figure 89. Viewing the details of the DynamoDB table</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_read_and_write_operations">12.2.2. Read and write operations</h4>
+<div class="paragraph">
+<p>Now, let&#8217;s practice read and write operations using the table that we just created.
+Here we will use Python and
+<a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">boto3</a>
+library.</p>
+</div>
+<div class="paragraph">
+<p>First, we write a new record in the table.
+Open the file named
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/simple_write.py">simple_write.py</a>
+in the hands-on directory.
+Inside the program, you will find the following code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">uuid4</span>
+<span class="n">ddb</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s">'dynamodb'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">write_item</span><span class="p">(</span><span class="n">table_name</span><span class="p">):</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">ddb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">put_item</span><span class="p">(</span>
+    <span class="n">Item</span><span class="o">=</span><span class="p">{</span>
+        <span class="s">'item_id'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>
+        <span class="s">'first_name'</span><span class="p">:</span> <span class="s">'John'</span><span class="p">,</span>
+        <span class="s">'last_name'</span><span class="p">:</span> <span class="s">'Doe'</span><span class="p">,</span>
+        <span class="s">'age'</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you read the code from the top, you will see that it first imports the boto3 library and then calls the <code>dynamodb</code> resource.
+The <code>write_item()</code> function takes the name of the DynamoDB table as an argument.
+Then, the <code>put_item()</code> method is called to write a new record to the DB.
+The item has four attributes defined: <code>item_id</code>, <code>first_name</code>, <code>last_name</code>, and <code>age</code>.
+The <code>item_id</code> corresponds to the partition key described above, and is given a random string using
+<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID4</a>
+algorithm.</p>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s run <code>simple_write.py</code>.
+Replace "XXXX" with the name of the table you deployed (a string starting with <code>SimpleDynamoDb</code>), and then execute the following command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_write.py XXXX</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s check from the AWS console that the new record has been written correctly.
+Use the same procedure as <a href="#handson_04_dynamodb_table_detail">Figure 89</a> to display the list of records in the table.
+You will find a new record as expected, as shown in <a href="#fig:dynamodb_table_new_item">Figure 90</a>.</p>
+</div>
+<div id="fig:dynamodb_table_new_item" class="imageblock text-center">
+<div class="content">
+<img src="imgs/handson-serverless/dynamodb_table_new_item.png" alt="cdk output" width="700">
+</div>
+<div class="title">Figure 90. Viewing the newly added record in the DynamoDB table</div>
+</div>
+<div class="paragraph">
+<p>It is also possible to use boto3 to read elements from a table.
+Open the file named
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/simple_read.py">simple_read.py</a>
+in the hands-on directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="n">ddb</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s">'dynamodb'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">scan_table</span><span class="p">(</span><span class="n">table_name</span><span class="p">):</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">ddb</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">"Items"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By calling <code>table.scan().get("Items")</code>, all the records in the table are read out.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s run this script with the following command
+(Don&#8217;t forget to replace the "XXXX" part correctly).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python simple_read.py XXXX</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should get an output showing the record we just added eariler.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_reading_and_writing_a_large_number_of_records">12.2.3. Reading and writing a large number of records</h4>
+<div class="paragraph">
+<p>The advantage of DynamoDB is that, as mentioned at the beginning, its processing capacity can be freely expanded according to the load.</p>
+</div>
+<div class="paragraph">
+<p>To test the capability of DynamoDB, let&#8217;s simulate the situation where a large amount of data is written at once.
+In
+<a href="https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py">batch_rw.py</a>,
+we have a short script to perform massive write operation to the database.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command (be sure to replace XXXX with the name of your table).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python batch_rw.py XXXX write 1000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command generates a thousand random data, and writes them to the database.</p>
+</div>
+<div class="paragraph">
+<p>Furthermore, let&#8217;s search the database.
+In the previous command, a random integer from 1 to 50 is assigned to the attribute <code>age</code> in each data.
+To search and retrieve only those elements whose <code>age</code> is less than or equal to 2, you execute the following command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>python batch_rw.py XXXX search_under_age 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s try running the above two commands several times to apply a simulated load to the database.
+You should see that the results are returned without any significant delay.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_deleting_the_stack_4">12.2.4. Deleting the stack</h4>
+<div class="paragraph">
+<p>When you have had enough fun with DynamoDB, remember to delete the stack.</p>
+</div>
+<div class="paragraph">
+<p>As in the previous hands-on sessions, you can delete the stack by executing the following command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>cdk destroy</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="sec:s3_tutorial">12.3. S3 hands-on</h3>
+<div class="paragraph">
+<p>Coming soon&#8230;&#8203;</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -8085,13 +8428,13 @@ Specifically, let&#8217;s create a social networking service (SNS), named <stron
 (<a href="https://en.wikipedia.org/wiki/Haiku">Haiku</a>
 is a Japanese poetic form where it is consisted of 17 characters divided in to 5,5,7 character phrases.)
 By incorporating all the technologies such as Lambda, DynamoDB, and S3, a simple yet scalable social networking service that makes full use of serverless cloud will be born.
-By the end of this hands-on, we will deploy a modern-looking SNS shown in <a href="#handson_05_bashoutter">Figure 86</a>.</p>
+By the end of this hands-on, we will deploy a modern-looking SNS shown in <a href="#handson_05_bashoutter">Figure 91</a>.</p>
 </div>
 <div id="handson_05_bashoutter" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/bashoutter.png" alt="bashoutter" width="700">
 </div>
-<div class="title">Figure 86. "Bashoutter" SNS app we will be building in this hands-on session</div>
+<div class="title">Figure 91. "Bashoutter" SNS app we will be building in this hands-on session</div>
 </div>
 <div class="sect2">
 <h3 id="_preparation">13.1. Preparation</h3>
@@ -8176,13 +8519,13 @@ For more information, see
 <div class="sect3">
 <h4 id="sec:bashoutter_application">13.2.2. Application architecture</h4>
 <div class="paragraph">
-<p><a href="#handson_05_architecture">Figure 87</a> shows an overview of the application we are creating in this hands-on.</p>
+<p><a href="#handson_05_architecture">Figure 92</a> shows an overview of the application we are creating in this hands-on.</p>
 </div>
 <div id="handson_05_architecture" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/handson-05-architecture.png" alt="hands-on 05 architecture" width="600">
 </div>
-<div class="title">Figure 87. Application architecture</div>
+<div class="title">Figure 92. Application architecture</div>
 </div>
 <div class="paragraph">
 <p>The summary of the system design is as follows:</p>
@@ -8739,7 +9082,7 @@ As a natural consequence of being serverless, it has the ability to automaticall
 <div class="content">
 <img src="imgs/handson-bashoutter/api_gateway.png" alt="api_gateway" width="700">
 </div>
-<div class="title">Figure 88. API Gateway</div>
+<div class="title">Figure 93. API Gateway</div>
 </div>
 <div class="paragraph">
 <p>By deploying an API Gateway, one can easily build a system that can handle a large number of API requests (thousands to tens of thousands per second) without having to write codes.
@@ -8933,7 +9276,7 @@ You should not forget to set the access key (<a href="#aws_cli_install">Section 
 </div>
 </div>
 <div class="paragraph">
-<p>If the deployment is successful, you should see an output like <a href="#handson_05_cdk_output">Figure 89</a>.
+<p>If the deployment is successful, you should see an output like <a href="#handson_05_cdk_output">Figure 94</a>.
 In the output you should find <code>Bashoutter.BashoutterApiEndpoint = XXXX</code> and <code>Bashoutter.BucketUrl = YYYY</code>.
 We will use these string values later, so be sure to make notes of them.</p>
 </div>
@@ -8941,55 +9284,55 @@ We will use these string values later, so be sure to make notes of them.</p>
 <div class="content">
 <img src="imgs/handson-bashoutter/cdk_output.png" alt="cdk output" width="700">
 </div>
-<div class="title">Figure 89. Output of <code>cdk deploy</code></div>
+<div class="title">Figure 94. Output of <code>cdk deploy</code></div>
 </div>
 <div class="paragraph">
 <p>Now, let&#8217;s log in to the AWS console and check the deployed stack.
 First, go to the API Gateway page.
-You will see a screen like <a href="#handson_05_apigw_console_list">Figure 90</a>, where you can check the list of deployed API endpoints.</p>
+You will see a screen like <a href="#handson_05_apigw_console_list">Figure 95</a>, where you can check the list of deployed API endpoints.</p>
 </div>
 <div id="handson_05_apigw_console_list" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/apigw_console_list.png" alt="apigw_console_list" width="700">
 </div>
-<div class="title">Figure 90. API Gateway console (1)</div>
+<div class="title">Figure 95. API Gateway console (1)</div>
 </div>
 <div class="paragraph">
-<p>By clicking on the API named "BashoutterApi", you can move to a screen like <a href="#handson_05_apigw_console_detail">Figure 91</a> and view detailed information.
+<p>By clicking on the API named "BashoutterApi", you can move to a screen like <a href="#handson_05_apigw_console_detail">Figure 96</a> and view detailed information.
 You can see that <code>GET /haiku</code>, <code>POST /haiku</code>, and other APIs are defined.</p>
 </div>
 <div class="paragraph">
 <p>Click on each method to see detailed information about that method.
 In addition to the aforementioned routing functions, API Gateway can also be used to add authentication.
 We won&#8217;t be using these authentication feature in this hands-on, but this feature will be useful in many web applications.
-Next, in <a href="#handson_05_apigw_console_detail">Figure 91</a>, notice that the Lambda functions called by this API is shown in the area circled in red.
+Next, in <a href="#handson_05_apigw_console_detail">Figure 96</a>, notice that the Lambda functions called by this API is shown in the area circled in red.
 Clicking on the function name will take you to the console of the corresponding Lambda function, where you can view the contents of the function.</p>
 </div>
 <div id="handson_05_apigw_console_detail" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/apigw_console_detail.png" alt="apigw_console_detail" width="700">
 </div>
-<div class="title">Figure 91. API Gateway console (2)</div>
+<div class="title">Figure 96. API Gateway console (2)</div>
 </div>
 <div class="paragraph">
 <p>Next, we will move to the S3 console.
-There, you should be able to find a bucket whose name starts with <code>bashouter-XXXX</code> (where <code>XXXX</code> is some random string) (<a href="#handson_05_s3_console">Figure 92</a>).</p>
+There, you should be able to find a bucket whose name starts with <code>bashouter-XXXX</code> (where <code>XXXX</code> is some random string) (<a href="#handson_05_s3_console">Figure 97</a>).</p>
 </div>
 <div id="handson_05_s3_console" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/s3_console.png" alt="s3_console" width="700">
 </div>
-<div class="title">Figure 92. S3 console</div>
+<div class="title">Figure 97. S3 console</div>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s check the contents of the bucket by clicking on the bucket name.
-You will find the main html document, <code>index.html</code>, along with <code>css/</code>, <code>js/</code> and other directories which store the components to render the web page (<a href="#handson_05_s3_contents">Figure 93</a>).</p>
+You will find the main html document, <code>index.html</code>, along with <code>css/</code>, <code>js/</code> and other directories which store the components to render the web page (<a href="#handson_05_s3_contents">Figure 98</a>).</p>
 </div>
 <div id="handson_05_s3_contents" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/s3_contents.png" alt="s3_contents" width="700">
 </div>
-<div class="title">Figure 93. The files in the S3 bucket</div>
+<div class="title">Figure 98. The files in the S3 bucket</div>
 </div>
 </div>
 <div class="sect2">
@@ -9182,18 +9525,18 @@ In a web application, the exact same thing is done behind a web browser to displ
 Lastly, let&#8217;s see what happens when the API is integrated with the GUI.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s check the URL given by <code>Bashoutter.BucketUrl=</code> that is output on the command line when we deployed the stack (<a href="#handson_05_cdk_output">Figure 89</a>).
+<p>Let&#8217;s check the URL given by <code>Bashoutter.BucketUrl=</code> that is output on the command line when we deployed the stack (<a href="#handson_05_cdk_output">Figure 94</a>).
 As mentioned earlier, this is the URL of the S3 bucket in public access mode.</p>
 </div>
 <div class="paragraph">
 <p>Open a web browser and enter the URL of S3 in the address bar to access it.
-You should see a page like shown in <a href="#handson_05_bashoutter_2">Figure 94</a>.</p>
+You should see a page like shown in <a href="#handson_05_bashoutter_2">Figure 99</a>.</p>
 </div>
 <div id="handson_05_bashoutter_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/handson-bashoutter/bashoutter_2.png" alt="bashoutter" width="700">
 </div>
-<div class="title">Figure 94. Bashoutter GUI</div>
+<div class="title">Figure 99. Bashoutter GUI</div>
 </div>
 <div class="paragraph">
 <p>When the page is loaded, enter the URL of the <strong>API Gateway</strong> you deployed in the text box at the top that says "API Endpoint URL".
@@ -9208,7 +9551,7 @@ After pressing "POST", be sure to press the "REFRESH" button again to retrieve t
 </div>
 </div>
 <div class="sect2">
-<h3 id="_deleting_the_stack_4">13.7. Deleting the stack</h3>
+<h3 id="_deleting_the_stack_5">13.7. Deleting the stack</h3>
 <div class="paragraph">
 <p>This concludes the Bashoutter project!
 We created an SNS that can be accessed from anywhere in the world via the Internet.
@@ -9330,34 +9673,34 @@ Follow the steps below to create an account.</p>
 </div>
 <div class="paragraph">
 <p>First, access <a href="https://aws.amazon.com/console/">AWS Management Console</a> from your web browser, and click <code>Create an AWS Account</code> in the upper right corner.
-(<a href="#fig:aws-signup-1">Figure 95</a>, boxed with a solid line).</p>
+(<a href="#fig:aws-signup-1">Figure 100</a>, boxed with a solid line).</p>
 </div>
 <div id="fig:aws-signup-1" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-1.png" alt="signup-1" width="500">
 </div>
-<div class="title">Figure 95. Sign up (1) - Accessing AWS Management Console</div>
+<div class="title">Figure 100. Sign up (1) - Accessing AWS Management Console</div>
 </div>
 <div class="paragraph">
-<p>Then, you will be taken to a page where you register your email address and password (<a href="#fig:aws-signup-3">Figure 96</a>).</p>
+<p>Then, you will be taken to a page where you register your email address and password (<a href="#fig:aws-signup-3">Figure 101</a>).</p>
 </div>
 <div id="fig:aws-signup-3" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-3.png" alt="signup-3" width="500">
 </div>
-<div class="title">Figure 96. Sign up (2): Register email and password</div>
+<div class="title">Figure 101. Sign up (2): Register email and password</div>
 </div>
 <div class="paragraph">
-<p>Next, you will be asked to enter your address, phone number, and other information (<a href="#fig:aws-signup-4">Figure 97</a>).</p>
+<p>Next, you will be asked to enter your address, phone number, and other information (<a href="#fig:aws-signup-4">Figure 102</a>).</p>
 </div>
 <div id="fig:aws-signup-4" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-4.png" alt="signup-4" width="500">
 </div>
-<div class="title">Figure 97. Sign up (3): Entering address and phone number</div>
+<div class="title">Figure 102. Sign up (3): Entering address and phone number</div>
 </div>
 <div class="paragraph">
-<p>Next, you will be asked to register your credit card information (<a href="#fig:aws-signup-5">Figure 98</a>).
+<p>Next, you will be asked to register your credit card information (<a href="#fig:aws-signup-5">Figure 103</a>).
 If you are using AWS as an individual, you will be billed for your usage via your credit card.
 Note that you cannot start using AWS without registering your credit card information.</p>
 </div>
@@ -9365,37 +9708,37 @@ Note that you cannot start using AWS without registering your credit card inform
 <div class="content">
 <img src="imgs/signup-5.png" alt="signup-5" width="500">
 </div>
-<div class="title">Figure 98. Sign up (4): Registering a credit card</div>
+<div class="title">Figure 103. Sign up (4): Registering a credit card</div>
 </div>
 <div class="paragraph">
-<p>On the next page, you will be asked to verify your identity using SMS or voice message on your cell phone (<a href="#fig:aws-signup-6">Figure 99</a>).
+<p>On the next page, you will be asked to verify your identity using SMS or voice message on your cell phone (<a href="#fig:aws-signup-6">Figure 104</a>).
 Select your preferred authentication method and enter your cell phone number.</p>
 </div>
 <div id="fig:aws-signup-6" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-6.png" alt="signup-6" width="500">
 </div>
-<div class="title">Figure 99. Sign up (5): Identify verification by cell phone</div>
+<div class="title">Figure 104. Sign up (5): Identify verification by cell phone</div>
 </div>
 <div class="paragraph">
-<p>After successfully verifying your identity, you will be asked to select a support plan (<a href="#fig:aws-signup-8">Figure 100</a>).
+<p>After successfully verifying your identity, you will be asked to select a support plan (<a href="#fig:aws-signup-8">Figure 105</a>).
 You can just select the Basic support plan, which is free.</p>
 </div>
 <div id="fig:aws-signup-8" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-8.png" alt="signup-8" width="500">
 </div>
-<div class="title">Figure 100. Sign up (6): Selecting a support plan</div>
+<div class="title">Figure 105. Sign up (6): Selecting a support plan</div>
 </div>
 <div class="paragraph">
-<p>These steps will complete the creation of your account (<a href="#fig:aws-signup-9">Figure 101</a>).
+<p>These steps will complete the creation of your account (<a href="#fig:aws-signup-9">Figure 106</a>).
 Let&#8217;s log in and see if we can access the AWS console.</p>
 </div>
 <div id="fig:aws-signup-9" class="imageblock text-center">
 <div class="content">
 <img src="imgs/signup-9.png" alt="signup-9" width="500">
 </div>
-<div class="title">Figure 101. Sign up (7): Sign up is complete!</div>
+<div class="title">Figure 106. Sign up (7): Sign up is complete!</div>
 </div>
 </div>
 <div class="sect2">
@@ -9412,10 +9755,10 @@ For more information on AWS secret keys, please refer to
 <p>First, log in to your AWS console</p>
 </li>
 <li>
-<p>Then, click on your account name in the upper right corner of the screen, and select "My Security Credentials" from the pull-down menu (<a href="#fig:aws_secret_key_1">Figure 102</a>)</p>
+<p>Then, click on your account name in the upper right corner of the screen, and select "My Security Credentials" from the pull-down menu (<a href="#fig:aws_secret_key_1">Figure 107</a>)</p>
 </li>
 <li>
-<p>Under "Access keys for CLI, SDK, &amp; API access", find the button that says "Create accesss key" and click it (<a href="#fig:aws_secret_key_2">Figure 103</a>)</p>
+<p>Under "Access keys for CLI, SDK, &amp; API access", find the button that says "Create accesss key" and click it (<a href="#fig:aws_secret_key_2">Figure 108</a>)</p>
 </li>
 <li>
 <p>Record the displayed access key ID and secret access key (if you close the window, they will not be displayed again)</p>
@@ -9432,13 +9775,13 @@ For more information on AWS secret keys, please refer to
 <div class="content">
 <img src="imgs/aws_secret_key_1.png" alt="aws_secret_key_1" width="400">
 </div>
-<div class="title">Figure 102. Creating an AWS secret key (1)</div>
+<div class="title">Figure 107. Creating an AWS secret key (1)</div>
 </div>
 <div id="fig:aws_secret_key_2" class="imageblock text-center">
 <div class="content">
 <img src="imgs/aws_secret_key_2.png" alt="aws_secret_key_2" width="700">
 </div>
-<div class="title">Figure 103. Creating an AWS secret key (2)</div>
+<div class="title">Figure 108. Creating an AWS secret key (2)</div>
 </div>
 </div>
 <div class="sect2">
@@ -9653,7 +9996,7 @@ For X64 systems, it must be Version 1903, Build 18362 or higher.
 If the version does not support WSL, update Windows first.</p>
 </div>
 <div class="paragraph">
-<p>First, start PowerShell with administrator privileges (<a href="#fig:powershell">Figure 104</a>).
+<p>First, start PowerShell with administrator privileges (<a href="#fig:powershell">Figure 109</a>).
 To do this, type <code>powershell</code> in the search bar of the Windows menu in the lower left corner, and you should find the PowerShell program.
 Then, right-click on it, and select <code>Run as administrator</code> to launch.</p>
 </div>
@@ -9661,7 +10004,7 @@ Then, right-click on it, and select <code>Run as administrator</code> to launch.
 <div class="content">
 <img src="imgs/wsl/powershell.png" alt="powershell" width="500">
 </div>
-<div class="title">Figure 104. Starting PowerShell with administrator privileges</div>
+<div class="title">Figure 109. Starting PowerShell with administrator privileges</div>
 </div>
 <div class="paragraph">
 <p>Once the PowerShell is ready, execute the following command:</p>
@@ -9709,14 +10052,14 @@ In this tutorial, let&#8217;s install <strong>Ubuntu 20.04</strong>.</p>
 </div>
 <div class="paragraph">
 <p>Launch the Microsoft Store app and type <code>Ubuntu</code> in the search bar.
-Open Ubuntu 20.04 LTS and click the "Get" button (<a href="#fig:microsoft_store">Figure 105</a>).
+Open Ubuntu 20.04 LTS and click the "Get" button (<a href="#fig:microsoft_store">Figure 110</a>).
 Wait for a while, and the installation of Ubuntu 20.04 will be completed.</p>
 </div>
 <div id="fig:microsoft_store" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/microsoft_store.png" alt="microsoft_store" width="500">
 </div>
-<div class="title">Figure 105. Installing Ubuntu 20.04 from Microsoft Store</div>
+<div class="title">Figure 110. Installing Ubuntu 20.04 from Microsoft Store</div>
 </div>
 <div class="paragraph">
 <p>The first time you start Ubuntu 20.04, the initial setup will start automatically and you will have to wait for a few minutes.
@@ -9725,24 +10068,24 @@ After the initial setup, you will be prompted to enter your user name and passwo
 <div class="paragraph">
 <p>This completes the installation of WSL2.
 Let&#8217;s launch WSL2!
-Type <code>Ubuntu</code> in the search bar of the Windows menu in the lower left corner, and you should find Ubuntu 20.04 (<a href="#fig:ubuntu">Figure 106</a>).
+Type <code>Ubuntu</code> in the search bar of the Windows menu in the lower left corner, and you should find Ubuntu 20.04 (<a href="#fig:ubuntu">Figure 111</a>).
 Click on it to start it.</p>
 </div>
 <div id="fig:ubuntu" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/ubuntu2004.png" alt="ubuntu2004" width="500">
 </div>
-<div class="title">Figure 106. Launching Ubuntu 20.04</div>
+<div class="title">Figure 111. Launching Ubuntu 20.04</div>
 </div>
 <div class="paragraph">
-<p>This should bring up a black terminal screen (<a href="#fig:wsl_window">Figure 107</a>).
+<p>This should bring up a black terminal screen (<a href="#fig:wsl_window">Figure 112</a>).
 Try typing <code>ls</code>, <code>top</code>, etc. to confirm that WSL is working properly.</p>
 </div>
 <div id="fig:wsl_window" class="imageblock text-center">
 <div class="content">
 <img src="imgs/wsl/wsl_window.png" alt="wsl_window" width="500">
 </div>
-<div class="title">Figure 107. WSL terminal</div>
+<div class="title">Figure 112. WSL terminal</div>
 </div>
 <div class="paragraph">
 <p>Optionally, you can install
@@ -9866,14 +10209,14 @@ Tools like <code>pyenv</code> and <code>conda</code> require separate installati
 </div>
 </div>
 <div class="paragraph">
-<p>Notice that the shell prompt starts with <code>(.env)</code> (<a href="#fig_venv_prompt">Figure 108</a>).
+<p>Notice that the shell prompt starts with <code>(.env)</code> (<a href="#fig_venv_prompt">Figure 113</a>).
 This is a sign that signifies, "You are now in a venv".</p>
 </div>
 <div id="fig_venv_prompt" class="imageblock text-center">
 <div class="content">
 <img src="imgs/venv_shell.png" alt="venv shell" width="500">
 </div>
-<div class="title">Figure 108. Shell prompt after activating venv</div>
+<div class="title">Figure 113. Shell prompt after activating venv</div>
 </div>
 <div class="paragraph">
 <p>When the virtual Python environment is activated, all subsequent <code>pip</code> commands will install libraries under <code>.env/</code> directory.
@@ -10007,7 +10350,7 @@ The technique of mounting the authentication file described here can also be use
 <div id="footer">
 <div id="footer-text">
 Version 1.0-en<br>
-Last updated 2021-09-30 14:40:34 UTC
+Last updated 2021-10-01 05:16:26 UTC
 </div>
 </div>
 <style>
