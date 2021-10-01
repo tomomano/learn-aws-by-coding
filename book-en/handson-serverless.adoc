@@ -224,3 +224,245 @@ To remove the stack, execute the following command.
 $ cdk destroy
 ----
 
+[[sec:dynamodb_tutorial]]
+=== DynamoDB hands-on
+
+Next, let's work on a short tutorial on DynamoDB.
+The source code for the hands-on is available on GitHub at
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/serverless/dynamodb[/handson/serverless/dynamodb].
+
+A sketch of the application used in this hands-on is shown in <<fig:dynamodb_deploy>>.
+In STEP 1, we deploy an empty DynamoDB tables using AWS CDK.
+Then, in STEP 2, we practice basic operations such as writing, reading, and deleting data from the database using the API.
+
+[[fig:dynamodb_deploy]]
+.Overview on DynamoDB tutorial
+image::imgs/handson-serverless/dynamodb_deploy.png[dynamodb_deploy, 700, align="center"]
+
+
+[WARNING]
+====
+This hands-on exercise can be performed within the
+https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc[free DynamoDB tier].
+====
+
+The program to deploy is written in
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/app.py[handson/serverless/dynamodb/app.py].
+Let's take a look at the code.
+
+[source, python, linenums]
+----
+class SimpleDynamoDb(core.Stack):
+    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
+        super().__init__(scope, name, **kwargs)
+
+        table = ddb.Table(
+            self, "SimpleTable",
+            # <1>
+            partition_key=ddb.Attribute(
+                name="item_id",
+                type=ddb.AttributeType.STRING
+            ),
+            # <2>
+            billing_mode=ddb.BillingMode.PAY_PER_REQUEST,
+            # <3>
+            removal_policy=core.RemovalPolicy.DESTROY
+        )
+----
+
+With this code, an empty DynamoDB table with the minimum configuration is created.
+Let us explain the meanings of each parameter.
+
+<1> Here we define **partition key** of the table.
+Every DynamoDB table must have a partition key.
+The partition key is a unique ID for each element (record) in the table.
+Every record in the table must have a partition key.
+There cannot be more than one element with the same partition key in a table.
+(except for the case where sort Key is used. For more information, see
+https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html[official documentation "Core Components of Amazon DynamoDB"]).
+In this example, the partition key is named `item_id`.
+<2> Here we specify the `billing_mode` parameter.
+By specifying `ddb.BillingMode.PAY_PER_REQUEST`, DynamoDB table in **on-demand capacity mode** is created.
+There is another mode called `PROVISIONED`, but this is for more advanced use cases.
+<3> Here we specify the `removal_policy`.
+It specifies whether DynamoDB table will be removed together when the CloudFormation stack is deleted.
+In this code, `DESTROY` is selected, so all the data will be deleted.
+If you select other options, you can define other behaviors such as keeping DynamoDB backups even if the stack is deleted.
+
+[[sec:serverless_dynamodb_deploy]]
+==== Deploying the application
+
+The deployment procedure is almost the same as the previous hands-on.
+Here, only the commands are listed (lines starting with `#` are comments).
+If you have forgotten the meaning of each command, review the first hands-on.
+You should not forget to set the access key (<<aws_cli_install>>).
+
+[source, bash]
+----
+# move to the project directory
+$ cd handson/serverless/dynamodb
+
+# create venv and install dependent libraries
+$ python3 -m venv .env
+$ source .env/bin/activate
+$ pip install -r requirements.txt
+
+# deploy!
+$ cdk deploy
+----
+
+If the deployment command is executed successfully, you should get an output like <<handson_04_dynamodb_cdk_output>>.
+In the output you should see a message `TableName = XXXX` where `XXXX` is some random string.
+We will use this `XXXX` string later, so make a note of it.
+
+[[handson_04_dynamodb_cdk_output]]
+.Output of `cdk deploy`
+image::imgs/handson-serverless/handson_04_dynamodb_cdk_output.png[cdk output, 700, align="center"]
+
+Let's log in to the AWS console and check the deployed stack.
+From the console, go to the DynamoDB page and select "Tables" from the menu bar on the left.
+Then, you can see the list of tables in a screen like <<handson_04_dynamodb_table_list>>.
+
+[[handson_04_dynamodb_table_list]]
+.Viewing the list of DynamoDB tables
+image::imgs/handson-serverless/dynamodb_table_list.png[cdk output, 700, align="center"]
+
+The deployment will createa a table with a random name starting with `SimpleDynamoDb`.
+Click on the name of the table to see the details.
+You should see a screen like <<handson_04_dynamodb_table_detail>>.
+Click on the "Items" tab to see the records in the table.
+At this point, the table is empty because no data has been written to it.
+
+[[handson_04_dynamodb_table_detail]]
+.Viewing the details of the DynamoDB table
+image::imgs/handson-serverless/dynamodb_table_detail.png[cdk output, 700, align="center"]
+
+==== Read and write operations
+
+Now, let's practice read and write operations using the table that we just created.
+Here we will use Python and
+https://boto3.amazonaws.com/v1/documentation/api/latest/index.html[boto3]
+library.
+
+First, we write a new record in the table.
+Open the file named
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/simple_write.py[simple_write.py]
+in the hands-on directory.
+Inside the program, you will find the following code.
+
+[source, python, linenums]
+----
+import boto3
+from uuid import uuid4
+ddb = boto3.resource('dynamodb')
+
+def write_item(table_name):
+    table = ddb.Table(table_name)
+    table.put_item(
+    Item={
+        'item_id': str(uuid4()),
+        'first_name': 'John',
+        'last_name': 'Doe',
+        'age': 25,
+        }
+    )
+----
+
+If you read the code from the top, you will see that it first imports the boto3 library and then calls the `dynamodb` resource.
+The `write_item()` function takes the name of the DynamoDB table as an argument.
+Then, the `put_item()` method is called to write a new record to the DB.
+The item has four attributes defined: `item_id`, `first_name`, `last_name`, and `age`.
+The `item_id` corresponds to the partition key described above, and is given a random string using
+https://en.wikipedia.org/wiki/Universally_unique_identifier[UUID4]
+algorithm.
+
+Now, let's run `simple_write.py`.
+Replace "XXXX" with the name of the table you deployed (a string starting with `SimpleDynamoDb`), and then execute the following command.
+
+[source, bash]
+----
+$ python simple_write.py XXXX
+----
+
+Let's check from the AWS console that the new record has been written correctly.
+Use the same procedure as <<handson_04_dynamodb_table_detail>> to display the list of records in the table.
+You will find a new record as expected, as shown in <<fig:dynamodb_table_new_item>>.
+
+[[fig:dynamodb_table_new_item]]
+.Viewing the newly added record in the DynamoDB table
+image::imgs/handson-serverless/dynamodb_table_new_item.png[cdk output, 700, align="center"]
+
+It is also possible to use boto3 to read elements from a table.
+Open the file named
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/simple_read.py[simple_read.py]
+in the hands-on directory.
+
+[source, python, linenums]
+----
+import boto3
+ddb = boto3.resource('dynamodb')
+
+def scan_table(table_name):
+    table = ddb.Table(table_name)
+    items = table.scan().get("Items")
+    print(items)
+----
+
+By calling `table.scan().get("Items")`, all the records in the table are read out.
+
+Let's run this script with the following command
+(Don't forget to replace the "XXXX" part correctly).
+
+[source, bash]
+----
+$ python simple_read.py XXXX
+----
+
+You should get an output showing the record we just added eariler.
+
+==== Reading and writing a large number of records
+
+The advantage of DynamoDB is that, as mentioned at the beginning, its processing capacity can be freely expanded according to the load.
+
+To test the capability of DynamoDB, let's simulate the situation where a large amount of data is written at once.
+In
+https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dynamodb/batch_rw.py[batch_rw.py],
+we have a short script to perform massive write operation to the database.
+
+Run the following command (be sure to replace XXXX with the name of your table).
+
+[source, bash]
+----
+$ python batch_rw.py XXXX write 1000
+----
+
+This command generates a thousand random data, and writes them to the database.
+
+Furthermore, let's search the database.
+In the previous command, a random integer from 1 to 50 is assigned to the attribute `age` in each data.
+To search and retrieve only those elements whose `age` is less than or equal to 2, you execute the following command.
+
+[source, bash]
+----
+$ python batch_rw.py XXXX search_under_age 2
+----
+
+Let's try running the above two commands several times to apply a simulated load to the database.
+You should see that the results are returned without any significant delay.
+
+==== Deleting the stack
+
+When you have had enough fun with DynamoDB, remember to delete the stack.
+
+As in the previous hands-on sessions, you can delete the stack by executing the following command.
+
+[source, bash]
+----
+$ cdk destroy
+----
+
+[[sec:s3_tutorial]]
+=== S3 hands-on
+
+Coming soon...
+
