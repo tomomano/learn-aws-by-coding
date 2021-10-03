@@ -6,7 +6,7 @@
 本書では，クラウドの実践を行うプラットフォームとして， AWS を用いる．
 実践にあたって，最低限必要な AWS の知識を本章では解説しよう．
 
-https://aws.amazon.com[AWS (Amazon Web Service)] はAmazon社が提供する総合的なクラウドプラットフォームである．
+https://aws.amazon.com[AWS (Amazon Web Services)] はAmazon社が提供する総合的なクラウドプラットフォームである．
 AWS は Amazon 社が持つ膨大な計算リソースを貸し出すクラウドサービスとして，2006年に誕生した．
 2021年では，クラウドプロバイダーとして最大のマーケットシェア (約32%) を保持している
 (https://www.canalys.com/newsroom/global-cloud-market-Q121[参照])．
