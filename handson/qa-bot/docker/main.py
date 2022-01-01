@@ -2,7 +2,7 @@ import argparse, sys, logging
 from transformers import pipeline
 import boto3
 
-# supress warning message from pipeline
+# suppress warning message from pipeline
 logging.disable(sys.maxsize)
 
 def main(context, question, item_id, save_flag):
