@@ -121,7 +121,7 @@ def list_answers(limit):
 
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(P.TABLE_NAME)
-    resp = table.scan().get("Items")
+    resp = table.scan(Limit=limit).get("Items")
 
     for (i, r) in enumerate(resp):
         print(i)
