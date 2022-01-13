@@ -16,7 +16,7 @@
 * ハンズオン実行用の Docker image の使い方 (<<sec_handson_docker>>)
 
 使用する OS は Linux/Mac/Windows のどれを用いても構わない．
-Windows のユーザーは， Windows Subsytem for Linux (WSL) を使用することを想定している (<<sec:install_wsl>>))．
+Windows のユーザーは， Windows Subsytem for Linux (WSL) を使用することを想定している (<<sec:install_wsl>>)．
 
 また，本書のハンズオンを実行するための
 https://hub.docker.com/repository/docker/tomomano/labc[Docker イメージ]
