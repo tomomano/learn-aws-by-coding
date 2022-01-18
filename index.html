@@ -6965,7 +6965,7 @@ AWS Batch を使ってこれらの計算を並列に実行することで，ジ�
 </div>
 <div class="paragraph">
 <p>また，今回は MNIST の訓練データ 60,000 枚のうち， 48,000 枚を訓練データ，残り 12,000 枚を検証データとして用いた．
-この分割は乱数を固定してランダムに行ったが，もしこの分割によるデータのバイアスを気にするならば，分割の乱数を変えて複数回モデルの評価を行う (<strong>k-fold cross-validation</strong>) 方法も，より精緻なアプローチとして考えられる．</p>
+この分割は乱数を固定してランダムに行ったが，もしこの分割によるデータのバイアスを気にするならば， k 個の異なる学習・検証データの分割をあらかじめ用意して，複数回モデルの評価を行う (<strong>k-fold cross-validation</strong>) 方法も，より精緻なアプローチとして考えられる．</p>
 </div>
 </td>
 </tr>
@@ -10819,7 +10819,7 @@ Docker イメージのビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2022-01-13 14:30:31 UTC
+Last updated 2022-01-18 01:30:05 UTC
 </div>
 </div>
 <style>
