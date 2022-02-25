@@ -141,12 +141,12 @@ $ aws ec2 describe-images --owners amazon
 ディープラーニングで頻繁に使われるプログラムがあらかじめインストールしてあるAMIが， https://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html[DLAMI (Deep Learning AMI)] である．
 DLAMI には `TensorFlow`, `PyTorch` などの人気の高いディープラーニングのフレームワーク・ライブラリがすでにインストールされているため， EC2 インスタンスを起動してすぐさまディープラーニングの計算を実行できる．
 
-本ハンズオンでは， Amazon Linux 2 をベースにした DLAMI を使用する (AMI ID = ami-09c0c16fc46a29ed9)．
+本ハンズオンでは， Amazon Linux 2 をベースにした DLAMI を使用する (AMI ID = ami-09c0c16fc46a29ed9．この AMI は ap-northeast-1 でしか使用できない点に注意)．
 AWS CLI を使って，このAMIの詳細情報を取得してみよう．
 
 [source, bash]
 ----
-$ aws ec2 describe-images --owners amazon --image-ids "ami-09c0c16fc46a29ed9"
+$ aws ec2 describe-images --owners amazon --image-ids "ami-09c0c16fc46a29ed9" --region ap-northeast-1
 ----
 
 [[handson_02_ami-info]]
