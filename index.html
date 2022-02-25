@@ -3444,12 +3444,12 @@ AMI は EC2 のコンソールから検索することが可能である．
 DLAMI には <code>TensorFlow</code>, <code>PyTorch</code> などの人気の高いディープラーニングのフレームワーク・ライブラリがすでにインストールされているため， EC2 インスタンスを起動してすぐさまディープラーニングの計算を実行できる．</p>
 </div>
 <div class="paragraph">
-<p>本ハンズオンでは， Amazon Linux 2 をベースにした DLAMI を使用する (AMI ID = ami-09c0c16fc46a29ed9)．
+<p>本ハンズオンでは， Amazon Linux 2 をベースにした DLAMI を使用する (AMI ID = ami-09c0c16fc46a29ed9．この AMI は ap-northeast-1 でしか使用できない点に注意)．
 AWS CLI を使って，このAMIの詳細情報を取得してみよう．</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>aws ec2 describe-images <span class="nt">--owners</span> amazon <span class="nt">--image-ids</span> <span class="s2">"ami-09c0c16fc46a29ed9"</span></code></pre>
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>aws ec2 describe-images <span class="nt">--owners</span> amazon <span class="nt">--image-ids</span> <span class="s2">"ami-09c0c16fc46a29ed9"</span> <span class="nt">--region</span> ap-northeast-1</code></pre>
 </div>
 </div>
 <div id="handson_02_ami-info" class="imageblock text-center">
@@ -10819,7 +10819,7 @@ Docker イメージのビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2022-01-18 01:30:05 UTC
+Last updated 2022-02-25 15:29:35 UTC
 </div>
 </div>
 <style>
