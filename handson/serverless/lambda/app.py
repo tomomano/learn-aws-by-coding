@@ -10,8 +10,8 @@ import time
 from random import choice, randint
 def handler(event, context):
     time.sleep(randint(2,5))
-    pokemon = ["Charmander", "Bulbasaur", "Squirtle"]
-    message = "Congratulations! You are given " + choice(pokemon)
+    sushi = ["salmon", "tuna", "squid"]
+    message = "Welcome to Cloud Sushi. Your order is " + choice(sushi)
     print(message)
     return message
 """
