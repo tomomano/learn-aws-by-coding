@@ -37,5 +37,11 @@ The work in progress can be viewed
 - 9/17: 英語版の作成を開始
 
 ## 💻Contributing💻
+
 バグの報告や文章の誤植などありましたら， [Issues](https://github.com/tomomano/learn-aws-by-coding/issues) までご報告いただけると幸いです．
 継続的にアップデートを行っていきたいと思います．
+
+(2022/03/20 追記) 100 スター超えました！
+とてもうれしいです．
+気に入っていただいた方はスターよろしくお願いします．
+めざせ200スター！
