@@ -298,7 +298,7 @@ $ aws s3 ls
 
 [source, bash]
 ----
-$ echo "Hello world!" > hello_world.txt
+$ echo "Hello world" > hello_world.txt
 $ aws s3 cp hello_world.txt "s3://${bucketName}/hello_world.txt"
 ----
 
