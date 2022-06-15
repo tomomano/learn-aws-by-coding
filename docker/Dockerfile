@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:16
 LABEL maintainer="Tomoyuki Mano"
 
 RUN apt-get update \
