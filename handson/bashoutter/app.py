@@ -31,6 +31,7 @@ class Bashoutter(core.Stack):
             self, "Bashoutter-Bucket",
             website_index_document="index.html",
             public_read_access=True,
+            auto_delete_objects=True,
             removal_policy=core.RemovalPolicy.DESTROY
         )
 
