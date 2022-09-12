@@ -8869,108 +8869,102 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">  1
-  2
-  3
-  4
-  5
-  6
-  7
-  8
-  9
- 10
- 11
- 12
- 13
- 14
- 15
- 16
- 17
- 18
- 19
- 20
- 21
- 22
- 23
- 24
- 25
- 26
- 27
- 28
- 29
- 30
- 31
- 32
- 33
- 34
- 35
- 36
- 37
- 38
- 39
- 40
- 41
- 42
- 43
- 44
- 45
- 46
- 47
- 48
- 49
- 50
- 51
- 52
- 53
- 54
- 55
- 56
- 57
- 58
- 59
- 60
- 61
- 62
- 63
- 64
- 65
- 66
- 67
- 68
- 69
- 70
- 71
- 72
- 73
- 74
- 75
- 76
- 77
- 78
- 79
- 80
- 81
- 82
- 83
- 84
- 85
- 86
- 87
- 88
- 89
- 90
- 91
- 92
- 93
- 94
- 95
- 96
- 97
- 98
- 99
-100
-101
-102
+<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
 </pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">Bashoutter</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">Stack</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">core</span><span class="o">.</span><span class="n">App</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
@@ -8994,12 +8988,6 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
             <span class="n">website_index_document</span><span class="o">=</span><span class="s">"index.html"</span><span class="p">,</span>
             <span class="n">public_read_access</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
             <span class="n">removal_policy</span><span class="o">=</span><span class="n">core</span><span class="o">.</span><span class="n">RemovalPolicy</span><span class="o">.</span><span class="n">DESTROY</span>
-        <span class="p">)</span>
-        <span class="n">s3_deploy</span><span class="o">.</span><span class="n">BucketDeployment</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="s">"BucketDeployment"</span><span class="p">,</span>
-            <span class="n">destination_bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span>
-            <span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="n">s3_deploy</span><span class="o">.</span><span class="n">Source</span><span class="o">.</span><span class="n">asset</span><span class="p">(</span><span class="s">"./gui/dist"</span><span class="p">)],</span>
-            <span class="n">retain_on_delete</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">common_params</span> <span class="o">=</span> <span class="p">{</span>
@@ -9084,8 +9072,7 @@ OAS に従って API の仕様が記述されていると，簡単にドキュ�
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>静的コンテンツを配信するための S3 バケットを用意している．
-また，スタックのデプロイ時に，必要なファイル群を自動的にアップロードするような設定を行っている．</td>
+<td>静的コンテンツを配信するための S3 バケットを用意している．</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -9139,6 +9126,10 @@ public access mode を設定しておくと， <code><a href="http://XXXX.s3-web
 そして，クライアントがこの URL にアクセスをすると，バケットの中にある <code>index.html</code> がクライアントに返され，ページがロードされる
 (どのファイルが返されるかは， <code>website_index_document="index.html"</code> の部分で設定している．)</p>
 </div>
+<div class="paragraph">
+<p>なお，この時点ではバケットは空である．
+HTML/CSS/JS など静的コンテンツの配置は，デプロイを行った後ほどのステップで行う．</p>
+</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -9177,49 +9168,6 @@ CloudFront についての詳細は
 <div class="paragraph">
 <p>今回の S3 バケットには， AWS によって付与されたランダムな URL がついている．
 これを． <code>example.com</code> のような自分のドメインでホストしたければ， AWS によって付与された URL を自分のドメインの DNS レコードに追加すればよい．</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Public access mode の S3 バケットを作成した後，バケットの中に配置するウェブサイトコンテンツを，次のコードによりアップロードしている．</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="python"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-</pre></td><td class="code"><pre><span class="n">s3_deploy</span><span class="o">.</span><span class="n">BucketDeployment</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span> <span class="s">"BucketDeployment"</span><span class="p">,</span>
-    <span class="n">destination_bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span>
-    <span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="n">s3_deploy</span><span class="o">.</span><span class="n">Source</span><span class="o">.</span><span class="n">asset</span><span class="p">(</span><span class="s">"./gui/dist"</span><span class="p">)],</span>
-    <span class="n">retain_on_delete</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></td></tr></tbody></table></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>このコードの意味は， <code>./gui/dist</code> のディレクトリの中にあるファイルをバケットに配置せよ，と言っている．
-<code>./gui/dist</code> にはビルド済みのウェブサイトの静的コンテンツ (HTML/CSS/JavaScript) が入っている．
-今回は GUI の説明はとくに行わないが，コードは
-<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter/gui">handson/bashoutter/gui</a>
-のディレクトリの中にある．
-興味のある読者は中身を確認してみるとよい．</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>今回のウェブサイトは <a href="https://vuejs.org/">Vue.js</a> と <a href="https://vuetifyjs.com/">Vuetify</a> という UI フレームワークを使って作成した．
-Vue を使うことで， Single page application (SPA) の技術でウェブサイトの画面がレンダリングされる．</p>
 </div>
 </td>
 </tr>
@@ -9832,7 +9780,42 @@ Content-Type: application/json
 最後に， API が GUI と統合されるとどうなるのか，見てみよう．</p>
 </div>
 <div class="paragraph">
-<p>デプロイを実行したときにコマンドラインで出力された， <code>Bashoutter.BucketUrl=</code> で与えられた URL を確認しよう (<a href="#handson_05_cdk_output">Figure 98</a>)．
+<p>CDK のコードで， Public access mode の S3 バケットを作成したことを思い出してほしい．
+最初のステップとして，ここにウェブサイトのコンテンツをアップロードしよう．
+ハンズオンのソースコードの中に <code>gui/dist</code> というフォルダが見つかるはずである．
+ここにはビルド済みのウェブサイトの静的コンテンツ (HTML/CSS/JavaScript) が入っている．
+AWS CLI のコマンドを使うことでこれらのファイルを S3 にアップロードしよう．</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nv">$ </span>aws s3 <span class="nb">cp</span> <span class="nt">--recursive</span> ./gui/dist s3://&lt;BUCKET_NAME&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>コマンドを実行する際は， Bashoutter ハンズオンのディレクトリから行うこと (<code>./gui/dist</code> に注目)，そして <code>&lt;BUCKET_NAME&gt;</code> にはデプロイした自身のバケットの名前が入る点に注意．
+念のため，AWS コンソールにログインし，バケットにファイルがアップロードされている点を確認しておこう．</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>なお，今回は GUI の説明はとくに行わないが， Bashoutter のウェブサイトは <a href="https://vuejs.org/">Vue.js</a> と <a href="https://vuetifyjs.com/">Vuetify</a> という UI フレームワークを使って作成した．
+Vue を使うことで， Single page application (SPA) の技術でウェブサイトの画面がレンダリングされる．
+ソースコードは
+<a href="https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter/gui">handson/bashoutter/gui</a>
+のディレクトリの中にあるので，興味のある読者は確認してみるとよい．</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>アップトードが完了したところで，続いてデプロイを実行したときにコマンドラインの出力を見直してみよう．
+<code>Bashoutter.BucketUrl=</code> で与えられた URL が見つかるはずである (<a href="#handson_05_cdk_output">Figure 98</a>)．
 これは，先述したとおり， Public access mode の S3 バケットの URL である．</p>
 </div>
 <div class="paragraph">
@@ -10819,7 +10802,7 @@ Docker イメージのビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2022-06-15 05:57:22 UTC
+Last updated 2022-09-12 14:45:33 UTC
 </div>
 </div>
 <style>
