@@ -112,12 +112,6 @@ class Bashoutter(core.Stack):
             public_read_access=True,
             removal_policy=core.RemovalPolicy.DESTROY
         )
-        s3_deploy.BucketDeployment(
-            self, "BucketDeployment",
-            destination_bucket=bucket,
-            sources=[s3_deploy.Source.asset("./gui/dist")],
-            retain_on_delete=False,
-        )
 
         common_params = {
             "runtime": _lambda.Runtime.PYTHON_3_7,
@@ -193,7 +187,6 @@ class Bashoutter(core.Stack):
 ----
 <1> ここで，俳句の情報を記録しておくための DynamoDB テーブルを定義している．
 <2> 静的コンテンツを配信するための S3 バケットを用意している．
-また，スタックのデプロイ時に，必要なファイル群を自動的にアップロードするような設定を行っている．
 <3> それぞれの API で実行される Lambda 関数を定義している．
 関数は Python3.7 で書かれており，コードは
 https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/bashoutter/api/api.py[handson/bashoutter/api/api.py]
@@ -225,6 +218,9 @@ public access mode を設定しておくと， `http://XXXX.s3-website-ap-northe
 そして，クライアントがこの URL にアクセスをすると，バケットの中にある `index.html` がクライアントに返され，ページがロードされる
 (どのファイルが返されるかは， `website_index_document="index.html"` の部分で設定している．)
 
+なお，この時点ではバケットは空である．
+HTML/CSS/JS など静的コンテンツの配置は，デプロイを行った後ほどのステップで行う．
+
 [TIP]
 ====
 より本格的なウェブページを運用する際には， public access mode の S3 バケットに， https://aws.amazon.com/cloudfront/[CloudFront] という機能を追加することが一般的である．
@@ -242,31 +238,6 @@ https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.
 ====
 今回の S3 バケットには， AWS によって付与されたランダムな URL がついている．
 これを． `example.com` のような自分のドメインでホストしたければ， AWS によって付与された URL を自分のドメインの DNS レコードに追加すればよい．
-====
-
-Public access mode の S3 バケットを作成した後，バケットの中に配置するウェブサイトコンテンツを，次のコードによりアップロードしている．
-
-[source, python, linenums]
-----
-s3_deploy.BucketDeployment(
-    self, "BucketDeployment",
-    destination_bucket=bucket,
-    sources=[s3_deploy.Source.asset("./gui/dist")],
-    retain_on_delete=False,
-)
-----
-
-このコードの意味は， `./gui/dist` のディレクトリの中にあるファイルをバケットに配置せよ，と言っている．
-`./gui/dist` にはビルド済みのウェブサイトの静的コンテンツ (HTML/CSS/JavaScript) が入っている．
-今回は GUI の説明はとくに行わないが，コードは
-https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter/gui[handson/bashoutter/gui]
-のディレクトリの中にある．
-興味のある読者は中身を確認してみるとよい．
-
-[TIP]
-====
-今回のウェブサイトは https://vuejs.org/[Vue.js] と https://vuetifyjs.com/[Vuetify] という UI フレームワークを使って作成した．
-Vue を使うことで， Single page application (SPA) の技術でウェブサイトの画面がレンダリングされる．
 ====
 
 ==== API のハンドラ関数
@@ -676,7 +647,31 @@ $ python client.py $ENDPOINT_URL clear_database
 ウェブアプリケーションでは，これと同じことがウェブブラウザの背後で行われ，ページのコンテンツが表示されている (<<fig:web_server>> 参照)．
 最後に， API が GUI と統合されるとどうなるのか，見てみよう．
 
-デプロイを実行したときにコマンドラインで出力された， `Bashoutter.BucketUrl=` で与えられた URL を確認しよう (<<handson_05_cdk_output>>)．
+CDK のコードで， Public access mode の S3 バケットを作成したことを思い出してほしい．
+最初のステップとして，ここにウェブサイトのコンテンツをアップロードしよう．
+ハンズオンのソースコードの中に `gui/dist` というフォルダが見つかるはずである．
+ここにはビルド済みのウェブサイトの静的コンテンツ (HTML/CSS/JavaScript) が入っている．
+AWS CLI のコマンドを使うことでこれらのファイルを S3 にアップロードしよう．
+
+[source, bash]
+----
+$ aws s3 cp --recursive ./gui/dist s3://<BUCKET_NAME>
+----
+
+コマンドを実行する際は， Bashoutter ハンズオンのディレクトリから行うこと (`./gui/dist` に注目)，そして `<BUCKET_NAME>` にはデプロイした自身のバケットの名前が入る点に注意．
+念のため，AWS コンソールにログインし，バケットにファイルがアップロードされている点を確認しておこう．
+
+[TIP]
+====
+なお，今回は GUI の説明はとくに行わないが， Bashoutter のウェブサイトは https://vuejs.org/[Vue.js] と https://vuetifyjs.com/[Vuetify] という UI フレームワークを使って作成した．
+Vue を使うことで， Single page application (SPA) の技術でウェブサイトの画面がレンダリングされる．
+ソースコードは
+https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/bashoutter/gui[handson/bashoutter/gui]
+のディレクトリの中にあるので，興味のある読者は確認してみるとよい．
+====
+
+アップトードが完了したところで，続いてデプロイを実行したときにコマンドラインの出力を見直してみよう．
+`Bashoutter.BucketUrl=` で与えられた URL が見つかるはずである (<<handson_05_cdk_output>>)．
 これは，先述したとおり， Public access mode の S3 バケットの URL である．
 
 ウェブブラウザを開き，アドレスバーに S3 の URL を入力しへアクセスしてみよう．

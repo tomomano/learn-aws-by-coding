@@ -31,6 +31,11 @@ The work in progress can be viewed
 - **Amazon (紙媒体 or Kindle)** => https://www.amazon.co.jp/dp/4839977607/
 - **マイナビブックス (紙媒体 or PDF)** => https://book.mynavi.jp/ec/products/detail/id=124113
 
+## バグ修正など
+
+- 2022/09/12: [Bashoutter ハンズオンのエラー](https://github.com/tomomano/learn-aws-by-coding/issues/44) に対応．
+関連PR: https://github.com/tomomano/learn-aws-by-coding/pull/45
+
 ## 更新履歴
 
 - 6/21: Version 1.0 公開
