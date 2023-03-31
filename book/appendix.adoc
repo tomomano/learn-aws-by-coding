@@ -329,7 +329,7 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 これが確認出来たら、一度コンピュータを再起動する．
 
 続いて， Linux kernel update package を次のリンクからダウンロードする．
-https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+https://wslstorestorage.blob.cdk.windows.net/wslblob/wsl_update_x64.msi
 
 ダウンロードしたファイルをダブルクリックして実行する．
 ダイアログに従ってインストールを完了させる．

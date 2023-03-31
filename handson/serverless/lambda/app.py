@@ -1,5 +1,7 @@
+from constructs import Construct
+import aws_cdk as cdk
 from aws_cdk import (
-    core,
+    Stack,
     aws_lambda as _lambda
 )
 import os
@@ -16,10 +18,10 @@ def handler(event, context):
     return message
 """
 
-class SimpleLambda(core.Stack):
+class SimpleLambda(Stack):
 
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # <2>
         handler = _lambda.Function(
@@ -28,13 +30,13 @@ class SimpleLambda(core.Stack):
             handler="index.handler",
             code=_lambda.Code.from_inline(FUNC),
             memory_size=128,
-            timeout=core.Duration.seconds(10),
+            timeout=cdk.Duration.seconds(10),
             dead_letter_queue_enabled=True,
         )
 
-        core.CfnOutput(self, "FunctionName", value=handler.function_name)
+        cdk.CfnOutput(self, "FunctionName", value=handler.function_name)
 
-app = core.App()
+app = cdk.App()
 SimpleLambda(
     app, "SimpleLambda",
     env={

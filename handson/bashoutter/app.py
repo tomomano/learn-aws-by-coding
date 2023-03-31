@@ -1,5 +1,7 @@
+from constructs import Construct
+import aws_cdk as cdk
 from aws_cdk import (
-    core,
+    Stack,
     aws_dynamodb as ddb,
     aws_s3 as s3,
     aws_s3_deployment as s3_deploy,
@@ -9,10 +11,10 @@ from aws_cdk import (
 )
 import os
 
-class Bashoutter(core.Stack):
+class Bashoutter(Stack):
 
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # <1>
         # dynamoDB table to store haiku
@@ -23,7 +25,7 @@ class Bashoutter(core.Stack):
                 type=ddb.AttributeType.STRING
             ),
             billing_mode=ddb.BillingMode.PAY_PER_REQUEST,
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=cdk.RemovalPolicy.DESTROY
         )
 
         # <2>
@@ -32,7 +34,7 @@ class Bashoutter(core.Stack):
             website_index_document="index.html",
             public_read_access=True,
             auto_delete_objects=True,
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=cdk.RemovalPolicy.DESTROY
         )
 
         common_params = {
@@ -49,7 +51,7 @@ class Bashoutter(core.Stack):
             code=_lambda.Code.from_asset("api"),
             handler="api.get_haiku",
             memory_size=512,
-            timeout=core.Duration.seconds(10),
+            timeout=cdk.Duration.seconds(10),
             **common_params,
         )
         post_haiku_lambda = _lambda.Function(
@@ -121,9 +123,9 @@ class Bashoutter(core.Stack):
         )
 
         # Output parameters
-        core.CfnOutput(self, 'BucketUrl', value=bucket.bucket_website_domain_name)
+        cdk.CfnOutput(self, 'BucketUrl', value=bucket.bucket_website_domain_name)
 
-app = core.App()
+app = cdk.App()
 Bashoutter(
     app, "Bashoutter",
     env={

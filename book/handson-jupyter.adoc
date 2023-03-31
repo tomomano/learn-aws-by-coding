@@ -59,15 +59,15 @@ https://github.com/tomomano/learn-aws-by-coding/tree/main/handson/mnist/app.py[h
 
 [source, python, linenums]
 ----
-class Ec2ForDl(core.Stack):
+class Ec2ForDl(Stack):
 
-    def __init__(self, scope: core.App, name: str, key_name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, key_name: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         vpc = ec2.Vpc(
             self, "Ec2ForDl-Vpc",
             max_azs=1,
-            cidr="10.10.0.0/23",
+            ip_addresses=ec2.IpAddresses.cidr("10.10.0.0/23"),
             subnet_configuration=[
                 ec2.SubnetConfiguration(
                     name="public",
@@ -677,7 +677,7 @@ image::imgs/handson-jupyter/train_loss.png[train_loss, 500, align="center"]
 
 [[handson_02_mnist_final_score]]
 .学習したCNNのテストデータに対するスコア (5エポック後)
-image::imgs/handson-jupyter/mnist_final_score.png[mnist_final_score, 700, align="center"]
+image::imgs/handson-jupyter/mnist_final_scdk.png[mnist_final_score, 700, align="center"]
 
 学習した CNN の推論結果を可視化してみよう．
 次のコードを実行することで， <<handson_02_mnist_mnist_prediction>> のような出力が得られるだろう．
