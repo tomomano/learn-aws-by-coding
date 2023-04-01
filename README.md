@@ -12,7 +12,7 @@
 ## CDK v2 への対応
 
 オリジナルの講義資料は CDK v1 で作成されました．
-が， AWS は2023年6月1日で v1 のサポートを終了し，CDK v2 への移行を推奨しています．
+が， AWS は2023年6月1日で v1 のサポートを終了し，CDK v2 への移行を推奨しています
 ([記事](https://aws.amazon.com/blogs/developer/version-1-of-the-aws-cloud-development-kit-aws-cdk-is-now-in-maintenance-mode/))．
 
 このたび， @takashi-uchida により， CDK v2 に対応したバージョンができました ([PR#49](https://github.com/tomomano/learn-aws-by-coding/pull/49))．
