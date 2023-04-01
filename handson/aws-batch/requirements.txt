@@ -1,5 +1,6 @@
-aws-cdk-lib==2.70.0
+aws-cdk-lib==2.72.0
 constructs>=10.0.0,<11.0.0
+aws-cdk.aws-batch-alpha==2.72.0a0
 boto3
 jupyter
 pandas
