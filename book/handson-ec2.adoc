@@ -100,16 +100,16 @@ image::imgs/handson-01/app_architecture.png[hands-on 01 architecture, 600, align
 
 [source, python, linenums]
 ----
-class MyFirstEc2(core.Stack):
+class MyFirstEc2(Stack):
 
-    def __init__(self, scope: core.App, name: str, key_name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, key_name: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # <1>
         vpc = ec2.Vpc(
             self, "MyFirstEc2-Vpc",
             max_azs=1,
-            cidr="10.10.0.0/23",
+            ip_addresses=ec2.IpAddresses.cidr("10.10.0.0/23"),
             subnet_configuration=[
                 ec2.SubnetConfiguration(
                     name="public",
@@ -169,7 +169,7 @@ VPC は AWS 上にプライベートな仮想ネットワーク環境を構築�
 vpc = ec2.Vpc(
     self, "MyFirstEc2-Vpc",
     max_azs=1,
-    cidr="10.10.0.0/23",
+    ip_addresses=ec2.IpAddresses.cidr("10.10.0.0/23"),
     subnet_configuration=[
         ec2.SubnetConfiguration(
             name="public",

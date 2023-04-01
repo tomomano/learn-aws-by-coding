@@ -193,10 +193,10 @@ image::imgs/handson-03/handson-03-architecture.png[hands-on 03 architecture, 600
 
 [source, python, linenums]
 ----
-class EcsClusterQaBot(core.Stack):
+class EcsClusterQaBot(Stack):
 
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # <1>
         # dynamoDB table to store questions and answers
@@ -206,7 +206,7 @@ class EcsClusterQaBot(core.Stack):
                 name="item_id", type=dynamodb.AttributeType.STRING
             ),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=cdk.RemovalPolicy.DESTROY
         )
 
         # <2>

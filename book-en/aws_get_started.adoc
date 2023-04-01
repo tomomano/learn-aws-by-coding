@@ -429,15 +429,16 @@ The following is an example excerpt of CDK code using Python.
 
 [source, python, linenums]
 ----
+import aws_cdk as cdk
 from aws_cdk import (
-    core,
+    Stack,
     aws_ec2 as ec2,
 )
 
-class MyFirstEc2(core.Stack):
+class MyFirstEc2(Stack):
 
-    def __init__(self, scope, name, **kwargs):
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope, construct_id, **kwargs):
+        super().__init__(scope, construct_id, **kwargs)
 
         vpc = ec2.Vpc(
             ... # some parameters

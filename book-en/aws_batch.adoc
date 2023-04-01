@@ -300,15 +300,15 @@ Let us take a look at the application source code
 
 [source, python, linenums]
 ----
-class SimpleBatch(core.Stack):
+class SimpleBatch(Stack):
 
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # <1>
         bucket = s3.Bucket(
             self, "bucket",
-            removal_policy=core.RemovalPolicy.DESTROY,
+            removal_policy=cdk.RemovalPolicy.DESTROY,
             auto_delete_objects=True,
         )
 
@@ -359,7 +359,7 @@ class SimpleBatch(core.Stack):
         # <5>
         repo = ecr.Repository(
             self, "repository",
-            removal_policy=core.RemovalPolicy.DESTROY,
+            removal_policy=cdk.RemovalPolicy.DESTROY,
         )
 
         # <6>
@@ -377,7 +377,7 @@ class SimpleBatch(core.Stack):
                 }
             ),
             job_definition_name=self.stack_name + "job-definition",
-            timeout=core.Duration.hours(2),
+            timeout=cdk.Duration.hours(2),
         )
 ----
 
@@ -486,7 +486,7 @@ In the source code, the following part defines the ECR.
 # <1>
 repo = ecr.Repository(
     self, "repository",
-    removal_policy=core.RemovalPolicy.DESTROY,
+    removal_policy=cdk.RemovalPolicy.DESTROY,
 )
 
 job_def = batch.JobDefinition(

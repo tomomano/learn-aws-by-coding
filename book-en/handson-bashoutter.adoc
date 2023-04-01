@@ -84,10 +84,10 @@ Now, let us take a look at the main application code
 
 [source, python, linenums]
 ----
-class Bashoutter(core.Stack):
+class Bashoutter(Stack):
 
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # <1>
         # dynamoDB table to store haiku
@@ -98,7 +98,7 @@ class Bashoutter(core.Stack):
                 type=ddb.AttributeType.STRING
             ),
             billing_mode=ddb.BillingMode.PAY_PER_REQUEST,
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=cdk.RemovalPolicy.DESTROY
         )
 
         # <2>
@@ -106,7 +106,7 @@ class Bashoutter(core.Stack):
             self, "Bashoutter-Bucket",
             website_index_document="index.html",
             public_read_access=True,
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=cdk.RemovalPolicy.DESTROY
         )
         s3_deploy.BucketDeployment(
             self, "BucketDeployment",
@@ -207,7 +207,7 @@ bucket = s3.Bucket(
     self, "Bashoutter-Bucket",
     website_index_document="index.html",
     public_read_access=True,
-    removal_policy=core.RemovalPolicy.DESTROY
+    removal_policy=cdk.RemovalPolicy.DESTROY
 )
 ----
 

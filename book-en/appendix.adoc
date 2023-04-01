@@ -298,7 +298,7 @@ After the execution, make sure that the command outputs the line `“The operati
 Once this is done, restart your computer.
 
 Next, download **Linux kernel update package** from the following link:
-https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+https://wslstorestorage.blob.cdk.windows.net/wslblob/wsl_update_x64.msi
 
 Double-click on the downloaded file to run it.
 Follow the dialog to complete the installation.
