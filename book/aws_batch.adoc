@@ -322,11 +322,11 @@ class SimpleBatch(Stack):
         )
 
         # <2>
-        managed_env = batch.ComputeEnvironment(
+        managed_env = batch_alpha.ComputeEnvironment(
             self, "managed-env",
-            compute_resources=batch.ComputeResources(
+            compute_resources=batch_alpha.ComputeResources(
                 vpc=vpc,
-                allocation_strategy=batch.AllocationStrategy.BEST_FIT,
+                allocation_strategy=batch_alpha.AllocationStrategy.BEST_FIT,
                 desiredv_cpus=0,
                 maxv_cpus=64,
                 minv_cpus=0,
@@ -339,10 +339,10 @@ class SimpleBatch(Stack):
         )
 
         # <3>
-        job_queue = batch.JobQueue(
+        job_queue = batch_alpha.JobQueue(
             self, "job-queue",
             compute_environments=[
-                batch.JobQueueComputeEnvironment(
+                batch_alpha.JobQueueComputeEnvironment(
                     compute_environment=managed_env,
                     order=100
                 )
@@ -367,9 +367,9 @@ class SimpleBatch(Stack):
         )
 
         # <6>
-        job_def = batch.JobDefinition(
+        job_def = batch_alpha.JobDefinition(
             self, "job-definition",
-            container=batch.JobDefinitionContainer(
+            container=batch_alpha.JobDefinitionContainer(
                 image=ecs.ContainerImage.from_ecr_repository(repo),
                 command=["python3", "main.py"],
                 vcpus=4,
@@ -492,9 +492,9 @@ repo = ecr.Repository(
     removal_policy=cdk.RemovalPolicy.DESTROY,
 )
 
-job_def = batch.JobDefinition(
+job_def = batch_alpha.JobDefinition(
     self, "job-definition",
-    container=batch.JobDefinitionContainer(
+    container=batch_alpha.JobDefinitionContainer(
         image=ecs.ContainerImage.from_ecr_repository(repo), # <2>
         ...
     ),
