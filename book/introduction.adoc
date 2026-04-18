@@ -16,16 +16,20 @@ https://github.com/tomomano/learn-aws-by-coding
 
 **CDK v2 への対応**
 
-オリジナルの講義資料は CDK v1 で作成されました．
+[line-through]#オリジナルの講義資料は CDK v1 で作成されました．
 が， AWS は2023年6月1日で v1 のサポートを終了し，CDK v2 への移行を推奨しています．
-(https://aws.amazon.com/blogs/developer/version-1-of-the-aws-cloud-development-kit-aws-cdk-is-now-in-maintenance-mode/[記事])．
+(https://aws.amazon.com/blogs/developer/version-1-of-the-aws-cloud-development-kit-aws-cdk-is-now-in-maintenance-mode/[記事])．#
 
-このたび， https://github.com/takashi-uchida[@takashi-uchida] により， CDK v2 に対応したバージョンができました (https://github.com/tomomano/learn-aws-by-coding/pull/49[PR#49])．
+[line-through]#このたび， https://github.com/takashi-uchida[@takashi-uchida] により， CDK v2 に対応したバージョンができました (https://github.com/tomomano/learn-aws-by-coding/pull/49[PR#49])．
 こちらのブランチでその中身を見ることができます．
 https://github.com/takashi-uchida/learn-aws-by-coding/tree/feature/to_cdkv2
 
 現在，コードをレビュー中なので，メインブランチにマージされるのはもう少し先になります．
-もうしばらくお待ちください！
+もうしばらくお待ちください！#
+
+*(2026/04/18 追記)* https://github.com/takashi-uchida[@takashi-uchida] による CDK v2 対応の https://github.com/tomomano/learn-aws-by-coding/pull/49[PR#49] をメインブランチにマージしました！
+本リポジトリのコードは CDK v2 に対応しています．
+不具合などありましたら， https://github.com/tomomano/learn-aws-by-coding/issues[Issue] にてご報告ください．
 
 **🌎英語バージョン🌎**
 https://tomomano.github.io/learn-aws-by-coding/en/[こちら]

@@ -20,7 +20,7 @@
 ~~https://github.com/takashi-uchida/learn-aws-by-coding/tree/feature/to_cdkv2~~
 
 ~~現在，コードをレビュー中なので，メインブランチにマージされるのはもう少し先になります．~~
-~~もうしばらくお待ちください！~~~~
+~~もうしばらくお待ちください！~~
 
 **(2026/04/18 追記)** @takashi-uchida による CDK v2 対応の [PR#49](https://github.com/tomomano/learn-aws-by-coding/pull/49) をメインブランチにマージしました！
 本リポジトリのコードは CDK v2 に対応しています．
