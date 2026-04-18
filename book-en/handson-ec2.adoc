@@ -185,7 +185,7 @@ vpc = ec2.Vpc(
 
 * `max_azs=1`: This parameter sets the number of avaialability zones (AZs).
 In this hands-on, it is set to `1` because we don't need to worry about the failure of the data center.
-* `cidr="10.10.0.0/23"`: This parameter specifies the range of IPv4 address in the VPC.
+* `ip_addresses=ec2.IpAddresses.cidr("10.10.0.0/23")`: This parameter specifies the range of IPv4 address in the VPC.
 For more information about CIDR notation, see
 https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing[Wikipedia article].
 `10.10.0.0/23` refers to a range of 512 consecutive addresses from `10.10.0.0` to `10.10.1.255`.

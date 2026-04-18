@@ -182,7 +182,7 @@ vpc = ec2.Vpc(
 
 * `max_azs=1` : このパラメータは，前章で説明した avaialibility zone (AZ) を設定している．
 このハンズオンでは，特にデータセンターの障害などを気にする必要はないので `1` にしている．
-* `cidr="10.10.0.0/23"` : このパラメータは，VPC内のIPv4のレンジを指定している．
+* `ip_addresses=ec2.IpAddresses.cidr("10.10.0.0/23")` : このパラメータは，VPC内のIPv4のレンジを指定している．
 CIDR記法については， https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing[Wikipedia]などを参照．
 `10.10.0.0/23` は `10.10.0.0` から `10.10.1.255` までの512個の連続したアドレス範囲を指している．
 つまり，このVPCでは最大で512個のユニークなIPv4アドレスが使えることになる．
