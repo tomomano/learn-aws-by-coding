@@ -1,63 +1,91 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    Ascii85 (1.0.3)
-    addressable (2.7.0)
-      public_suffix (>= 2.0.2, < 5.0)
-    afm (0.2.2)
-    asciidoctor (2.0.10)
-    asciidoctor-pdf (1.5.0.beta.6)
-      asciidoctor (>= 1.5.3, < 3.0.0)
-      concurrent-ruby (~> 1.1.0)
-      prawn (~> 2.2.0)
-      prawn-icon (~> 2.5.0)
-      prawn-svg (~> 0.29.0)
+    Ascii85 (2.0.1)
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
+    afm (1.0.0)
+    asciidoctor (2.0.26)
+    asciidoctor-pdf (2.3.24)
+      asciidoctor (~> 2.0)
+      concurrent-ruby (~> 1.3)
+      matrix (~> 0.4)
+      prawn (~> 2.4.0)
+      prawn-icon (~> 3.0.0)
+      prawn-svg (~> 0.34.0)
       prawn-table (~> 0.2.0)
       prawn-templates (~> 0.1.0)
-      safe_yaml (~> 1.0.0)
-      thread_safe (~> 0.3.0)
-      treetop (~> 1.5.0)
-    asciidoctor-pdf-cjk (0.1.3)
-      asciidoctor-pdf (~> 1.5.0.alpha.8)
-    concurrent-ruby (1.1.5)
-    css_parser (1.7.0)
+      treetop (~> 1.6.0)
+      ttfunk (~> 1.7.0)
+    concurrent-ruby (1.3.6)
+    css_parser (1.21.1)
       addressable
     hashery (2.1.2)
-    pdf-core (0.7.0)
-    pdf-reader (2.2.1)
-      Ascii85 (~> 1.0.0)
-      afm (~> 0.2.1)
+    matrix (0.4.3)
+    pdf-core (0.9.0)
+    pdf-reader (2.15.1)
+      Ascii85 (>= 1.0, < 3.0, != 2.0.0)
+      afm (>= 0.2.1, < 2)
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
     polyglot (0.3.5)
-    prawn (2.2.2)
-      pdf-core (~> 0.7.0)
-      ttfunk (~> 1.5)
-    prawn-icon (2.5.0)
+    prawn (2.4.0)
+      pdf-core (~> 0.9.0)
+      ttfunk (~> 1.7)
+    prawn-icon (3.0.0)
       prawn (>= 1.1.0, < 3.0.0)
-    prawn-svg (0.29.1)
+    prawn-svg (0.34.2)
       css_parser (~> 1.6)
+      matrix (~> 0.4.2)
       prawn (>= 0.11.1, < 3)
+      rexml (~> 3.2)
     prawn-table (0.2.2)
       prawn (>= 1.3.0, < 3.0.0)
-    prawn-templates (0.1.1)
+    prawn-templates (0.1.2)
       pdf-reader (~> 2.0)
       prawn (~> 2.2)
-    public_suffix (4.0.1)
-    rouge (3.12.0)
+    public_suffix (7.0.5)
+    rexml (3.4.4)
+    rouge (4.7.0)
     ruby-rc4 (0.1.5)
-    safe_yaml (1.0.5)
-    thread_safe (0.3.6)
-    treetop (1.5.3)
+    treetop (1.6.18)
       polyglot (~> 0.3)
-    ttfunk (1.5.1)
+    ttfunk (1.7.0)
 
 PLATFORMS
+  arm64-darwin-24
   ruby
 
 DEPENDENCIES
-  asciidoctor (= 2.0.10)
-  asciidoctor-pdf (~> 1.5.0.beta)
-  asciidoctor-pdf-cjk (~> 0.1.3)
+  asciidoctor (~> 2.0)
+  asciidoctor-pdf (~> 2.3)
   rouge
+
+CHECKSUMS
+  Ascii85 (2.0.1) sha256=15cb5d941808543cbb9e7e6aea3c8ec3877f154c3461e8b3673e97f7ecedbe5a
+  addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
+  afm (1.0.0) sha256=5bd4d6f6241e7014ef090985ec6f4c3e9745f6de0828ddd58bc1efdd138f4545
+  asciidoctor (2.0.26) sha256=16e3accf1fc206bbd6335848649d7fd65f31d2daa60d85af13d47a8ee4b071c1
+  asciidoctor-pdf (2.3.24) sha256=3076e55132d43b21de93cd7c8149a8c1b2e4afc07e79855fb6b795a0ef20b051
+  concurrent-ruby (1.3.6) sha256=6b56837e1e7e5292f9864f34b69c5a2cbc75c0cf5338f1ce9903d10fa762d5ab
+  css_parser (1.21.1) sha256=6cfd3ffc0a97333b39d2b1b49c95397b05e0e3b684d68f77ec471ba4ec2ef7c7
+  hashery (2.1.2) sha256=d239cc2310401903f6b79d458c2bbef5bf74c46f3f974ae9c1061fb74a404862
+  matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
+  pdf-core (0.9.0) sha256=4f368b2f12b57ec979872d4bf4bd1a67e8648e0c81ab89801431d2fc89f4e0bb
+  pdf-reader (2.15.1) sha256=18c6a986a84a3117fa49f4279fc2de51f5d2399b71833df5d2bccd595c7068ce
+  polyglot (0.3.5) sha256=59d66ef5e3c166431c39cb8b7c1d02af419051352f27912f6a43981b3def16af
+  prawn (2.4.0) sha256=82062744f7126c2d77501da253a154271790254dfa8c309b8e52e79bc5de2abd
+  prawn-icon (3.0.0) sha256=dac8d481dee0f60a769c0cab0fd1baec7351b4806bf9ba959cd6c65f6694b6f5
+  prawn-svg (0.34.2) sha256=afff79d332940f6d59604d0b2810f54d46e9335533a2aa4e892fb7d514777a90
+  prawn-table (0.2.2) sha256=336d46e39e003f77bf973337a958af6a68300b941c85cb22288872dc2b36addb
+  prawn-templates (0.1.2) sha256=117aa03db570147cb86fcd7de4fd896994f702eada1d699848a9529a87cd31f1
+  public_suffix (7.0.5) sha256=1a8bb08f1bbea19228d3bed6e5ed908d1cb4f7c2726d18bd9cadf60bc676f623
+  rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
+  rouge (4.7.0) sha256=dba5896715c0325c362e895460a6d350803dbf6427454f49a47500f3193ea739
+  ruby-rc4 (0.1.5) sha256=00cc40a39d20b53f5459e7ea006a92cf584e9bc275e2a6f7aa1515510e896c03
+  treetop (1.6.18) sha256=a3043f32f1c652aa2abdf3a3848edb2d2f69897257af2675516ac61355c183da
+  ttfunk (1.7.0) sha256=2370ba484b1891c70bdcafd3448cfd82a32dd794802d81d720a64c15d3ef2a96
+
+BUNDLED WITH
+  4.0.10
