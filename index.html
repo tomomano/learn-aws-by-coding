@@ -2400,7 +2400,7 @@ EC2のインスタンスには秘密鍵を持ったコンピュータのみが�
 このハンズオンでは，特にデータセンターの障害などを気にする必要はないので <code>1</code> にしている．</p>
 </li>
 <li>
-<p><code>cidr="10.10.0.0/23"</code> : このパラメータは，VPC内のIPv4のレンジを指定している．
+<p><code>ip_addresses=ec2.IpAddresses.cidr("10.10.0.0/23")</code> : このパラメータは，VPC内のIPv4のレンジを指定している．
 CIDR記法については， <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">Wikipedia</a>などを参照．
 <code>10.10.0.0/23</code> は <code>10.10.0.0</code> から <code>10.10.1.255</code> までの512個の連続したアドレス範囲を指している．
 つまり，このVPCでは最大で512個のユニークなIPv4アドレスが使えることになる．
@@ -10942,7 +10942,7 @@ Docker イメージのビルドファイルは GitHub の
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2026-04-18 12:45:09 UTC
+Last updated 2026-04-18 12:48:27 UTC
 </div>
 </div>
 </body>

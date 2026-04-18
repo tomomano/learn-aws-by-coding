@@ -2356,7 +2356,7 @@ However, since AWS specification require that EC2 instances must be placed insid
 In this hands-on, it is set to <code>1</code> because we don&#8217;t need to worry about the failure of the data center.</p>
 </li>
 <li>
-<p><code>cidr="10.10.0.0/23"</code>: This parameter specifies the range of IPv4 address in the VPC.
+<p><code>ip_addresses=ec2.IpAddresses.cidr("10.10.0.0/23")</code>: This parameter specifies the range of IPv4 address in the VPC.
 For more information about CIDR notation, see
 <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">Wikipedia article</a>.
 <code>10.10.0.0/23</code> refers to a range of 512 consecutive addresses from <code>10.10.0.0</code> to <code>10.10.1.255</code>.
@@ -10468,7 +10468,7 @@ The technique of mounting the authentication file described here can also be use
 <div id="footer">
 <div id="footer-text">
 Version 1.0-en<br>
-Last updated 2026-04-18 12:45:08 UTC
+Last updated 2026-04-18 12:48:27 UTC
 </div>
 </div>
 </body>
