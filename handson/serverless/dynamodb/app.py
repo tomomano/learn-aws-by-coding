@@ -1,13 +1,15 @@
+from constructs import Construct
+import aws_cdk as cdk
 from aws_cdk import (
-    core,
+    Stack,
     aws_dynamodb as ddb
 )
 import os
 
-class SimpleDynamoDb(core.Stack):
+class SimpleDynamoDb(Stack):
 
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # <1>
         table = ddb.Table(
@@ -17,11 +19,11 @@ class SimpleDynamoDb(core.Stack):
                 type=ddb.AttributeType.STRING
             ),
             billing_mode=ddb.BillingMode.PAY_PER_REQUEST,
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=cdk.RemovalPolicy.DESTROY
         )
-        core.CfnOutput(self, "TableName", value=table.table_name)
+        cdk.CfnOutput(self, "TableName", value=table.table_name)
 
-app = core.App()
+app = cdk.App()
 SimpleDynamoDb(
     app, "SimpleDynamoDb",
     env={

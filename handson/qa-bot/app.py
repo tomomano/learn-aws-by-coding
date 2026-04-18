@@ -1,5 +1,7 @@
+from constructs import Construct
+import aws_cdk as cdk
 from aws_cdk import (
-    core,
+    Stack,
     aws_ec2 as ec2,
     aws_ecs as ecs,
     aws_dynamodb as dynamodb,
@@ -9,10 +11,10 @@ from aws_cdk import (
 )
 import os
 
-class EcsClusterQaBot(core.Stack):
+class EcsClusterQaBot(Stack):
 
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # <1>
         # dynamoDB table to store questions and answers
@@ -22,7 +24,7 @@ class EcsClusterQaBot(core.Stack):
                 name="item_id", type=dynamodb.AttributeType.STRING
             ),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=cdk.RemovalPolicy.DESTROY
         )
 
         # <2>
@@ -100,10 +102,10 @@ class EcsClusterQaBot(core.Stack):
             string_value=table.table_name
         )
 
-        core.CfnOutput(self, "ClusterName", value=cluster.cluster_name)
-        core.CfnOutput(self, "TaskDefinitionArn", value=taskdef.task_definition_arn)
+        cdk.CfnOutput(self, "ClusterName", value=cluster.cluster_name)
+        cdk.CfnOutput(self, "TaskDefinitionArn", value=taskdef.task_definition_arn)
 
-app = core.App()
+app = cdk.App()
 EcsClusterQaBot(
     app, "EcsClusterQaBot",
     env={

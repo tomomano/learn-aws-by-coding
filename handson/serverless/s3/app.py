@@ -1,24 +1,26 @@
+from constructs import Construct
+import aws_cdk as cdk
 from aws_cdk import (
-    core,
+    Stack,
     aws_s3 as s3
 )
 import os
 
-class SimpleS3(core.Stack):
+class SimpleS3(Stack):
 
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # S3 bucket to store data
         bucket = s3.Bucket(
             self, "bucket",
-            removal_policy=core.RemovalPolicy.DESTROY,
+            removal_policy=cdk.RemovalPolicy.DESTROY,
             auto_delete_objects=True,
         )
 
-        core.CfnOutput(self, "BucketName", value=bucket.bucket_name)
+        cdk.CfnOutput(self, "BucketName", value=bucket.bucket_name)
 
-app = core.App()
+app = cdk.App()
 SimpleS3(
     app, "SimpleS3",
     env={

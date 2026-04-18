@@ -51,15 +51,15 @@ We will explain only the parts where changes were made.
 
 [source, python, linenums]
 ----
-class Ec2ForDl(core.Stack):
+class Ec2ForDl(Stack):
 
-    def __init__(self, scope: core.App, name: str, key_name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, key_name: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         vpc = ec2.Vpc(
             self, "Ec2ForDl-Vpc",
             max_azs=1,
-            cidr="10.10.0.0/23",
+            ip_addresses=ec2.IpAddresses.cidr("10.10.0.0/23"),
             subnet_configuration=[
                 ec2.SubnetConfiguration(
                     name="public",

@@ -44,10 +44,10 @@ def handler(event, context):
     return message
 """
 
-class SimpleLambda(core.Stack):
+class SimpleLambda(Stack):
 
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # <2>
         handler = _lambda.Function(
@@ -56,7 +56,7 @@ class SimpleLambda(core.Stack):
             code=_lambda.Code.from_inline(FUNC),
             handler="index.handler",
             memory_size=128,
-            timeout=core.Duration.seconds(10),
+            timeout=cdk.Duration.seconds(10),
             dead_letter_queue_enabled=True,
         )
 ----
@@ -75,7 +75,7 @@ Python3.7 のほかに， Node.js, Java, Ruby, Go などの言語を指定する
 `handler` という名前の関数をメイン関数として実行せよ，という意味である．
 * `memory_size=128`:
 メモリーは 128MB を最大で使用することを指定している．
-* `timeout=core.Duration.seconds(10)`
+* `timeout=cdk.Duration.seconds(10)`
 タイムアウト時間を10秒に設定している．
 10秒以内に関数の実行が終了しなかった場合，エラーが返される．
 * `dead_letter_queue_enabled=True`:
@@ -246,9 +246,9 @@ https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/dyn
 
 [source, python, linenums]
 ----
-class SimpleDynamoDb(core.Stack):
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+class SimpleDynamoDb(Stack):
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         table = ddb.Table(
             self, "SimpleTable",
@@ -260,7 +260,7 @@ class SimpleDynamoDb(core.Stack):
             # <2>
             billing_mode=ddb.BillingMode.PAY_PER_REQUEST,
             # <3>
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=cdk.RemovalPolicy.DESTROY
         )
 ----
 
@@ -477,14 +477,14 @@ https://github.com/tomomano/learn-aws-by-coding/blob/main/handson/serverless/s3/
 
 [source, python, linenums]
 ----
-class SimpleS3(core.Stack):
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+class SimpleS3(Stack):
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # S3 bucket to store data
         bucket = s3.Bucket(
             self, "bucket",
-            removal_policy=core.RemovalPolicy.DESTROY,
+            removal_policy=cdk.RemovalPolicy.DESTROY,
             auto_delete_objects=True,
         )
 ----
@@ -499,7 +499,7 @@ class SimpleS3(core.Stack):
 ====
 デフォルトでは， CloudFormation スタックが削除されたとき， S3 バケットとその中に保存されたファイルは削除されない．
 これは，大切なデータを誤って消してしまうことを防止するための安全策である．
-`cdk destroy` を実行したときにバケットも含めてすべて削除されるようにするには， `removal_policy=core.RemovalPolicy.DESTROY, auto_delete_objects=True` とパラメータを設定する．
+`cdk destroy` を実行したときにバケットも含めてすべて削除されるようにするには， `removal_policy=cdk.RemovalPolicy.DESTROY, auto_delete_objects=True` とパラメータを設定する．
 結果もよく理解したうえで，自分の用途にあった適切なパラメータを設定しよう．
 ====
 

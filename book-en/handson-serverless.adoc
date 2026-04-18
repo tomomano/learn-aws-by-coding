@@ -45,10 +45,10 @@ def handler(event, context):
     return message
 """
 
-class SimpleLambda(core.Stack):
+class SimpleLambda(Stack):
 
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         # <2>
         handler = _lambda.Function(
@@ -57,7 +57,7 @@ class SimpleLambda(core.Stack):
             code=_lambda.Code.from_inline(FUNC),
             handler="index.handler",
             memory_size=128,
-            timeout=core.Duration.seconds(10),
+            timeout=cdk.Duration.seconds(10),
             dead_letter_queue_enabled=True,
         )
 ----
@@ -78,7 +78,7 @@ This is a parameter to distinguish between the main and sub functions when the c
 It means that the function named `handler` should be executed as the main function.
 * `memory_size=128`:
 Specifies that the maximum memory size is 128MB.
-* `timeout=core.Duration.seconds(10)`.
+* `timeout=cdk.Duration.seconds(10)`.
 The timeout period is set to 10 seconds.
 If the function does not finish within 10 seconds, an error is returned.
 * `dead_letter_queue_enabled=True`:
@@ -252,9 +252,9 @@ Let's take a look at the code.
 
 [source, python, linenums]
 ----
-class SimpleDynamoDb(core.Stack):
-    def __init__(self, scope: core.App, name: str, **kwargs) -> None:
-        super().__init__(scope, name, **kwargs)
+class SimpleDynamoDb(Stack):
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
 
         table = ddb.Table(
             self, "SimpleTable",
@@ -266,7 +266,7 @@ class SimpleDynamoDb(core.Stack):
             # <2>
             billing_mode=ddb.BillingMode.PAY_PER_REQUEST,
             # <3>
-            removal_policy=core.RemovalPolicy.DESTROY
+            removal_policy=cdk.RemovalPolicy.DESTROY
         )
 ----
 
