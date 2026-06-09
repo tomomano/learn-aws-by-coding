@@ -1,13 +1,13 @@
-FROM node:16
+FROM node:20
 LABEL maintainer="Tomoyuki Mano"
 
 RUN apt-get update \
     && apt-get install nano less
 
 RUN cd /opt \
-    && curl -q "https://www.python.org/ftp/python/3.7.6/Python-3.7.6.tgz" -o Python-3.7.6.tgz \
-    && tar -xzf Python-3.7.6.tgz \
-    && cd Python-3.7.6 \
+    && curl -q "https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz" -o Python-3.12.0.tgz \
+    && tar -xzf Python-3.12.0.tgz \
+    && cd Python-3.12.0 \
     && ./configure --enable-optimizations \
     && make install
 
@@ -16,7 +16,7 @@ RUN cd /opt \
     && unzip awscliv2.zip \
     && ./aws/install
 
-RUN npm install -g aws-cdk@1.100
+RUN npm install -g aws-cdk
 
 # clean up unnecessary files
 RUN rm -rf /opt/*

@@ -37,7 +37,7 @@ class MyFirstEc2(core.Stack):
         # <3>
         host = ec2.Instance(
             self, "MyFirstEc2Instance",
-            instance_type=ec2.InstanceType("t2.micro"),
+            instance_type=ec2.InstanceType("t3.micro"),
             machine_image=ec2.MachineImage.latest_amazon_linux(),
             vpc=vpc,
             vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
